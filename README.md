@@ -1,34 +1,21 @@
-## Synopsis
+# React markdown (work in progress)
 
-At the top of the file there should be a short introduction and/ or overview that explains **what** the project is.
-This description should match descriptions added for package managers (Gemspec, package.json, etc.)
+## Demo and documentation
 
-## Code Example
+Online demo and components reference available here: https://opuscapita.github.io/react-markdown
 
-Show what the library does as concisely as possible, developers should be able to figure out **how** your project solves their problem by looking at the code example.
- Make sure the API you are showing off is obvious, and that your code is short and concise.
-
-## Motivation
-
-A short description of the motivation behind the creation and maintenance of the project. This should explain **why** the project exists.
+> Demo powered by [react-showroom](https://github.com/OpusCapitaBES/js-react-showroom-client)
 
 ## Installation
 
-Provide code examples and explanations of how to get the project.
-
-## API Reference
-
-Depending on the size of the project, if it is small and simple enough the reference docs can be added to the README. 
-For medium size to larger projects it is important to at least provide a link to where the API reference docs live.
-
-## Tests
-
-Describe and show how to run the tests with code examples.
+`yarn add -D @opuscapita/react-markdown`
 
 ## Contributors
 
-Let people know how they can dive into the project, include important links to things like issue trackers, irc, twitter accounts if applicable.
+| [<img src="https://avatars.githubusercontent.com/u/24603787?v=3" width="100px;"/>](https://github.com/asergeev-sc) | [**Alexey Sergeev**](https://github.com/asergeev-sc)     |
+| :---: | :---: |
+| [<img src="https://avatars.githubusercontent.com/u/24652543?v=3" width="100px;"/>](https://github.com/asergeev-sc) | [**Kirill Volkovich**](https://github.com/kvolkovich-sc) |
 
 ## License
 
-A short snippet describing the license (MIT, Apache, etc.)
+Licensed under the Apache License, Version 2.0. See [LICENSE](./LICENSE) for the full license text.
