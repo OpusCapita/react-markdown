@@ -4,7 +4,7 @@
 
 Online demo and components reference available here: https://opuscapita.github.io/react-markdown
 
-> Demo powered by [react-showroom](https://github.com/OpusCapitaBES/js-react-showroom-client)
+> Demo powered by [React Showroom](https://github.com/OpusCapita/react-showroom-client)
 
 ## Installation
 
