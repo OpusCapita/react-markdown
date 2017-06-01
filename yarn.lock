@@ -1841,6 +1841,14 @@ domutils@1.5.1, domutils@^1.5.1:
     dom-serializer "0"
     domelementtype "1"
 
+draft-js@^0.10.1:
+  version "0.10.1"
+  resolved "http://leon.scand:4873/draft-js/-/draft-js-0.10.1.tgz#6f1219d8095729691429ca6fd7a58d2a8be5cb67"
+  dependencies:
+    fbjs "^0.8.7"
+    immutable "~3.7.4"
+    object-assign "^4.1.0"
+
 duplexer@~0.1.1:
   version "0.1.1"
   resolved "http://leon.scand:4873/duplexer/-/duplexer-0.1.1.tgz#ace6ff808c1ce66b57d1ebf97977acb02334cfc1"
@@ -2266,7 +2274,7 @@ fastparse@^1.1.1:
   version "1.1.1"
   resolved "http://leon.scand:4873/fastparse/-/fastparse-1.1.1.tgz#d1e2643b38a94d7583b479060e6c4affc94071f8"
 
-fbjs@^0.8.1, fbjs@^0.8.4:
+fbjs@^0.8.1, fbjs@^0.8.4, fbjs@^0.8.7:
   version "0.8.12"
   resolved "http://leon.scand:4873/fbjs/-/fbjs-0.8.12.tgz#10b5d92f76d45575fd63a217d4ea02bea2f8ed04"
   dependencies:
@@ -2798,6 +2806,10 @@ ignore@^3.2.0:
 image-size@~0.5.0:
   version "0.5.4"
   resolved "http://leon.scand:4873/image-size/-/image-size-0.5.4.tgz#94e07beec0659386f1aefb84b2222e88405485cd"
+
+immutable@~3.7.4:
+  version "3.7.6"
+  resolved "http://leon.scand:4873/immutable/-/immutable-3.7.6.tgz#13b4d3cb12befa15482a26fe1b2ebae640071e4b"
 
 imurmurhash@^0.1.4:
   version "0.1.4"
