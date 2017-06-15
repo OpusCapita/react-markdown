@@ -22,7 +22,7 @@ class AutocompleteItemsList extends Component {
   render() {
     let { left, top } = this.props;
     const listStyle = Object.assign({}, styles.list, {
-      position: 'absolute',
+      position: 'fixed',
       left,
       top
     });

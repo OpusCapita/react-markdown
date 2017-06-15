@@ -12,7 +12,7 @@ const defaultProps = {
 };
 
 export default
-class TestEditor extends Component {
+class PlainMarkdownEditor extends Component {
 
   constructor() {
     super();
@@ -85,19 +85,19 @@ class TestEditor extends Component {
       return null;
     }
 
-    const tempRange = window.getSelection().getRangeAt(0).cloneRange();
-    if (this.state.editorState.getCurrentContent().getPlainText().includes(tempRange.startContainer)) {
+    if (window.getSelection().anchorNode && this.state.editorState.getSelection().getHasFocus()) {
+      let tempRange = window.getSelection().getRangeAt(0).cloneRange();
       tempRange.setStart(tempRange.startContainer, queryRange.start);
-    }
-
-    const rangeRect = tempRange.getBoundingClientRect();
-    let [left, top] = [rangeRect.left, rangeRect.bottom];
-
-    return {
-      left,
-      top,
-      text: queryRange.text,
-      selectedIndex: 0
+      let rangeRect = tempRange.getBoundingClientRect();
+      let [left, top] = [rangeRect.left, rangeRect.bottom];
+      return {
+        left,
+        top,
+        text: queryRange.text,
+        selectedIndex: 0
+      }
+    } else {
+      return this.state.queryState
     }
   };
 
@@ -172,7 +172,7 @@ class TestEditor extends Component {
   };
 
   handleReturn = (e) => {
-    if (this.state.queryState) {
+    if (this.state.queryState && this.state.filteredItems.length) {
       this.onItemSelect(this.state.queryState.selectedIndex);
       return true;
     }
@@ -238,8 +238,8 @@ class TestEditor extends Component {
   }
 }
 
-TestEditor.propTypes = propTypes;
-TestEditor.defaultProps = defaultProps;
+PlainMarkdownEditor.propTypes = propTypes;
+PlainMarkdownEditor.defaultProps = defaultProps;
 
 const styles = {
   editor: {
