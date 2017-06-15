@@ -172,7 +172,7 @@ class PlainMarkdownEditor extends Component {
   };
 
   handleReturn = (e) => {
-    if (this.state.queryState) {
+    if (this.state.queryState && this.state.filteredItems.length) {
       this.onItemSelect(this.state.queryState.selectedIndex);
       return true;
     }
