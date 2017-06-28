@@ -26,21 +26,31 @@ class AutocompleteItemsList extends Component {
       left,
       top
     });
-    return (
-      <ul style={listStyle}>
-        {this.props.items.map((value, index) => {
-          return (
-            <li key={index}
-              style={index === this.props.selectedIndex ? styles.selectedValue : styles.value}
-              onClick={this.props.onItemClick.bind(this, index)}
-              onMouseMove={this.props.onItemMouseMove.bind(this, index)}
-            >
-              {value}
-            </li>
-          );
-        })}
-      </ul>
-    );
+    if (this.props.items.length) {
+      return (
+        <ul style={listStyle}>
+          {this.props.items.map((item, index) => {
+            return (
+              <li key={index}
+                  style={index === this.props.selectedIndex ? styles.selectedValue : styles.value}
+                  onClick={this.props.onItemClick.bind(this, index)}
+                  onMouseMove={this.props.onItemMouseMove.bind(this, index)}
+              >
+                {item._objectLabel}
+              </li>
+            );
+          })}
+        </ul>
+      )
+    } else {
+      return (
+        <ul style={listStyle}>
+          <li style={styles.value}>
+            No matches found.
+          </li>
+        </ul>
+      )
+    }
   }
 }
 

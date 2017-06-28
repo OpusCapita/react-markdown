@@ -6,15 +6,63 @@ PlainMarkdownEditor
 
 | Name                           | Type                    | Description                                                 |
 | ------------------------------ | :---------------------- | ----------------------------------------------------------- |
-| onChange                       | func                    | Callback: `(value) => {}`                                   |
-| autocomplete                   | object                  | Autocomplete values for special characters                  |
+| onChange                       | func                    | Callback: `(value) => {}`. Called when text is changed.     |
+| value                          | string                  | Raw markdown                                                |
+| autocompletes                  | object                  | Markdown autocomplete                                       |
 
 ### Code Example
 
 ```
 <PlainMarkdownEditor 
   onChange={_scope.handleValueChange}
-  autocomplete={{'@': ['1|ColumnA|ColumnB|\n|cell1|cell2|', '2|ColumnA|ColumnB|\n|cell1|cell2|\n|Cell3|Cell4|', '23|ColumnC|ColumnD|\n|cell5|cell6|\n|Cell7|Cell8|'], '!': ['3|ColumnA|ColumnB|ColumnC|\n|cell1|cell2|cell3|', '4|ColumnA|ColumnB|ColumnC|\n|cell1|cell2|cell3|\n|cell4|cell5|cell6|']}}
+  value={_scope.state.value}
+  autocompletes = {[{
+     termRegex: /\$(\w*)$/,
+     fetch: (term) => {
+       switch(term) {
+         case '$':
+           return Promise.resolve([
+             { _objectLabel: '1s' },
+             { _objectLabel: '2f' },
+             { _objectLabel: '2s' }
+           ]);
+         case '$1':
+           return Promise.resolve([
+             { _objectLabel: '1s' }
+           ]);
+         case '$2':
+           return Promise.resolve([
+             { _objectLabel: '2f' },
+             { _objectLabel: '2s' }
+           ]);
+         default:
+           return Promise.resolve([])
+       }
+     },
+     selectItem: (item) => { return `ITEM$: ${item._objectLabel}` }
+   }, {
+     termRegex: /\!(\w*)/,
+     fetch: (term) => {
+       switch(term) {
+         case '!':
+           return Promise.resolve([
+             { _objectLabel: '3a' },
+             { _objectLabel: '4a' }
+           ]);
+         case '!3':
+           return Promise.resolve([
+             { _objectLabel: '3a' }
+           ]);
+         case '!4':
+           return Promise.resolve([
+             { _objectLabel: '4a' }
+           ]);
+         default:
+           return Promise.resolve([])
+       }
+     },
+     selectItem: (item) => { return `ITEM!: ${item._objectLabel}` }
+   }]}
 />
 ```
 
