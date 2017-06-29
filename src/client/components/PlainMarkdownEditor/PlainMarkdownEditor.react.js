@@ -104,7 +104,7 @@ class PlainMarkdownEditor extends Component {
     const nextEditorState = EditorState.push(
       editorState, modifiedContentState, null
     );
-    this.setState({ editorState: nextEditorState, filteredItems: [], queryState: null });
+    this.setState({ editorState: nextEditorState, filteredItems: [], queryState: null }, this.onChange.bind(this, nextEditorState));
   };
 
   getQueryRange = () => {
