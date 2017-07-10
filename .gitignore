@@ -7,3 +7,4 @@ npm-debug.log
 /build
 /lib
 node_modules
+package-lock.json
