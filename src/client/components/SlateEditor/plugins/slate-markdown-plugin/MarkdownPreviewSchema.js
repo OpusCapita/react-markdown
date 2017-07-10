@@ -1,6 +1,6 @@
 import Prism from 'prismjs';
 import React from 'react';
-import {Mark} from 'slate';
+import { Mark } from 'slate';
 
 /**
  * Add the markdown syntax to Prism.
@@ -143,12 +143,12 @@ function addMarks(characters, tokens, offset) {
       continue
     }
 
-    const {content, length, type} = token;
-    const mark = Mark.create({type});
+    const { content, length, type } = token;
+    const mark = Mark.create({ type });
 
     for (let i = offset; i < offset + length; i++) {
       let char = characters.get(i);
-      let {marks} = char;
+      let { marks } = char;
       marks = marks.add(mark);
       char = char.set('marks', marks);
       characters.set(i, char);

@@ -1,6 +1,6 @@
 import React from 'react';
 
-const HeaderOneNode = ({children}) => (
+const HeaderOneNode = ({ children }) => (
   <h1>
     {children}
   </h1>

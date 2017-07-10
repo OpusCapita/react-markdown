@@ -1,7 +1,7 @@
 import React from 'react';
 
 
-const UnderlineMark = ({children}) => (
+const UnderlineMark = ({ children }) => (
   <u>
     {children}
   </u>

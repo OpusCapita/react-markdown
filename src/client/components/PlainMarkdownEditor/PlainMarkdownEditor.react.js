@@ -19,9 +19,9 @@ import {
   MarkdownUnorderedListButton
 } from '../SlateEditor/plugins';
 
-import {SlateContent, SlateEditor, SlateToolbar, SlateToolbarGroup} from '../SlateEditor';
+import { SlateContent, SlateEditor, SlateToolbar, SlateToolbarGroup } from '../SlateEditor';
 
-import {Plain} from 'slate';
+import { Plain } from 'slate';
 
 export default class PlainMarkdownEditor extends React.Component {
   state = {
@@ -31,11 +31,11 @@ export default class PlainMarkdownEditor extends React.Component {
   onChange = (editorState) => {
     this.props.onChange && this.props.onChange(Plain.serialize(editorState));
 
-    this.setState({editorState});
+    this.setState({ editorState });
   };
 
   componentWillMount = () => {
-    const {autocompletes = []} = this.props;
+    const { autocompletes = [] } = this.props;
     this.plugins = [
       AutocompletePlugin(
         {
@@ -47,15 +47,16 @@ export default class PlainMarkdownEditor extends React.Component {
   };
 
   render() {
-    const {editorState} = this.state;
-    const {children, onFullScreen, fullScreen} = this.props;
+    const { editorState } = this.state;
+    const { children, onFullScreen, fullScreen } = this.props;
 
     return (
       <SlateEditor
         state={editorState}
         fullScreen={fullScreen}
         plugins={this.plugins}
-        onChange={this.onChange}>
+        onChange={this.onChange}
+      >
 
         <SlateToolbar>
           <SlateToolbarGroup>

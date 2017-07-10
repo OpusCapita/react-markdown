@@ -6,10 +6,10 @@ import './SlateEditor.less';
 
 class SlateEditor extends React.Component {
   render() {
-    const {children, plugins, state, onChange, fullScreen} = this.props;
+    const { children, plugins, state, onChange, fullScreen } = this.props;
     return (
-      <div className={classnames('slate-editor', {fullScreen})}>
-        {Utils.cloneElement(children, {plugins, state, onChange})}
+      <div className={classnames('slate-editor', { fullScreen })}>
+        {Utils.cloneElement(children, { plugins, state, onChange })}
       </div>
     )
   }

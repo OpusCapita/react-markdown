@@ -27,7 +27,7 @@ import {
   StrikethroughPlugin,
   UnorderedListButton
 } from '../SlateEditor/plugins';
-import {SlateContent, SlateEditor, SlateToolbar, SlateToolbarGroup} from '../SlateEditor';
+import { SlateContent, SlateEditor, SlateToolbar, SlateToolbarGroup } from '../SlateEditor';
 
 const markdown = new Markdown();
 
@@ -58,11 +58,11 @@ export default class RichMarkdownEditor extends React.Component {
   onChange = (editorState) => {
     this.props.onChange && this.props.onChange(markdown.serialize(editorState));
 
-    this.setState({editorState});
+    this.setState({ editorState });
   };
 
   componentWillMount = () => {
-    const {autocompletes = [], autoCompletionLinks = []} = this.props;
+    const { autocompletes = [], autoCompletionLinks = [] } = this.props;
     this.plugins = [
       LinkPlugin(
         {
@@ -90,15 +90,16 @@ export default class RichMarkdownEditor extends React.Component {
    * @return {Element}
    */
   render() {
-    const {editorState} = this.state;
-    const {children, autoCompletionLinks, onFullScreen, fullScreen} = this.props;
+    const { editorState } = this.state;
+    const { children, autoCompletionLinks, onFullScreen, fullScreen } = this.props;
 
     return (
       <SlateEditor
         state={editorState}
         fullScreen={fullScreen}
         plugins={this.plugins}
-        onChange={this.onChange}>
+        onChange={this.onChange}
+      >
 
         <SlateToolbar>
           <SlateToolbarGroup>
@@ -134,5 +135,5 @@ export default class RichMarkdownEditor extends React.Component {
         <SlateContent/>
       </SlateEditor>
     )
-  };
+  }
 }

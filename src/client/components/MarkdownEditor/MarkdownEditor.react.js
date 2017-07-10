@@ -15,30 +15,31 @@ export default class MarkdownEditor extends React.Component {
   };
 
   handleChangeMode = (mode) => {
-    this.setState({mode});
+    this.setState({ mode });
   };
 
   handleChangeValue = (value) => {
     this.props.onChange && this.props.onChange(value);
 
-    this.setState({value});
+    this.setState({ value });
   };
 
   handleFullScreen = () => {
-    const {fullScreen} = this.state;
-    this.setState({fullScreen: !fullScreen});
+    const { fullScreen } = this.state;
+    this.setState({ fullScreen: !fullScreen });
   };
 
   render() {
-    const {mode, value, fullScreen} = this.state;
-    const {autocompletes, autoCompletionLinks} = this.props;
+    const { mode, value, fullScreen } = this.state;
+    const { autocompletes, autoCompletionLinks } = this.props;
     if (mode === 'plain') {
       return (
         <PlainMarkdownEditor value={value}
-                             onChange={this.handleChangeValue}
-                             autocompletes={autocompletes}
-                             onFullScreen={this.handleFullScreen}
-                             fullScreen={fullScreen}>
+          onChange={this.handleChangeValue}
+          autocompletes={autocompletes}
+          onFullScreen={this.handleFullScreen}
+          fullScreen={fullScreen}
+        >
           <SlateToolbarGroup>
             <SwitchModeButton onChangeMode={this.handleChangeMode} mode="plain"/>
           </SlateToolbarGroup>
@@ -47,11 +48,12 @@ export default class MarkdownEditor extends React.Component {
     } else if (mode === 'rich') {
       return (
         <RichMarkdownEditor value={value}
-                            onChange={this.handleChangeValue}
-                            autocompletes={autocompletes}
-                            autoCompletionLinks={autoCompletionLinks}
-                            onFullScreen={this.handleFullScreen}
-                            fullScreen={fullScreen}>
+          onChange={this.handleChangeValue}
+          autocompletes={autocompletes}
+          autoCompletionLinks={autoCompletionLinks}
+          onFullScreen={this.handleFullScreen}
+          fullScreen={fullScreen}
+        >
           <SlateToolbarGroup>
             <SwitchModeButton onChangeMode={this.handleChangeMode} mode="rich"/>
           </SlateToolbarGroup>
@@ -60,5 +62,5 @@ export default class MarkdownEditor extends React.Component {
     } else {
       throw new Error(`Mode '${mode}' not supported`);
     }
-  };
+  }
 }

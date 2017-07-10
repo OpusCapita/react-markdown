@@ -1,5 +1,5 @@
 import React from 'react';
-import {Modal} from 'react-bootstrap';
+import { Modal } from 'react-bootstrap';
 
 /**
  * Editor for link fields: href & text
@@ -12,28 +12,28 @@ class LinkEditor extends React.Component {
   };
 
   componentWillReceiveProps = (nextProps) => {
-    const {text, href} = nextProps;
+    const { text, href } = nextProps;
 
     if (text !== this.state.text) {
-      this.setState({text});
+      this.setState({ text });
     }
 
     if (href !== this.state.href) {
-      this.setState({href});
+      this.setState({ href });
     }
   };
 
   handleChange = () => {
-    const {text, href} = this.state;
+    const { text, href } = this.state;
     if (text && href) {
-      const {onChange} = this.props;
-      onChange({text, href});
+      const { onChange } = this.props;
+      onChange({ text, href });
     }
   };
 
   render() {
-    const {mode, onCancel, autoCompletionLinks = []} = this.props;
-    const {text, href, isAutocompleteOverlayVisible} = this.state;
+    const { mode, onCancel, autoCompletionLinks = [] } = this.props;
+    const { text, href, isAutocompleteOverlayVisible } = this.state;
 
     const title = mode === 'insert' ? 'Insert link' : 'Update Link';
     const autocompleteListStyles = {
@@ -44,7 +44,7 @@ class LinkEditor extends React.Component {
       top: 32
     };
     return (
-      <Modal show onHide={onCancel}>
+      <Modal show={true} onHide={onCancel}>
         <Modal.Header closeButton={true}>
           {title}
         </Modal.Header>
@@ -54,28 +54,31 @@ class LinkEditor extends React.Component {
               <label className="col-sm-3 control-label" htmlFor="link-editor-text">Text</label>
               <div className="col-sm-8">
                 <input id="link-editor-text" type="text"
-                       className="form-control"
-                       value={text}
-                       onChange={({target: {value}}) => this.setState({
-                         text: value,
-                         isAutocompleteOverlayVisible: true
-                       })}
-                       onFocus={() => this.setState({isAutocompleteOverlayVisible: true})}/>
+                  className="form-control"
+                  value={text}
+                  onChange={({ target: { value } }) => this.setState({
+                    text: value,
+                    isAutocompleteOverlayVisible: true
+                  })}
+                  onFocus={() => this.setState({ isAutocompleteOverlayVisible: true })}
+                />
                 {(autoCompletionLinks.length && isAutocompleteOverlayVisible) ? (
                   <ul className="dropdown-menu textcomplete-dropdown"
-                      style={autocompleteListStyles}>
+                    style={autocompleteListStyles}
+                  >
                     {
                       autoCompletionLinks.map((autoCompletionLink, index) => {
                         return (
                           <li key={index}
-                              onClick={() => {
-                                this.setState({
-                                  href: autoCompletionLink.url,
-                                  text: autoCompletionLink.text,
-                                  isAutocompleteOverlayVisible: false
-                                })
-                              }}
-                              className="textcomplete-item">
+                            onClick={() => {
+                              this.setState({
+                                href: autoCompletionLink.url,
+                                text: autoCompletionLink.text,
+                                isAutocompleteOverlayVisible: false
+                              })
+                            }}
+                            className="textcomplete-item"
+                          >
                             <a href="javascript:void(0)">{autoCompletionLink.text}</a>
                           </li>
                         );
@@ -90,9 +93,10 @@ class LinkEditor extends React.Component {
               <label className="col-sm-3 control-label" htmlFor="link-editor-href">Link</label>
               <div className="col-sm-8">
                 <input id="link-editor-href" type="text"
-                       className="form-control"
-                       value={href}
-                       onChange={({target: {value}}) => this.setState({href: value})}/>
+                  className="form-control"
+                  value={href}
+                  onChange={({ target: { value } }) => this.setState({ href: value })}
+                />
               </div>
             </div>
           </div>

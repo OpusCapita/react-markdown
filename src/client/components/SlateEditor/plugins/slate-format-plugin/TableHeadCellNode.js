@@ -1,6 +1,6 @@
 import React from 'react';
 
-const TableHeadCellNode = ({children}) => {
+const TableHeadCellNode = ({ children }) => {
   return <th>{children}</th>
 };
 

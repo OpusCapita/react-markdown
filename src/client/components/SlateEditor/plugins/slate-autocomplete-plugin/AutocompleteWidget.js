@@ -1,5 +1,5 @@
 import React from 'react';
-import './autocomplete.css';
+import './Autocomplete.less';
 
 class AutocompleteWidget extends React.Component {
   state = {
@@ -20,11 +20,11 @@ class AutocompleteWidget extends React.Component {
       left = rect.left + window.pageXOffset;
     }
 
-    return {left, top};
+    return { left, top };
   };
 
   componentWillReceiveProps = (nextProps) => {
-    //get selection bounding client rect on next cycle
+    // get selection bounding client rect on next cycle
     setTimeout(() => {
       this.setState(this.getPosition());
     });
@@ -54,8 +54,8 @@ class AutocompleteWidget extends React.Component {
   };
 
   render() {
-    const {left, top} = this.state;
-    const {items, selectedIndex} = this.props;
+    const { left, top } = this.state;
+    const { items, selectedIndex } = this.props;
 
     const styles = {
       position: 'absolute',
@@ -68,14 +68,16 @@ class AutocompleteWidget extends React.Component {
     if (items !== undefined && items !== null) {
       return (
         <ul className="dropdown-menu textcomplete-dropdown"
-            ref="autocompleteList"
-            style={styles}>
+          ref="autocompleteList"
+          style={styles}
+        >
           {items.map((item, index) => {
             return (
               <li key={index}
-                  ref={`autocompleteItem${index}`}
-                  onClick={this.handleSelectItem.bind(this, index)}
-                  className={'textcomplete-item' + (selectedIndex === index ? ' active' : '')}>
+                ref={`autocompleteItem${index}`}
+                onClick={this.handleSelectItem.bind(this, index)}
+                className={'textcomplete-item' + (selectedIndex === index ? ' active' : '')}
+              >
                 <a href="javascript:void(0)">{item._objectLabel}</a>
               </li>
             );

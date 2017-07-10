@@ -1,8 +1,8 @@
 import React from 'react';
 
 
-const ImgNode = ({node, attributes}) => {
-  const {data} = node;
+const ImgNode = ({ node, attributes }) => {
+  const { data } = node;
   const src = data.get('src');
   const alt = data.get('alt');
 

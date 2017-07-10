@@ -1,6 +1,6 @@
 import React from 'react';
 
-const CodeNode = ({children}) => {
+const CodeNode = ({ children }) => {
   return <pre><code>{children}</code></pre>
 };
 
