@@ -34,7 +34,7 @@ const RULES = [
       if (obj.kind !== 'block') return;
 
       let listLevel = 0;
-      let arrChildren;
+      let arrChildren, label;
 
       switch (obj.type) {
         case 'heading1':
@@ -84,8 +84,16 @@ const RULES = [
           let parent = obj.getIn(['data', 'parent']);
 
           if (parent === 'unordered-list') {
-            let mod = obj.getIn(['data', 'level']) % 10;
-            let pref = ['+', '+', '-', '-', '*', '*', '-', '+', '-', '*'][mod];
+            let pref;
+
+            if (obj.getIn(['data', 'markup'])) {
+              pref = obj.getIn(['data', 'markup']);
+            }
+
+            else {
+              let mod = obj.getIn(['data', 'level']) % 10;
+              pref = ['+', '+', '-', '-', '*', '*', '-', '+', '-', '*'][mod];
+            }
 
             return `${pref} ${children}\n`;
           }
@@ -124,6 +132,9 @@ const RULES = [
           }
           children = arrChildren.join('\n');
           return `${children}\n`;
+        case 'anchor':
+          label = obj.getIn(['data', 'label']);
+          return `[^${label}]: ${children}`;
       }
     }
   },
@@ -160,11 +171,14 @@ const RULES = [
   {
     serialize(obj, children) {
       if (obj.kind !== 'mark') return;
+      let markup = obj.getIn(['data', 'markup']);
       switch (obj.type) {
         case 'bold':
-          return `**${children}**`;
+          markup = markup ? markup : '**';
+          return `${markup}${children}${markup}`;
         case 'italic':
-          return `*${children}*`;
+          markup = markup ? markup : '*';
+          return `${markup}${children}${markup}`;
         case 'code':
           return `\`${children}\``;
         case 'insert':
@@ -221,7 +235,6 @@ class Markdown {
   serialize(state) {
     const {document} = state;
     const elements = document.nodes.map(this.serializeNode);
-
     return elements.join('\n').trim();
   }
 

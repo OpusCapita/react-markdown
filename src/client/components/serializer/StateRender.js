@@ -83,6 +83,10 @@ class BlockNode {
     this.tag = token.tag;
     this.data = {};
 
+    if (token.type === 'list_item_open' && token.markup) {
+      this.data.markup = token.markup;
+    }
+
     if (token.tag === 'hr') {
       this.isVoid = true;
     }
@@ -156,32 +160,6 @@ class LinkNode extends InlineNode {
   }
 }
 
-// class AnchorNode extends InlineNode {
-//   constructor(label) {
-//     super();
-//
-//     this.type = "anchor";
-//     this.isVoid = false;
-//     this.nodes = [
-//       {
-//         kind: "text",
-//         ranges: [
-//           {
-//             "text": ''
-//           }
-//         ]
-//       }
-//     ];
-//     this.data = {
-//       label: label
-//     };
-//   }
-//
-//   addText(text) {
-//     this.nodes[0].ranges[0].text = text;
-//   }
-// }
-
 class AbbrNode extends InlineNode {
   constructor(title) {
     super();
@@ -235,7 +213,12 @@ class TextBlock {
     }
 
     else if (token.markup && markups[token.markup]) {
-      this.marks = [{type: markups[token.markup]}];
+      this.marks = [
+        {
+          type: markups[token.markup],
+          data: {markup: token.markup}
+        }
+      ];
     }
   }
 
@@ -289,21 +272,6 @@ class Children {
 
     this.currNode = new LinkNode(link);
   }
-
-  // createAnchor(token) {
-  //   this.addCurrNode();
-  //
-  //   let label = '';
-  //
-  //   for (let attr of token.meta) {
-  //     if (attr[0] === 'label') {
-  //       label = attr[1];
-  //       break;
-  //     }
-  //   }
-  //
-  //   this.currNode = new AnchorNode(label);
-  // }
 
   createAbbr(token) {
     this.addCurrNode();
