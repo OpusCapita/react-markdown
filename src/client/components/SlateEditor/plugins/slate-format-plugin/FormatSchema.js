@@ -25,7 +25,7 @@ const FormatSchema = {
     tr: TableRowNode,
     th: TableHeadCellNode,
     td: TableRowCellNode,
-   'horizontal-rule': HorizontalLineNode,
+    'horizontal-rule': HorizontalLineNode,
     code: CodeNode,
     image: ImgNode,
     softbreak: SoftBreakNode,

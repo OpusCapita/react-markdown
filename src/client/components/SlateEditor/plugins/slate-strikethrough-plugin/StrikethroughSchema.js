@@ -1,4 +1,4 @@
-import StrikethroughMark from './StrikethroughMark'
+import StrikethroughMark from './StrikethroughMark';
 
 
 const StrikethroughSchema = {

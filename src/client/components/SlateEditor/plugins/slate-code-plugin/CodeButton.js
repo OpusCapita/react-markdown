@@ -1,5 +1,5 @@
 import React from 'react';
-import {hasMark, codeMark} from './CodeUtils';
+import {codeMark, hasMark} from './CodeUtils';
 import classnames from 'classnames';
 
 const CodeButton = ({state, onChange, className, style}) => (

@@ -7,7 +7,7 @@ const style = {
   borderRadius: '4px'
 };
 
-const CodeMark = ({ children }) => (
+const CodeMark = ({children}) => (
   <code style={style}>
     {children}
   </code>

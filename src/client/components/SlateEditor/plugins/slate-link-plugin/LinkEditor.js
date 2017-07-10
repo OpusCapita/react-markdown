@@ -56,30 +56,33 @@ class LinkEditor extends React.Component {
                 <input id="link-editor-text" type="text"
                        className="form-control"
                        value={text}
-                       onChange={({target: {value}}) => this.setState({text: value, isAutocompleteOverlayVisible: true})}
-                       onFocus={() => this.setState({ isAutocompleteOverlayVisible: true })} />
+                       onChange={({target: {value}}) => this.setState({
+                         text: value,
+                         isAutocompleteOverlayVisible: true
+                       })}
+                       onFocus={() => this.setState({isAutocompleteOverlayVisible: true})}/>
                 {(autoCompletionLinks.length && isAutocompleteOverlayVisible) ? (
-                    <ul className="dropdown-menu textcomplete-dropdown"
-                        style={autocompleteListStyles}>
-                      {
-                        autoCompletionLinks.map((autoCompletionLink, index) => {
-                          return (
-                            <li key={index}
-                                onClick={() => {
-                                  this.setState({
-                                    href: autoCompletionLink.url,
-                                    text: autoCompletionLink.text,
-                                    isAutocompleteOverlayVisible: false
-                                  })
-                                }}
-                                className="textcomplete-item">
-                              <a href="javascript:void(0)">{autoCompletionLink.text}</a>
-                            </li>
-                          );
-                        })
-                      }
-                    </ul>
-                  ) : null}
+                  <ul className="dropdown-menu textcomplete-dropdown"
+                      style={autocompleteListStyles}>
+                    {
+                      autoCompletionLinks.map((autoCompletionLink, index) => {
+                        return (
+                          <li key={index}
+                              onClick={() => {
+                                this.setState({
+                                  href: autoCompletionLink.url,
+                                  text: autoCompletionLink.text,
+                                  isAutocompleteOverlayVisible: false
+                                })
+                              }}
+                              className="textcomplete-item">
+                            <a href="javascript:void(0)">{autoCompletionLink.text}</a>
+                          </li>
+                        );
+                      })
+                    }
+                  </ul>
+                ) : null}
               </div>
             </div>
 

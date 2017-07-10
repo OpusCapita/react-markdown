@@ -1,4 +1,4 @@
-import { strikethroughMark } from './StrikethroughUtils';
+import {strikethroughMark} from './StrikethroughUtils';
 
 
 const StrikethroughKeyboardShortcut = (event, data, state) => {

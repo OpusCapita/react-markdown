@@ -1,4 +1,4 @@
-import { boldMark } from './BoldUtils';
+import {boldMark} from './BoldUtils';
 
 
 const BoldKeyboardShortcut = (event, data, state) => {

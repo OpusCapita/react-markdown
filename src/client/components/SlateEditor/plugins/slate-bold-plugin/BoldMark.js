@@ -1,7 +1,7 @@
 import React from 'react';
 
 
-const BoldNode = ({ children }) => (
+const BoldNode = ({children}) => (
   <b>
     {children}
   </b>

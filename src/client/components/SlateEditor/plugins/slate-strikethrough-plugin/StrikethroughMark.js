@@ -1,7 +1,7 @@
 import React from 'react';
 
 
-const StrikethroughMark = ({ children }) => (
+const StrikethroughMark = ({children}) => (
   <strike>
     {children}
   </strike>

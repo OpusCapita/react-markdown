@@ -1,7 +1,7 @@
 import React from 'react';
 
 const SoftBreakNode = data => {
-    return <br/>;
+  return <br/>;
 };
 
 export default SoftBreakNode;

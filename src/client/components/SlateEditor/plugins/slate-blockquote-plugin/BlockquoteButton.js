@@ -1,6 +1,6 @@
 import React from 'react';
 import classnames from 'classnames';
-import {hasBlock, wrapBlock, unwrapBlock} from './BlockquoteUtils';
+import {hasBlock, unwrapBlock, wrapBlock} from './BlockquoteUtils';
 import {OverlayTrigger, Tooltip} from 'react-bootstrap';
 
 

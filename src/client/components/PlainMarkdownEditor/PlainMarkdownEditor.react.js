@@ -1,28 +1,25 @@
 import React from 'react';
 
 import {
-  MarkdownBoldButton,
-  MarkdownItalicButton,
-  MarkdownStrikethroughButton,
-  MarkdownOrderedListButton,
-  MarkdownUnorderedListButton,
-  MarkdownBlockQuoteButton,
-  MarkdownLinkButton,
-  MarkdownHeaderOneButton,
-  MarkdownHeaderTwoButton,
-  MarkdownHeaderThreeButton,
-  MarkdownHeaderFourButton,
-  MarkdownHeaderFiveButton,
-  MarkdownHeaderSixButton,
-  FullScreenButton,
-} from '../SlateEditor/plugins';
-
-import {
   AutocompletePlugin,
+  FullScreenButton,
+  MarkdownBlockQuoteButton,
+  MarkdownBoldButton,
+  MarkdownHeaderFiveButton,
+  MarkdownHeaderFourButton,
+  MarkdownHeaderOneButton,
+  MarkdownHeaderSixButton,
+  MarkdownHeaderThreeButton,
+  MarkdownHeaderTwoButton,
+  MarkdownItalicButton,
+  MarkdownLinkButton,
+  MarkdownOrderedListButton,
   MarkdownPreviewPlugin,
+  MarkdownStrikethroughButton,
+  MarkdownUnorderedListButton
 } from '../SlateEditor/plugins';
 
-import {SlateEditor, SlateContent, SlateToolbar, SlateToolbarGroup} from '../SlateEditor';
+import {SlateContent, SlateEditor, SlateToolbar, SlateToolbarGroup} from '../SlateEditor';
 
 import {Plain} from 'slate';
 

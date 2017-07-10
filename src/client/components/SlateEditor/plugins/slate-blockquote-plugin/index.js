@@ -1,5 +1,5 @@
-import BlockquoteSchema from './BlockquoteSchema'
-import BlockquoteButton from './BlockquoteButton'
+import BlockquoteSchema from './BlockquoteSchema';
+import BlockquoteButton from './BlockquoteButton';
 
 
 const BlockquotePlugin = options => ({

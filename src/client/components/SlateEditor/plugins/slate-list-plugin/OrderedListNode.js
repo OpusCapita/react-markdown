@@ -1,6 +1,6 @@
-import React from 'react'
+import React from 'react';
 
-const OrderedListNode = ({ attributes, children }) => (
+const OrderedListNode = ({attributes, children}) => (
   <ol {...attributes}>
     {children}
   </ol>

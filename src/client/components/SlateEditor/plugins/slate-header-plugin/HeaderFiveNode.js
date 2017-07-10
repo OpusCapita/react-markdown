@@ -1,6 +1,6 @@
 import React from 'react';
 
-const HeaderFiveNode = ({ children }) => (
+const HeaderFiveNode = ({children}) => (
   <h5>
     {children}
   </h5>

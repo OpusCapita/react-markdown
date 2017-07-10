@@ -1,6 +1,6 @@
 import React from 'react';
 
-const UnorderedListNode = ({ attributes, children }) => (
+const UnorderedListNode = ({attributes, children}) => (
   <ul {...attributes}>
     {children}
   </ul>

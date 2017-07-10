@@ -65,9 +65,9 @@ export default class RichMarkdownEditor extends React.Component {
     const {autocompletes = [], autoCompletionLinks = []} = this.props;
     this.plugins = [
       LinkPlugin(
-          {
-            links: autoCompletionLinks
-          }
+        {
+          links: autoCompletionLinks
+        }
       ),
       ListPlugin(),
       StrikethroughPlugin(),

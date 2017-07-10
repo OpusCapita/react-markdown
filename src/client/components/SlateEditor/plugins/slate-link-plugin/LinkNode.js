@@ -88,7 +88,7 @@ export default function (options) {
                         autoCompletionLinks={options.links}/>
           ) : null}
 
-        <OverlayTrigger ref="overlay" trigger="click" rootClose placement="bottom" overlay={popover}>
+          <OverlayTrigger ref="overlay" trigger="click" rootClose placement="bottom" overlay={popover}>
           <a {...attributes} href={href}>{children}</a>
         </OverlayTrigger>
       </span>

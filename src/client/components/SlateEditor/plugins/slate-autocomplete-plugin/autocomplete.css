@@ -26,9 +26,11 @@
     z-index: -1;
     background: #eee;
 }
+
 .textcomplete-dropdown .active span {
     color: #fff !important;
 }
+
 .textcomplete-dropdown .textcomplete-no-results-message {
     color: #2e6b99;
     margin: 4px 4px 4px 0;

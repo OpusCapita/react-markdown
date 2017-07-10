@@ -1,7 +1,6 @@
 import React from 'react';
 
 import AutocompleteWidget from './AutocompleteWidget';
-
 //polyfile Promise for IE
 import 'bluebird';
 

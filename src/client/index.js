@@ -1,5 +1,3 @@
 // Here should be CommonJS component exports.
 
-modules.exports = {
-
-};
+modules.exports = {};

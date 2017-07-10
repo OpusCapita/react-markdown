@@ -1,5 +1,5 @@
-import CodeSchema from './CodeSchema'
-import CodeButton from './CodeButton'
+import CodeSchema from './CodeSchema';
+import CodeButton from './CodeButton';
 
 const CodePlugin = options => ({
   schema: CodeSchema,

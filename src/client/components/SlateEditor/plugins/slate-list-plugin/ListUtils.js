@@ -43,7 +43,7 @@ export const applyUnorderedList = state => applyList(state.transform(), 'unorder
 export const applyOrderedList = state => applyList(state.transform(), 'ordered-list');
 
 const deepRemoveList = state => {
-  const { document } = state;
+  const {document} = state;
   const node = getNodeOfType(state, 'list-item');
   const depth = document.getDepth(node.key);
 
@@ -62,7 +62,8 @@ export const unorderedList = state => {
 
   if (isUnorderedList(state)) return deepRemoveList(state).apply();
   if (isOrderedList(state)) return switchToUnorderedList(transform).apply();
-  console.info('[SlateJS][ListPlugin] It is a different type of list.'); return state
+  console.info('[SlateJS][ListPlugin] It is a different type of list.');
+  return state
 };
 
 export const orderedList = state => {
@@ -74,7 +75,8 @@ export const orderedList = state => {
   // If it is already a list, handle it!
   if (isOrderedList(state)) return deepRemoveList(state).apply();
   else if (isUnorderedList(state)) return switchToOrderedList(transform).apply();
-  else console.info('[SlateJS][ListPlugin] It is a different type of list.'); return state
+  else console.info('[SlateJS][ListPlugin] It is a different type of list.');
+  return state
 };
 
 export const increaseListDepthStrategy = state => {

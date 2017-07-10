@@ -1,4 +1,4 @@
-import { italicMark } from './ItalicUtils';
+import {italicMark} from './ItalicUtils';
 
 
 const ItalicKeyboardShortcut = (event, data, state) => {
