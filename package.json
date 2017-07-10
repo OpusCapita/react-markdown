@@ -12,9 +12,11 @@
     "start": "node www/index",
     "test": "mocha --compilers js:babel-core/register --require ignore-styles --require ./test/setup.js --recursive src/**/*.spec.js"
   },
-  "author": {
-    "name": "Kirill Volkovich",
-    "email": "kirill.volkovich@jcatalog.com"
+  "license": "Apache-2.0",
+  "repository": "OpusCapita/react-markdown",
+    "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
   },
   "main": "lib/index.js",
   "files": [
