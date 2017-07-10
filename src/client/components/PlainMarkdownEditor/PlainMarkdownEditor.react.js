@@ -1,5 +1,5 @@
 import React from 'react';
-
+import Types from 'prop-types';
 import {
   AutocompletePlugin,
   FullScreenButton,
@@ -23,15 +23,9 @@ import { SlateContent, SlateEditor, SlateToolbar, SlateToolbarGroup } from '../S
 
 import { Plain } from 'slate';
 
-export default class PlainMarkdownEditor extends React.Component {
+class PlainMarkdownEditor extends React.Component {
   state = {
     editorState: Plain.deserialize(this.props.value || '')
-  };
-
-  onChange = (editorState) => {
-    this.props.onChange && this.props.onChange(Plain.serialize(editorState));
-
-    this.setState({ editorState });
   };
 
   componentWillMount = () => {
@@ -46,6 +40,12 @@ export default class PlainMarkdownEditor extends React.Component {
     ];
   };
 
+  handleChange = (editorState) => {
+    this.props.onChange(Plain.serialize(editorState));
+
+    this.setState({ editorState });
+  };
+
   render() {
     const { editorState } = this.state;
     const { children, onFullScreen, fullScreen } = this.props;
@@ -55,7 +55,7 @@ export default class PlainMarkdownEditor extends React.Component {
         state={editorState}
         fullScreen={fullScreen}
         plugins={this.plugins}
-        onChange={this.onChange}
+        onChange={this.handleChange}
       >
 
         <SlateToolbar>
@@ -94,3 +94,13 @@ export default class PlainMarkdownEditor extends React.Component {
     );
   }
 }
+
+PlainMarkdownEditor.propTypes = {
+  autocompletes: Types.array,
+  value: Types.string,
+  onChange: Types.func,
+  onFullScreen: Types.func,
+  fullScreen: Types.bool,
+};
+
+export default PlainMarkdownEditor;

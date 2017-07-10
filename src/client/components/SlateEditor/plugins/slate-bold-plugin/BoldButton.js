@@ -1,4 +1,5 @@
 import React from 'react';
+import Types from 'prop-types';
 import { boldMark, hasMark } from './BoldUtils';
 import classnames from 'classnames';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
@@ -12,5 +13,10 @@ const BoldButton = ({ state, onChange }) => (
     </button>
   </OverlayTrigger>
 );
+
+BoldButton.propTypes = {
+  state: Types.object,
+  onChange: Types.func
+};
 
 export default BoldButton;

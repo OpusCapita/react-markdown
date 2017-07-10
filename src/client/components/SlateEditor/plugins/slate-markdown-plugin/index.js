@@ -1,5 +1,3 @@
-import React from 'react';
-
 import MarkdownItalicButton from './MarkdownItalicButton';
 import MarkdownBoldButton from './MarkdownBoldButton';
 import MarkdownStrikethroughButton from './MarkdownStrikethroughButton';

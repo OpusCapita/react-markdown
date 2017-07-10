@@ -1,4 +1,5 @@
 import React from 'react';
+import Types from 'prop-types';
 
 import AutocompleteWidget from './AutocompleteWidget';
 // polyfile Promise for IE
@@ -9,11 +10,31 @@ const arrowUpCode = 38;
 const arrowDownCode = 40;
 const enterCode = 13;
 
+const propTypes = {
+  state: Types.object,
+  editor: Types.object,
+  options: Types.object
+};
+
+const defaultProps = {
+  state: {},
+  editor: {},
+  options: {}
+};
+
 class AutocompleteContainer extends React.Component {
   state = {
     show: false,
     selectedIndex: 0,
     isLoading: false
+  };
+
+  componentDidMount = () => {
+    this.searchItems(this.props);
+  };
+
+  componentWillReceiveProps = (nextProps) => {
+    this.searchItems(nextProps);
   };
 
   matchRule = (rules, token) => {
@@ -24,6 +45,7 @@ class AutocompleteContainer extends React.Component {
         return rule;
       }
     }
+    return undefined;
   };
 
   getSearchToken = (state) => {
@@ -93,7 +115,7 @@ class AutocompleteContainer extends React.Component {
 
         editor.onChange(
           t.focus().
-            apply()
+          apply()
         );
       }
     }
@@ -118,14 +140,6 @@ class AutocompleteContainer extends React.Component {
     }
   };
 
-  componentDidMount = () => {
-    this.searchItems(this.props);
-  };
-
-  componentWillReceiveProps = (nextProps) => {
-    this.searchItems(nextProps);
-  };
-
   render() {
     const { show, selectedIndex, items, isLoading } = this.state;
     const { children } = this.props;
@@ -144,5 +158,8 @@ class AutocompleteContainer extends React.Component {
     );
   }
 }
+
+AutocompleteContainer.propTypes = propTypes;
+AutocompleteContainer.defaultProps = defaultProps;
 
 export default AutocompleteContainer;

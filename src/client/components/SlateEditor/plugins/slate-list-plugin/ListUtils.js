@@ -50,7 +50,11 @@ const deepRemoveList = state => {
   let transform = state.transform();
   Array(depth).fill('.').forEach(() => {
     const parent = document.getParent(node.key);
-    if (parent.type === 'unordered-list') {removeUnorderedList(transform);} else {removeOrderedList(transform)}
+    if (parent.type === 'unordered-list') {
+      removeUnorderedList(transform);
+    } else {
+      removeOrderedList(transform);
+    }
   });
   return transform
 };
@@ -72,26 +76,44 @@ export const orderedList = state => {
   if (!isList(state)) {return applyList(transform, 'ordered-list').apply();}
 
   // If it is already a list, handle it!
-  if (isOrderedList(state)) {return deepRemoveList(state).apply();} else if (isUnorderedList(state)) {return switchToOrderedList(transform).apply();} else {console.info('[SlateJS][ListPlugin] It is a different type of list.');}
-  return state
+  if (isOrderedList(state)) {
+    return deepRemoveList(state).apply();
+  } else if (isUnorderedList(state)) {
+    return switchToOrderedList(transform).apply();
+  } else {
+    console.info('[SlateJS][ListPlugin] It is a different type of list.');
+  }
+  return state;
 };
 
 export const increaseListDepthStrategy = state => {
   // If it is not a list, kill the action immediately.
-  if (!isList(state)) {return state;}
+  if (!isList(state)) {
+    return state;
+  }
 
-  if (isUnorderedList(state)) {return applyUnorderedList(state).apply();}
-  if (isOrderedList(state)) {return applyOrderedList(state).apply();}
-  return state
+  if (isUnorderedList(state)) {
+    return applyUnorderedList(state).apply();
+  }
+  if (isOrderedList(state)) {
+    return applyOrderedList(state).apply();
+  }
+  return state;
 };
 
 export const decreaseListDepthStrategy = state => {
   // If it is not a list, kill the action immediately.
-  if (!isList(state)) {return state;}
+  if (!isList(state)) {
+    return state;
+  }
 
   const node = getNodeOfType(state, 'list-item');
   const depth = state.document.getDepth(node.key);
-  if (isUnorderedList(state) && depth > 2) {return onlyRemoveUnorderedList(state).apply();}
-  if (isOrderedList(state) && depth > 2) {return onlyRemoveOrderedList(state).apply();}
-  return state
+  if (isUnorderedList(state) && depth > 2) {
+    return onlyRemoveUnorderedList(state).apply();
+  }
+  if (isOrderedList(state) && depth > 2) {
+    return onlyRemoveOrderedList(state).apply();
+  }
+  return state;
 };

@@ -1,4 +1,5 @@
 import React from 'react';
+import Types from 'prop-types';
 import classnames from 'classnames';
 
 import { isOrderedList, orderedList } from './ListUtils';
@@ -13,5 +14,14 @@ const OrderedListButton = ({ state, onChange }) => (
     </button>
   </OverlayTrigger>
 );
+
+OrderedListButton.propTypes = {
+  state: Types.object,
+  onChange: Types.func
+};
+
+OrderedListButton.defaultProps = {
+  onChange: () => {}
+};
 
 export default OrderedListButton;

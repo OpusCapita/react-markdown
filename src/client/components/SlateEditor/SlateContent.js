@@ -1,7 +1,8 @@
 import React from 'react';
 import { Editor } from 'slate';
+import Types from 'prop-types';
 
-export default ({
+const SlateContent = ({
                   state,
                   plugins,
                   onChange,
@@ -20,4 +21,12 @@ export default ({
       {children}
     </div>
   );
-}
+};
+
+SlateContent.propTypes = {
+  plugins: Types.any,
+  state: Types.any,
+  onChange: Types.func
+};
+
+export default SlateContent;

@@ -13,5 +13,9 @@ export const wrapHeaderOneMarkdown = state => state.transform().moveOffsetsTo(0)
 export const wrapHeaderTwoMarkdown = state => state.transform().moveOffsetsTo(0).wrapText('## ', '').focus().apply();
 export const wrapHeaderThreeMarkdown = state => state.transform().moveOffsetsTo(0).wrapText('### ', '').focus().apply();
 export const wrapHeaderFourMarkdown = state => state.transform().moveOffsetsTo(0).wrapText('#### ', '').focus().apply();
-export const wrapHeaderFiveMarkdown = state => state.transform().moveOffsetsTo(0).wrapText('##### ', '').focus().apply();
-export const wrapHeaderSixMarkdown = state => state.transform().moveOffsetsTo(0).wrapText('###### ', '').focus().apply();
+export const wrapHeaderFiveMarkdown = state => {
+  return state.transform().moveOffsetsTo(0).wrapText('##### ', '').focus().apply();
+};
+export const wrapHeaderSixMarkdown = state => {
+  return state.transform().moveOffsetsTo(0).wrapText('###### ', '').focus().apply();
+};

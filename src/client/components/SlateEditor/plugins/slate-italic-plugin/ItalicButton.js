@@ -1,4 +1,5 @@
 import React from 'react';
+import Types from 'prop-types';
 import { hasMark, italicMark } from './ItalicUtils';
 import classnames from 'classnames';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
@@ -12,5 +13,10 @@ const ItalicButton = ({ state, onChange }) => (
     </button>
   </OverlayTrigger>
 );
+
+ItalicButton.propTypes = {
+  state: Types.object,
+  onChange: Types.func
+};
 
 export default ItalicButton;

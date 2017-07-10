@@ -9,6 +9,8 @@ const StrikethroughKeyboardShortcut = (event, data, state) => {
   if (mac || win) {
     return strikethroughMark(state);
   }
+
+  return undefined;
 };
 
 export default StrikethroughKeyboardShortcut;

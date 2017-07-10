@@ -1,4 +1,5 @@
 import React from 'react';
+import Types from 'prop-types';
 
 import { wrapOrderingListMarkdown } from './MarkdownUtils';
 
@@ -9,5 +10,10 @@ const MarkdownOrderedListButton = ({ state, onChange }) => (
     <i className="fa fa-list-ol"/>
   </button>
 );
+
+MarkdownOrderedListButton.propTypes = {
+  state: Types.object,
+  onChange: Types.func
+};
 
 export default MarkdownOrderedListButton;

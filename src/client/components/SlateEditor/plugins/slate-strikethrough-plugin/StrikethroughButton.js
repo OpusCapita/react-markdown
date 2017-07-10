@@ -1,4 +1,5 @@
 import React from 'react';
+import Types from 'prop-types';
 import classnames from 'classnames';
 
 import { hasMark, strikethroughMark } from './StrikethroughUtils';
@@ -13,5 +14,10 @@ const StrikethroughButton = ({ state, onChange }) => (
     </button>
   </OverlayTrigger>
 );
+
+StrikethroughButton.propTypes = {
+  state: Types.object,
+  onChange: Types.func
+};
 
 export default StrikethroughButton;

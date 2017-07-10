@@ -84,6 +84,7 @@
     "markdown-it-sub": "^1.0.0",
     "markdown-it-sup": "^1.0.0",
     "prismjs": "^1.6.0",
+    "prop-types": "^15.5.10",
     "query-string": "^4.3.4",
     "react": "^15.5.4",
     "react-bootstrap": "^0.31.0",
