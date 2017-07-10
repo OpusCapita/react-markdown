@@ -16,53 +16,56 @@ MarkdownEditor
 <MarkdownEditor 
   onChange={_scope.handleValueChange}
   value={_scope.state.value}
-  autocompletes = {[{
-     termRegex: /\$(\w*)$/,
-     fetch: (term) => {
-       switch(term) {
-         case '$':
-           return Promise.resolve([
-             { _objectLabel: '1s' },
-             { _objectLabel: '2f' },
-             { _objectLabel: '2s' }
-           ]);
-         case '$1':
-           return Promise.resolve([
-             { _objectLabel: '1s' }
-           ]);
-         case '$2':
-           return Promise.resolve([
-             { _objectLabel: '2f' },
-             { _objectLabel: '2s' }
-           ]);
-         default:
-           return Promise.resolve([])
-       }
-     },
-     selectItem: (item) => { return `ITEM$: ${item._objectLabel}` }
-   }, {
-     termRegex: /\!(\w*)/,
-     fetch: (term) => {
-       switch(term) {
-         case '!':
-           return Promise.resolve([
-             { _objectLabel: '3a' },
-             { _objectLabel: '4a' }
-           ]);
-         case '!3':
-           return Promise.resolve([
-             { _objectLabel: '3a' }
-           ]);
-         case '!4':
-           return Promise.resolve([
-             { _objectLabel: '4a' }
-           ]);
-         default:
-           return Promise.resolve([])
-       }
-     },
-     selectItem: (item) => { return `ITEM!: ${item._objectLabel}` }
-   }]}
+  autocompletes = {[
+                     {
+                       termRegex: /^\$(\w*)$/,
+                       fetch(term) {
+                         const items = [
+                           { _objectLabel: 'a1' },
+                           { _objectLabel: 'a2' },
+                           { _objectLabel: 'a23' },
+                           { _objectLabel: 'b1' },
+                           { _objectLabel: 'ba2' },
+                           { _objectLabel: 'ba21' },
+                           { _objectLabel: 'ba222' },
+                           { _objectLabel: 'ba23' },
+                           { _objectLabel: 'ba24' },
+                           { _objectLabel: 'ba25' },
+                           { _objectLabel: 'ba255' },
+                           { _objectLabel: 'ba256' },
+                           { _objectLabel: 'ba257' },
+                         ];
+                         return Promise.resolve(items.filter(({_objectLabel}) => _objectLabel.startsWith(term.substring(1))));
+                       },
+                       selectItem(item) {
+                         return '$' + item._objectLabel;
+                       }
+                     },
+                     {
+                       termRegex: /^\#(\w*)$/,
+                       fetch(term) {
+                         const items = [
+                           { _objectLabel: 'a1' },
+                           { _objectLabel: 'a2' },
+                           { _objectLabel: 'a23' },
+                           { _objectLabel: 'b1' },
+                           { _objectLabel: 'ba2' },
+                           { _objectLabel: 'ba21' },
+                           { _objectLabel: 'ba222' },
+                           { _objectLabel: 'ba23' },
+                           { _objectLabel: 'ba24' },
+                           { _objectLabel: 'ba25' },
+                           { _objectLabel: 'ba255' },
+                           { _objectLabel: 'ba256' },
+                           { _objectLabel: 'ba257' },
+                         ];
+                         return Promise.resolve(items.filter(({_objectLabel}) => _objectLabel.startsWith(term.substring(1))));
+                       },
+                       selectItem(item) {
+                         return '#' + item._objectLabel;
+                       }
+                     }
+                   ]}
 />
 ```
 

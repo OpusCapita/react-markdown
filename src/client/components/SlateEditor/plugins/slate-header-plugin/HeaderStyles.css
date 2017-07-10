@@ -1,0 +1,18 @@
+.heading1::after {
+    content: '1';
+}
+.heading2::after {
+    content: '2';
+}
+.heading3::after {
+    content: '3';
+}
+.heading4::after {
+    content: '4';
+}
+.heading5::after {
+    content: '5';
+}
+.heading6::after {
+    content: '6';
+}

@@ -1,0 +1,14 @@
+.slate-editor {
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.slate-editor .editor-toolbar {
+    padding: 5px;
+}
+
+.slate-editor .editor-content {
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    padding: 5px;
+    overflow: auto;
+    height: 100%;
+}
