@@ -1,6 +1,6 @@
 import React from 'react';
 import Types from 'prop-types';
-import { Modal } from 'react-bootstrap';
+import Modal from 'react-bootstrap/lib/Modal';
 
 /**
  * Editor for link fields: href & text
