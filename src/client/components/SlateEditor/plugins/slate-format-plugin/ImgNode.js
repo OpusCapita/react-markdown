@@ -1,4 +1,5 @@
 import React from 'react';
+import Types from 'prop-types';
 
 const propTypes = {
   node: Types.object,
