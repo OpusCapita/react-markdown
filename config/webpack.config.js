@@ -40,7 +40,7 @@ if(IS_PRODUCTION_MODE || IS_DOCS_MODE) {
   plugins.push(uglifyPlugin);
 }
 
-if(WEBPACK_BUNDLE_ANALYZE) {
+if(WEBPACK_BUNDLE_ANALYZE && IS_PRODUCTION_MODE) {
   let bundleAnalyzerPlugin = new BundleAnalyzerPlugin({
     analyzerMode: 'static',
     analyzerHost: '127.0.0.1',
