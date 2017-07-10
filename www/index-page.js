@@ -1,8 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Showroom from '@opuscapita/react-showroom-client';
-import '../external_modules/jcatalog-bootstrap/dist/less/jcatalog-bootstrap-bundle.less';
-import '../external_modules/jcatalog-bootstrap/dist/less/jcatalog-bootstrap-extensions-bundle.less';
+import '@opuscapita/opuscapita-ui';
 import env from '../.env';
 
 window._showroom = { ...(window._showroom || {}), env };
