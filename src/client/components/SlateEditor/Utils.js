@@ -5,7 +5,9 @@ const cloneElement = (children, props) => {
     children = [children, ]
   }
 
-  return children && children.map((child, index) => React.cloneElement(child, {
+  return children && children
+      .filter((it) => it !== null && it !== undefined)
+      .map((child, index) => React.cloneElement(child, {
     ...props,
     key: index
   }))

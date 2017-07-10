@@ -1,6 +1,6 @@
 ### Synopsis
 
-PlainMarkdownEditor
+RichMarkdownEditor
 
 ### Props Reference
 
@@ -8,12 +8,13 @@ PlainMarkdownEditor
 | ------------------------------ | :---------------------- | ----------------------------------------------------------- |
 | onChange                       | func                    | Callback: `(value) => {}`. Called when text is changed.     |
 | value                          | string                  | Raw markdown                                                |
-| autocompletes                  | object                  | Markdown autocomplete                                       |
+| autocompletes                  | array                   | Markdown autocomplete                                       |
+| autoCompletionLinks            | array                   | List of suggestions links                                   |
 
 ### Code Example
 
 ```
-<PlainMarkdownEditor
+<RichMarkdownEditor
   onChange={_scope.handleValueChange}
   value={_scope.state.value}
   autocompletes={[
@@ -71,7 +72,7 @@ PlainMarkdownEditor
 
 ### Component Name
 
-PlainMarkdownEditor
+RichMarkdownEditor
 
 ### License
 
