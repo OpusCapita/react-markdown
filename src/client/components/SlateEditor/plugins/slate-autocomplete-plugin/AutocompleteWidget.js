@@ -1,10 +1,36 @@
 import React from 'react';
 import './Autocomplete.less';
+import Types from 'prop-types';
 
 class AutocompleteWidget extends React.Component {
   state = {
     left: 0,
     top: 0
+  };
+
+  componentDidMount = () => {
+    this.setState(this.getPosition());
+  };
+
+  componentWillReceiveProps = (nextProps) => {
+    // get selection bounding client rect on next cycle
+    setTimeout(() => {
+      this.setState(this.getPosition());
+    });
+  };
+
+  componentWillUpdate = (nextProps, nextState) => {
+    let list = this.refs.autocompleteList;
+    let targetLi = this.refs[`autocompleteItem${nextProps.selectedIndex}`];
+
+    if (list && targetLi) {
+      if ((this.props.selectedIndex < nextProps.selectedIndex) && (targetLi.offsetTop - list.scrollTop > 156)) {
+        list.scrollTop = (targetLi.offsetTop - 156);
+      }
+      if ((this.props.selectedIndex > nextProps.selectedIndex) && (targetLi.offsetTop - list.scrollTop < 26)) {
+        list.scrollTop = (targetLi.offsetTop - 26);
+      }
+    }
   };
 
   getPosition = () => {
@@ -21,31 +47,6 @@ class AutocompleteWidget extends React.Component {
     }
 
     return { left, top };
-  };
-
-  componentWillReceiveProps = (nextProps) => {
-    // get selection bounding client rect on next cycle
-    setTimeout(() => {
-      this.setState(this.getPosition());
-    });
-  };
-
-  componentDidMount = () => {
-    this.setState(this.getPosition());
-  };
-
-  componentWillUpdate = (nextProps, nextState) => {
-    let list = this.refs.autocompleteList;
-    let targetLi = this.refs[`autocompleteItem${nextProps.selectedIndex}`];
-
-    if (list && targetLi) {
-      if ((this.props.selectedIndex < nextProps.selectedIndex) && (targetLi.offsetTop - list.scrollTop > 156)) {
-        list.scrollTop = (targetLi.offsetTop - 156);
-      }
-      if ((this.props.selectedIndex > nextProps.selectedIndex) && (targetLi.offsetTop - list.scrollTop < 26)) {
-        list.scrollTop = (targetLi.offsetTop - 26);
-      }
-    }
   };
 
   handleSelectItem = (index, e) => {
@@ -78,7 +79,7 @@ class AutocompleteWidget extends React.Component {
                 onClick={this.handleSelectItem.bind(this, index)}
                 className={'textcomplete-item' + (selectedIndex === index ? ' active' : '')}
               >
-                <a href="javascript:void(0)">{item._objectLabel}</a>
+                <a href={void(0)}>{item._objectLabel}</a>
               </li>
             );
           })}
@@ -93,5 +94,11 @@ class AutocompleteWidget extends React.Component {
     }
   }
 }
+
+AutocompleteWidget.propTypes = {
+  items: Types.array,
+  onSelectItem: Types.func,
+  selectedIndex: Types.number,
+};
 
 export default AutocompleteWidget;

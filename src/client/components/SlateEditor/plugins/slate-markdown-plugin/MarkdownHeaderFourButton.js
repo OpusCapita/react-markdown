@@ -1,4 +1,5 @@
 import React from 'react';
+import Types from 'prop-types';
 
 import { wrapHeaderFourMarkdown } from './MarkdownUtils';
 
@@ -11,5 +12,10 @@ const MarkdownHeaderFourButton = ({ state, onChange }) => (
     <i className="fa fa-header heading4"/>
   </button>
 );
+
+MarkdownHeaderFourButton.propTypes = {
+  state: Types.object,
+  onChange: Types.func
+};
 
 export default MarkdownHeaderFourButton;

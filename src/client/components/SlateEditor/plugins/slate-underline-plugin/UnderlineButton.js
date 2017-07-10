@@ -1,4 +1,5 @@
 import React from 'react';
+import Types from 'prop-types';
 import classnames from 'classnames';
 import { hasMark, underlineMark } from './UnderlineUtils';
 
@@ -9,5 +10,10 @@ const UnderlineButton = ({ state, onChange }) => (
     <i className="fa fa-underline"/>
   </button>
 );
+
+UnderlineButton.propTypes = {
+  state: Types.object,
+  onChange: Types.func
+};
 
 export default UnderlineButton;

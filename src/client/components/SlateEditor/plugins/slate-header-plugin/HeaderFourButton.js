@@ -1,4 +1,5 @@
 import React from 'react';
+import Types from 'prop-types';
 import { hasBlock, unwrapBlock, wrapBlock } from './HeaderUtils';
 import classnames from 'classnames';
 
@@ -15,6 +16,11 @@ const HeaderFourButton = ({ state, onChange }) => {
       <i className="fa fa-header heading4"/>
     </button>
   );
+};
+
+HeaderFourButton.propTypes = {
+  state: Types.object,
+  onChange: Types.func
 };
 
 export default HeaderFourButton;

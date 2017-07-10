@@ -1,5 +1,5 @@
 import React from 'react';
-
+import Types from 'prop-types';
 import Markdown from '../serializer/MarkdownRenderer';
 
 import {
@@ -37,7 +37,7 @@ const markdown = new Markdown();
  * @type {Component}
  */
 
-export default class RichMarkdownEditor extends React.Component {
+class RichMarkdownEditor extends React.Component {
 
   /**
    * Deserialize the initial editor state.
@@ -47,18 +47,6 @@ export default class RichMarkdownEditor extends React.Component {
 
   state = {
     editorState: markdown.deserialize(this.props.value || '')
-  };
-
-  /**
-   * On change, save the new state.
-   *
-   * @param {State} editorState
-   */
-
-  onChange = (editorState) => {
-    this.props.onChange && this.props.onChange(markdown.serialize(editorState));
-
-    this.setState({ editorState });
   };
 
   componentWillMount = () => {
@@ -85,6 +73,17 @@ export default class RichMarkdownEditor extends React.Component {
   };
 
   /**
+   * On change, save the new state.
+   *
+   * @param {State} editorState
+   */
+  handleChange = (editorState) => {
+    this.props.onChange(markdown.serialize(editorState));
+
+    this.setState({ editorState });
+  };
+
+  /**
    * Render.
    *
    * @return {Element}
@@ -98,7 +97,7 @@ export default class RichMarkdownEditor extends React.Component {
         state={editorState}
         fullScreen={fullScreen}
         plugins={this.plugins}
-        onChange={this.onChange}
+        onChange={this.handleChange}
       >
 
         <SlateToolbar>
@@ -137,3 +136,15 @@ export default class RichMarkdownEditor extends React.Component {
     )
   }
 }
+
+RichMarkdownEditor.propTypes = {
+  autocompletes: Types.array,
+  autoCompletionLinks: Types.array,
+  value: Types.string,
+  onChange: Types.func,
+  onFullScreen: Types.func,
+  fullScreen: Types.bool,
+};
+
+
+export default RichMarkdownEditor;

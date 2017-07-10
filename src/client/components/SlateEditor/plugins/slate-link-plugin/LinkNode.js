@@ -1,5 +1,5 @@
 import React from 'react';
-
+import Types from 'prop-types';
 import { OverlayTrigger, Popover, Tooltip } from 'react-bootstrap';
 
 import { unlink, updateLink } from './LinkUtils';
@@ -64,12 +64,12 @@ export default function(options) {
               </a>
             </OverlayTrigger>
             <OverlayTrigger placement="bottom" overlay={<Tooltip id="edit-link-tp">Edit Link</Tooltip>}>
-              <a className="btn btn-default" href="javascript:void(0)" onClick={this.handleEdit}>
+              <a className="btn btn-default" href={void(0)} onClick={this.handleEdit}>
                 <i className="fa fa-pencil-square-o"/>
               </a>
             </OverlayTrigger>
             <OverlayTrigger placement="bottom" overlay={<Tooltip id="unlink-tp">Unlink</Tooltip>}>
-              <a className="btn btn-default" href="javascript:void(0)" onClick={this.handleUnlink}>
+              <a className="btn btn-default" href={void(0)} onClick={this.handleUnlink}>
                 <i className="fa fa-chain-broken"/>
               </a>
             </OverlayTrigger>
@@ -96,6 +96,12 @@ export default function(options) {
       );
     }
   }
+
+  LinkNode.propTypes = {
+    editor: Types.object,
+    node: Types.object,
+    attributes: Types.object
+  };
 
   return LinkNode;
 }

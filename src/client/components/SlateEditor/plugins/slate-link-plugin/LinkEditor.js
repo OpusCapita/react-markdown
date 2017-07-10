@@ -1,9 +1,28 @@
 import React from 'react';
+import Types from 'prop-types';
 import { Modal } from 'react-bootstrap';
 
 /**
  * Editor for link fields: href & text
  */
+
+const propTypes = {
+  href: Types.string,
+  mode: Types.oneOf(['insert', 'update']),
+  onCancel: Types.func,
+  onChange: Types.func,
+  autoCompletionLinks: Types.array,
+  text: Types.string
+};
+
+const defaultProps = {
+  href: '',
+  mode: 'insert',
+  onCancel: () => {},
+  onChange: () => {},
+  text: ''
+};
+
 class LinkEditor extends React.Component {
   state = {
     text: this.props.text,
@@ -79,7 +98,7 @@ class LinkEditor extends React.Component {
                             }}
                             className="textcomplete-item"
                           >
-                            <a href="javascript:void(0)">{autoCompletionLink.text}</a>
+                            <a href={void(0)}>{autoCompletionLink.text}</a>
                           </li>
                         );
                       })
@@ -123,5 +142,8 @@ class LinkEditor extends React.Component {
     );
   }
 }
+
+LinkEditor.propTypes = propTypes;
+LinkEditor.defaultProps = defaultProps;
 
 export default LinkEditor;

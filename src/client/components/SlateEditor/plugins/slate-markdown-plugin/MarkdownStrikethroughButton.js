@@ -1,4 +1,5 @@
 import React from 'react';
+import Types from 'prop-types';
 
 import { wrapStrikethroughMarkdown } from './MarkdownUtils';
 
@@ -9,5 +10,10 @@ const MarkdownStrikethroughButton = ({ state, onChange }) => (
     <i className="fa fa-strikethrough"/>
   </button>
 );
+
+MarkdownStrikethroughButton.propTypes = {
+  state: Types.object,
+  onChange: Types.func
+};
 
 export default MarkdownStrikethroughButton;

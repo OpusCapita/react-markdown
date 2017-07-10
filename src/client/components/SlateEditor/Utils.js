@@ -1,9 +1,9 @@
 import React from 'react';
 
 const cloneElement = (children, props) => {
-  let result = [];
-  if (children && !children.length) {
-    result = [children];
+  let result = children;
+  if (result && !result.length) {
+    result = [result];
   }
 
   return result.

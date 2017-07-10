@@ -12,9 +12,11 @@
     "start": "node www/index",
     "test": "mocha --compilers js:babel-core/register --require ignore-styles --require ./test/setup.js --recursive src/**/*.spec.js"
   },
-  "author": {
-    "name": "Kirill Volkovich",
-    "email": "kirill.volkovich@jcatalog.com"
+  "license": "Apache-2.0",
+  "repository": "OpusCapita/react-markdown",
+    "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
   },
   "main": "lib/index.js",
   "files": [
@@ -90,6 +92,7 @@
     "markdown-it-sub": "^1.0.0",
     "markdown-it-sup": "^1.0.0",
     "prismjs": "^1.6.0",
+    "prop-types": "^15.5.10",
     "query-string": "^4.3.4",
     "react": "^15.5.4",
     "react-bootstrap": "^0.31.0",

@@ -1,4 +1,5 @@
 import React from 'react';
+import Types from 'prop-types';
 import RichMarkdownEditor from '../RichMarkdownEditor';
 import PlainMarkdownEditor from '../PlainMarkdownEditor';
 import SlateToolbarGroup from '../SlateEditor/SlateToolbarGroup';
@@ -7,7 +8,7 @@ import SwitchModeButton from './SwitchModeButton.react';
 /**
  * https://markdown-it.github.io/
  */
-export default class MarkdownEditor extends React.Component {
+class MarkdownEditor extends React.Component {
   state = {
     mode: this.props.mode || 'rich',
     value: this.props.value || '',
@@ -19,7 +20,7 @@ export default class MarkdownEditor extends React.Component {
   };
 
   handleChangeValue = (value) => {
-    this.props.onChange && this.props.onChange(value);
+    this.props.onChange(value);
 
     this.setState({ value });
   };
@@ -64,3 +65,13 @@ export default class MarkdownEditor extends React.Component {
     }
   }
 }
+
+MarkdownEditor.propTypes = {
+  autocompletes: Types.array,
+  autoCompletionLinks: Types.array,
+  mode: Types.string,
+  value: Types.string,
+  onChange: Types.func,
+};
+
+export default MarkdownEditor;

@@ -1,10 +1,19 @@
 import React from 'react';
-
+import Types from 'prop-types';
 import { getLink, getSelectedText, updateLink } from './LinkUtils';
 
 import LinkEditor from './LinkEditor';
 import classnames from 'classnames';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
+const propTypes = {
+  state: Types.object,
+  autoCompletionLinks: Types.array,
+  onChange: Types.func
+};
+
+const defaultProps = {
+  onChange: () => {}
+};
 
 class LinkButton extends React.Component {
   state = {
@@ -62,5 +71,8 @@ class LinkButton extends React.Component {
     );
   }
 }
+
+LinkButton.propTypes = propTypes;
+LinkButton.defaultProps = defaultProps;
 
 export default LinkButton;

@@ -1,4 +1,5 @@
 import React from 'react';
+import Types from 'prop-types';
 import classnames from 'classnames';
 import { hasBlock, unwrapBlock, wrapBlock } from './BlockquoteUtils';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
@@ -15,6 +16,11 @@ const BlockquoteButton = ({ state, onChange }) => {
       </button>
     </OverlayTrigger>
   );
+};
+
+BlockquoteButton.propTypes = {
+  state: Types.object,
+  onChange: Types.func
 };
 
 export default BlockquoteButton;

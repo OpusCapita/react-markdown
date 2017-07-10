@@ -1,4 +1,5 @@
 import React from 'react';
+import Types from 'prop-types';
 import classnames from 'classnames';
 
 import { isUnorderedList, unorderedList } from './ListUtils';
@@ -13,5 +14,14 @@ const UnorderedListButton = ({ state, onChange }) => (
     </button>
   </OverlayTrigger>
 );
+
+UnorderedListButton.propTypes = {
+  state: Types.object,
+  onChange: Types.func
+};
+
+UnorderedListButton.defaultProps = {
+  onChange: () => {}
+};
 
 export default UnorderedListButton;
