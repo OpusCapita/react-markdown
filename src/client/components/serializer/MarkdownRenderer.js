@@ -1,6 +1,6 @@
-import MDParser from './MDParser';
-import {Raw} from 'slate';
-import {Record} from 'immutable';
+import MDParser from './MDParser'
+import {Raw} from 'slate'
+import {Record} from 'immutable'
 
 
 /**
@@ -11,6 +11,9 @@ const String = new Record({
   kind: 'string',
   text: ''
 });
+
+const abbreviations = {};
+let hasNewAbbr = false;
 
 /**
  * Rules to (de)serialize nodes.
@@ -46,7 +49,6 @@ const RULES = [
           return `##### ${children}`;
         case 'heading6':
           return `###### ${children}`;
-        // case 'paragraph': return `\n${children}\n`;
         case 'paragraph':
           return `${children}\n`;
         case 'horizontal-rule':
@@ -67,7 +69,6 @@ const RULES = [
         case 'unordered-list':
           children = children.replace('\n\n', '\n'); // Delete empty strings in the list
           listLevel = obj.getIn(['data', 'level']);
-          // if (listLevel > 0) {
           arrChildren = children.split('\n');
           for (let i = 0; i < arrChildren.length; i++) {
             if (arrChildren[i] !== '') {
@@ -75,8 +76,7 @@ const RULES = [
             }
           }
 
-          children = `${arrChildren.join('\n')}`;
-          // }
+          children = arrChildren.join('\n');
           children = children.replace('\n\n', '\n'); // Delete empty strings in the list
           return `\n${children}`;
 
@@ -107,18 +107,49 @@ const RULES = [
         case 'th':
         case 'td':
           return `${children} |`;
+        case 'dl-simple':
+        case 'dl':
+          return children;
+        case 'dt-simple':
+        case 'dt':
+          return `${children}\n`;
+        case 'dd-simple':
+          return `  ~ ${children}\n`;
+        case 'dd':
+          arrChildren = children.split('\n');
+          for (let i = 0; i < arrChildren.length; i++) {
+            if (arrChildren[i] !== '') {
+              arrChildren[i] = i === 0 ? `:    ${arrChildren[i]}` : `     ${arrChildren[i]}`;
+            }
+          }
+          children = arrChildren.join('\n');
+          return `${children}\n`;
       }
     }
   },
   {
     serialize(obj, children) {
+      let title = '';
       if (obj.kind !== 'inline') return;
       switch (obj.type) {
         case 'link':
           return `[${children}](${obj.getIn(['data', 'href'])})`;
 
+        case 'abbr':
+          title = obj.getIn(['data', 'title']);
+          let key = children;
+          if (!abbreviations[key]) {
+            abbreviations[key] = {
+              title,
+              use: false
+            };
+
+            hasNewAbbr = true;
+          }
+          return `${children}`;
+
         case 'image':
-          let title = obj.getIn(['data', 'title']);
+          title = obj.getIn(['data', 'title']);
           let src = obj.getIn(['data', 'src']);
           let alt = obj.getIn(['data', 'alt']);
           return `![${title}](${src} "${alt}")`;
@@ -212,9 +243,25 @@ class Markdown {
 
     for (const rule of this.rules) {
       if (!rule.serialize) continue;
-      const ret = rule.serialize(node, children);
+      let ret = rule.serialize(node, children);
 
-      if (ret) return ret;
+      if (ret) {
+        if (node.data && node.data.get('level') === 0 && hasNewAbbr) {
+          for (let key in abbreviations) {
+            let abbr = abbreviations[key];
+            if (!abbr.use) {
+              ret += `*[${key}]: ${abbr.title}\n`;
+              abbr.use = true;
+            }
+          }
+
+          hasNewAbbr = false;
+        }
+
+        return ret;
+      }
+
+      // if (ret) return ret;
     }
   }
 
@@ -255,6 +302,15 @@ class Markdown {
         '\\$1'
       );
       strVal = strVal.replace(/(\+\+|\+|--|-|\*\*|\*|`|~~|~|\^)(.+)\1/g, '\\$1$2\\$1');
+
+      strVal = strVal.replace(/©/g, '(C)');
+      strVal = strVal.replace(/®/g, '(R)');
+      strVal = strVal.replace(/™/g, '(TM)');
+      strVal = strVal.replace(/§/g, '(P)');
+      strVal = strVal.replace(/±/g, '+-');
+      strVal = strVal.replace(/–/g, '--');
+      strVal = strVal.replace(/—/g, '---');
+      strVal = strVal.replace(/…/g, '...');
     }
 
     for (const rule of this.rules) {

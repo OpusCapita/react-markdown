@@ -25,31 +25,50 @@ const MDParser = {
     options = assign({}, defaults, options);
     let fragment = null;
 
-    try {
-      fragment = StateRender.render(src);
+    if (src === '') {
+      fragment = [{
+        kind: "block",
+        type: "paragraph",
+        nodes: [
+          {
+            kind: "text",
+            ranges: [
+              {
+                text: ""
+              }
+            ]
+          }
+        ]
+      }];
     }
 
-    catch (e) {
-      if (options.silent) {
-        fragment = [{
-          kind: "block",
-          type: "paragraph",
-          nodes: [
-            {
-              kind: "text",
-              ranges: [
-                {
-                  text: "An error occured:"
-                },
-                {
-                  text: e.message
-                }
-              ]
-            }
-          ]
-        }];
-      } else {
-        throw e;
+    else {
+      try {
+        fragment = StateRender.render(src);
+      }
+
+      catch (e) {
+        if (options.silent) {
+          fragment = [{
+            kind: "block",
+            type: "paragraph",
+            nodes: [
+              {
+                kind: "text",
+                ranges: [
+                  {
+                    text: "An error occured:"
+                  },
+                  {
+                    text: e.message
+                  }
+                ]
+              }
+            ]
+          }];
+        } else {
+          throw e;
+        }
       }
     }
 
