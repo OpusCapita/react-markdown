@@ -5,7 +5,7 @@ const style = {
   fontSize: 'smaller'
 };
 
-const HighlightMark = ({children}) => {
+const HighlightMark = ({ children }) => {
   return <mark style={style}>{children}</mark>
 };
 

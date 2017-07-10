@@ -1,6 +1,6 @@
 import React from 'react';
 
-const BlockquoteNode = ({children}) => (
+const BlockquoteNode = ({ children }) => (
   <blockquote>
     {children}
   </blockquote>

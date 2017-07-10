@@ -1,14 +1,14 @@
 import React from 'react';
 
-import {OverlayTrigger, Popover, Tooltip} from 'react-bootstrap';
+import { OverlayTrigger, Popover, Tooltip } from 'react-bootstrap';
 
-import {unlink, updateLink} from './LinkUtils';
+import { unlink, updateLink } from './LinkUtils';
 
 import LinkEditor from './LinkEditor';
 
 import './LinkNode.css';
 
-export default function (options) {
+export default function(options) {
   class LinkNode extends React.Component {
     state = {
       editMode: false
@@ -17,7 +17,7 @@ export default function (options) {
     handleUnlink = (e) => {
       e.preventDefault();
 
-      const {editor} = this.props;
+      const { editor } = this.props;
       const state = editor.getState();
       editor.onChange(unlink(state));
     };
@@ -27,7 +27,7 @@ export default function (options) {
 
       this.refs.overlay.hide();
 
-      this.setState({editMode: true});
+      this.setState({ editMode: true });
     };
 
     handleOpen = () => {
@@ -35,25 +35,25 @@ export default function (options) {
     };
 
     handleCancel = () => {
-      this.setState({editMode: false});
+      this.setState({ editMode: false });
     };
 
-    handleChange = ({text, href}) => {
-      this.setState({editMode: false});
-      const {editor} = this.props;
+    handleChange = ({ text, href }) => {
+      this.setState({ editMode: false });
+      const { editor } = this.props;
       const state = editor.getState();
 
       editor.onChange(
-        updateLink(state, {href, text})
+        updateLink(state, { href, text })
       );
     };
 
     render() {
-      const {editMode} = this.state;
-      const {node, children, attributes} = this.props;
-      const {data} = node;
+      const { editMode } = this.state;
+      const { node, children, attributes } = this.props;
+      const { data } = node;
       const href = data.get('href');
-      const {text} = node;
+      const { text } = node;
 
       const popover = (
         <Popover id="edit-anchor">
@@ -81,14 +81,15 @@ export default function (options) {
         <span>
           {editMode ? (
             <LinkEditor mode="update"
-                        href={href}
-                        text={text}
-                        onChange={this.handleChange}
-                        onCancel={this.handleCancel}
-                        autoCompletionLinks={options.links}/>
+              href={href}
+              text={text}
+              onChange={this.handleChange}
+              onCancel={this.handleCancel}
+              autoCompletionLinks={options.links}
+            />
           ) : null}
 
-          <OverlayTrigger ref="overlay" trigger="click" rootClose placement="bottom" overlay={popover}>
+          <OverlayTrigger ref="overlay" trigger="click" rootClose={true} placement="bottom" overlay={popover}>
           <a {...attributes} href={href}>{children}</a>
         </OverlayTrigger>
       </span>

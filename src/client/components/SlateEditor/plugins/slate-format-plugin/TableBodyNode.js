@@ -1,6 +1,6 @@
 import React from 'react';
 
-const TableBodyNode = ({children}) => {
+const TableBodyNode = ({ children }) => {
   return <tbody>{children}</tbody>
 };
 

@@ -5,7 +5,7 @@ const style = {
   fontSize: 'smaller'
 };
 
-const SuperscriptMark = ({children}) => {
+const SuperscriptMark = ({ children }) => {
   return <sup style={style}>{children}</sup>
 };
 

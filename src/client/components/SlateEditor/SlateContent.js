@@ -1,5 +1,5 @@
 import React from 'react';
-import {Editor} from 'slate';
+import { Editor } from 'slate';
 
 export default ({
                   state,
@@ -8,11 +8,10 @@ export default ({
                   children,
                   ...rest
                 }) => {
-
   return (
     <div className="editor-content">
       <Editor
-        spellCheck
+        spellCheck={true}
         plugins={plugins}
         state={state}
         onChange={onChange}

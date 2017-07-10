@@ -5,7 +5,7 @@ const style = {
   fontSize: 'smaller'
 };
 
-const SubscriptMark = ({children}) => {
+const SubscriptMark = ({ children }) => {
   return <sub style={style}>{children}</sub>
 };
 

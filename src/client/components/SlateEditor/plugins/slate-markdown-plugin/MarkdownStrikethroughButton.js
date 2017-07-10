@@ -1,10 +1,11 @@
 import React from 'react';
 
-import {wrapStrikethroughMarkdown} from './MarkdownUtils';
+import { wrapStrikethroughMarkdown } from './MarkdownUtils';
 
-const MarkdownStrikethroughButton = ({state, onChange}) => (
+const MarkdownStrikethroughButton = ({ state, onChange }) => (
   <button className="btn btn-default"
-          onClick={e => onChange(wrapStrikethroughMarkdown(state))}>
+    onClick={e => onChange(wrapStrikethroughMarkdown(state))}
+  >
     <i className="fa fa-strikethrough"/>
   </button>
 );

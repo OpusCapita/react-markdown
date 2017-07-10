@@ -3,8 +3,8 @@
  https://github.com/OpusCapita/react-showroom-client/blob/master/docs/scope-component.md
  */
 
-import React, {Component, PropTypes} from 'react';
-import {showroomScopeDecorator} from '@opuscapita/react-showroom-client';
+import React, { Component, PropTypes } from 'react';
+import { showroomScopeDecorator } from '@opuscapita/react-showroom-client';
 
 @showroomScopeDecorator
 export default
@@ -19,7 +19,7 @@ class TestEditorScope extends Component {
 * List item 2
 * List item 3
 `,
-      /*autocompletes: [{
+      /* autocompletes: [{
        termRegex: /\$(\w*)$/,
        fetch: (term) => {
        switch(term) {
@@ -72,7 +72,7 @@ class TestEditorScope extends Component {
   }
 
   handleValueChange(value) {
-    this.setState({value});
+    this.setState({ value });
   }
 
   render() {

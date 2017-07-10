@@ -10,6 +10,7 @@ MarkdownEditor
 | value                          | string                  | Raw markdown                                                |
 | autocompletes                  | array                   | Markdown autocomplete                                       |
 | autoCompletionLinks            | array                   | List of suggestions links                                   |
+| mode                           | string                  | Open editor in mode: 'rich' or 'plain', by default 'rich'   |
 
 ### Code Example
 

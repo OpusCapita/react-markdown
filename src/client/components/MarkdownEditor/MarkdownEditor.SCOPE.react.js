@@ -3,8 +3,8 @@
  https://github.com/OpusCapita/react-showroom-client/blob/master/docs/scope-component.md
  */
 
-import React, {Component, PropTypes} from 'react';
-import {showroomScopeDecorator} from '@opuscapita/react-showroom-client';
+import React, { Component, PropTypes } from 'react';
+import { showroomScopeDecorator } from '@opuscapita/react-showroom-client';
 
 import text from './example.md';
 
@@ -15,7 +15,7 @@ class MarkdownEditorScope extends Component {
     super(props);
     this.state = {
       value: text,
-      /*autocompletes: [
+      /* autocompletes: [
        {
        termRegex: /^\$(\w*)$/,
        fetch(term) {
@@ -71,13 +71,13 @@ class MarkdownEditorScope extends Component {
   }
 
   handleValueChange(value) {
-    this.setState({value});
+    this.setState({ value });
   }
 
   render() {
-    const {value} = this.state;
+    const { value } = this.state;
     return (
-      <div style={{display: 'flex', flexDirection: 'row', flexWrap: 'wrap', height: '70vh'}}>
+      <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', height: '70vh' }}>
         {this._renderChildren()}
 
         <div style={{
@@ -85,7 +85,8 @@ class MarkdownEditorScope extends Component {
           overflow: 'auto',
           marginLeft: '12px',
           minWidth: '300px'
-        }}>
+        }}
+        >
           <pre>{value}</pre>
         </div>
       </div>
