@@ -32,10 +32,11 @@ class AutocompleteWidget extends React.Component {
   };
 
   componentWillUpdate = (nextProps, nextState) => {
+    let { isMouseIndexSelected } = this.props;
     let list = this.refs.autocompleteList;
     let targetLi = this.refs[`autocompleteItem${nextProps.selectedIndex}`];
 
-    if (list && targetLi) {
+    if (list && targetLi && !isMouseIndexSelected) {
       if ((this.props.selectedIndex < nextProps.selectedIndex) && (targetLi.offsetTop - list.scrollTop > 156)) {
         list.scrollTop = (targetLi.offsetTop - 156);
       }
@@ -72,6 +73,7 @@ class AutocompleteWidget extends React.Component {
               <li key={index}
                 ref={`autocompleteItem${index}`}
                 onClick={this.handleSelectItem.bind(this, index)}
+                onMouseMove={this.props.onSelectedIndexChange.bind(this, index)}
                 className={'textcomplete-item' + (selectedIndex === index ? ' active' : '')}
               >
                 <a href={void(0)}>{item._objectLabel}</a>
