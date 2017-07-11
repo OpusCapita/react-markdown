@@ -2,7 +2,8 @@ import React from 'react';
 import Types from 'prop-types';
 import { hasMark, italicMark } from './ItalicUtils';
 import classnames from 'classnames';
-import { OverlayTrigger, Tooltip } from 'react-bootstrap';
+import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
+import Tooltip from 'react-bootstrap/lib/Tooltip';
 
 const ItalicButton = ({ state, onChange }) => (
   <OverlayTrigger placement="bottom" overlay={<Tooltip id="bold-tp">Italic (Ctrl+I)</Tooltip>}>

@@ -4,7 +4,9 @@ import { getLink, getSelectedText, updateLink } from './LinkUtils';
 
 import LinkEditor from './LinkEditor';
 import classnames from 'classnames';
-import { OverlayTrigger, Tooltip } from 'react-bootstrap';
+import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
+import Tooltip from 'react-bootstrap/lib/Tooltip';
+
 const propTypes = {
   state: Types.object,
   autoCompletionLinks: Types.array,

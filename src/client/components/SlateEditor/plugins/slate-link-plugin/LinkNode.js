@@ -1,6 +1,8 @@
 import React from 'react';
 import Types from 'prop-types';
-import { OverlayTrigger, Popover, Tooltip } from 'react-bootstrap';
+import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
+import Tooltip from 'react-bootstrap/lib/Tooltip';
+import Popover from 'react-bootstrap/lib/Popover';
 
 import { unlink, updateLink } from './LinkUtils';
 
