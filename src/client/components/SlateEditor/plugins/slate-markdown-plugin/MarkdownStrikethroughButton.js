@@ -3,8 +3,8 @@ import Types from 'prop-types';
 
 import { wrapStrikethroughMarkdown } from './MarkdownUtils';
 
-const MarkdownStrikethroughButton = ({ state, onChange }) => (
-  <button className="btn btn-default"
+const MarkdownStrikethroughButton = ({ state, onChange, disabled }) => (
+  <button className="btn btn-default" disabled={disabled}
     onClick={e => onChange(wrapStrikethroughMarkdown(state))}
   >
     <i className="fa fa-strikethrough"/>
@@ -12,6 +12,7 @@ const MarkdownStrikethroughButton = ({ state, onChange }) => (
 );
 
 MarkdownStrikethroughButton.propTypes = {
+  disabled: Types.bool,
   state: Types.object,
   onChange: Types.func
 };

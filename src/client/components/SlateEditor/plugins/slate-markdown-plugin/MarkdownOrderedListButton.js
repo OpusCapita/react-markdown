@@ -3,8 +3,8 @@ import Types from 'prop-types';
 
 import { wrapOrderingListMarkdown } from './MarkdownUtils';
 
-const MarkdownOrderedListButton = ({ state, onChange }) => (
-  <button className="btn btn-default"
+const MarkdownOrderedListButton = ({ state, onChange, disabled }) => (
+  <button className="btn btn-default" disabled={disabled}
     onClick={e => onChange(wrapOrderingListMarkdown(state))}
   >
     <i className="fa fa-list-ol"/>
@@ -12,6 +12,7 @@ const MarkdownOrderedListButton = ({ state, onChange }) => (
 );
 
 MarkdownOrderedListButton.propTypes = {
+  disabled: Types.bool,
   state: Types.object,
   onChange: Types.func
 };

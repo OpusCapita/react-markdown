@@ -59,24 +59,24 @@ class PlainMarkdownEditor extends React.Component {
 
         <SlateToolbar>
           <SlateToolbarGroup>
-            <MarkdownBoldButton/>
-            <MarkdownItalicButton/>
-            <MarkdownStrikethroughButton/>
-            <MarkdownLinkButton/>
+            <MarkdownBoldButton disabled={true}/>
+            <MarkdownItalicButton disabled={true}/>
+            <MarkdownStrikethroughButton disabled={true}/>
+            <MarkdownLinkButton disabled={true}/>
           </SlateToolbarGroup>
 
           <SlateToolbarGroup>
-            <MarkdownHeaderOneButton/>
-            <MarkdownHeaderTwoButton/>
-            <MarkdownHeaderThreeButton/>
-            <MarkdownHeaderFourButton/>
-            <MarkdownHeaderFiveButton/>
-            <MarkdownHeaderSixButton/>
+            <MarkdownHeaderOneButton disabled={true}/>
+            <MarkdownHeaderTwoButton disabled={true}/>
+            <MarkdownHeaderThreeButton disabled={true}/>
+            <MarkdownHeaderFourButton disabled={true}/>
+            <MarkdownHeaderFiveButton disabled={true}/>
+            <MarkdownHeaderSixButton disabled={true}/>
           </SlateToolbarGroup>
 
           <SlateToolbarGroup>
-            <MarkdownOrderedListButton/>
-            <MarkdownUnorderedListButton/>
+            <MarkdownOrderedListButton disabled={true}/>
+            <MarkdownUnorderedListButton disabled={true}/>
           </SlateToolbarGroup>
 
           {onFullScreen ? (

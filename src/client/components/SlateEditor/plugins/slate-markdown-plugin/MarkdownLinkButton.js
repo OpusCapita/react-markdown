@@ -3,8 +3,8 @@ import Types from 'prop-types';
 
 import { wrapLinkMarkdown } from './MarkdownUtils';
 
-const MarkdownLinkButton = ({ state, onChange }) => (
-  <button className="btn btn-default"
+const MarkdownLinkButton = ({ state, onChange, disabled }) => (
+  <button className="btn btn-default" disabled={disabled}
     onClick={e => onChange(wrapLinkMarkdown(state))}
   >
     <i className="fa fa-link"/>
@@ -12,6 +12,7 @@ const MarkdownLinkButton = ({ state, onChange }) => (
 );
 
 MarkdownLinkButton.propTypes = {
+  disabled: Types.bool,
   state: Types.object,
   onChange: Types.func
 };

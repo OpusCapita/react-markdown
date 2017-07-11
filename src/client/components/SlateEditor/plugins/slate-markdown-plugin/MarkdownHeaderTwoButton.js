@@ -5,8 +5,8 @@ import { wrapHeaderTwoMarkdown } from './MarkdownUtils';
 
 import './HeaderStyles.css';
 
-const MarkdownHeaderTwoButton = ({ state, onChange }) => (
-  <button className="btn btn-default"
+const MarkdownHeaderTwoButton = ({ state, onChange, disabled }) => (
+  <button className="btn btn-default" disabled={disabled}
     onClick={e => onChange(wrapHeaderTwoMarkdown(state))}
   >
     <i className="fa fa-header heading2"/>
@@ -14,6 +14,7 @@ const MarkdownHeaderTwoButton = ({ state, onChange }) => (
 );
 
 MarkdownHeaderTwoButton.propTypes = {
+  disabled: Types.bool,
   state: Types.object,
   onChange: Types.func
 };

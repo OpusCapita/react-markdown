@@ -32,6 +32,13 @@ class MarkdownEditor extends React.Component {
   render() {
     const { mode, value, fullScreen } = this.state;
     const { autocompletes, autoCompletionLinks } = this.props;
+
+    const buttons = (
+      <SlateToolbarGroup>
+        <SwitchModeButton onChangeMode={this.handleChangeMode} mode={mode}/>
+      </SlateToolbarGroup>
+    );
+
     if (mode === 'plain') {
       return (
         <PlainMarkdownEditor value={value}
@@ -40,9 +47,7 @@ class MarkdownEditor extends React.Component {
           onFullScreen={this.handleFullScreen}
           fullScreen={fullScreen}
         >
-          <SlateToolbarGroup>
-            <SwitchModeButton onChangeMode={this.handleChangeMode} mode="plain"/>
-          </SlateToolbarGroup>
+          {buttons}
         </PlainMarkdownEditor>
       );
     } else if (mode === 'rich') {
@@ -54,9 +59,7 @@ class MarkdownEditor extends React.Component {
           onFullScreen={this.handleFullScreen}
           fullScreen={fullScreen}
         >
-          <SlateToolbarGroup>
-            <SwitchModeButton onChangeMode={this.handleChangeMode} mode="rich"/>
-          </SlateToolbarGroup>
+          {buttons}
         </RichMarkdownEditor>
       )
     } else {
