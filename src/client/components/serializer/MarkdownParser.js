@@ -1,3 +1,4 @@
+// import StateRender from './StateRender';
 import MarkdownIt from 'js-slate-markdown-serializer';
 import MarkdownItSub from 'markdown-it-sub';
 import MarkdownItSup from 'markdown-it-sup';
@@ -356,7 +357,7 @@ class Children {
       }
 
       else if (token.type === 'text' && this.currNode
-      &&  (this.currNode.type === 'link' || this.currNode.type === 'abbr')) {
+        &&  (this.currNode.type === 'link' || this.currNode.type === 'abbr')) {
         this.currNode.addText(token.content);
       }
 
@@ -414,7 +415,7 @@ const StateRender = {
     while (i + 1 < tokens.length) {
       let token = tokens[i];
       if ((blockquoteLevel > 0 || bulletListLevel > 0
-      ||  orderedListLevel > 0 || ddLevel > 0 || anchorLevel > 0)
+        ||  orderedListLevel > 0 || ddLevel > 0 || anchorLevel > 0)
         && (token.type === 'paragraph_open' || token.type === 'paragraph_close')) {
         tokens.splice(i, 1);
       }
@@ -677,4 +678,80 @@ const StateRender = {
   }
 };
 
-export default StateRender;
+
+const hasOwnProperty = Object.prototype.hasOwnProperty;
+
+const assign = Object.assign || function (obj) {
+    for (let i = 1; i < arguments.length; i++) {
+      let target = arguments[i];
+      for (let key in target) {
+        if (hasOwnProperty.call(target, key)) {
+          obj[key] = target[key];
+        }
+      }
+    }
+    return obj;
+  };
+
+
+let defaults = {
+  silent: false,
+};
+
+const MDParser = {
+  parse(src, options) {
+    options = assign({}, defaults, options);
+    let fragment = null;
+
+    if (src === '') {
+      fragment = [{
+        kind: "block",
+        type: "paragraph",
+        nodes: [
+          {
+            kind: "text",
+            ranges: [
+              {
+                text: ""
+              }
+            ]
+          }
+        ]
+      }];
+    }
+
+    else {
+      try {
+        fragment = StateRender.render(src);
+      }
+
+      catch (e) {
+        if (options.silent) {
+          fragment = [{
+            kind: "block",
+            type: "paragraph",
+            nodes: [
+              {
+                kind: "text",
+                ranges: [
+                  {
+                    text: "An error occured:"
+                  },
+                  {
+                    text: e.message
+                  }
+                ]
+              }
+            ]
+          }];
+        } else {
+          throw e;
+        }
+      }
+    }
+
+    return {nodes: fragment};
+  },
+};
+
+export default MDParser;

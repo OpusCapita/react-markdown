@@ -1,4 +1,4 @@
-import MDParser from './MDParser'
+import MarkdownParser from './MarkdownParser'
 import {Raw} from 'slate'
 import {Record} from 'immutable'
 
@@ -342,7 +342,7 @@ class Markdown {
    * @return {State} state
    */
   deserialize(markdown) {
-    const nodes = MDParser.parse(markdown);
+    const nodes = MarkdownParser.parse(markdown);
     const state = Raw.deserialize(nodes, {terse: true});
     return state;
   }
