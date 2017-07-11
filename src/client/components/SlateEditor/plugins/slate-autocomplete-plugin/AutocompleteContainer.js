@@ -142,18 +142,18 @@ class AutocompleteContainer extends React.Component {
 
   render() {
     const { show, selectedIndex, items, isLoading } = this.state;
-    const { children } = this.props;
+    const { children, state } = this.props;
 
     return (
       <div onKeyDown={this.handleKeyDown}>
-        {children}
-        {show ? (
+        {show && state.isFocused ? (
           <AutocompleteWidget items={items}
             isLoading={isLoading}
             selectedIndex={selectedIndex}
             onSelectItem={this.handleSelectItem}
           />
         ) : null}
+        {children}
       </div>
     );
   }

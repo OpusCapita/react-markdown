@@ -3,8 +3,8 @@ import Types from 'prop-types';
 
 import { wrapInlineCodeMarkdown } from './MarkdownUtils';
 
-const MarkdownInlineCodeButton = ({ state, onChange }) => (
-  <button className="btn btn-default"
+const MarkdownInlineCodeButton = ({ state, onChange, disabled }) => (
+  <button className="btn btn-default" disabled={disabled}
     onClick={e => onChange(wrapInlineCodeMarkdown(state))}
   >
     <i className="fa fa-code"/>
@@ -12,6 +12,7 @@ const MarkdownInlineCodeButton = ({ state, onChange }) => (
 );
 
 MarkdownInlineCodeButton.propTypes = {
+  disabled: Types.bool,
   state: Types.object,
   onChange: Types.func
 };

@@ -3,8 +3,8 @@ import Types from 'prop-types';
 
 import { wrapBoldMarkdown } from './MarkdownUtils';
 
-const MarkdownBoldButton = ({ state, onChange }) => (
-  <button className="btn btn-default"
+const MarkdownBoldButton = ({ state, onChange, disabled }) => (
+  <button className="btn btn-default" disabled={disabled}
     onClick={e => onChange(wrapBoldMarkdown(state))}
   >
     <i className="fa fa-bold"/>
@@ -12,6 +12,7 @@ const MarkdownBoldButton = ({ state, onChange }) => (
 );
 
 MarkdownBoldButton.propTypes = {
+  disabled: Types.bool,
   state: Types.object,
   onChange: Types.func
 };

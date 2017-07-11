@@ -5,10 +5,10 @@ import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
 
 const FullScreenButton = function(props) {
-  const { onClick, fullScreen } = props;
+  const { onFullScreen, fullScreen } = props;
   return (
     <OverlayTrigger placement="bottom" overlay={<Tooltip id="switch-tp">Fullscreen</Tooltip>}>
-      <button className={classnames('btn btn-default')} onClick={onClick}>
+      <button className={classnames('btn btn-default')} onClick={() => onFullScreen(!fullScreen)}>
         <i className={classnames('fa', { 'fa-expand': !fullScreen, 'fa-compress': fullScreen })}/>
       </button>
     </OverlayTrigger>
@@ -17,7 +17,7 @@ const FullScreenButton = function(props) {
 
 FullScreenButton.propTypes = {
   fullScreen: Types.bool,
-  onClick: Types.func
+  onFullScreen: Types.func
 };
 
 export default FullScreenButton;

@@ -3,7 +3,6 @@ import Types from 'prop-types';
 import {
   AutocompletePlugin,
   FullScreenButton,
-  MarkdownBlockQuoteButton,
   MarkdownBoldButton,
   MarkdownHeaderFiveButton,
   MarkdownHeaderFourButton,
@@ -60,30 +59,29 @@ class PlainMarkdownEditor extends React.Component {
 
         <SlateToolbar>
           <SlateToolbarGroup>
-            <MarkdownBoldButton/>
-            <MarkdownItalicButton/>
-            <MarkdownStrikethroughButton/>
-            <MarkdownLinkButton/>
+            <MarkdownBoldButton disabled={true}/>
+            <MarkdownItalicButton disabled={true}/>
+            <MarkdownStrikethroughButton disabled={true}/>
+            <MarkdownLinkButton disabled={true}/>
           </SlateToolbarGroup>
 
           <SlateToolbarGroup>
-            <MarkdownBlockQuoteButton/>
-            <MarkdownHeaderOneButton/>
-            <MarkdownHeaderTwoButton/>
-            <MarkdownHeaderThreeButton/>
-            <MarkdownHeaderFourButton/>
-            <MarkdownHeaderFiveButton/>
-            <MarkdownHeaderSixButton/>
+            <MarkdownHeaderOneButton disabled={true}/>
+            <MarkdownHeaderTwoButton disabled={true}/>
+            <MarkdownHeaderThreeButton disabled={true}/>
+            <MarkdownHeaderFourButton disabled={true}/>
+            <MarkdownHeaderFiveButton disabled={true}/>
+            <MarkdownHeaderSixButton disabled={true}/>
           </SlateToolbarGroup>
 
           <SlateToolbarGroup>
-            <MarkdownOrderedListButton/>
-            <MarkdownUnorderedListButton/>
+            <MarkdownOrderedListButton disabled={true}/>
+            <MarkdownUnorderedListButton disabled={true}/>
           </SlateToolbarGroup>
 
           {onFullScreen ? (
             <SlateToolbarGroup>
-              <FullScreenButton onClick={onFullScreen} fullScreen={fullScreen}/>
+              <FullScreenButton onFullScreen={onFullScreen} fullScreen={fullScreen}/>
             </SlateToolbarGroup>
           ) : null}
 

@@ -5,8 +5,8 @@ import { wrapHeaderSixMarkdown } from './MarkdownUtils';
 
 import './HeaderStyles.css';
 
-const MarkdownHeaderSixButton = ({ state, onChange }) => (
-  <button className="btn btn-default"
+const MarkdownHeaderSixButton = ({ state, onChange, disabled }) => (
+  <button className="btn btn-default" disabled={disabled}
     onClick={e => onChange(wrapHeaderSixMarkdown(state))}
   >
     <i className="fa fa-header heading6"/>
@@ -14,6 +14,7 @@ const MarkdownHeaderSixButton = ({ state, onChange }) => (
 );
 
 MarkdownHeaderSixButton.propTypes = {
+  disabled: Types.bool,
   state: Types.object,
   onChange: Types.func
 };

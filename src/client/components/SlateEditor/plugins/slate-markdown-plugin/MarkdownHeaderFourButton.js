@@ -5,8 +5,8 @@ import { wrapHeaderFourMarkdown } from './MarkdownUtils';
 
 import './HeaderStyles.css';
 
-const MarkdownHeaderFourButton = ({ state, onChange }) => (
-  <button className="btn btn-default"
+const MarkdownHeaderFourButton = ({ state, onChange, disabled }) => (
+  <button className="btn btn-default" disabled={disabled}
     onClick={e => onChange(wrapHeaderFourMarkdown(state))}
   >
     <i className="fa fa-header heading4"/>
@@ -14,6 +14,7 @@ const MarkdownHeaderFourButton = ({ state, onChange }) => (
 );
 
 MarkdownHeaderFourButton.propTypes = {
+  disabled: Types.bool,
   state: Types.object,
   onChange: Types.func
 };

@@ -75,20 +75,9 @@ class MarkdownEditorScope extends Component {
   }
 
   render() {
-    const { value } = this.state;
     return (
-      <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', height: '70vh' }}>
+      <div style={{ height: '70vh', display: 'flex', flexDirection: 'row' }}>
         {this._renderChildren()}
-
-        <div style={{
-          flex: '1 0 auto',
-          overflow: 'auto',
-          marginLeft: '12px',
-          minWidth: '300px'
-        }}
-        >
-          <pre>{value}</pre>
-        </div>
       </div>
     );
   }

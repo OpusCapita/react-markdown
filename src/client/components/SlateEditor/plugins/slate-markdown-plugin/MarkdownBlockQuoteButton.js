@@ -3,8 +3,8 @@ import Types from 'prop-types';
 
 import { wrapBlockQuoteMarkdown } from './MarkdownUtils';
 
-const MarkdownBlockQuoteButton = ({ state, onChange }) => (
-  <button className="btn btn-default"
+const MarkdownBlockQuoteButton = ({ state, onChange, disabled }) => (
+  <button className="btn btn-default" disabled={disabled}
     onClick={e => onChange(wrapBlockQuoteMarkdown(state))}
   >
     <i className="fa fa-quote-right"/>
@@ -12,6 +12,7 @@ const MarkdownBlockQuoteButton = ({ state, onChange }) => (
 );
 
 MarkdownBlockQuoteButton.propTypes = {
+  disabled: Types.bool,
   state: Types.object,
   onChange: Types.func
 };
