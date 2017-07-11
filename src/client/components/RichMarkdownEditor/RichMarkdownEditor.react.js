@@ -136,8 +136,6 @@ class RichMarkdownEditor extends React.Component {
 }
 
 RichMarkdownEditor.propTypes = {
-  autocompletes: Types.array,
-  autoCompletionLinks: Types.array,
   value: Types.string,
   onChange: Types.func,
   onFullScreen: Types.func,

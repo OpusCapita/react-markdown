@@ -1,22 +1,38 @@
 import React from 'react';
-import Types from 'prop-types';
+import PropTypes from 'prop-types';
+import classnames from 'classnames';
 import RichMarkdownEditor from '../RichMarkdownEditor';
 import PlainMarkdownEditor from '../PlainMarkdownEditor';
 import SlateToolbarGroup from '../SlateEditor/SlateToolbarGroup';
-import SwitchModeButton from './SwitchModeButton.react';
+import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
+import Tooltip from 'react-bootstrap/lib/Tooltip';
 
-/**
- * https://markdown-it.github.io/
- */
 class MarkdownEditor extends React.Component {
+  static propTypes = {
+    mode: PropTypes.string,
+    value: PropTypes.string,
+    onChange: PropTypes.func,
+  };
+
+  static defaultProps = {
+    mode: 'rich',
+    value: '',
+    onChange: () => {}
+  };
+
   state = {
-    mode: this.props.mode || 'rich',
-    value: this.props.value || '',
+    mode: this.props.mode,
+    value: this.props.value,
     fullScreen: false
   };
 
-  handleChangeMode = (mode) => {
-    this.setState({ mode });
+  handleSwitchMode = () => {
+    const { mode } = this.state;
+    if (mode === 'rich') {
+      this.setState({ mode: 'plain' });
+    } else {
+      this.setState({ mode: 'rich' });
+    }
   };
 
   handleChangeValue = (value) => {
@@ -29,51 +45,45 @@ class MarkdownEditor extends React.Component {
     this.setState({ fullScreen });
   };
 
-  render() {
-    const { mode, value, fullScreen } = this.state;
-    const { autocompletes, autoCompletionLinks } = this.props;
-
-    const buttons = (
+  renderSwitchModeButton = () => {
+    const { mode } = this.state;
+    return (
       <SlateToolbarGroup>
-        <SwitchModeButton onChangeMode={this.handleChangeMode} mode={mode}/>
+        <OverlayTrigger placement="bottom"
+          overlay={<Tooltip id="switch-tp">{mode === 'rich' ? 'Plain Mode' : 'Rich Mode'}</Tooltip>}
+        >
+          <button className={classnames('btn btn-default', { active: mode === 'plain' })}
+            onClick={this.handleSwitchMode}
+          >
+            <i className="fa fa-code"/>
+          </button>
+        </OverlayTrigger>
       </SlateToolbarGroup>
     );
+  }
+
+  render() {
+    const { mode, value, fullScreen } = this.state;
 
     if (mode === 'plain') {
       return (
-        <PlainMarkdownEditor value={value}
-          onChange={this.handleChangeValue}
-          autocompletes={autocompletes}
-          onFullScreen={this.handleFullScreen}
-          fullScreen={fullScreen}
+        <PlainMarkdownEditor value={value} onChange={this.handleChangeValue}
+          onFullScreen={this.handleFullScreen} fullScreen={fullScreen}
         >
-          {buttons}
+          {this.renderSwitchModeButton()}
         </PlainMarkdownEditor>
       );
-    } else if (mode === 'rich') {
+    } else {
+      // mode is 'rich'
       return (
-        <RichMarkdownEditor value={value}
-          onChange={this.handleChangeValue}
-          autocompletes={autocompletes}
-          autoCompletionLinks={autoCompletionLinks}
-          onFullScreen={this.handleFullScreen}
-          fullScreen={fullScreen}
+        <RichMarkdownEditor value={value} onChange={this.handleChangeValue}
+          onFullScreen={this.handleFullScreen} fullScreen={fullScreen}
         >
-          {buttons}
+          {this.renderSwitchModeButton()}
         </RichMarkdownEditor>
       )
-    } else {
-      throw new Error(`Mode '${mode}' not supported`);
     }
   }
 }
-
-MarkdownEditor.propTypes = {
-  autocompletes: Types.array,
-  autoCompletionLinks: Types.array,
-  mode: Types.string,
-  value: Types.string,
-  onChange: Types.func,
-};
 
 export default MarkdownEditor;
