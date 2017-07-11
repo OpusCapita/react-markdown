@@ -2,6 +2,18 @@ import React from 'react';
 import './Autocomplete.less';
 import Types from 'prop-types';
 
+const getSelectionTopLeft = function() {
+  const selection = window.getSelection();
+  let rangePos, left = 0, top = 0;
+  if (selection.rangeCount) {
+    rangePos = window.getSelection().getRangeAt(0).getBoundingClientRect();
+    // you can get also right and bottom here if you like
+    left = parseInt(rangePos.left, 10) + 5;
+    top = parseInt(rangePos.top, 10) + window.scrollY;
+  }
+  return { left, top };
+};
+
 class AutocompleteWidget extends React.Component {
   state = {
     left: 0,
@@ -9,13 +21,13 @@ class AutocompleteWidget extends React.Component {
   };
 
   componentDidMount = () => {
-    this.setState(this.getPosition());
+    this.setState(getSelectionTopLeft());
   };
 
   componentWillReceiveProps = (nextProps) => {
     // get selection bounding client rect on next cycle
     setTimeout(() => {
-      this.setState(this.getPosition());
+      this.setState(getSelectionTopLeft());
     });
   };
 
@@ -33,22 +45,6 @@ class AutocompleteWidget extends React.Component {
     }
   };
 
-  getPosition = () => {
-    const selection = window.getSelection();
-
-    let left = 0, top = 0;
-
-    if (selection.anchorNode) {
-      const range = selection.getRangeAt(0);
-      const rect = range.getBoundingClientRect();
-
-      top = rect.top - rect.height + window.pageYOffset;
-      left = rect.left + window.pageXOffset;
-    }
-
-    return { left, top };
-  };
-
   handleSelectItem = (index, e) => {
     e.preventDefault();
     this.props.onSelectItem(index);
@@ -59,7 +55,6 @@ class AutocompleteWidget extends React.Component {
     const { items, selectedIndex } = this.props;
 
     const styles = {
-      position: 'absolute',
       zIndex: 99999,
       display: 'block',
       left,
