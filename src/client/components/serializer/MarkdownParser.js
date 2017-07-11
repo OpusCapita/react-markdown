@@ -1,4 +1,3 @@
-// import StateRender from './StateRender';
 import MarkdownIt from 'js-slate-markdown-serializer';
 import MarkdownItSub from 'markdown-it-sub';
 import MarkdownItSup from 'markdown-it-sup';
@@ -6,8 +5,9 @@ import MarkdownItIns from 'markdown-it-ins';
 import MarkdownItMark from 'markdown-it-mark';
 import MarkdownItEmoji from 'markdown-it-emoji';
 import MarkdownItDeflist from 'markdown-it-deflist';
-import MarkdownItAnchor from 'js-slate-markdown-anchor-serializer';
 import MarkdownItAbbr from 'markdown-it-abbr';
+import MarkdownItAnchor from './plugins/markdown-it-anchor';
+import MarkdownItEmptyLine from './plugins/markdown-it-emptyline';
 
 
 const markdown = new MarkdownIt({
@@ -23,6 +23,7 @@ markdown
   .use(MarkdownItDeflist)
   .use(MarkdownItAnchor)
   .use(MarkdownItAbbr)
+  .use(MarkdownItEmptyLine)
   .use(MarkdownItMark);
 
 

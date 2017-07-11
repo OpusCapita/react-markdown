@@ -80,7 +80,6 @@
     "bluebird": "3.5.0",
     "classnames": "2.2.5",
     "immutable": "3.8.1",
-    "js-slate-markdown-anchor-serializer": "1.0.0",
     "js-slate-markdown-serializer": "1.0.3",
     "lodash": "4.17.4",
     "markdown-it-abbr": "1.0.4",
