@@ -70,8 +70,9 @@ const RULES = [
           children = children.replace('\n\n', '\n'); // Delete empty strings in the list
           listLevel = obj.getIn(['data', 'level']);
 
+          arrChildren = children.split('\n');
+
           if (listLevel > 0) {
-            arrChildren = children.split('\n');
             for (let i = 0; i < arrChildren.length; i++) {
               if (arrChildren[i] !== '') {
                 arrChildren[i] = `    ${arrChildren[i]}`;
@@ -276,8 +277,6 @@ class Markdown {
 
         return ret;
       }
-
-      // if (ret) return ret;
     }
   }
 
