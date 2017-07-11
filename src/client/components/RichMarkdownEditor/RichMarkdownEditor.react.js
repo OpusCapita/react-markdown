@@ -4,7 +4,6 @@ import Markdown from '../serializer/MarkdownRenderer';
 
 import {
   AutocompletePlugin,
-  BlockquoteButton,
   BlockquotePlugin,
   BoldButton,
   BoldPlugin,
@@ -109,7 +108,6 @@ class RichMarkdownEditor extends React.Component {
           </SlateToolbarGroup>
 
           <SlateToolbarGroup>
-            <BlockquoteButton/>
             <HeaderOneButton/>
             <HeaderTwoButton/>
             <HeaderThreeButton/>
@@ -125,7 +123,7 @@ class RichMarkdownEditor extends React.Component {
 
           {onFullScreen ? (
             <SlateToolbarGroup>
-              <FullScreenButton onClick={onFullScreen} fullScreen={fullScreen}/>
+              <FullScreenButton onFullScreen={onFullScreen} fullScreen={fullScreen}/>
             </SlateToolbarGroup>
           ) : null}
 

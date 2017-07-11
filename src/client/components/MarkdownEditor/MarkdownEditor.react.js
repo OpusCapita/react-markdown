@@ -25,9 +25,8 @@ class MarkdownEditor extends React.Component {
     this.setState({ value });
   };
 
-  handleFullScreen = () => {
-    const { fullScreen } = this.state;
-    this.setState({ fullScreen: !fullScreen });
+  handleFullScreen = (fullScreen) => {
+    this.setState({ fullScreen });
   };
 
   render() {

@@ -3,7 +3,6 @@ import Types from 'prop-types';
 import {
   AutocompletePlugin,
   FullScreenButton,
-  MarkdownBlockQuoteButton,
   MarkdownBoldButton,
   MarkdownHeaderFiveButton,
   MarkdownHeaderFourButton,
@@ -67,7 +66,6 @@ class PlainMarkdownEditor extends React.Component {
           </SlateToolbarGroup>
 
           <SlateToolbarGroup>
-            <MarkdownBlockQuoteButton/>
             <MarkdownHeaderOneButton/>
             <MarkdownHeaderTwoButton/>
             <MarkdownHeaderThreeButton/>
@@ -83,7 +81,7 @@ class PlainMarkdownEditor extends React.Component {
 
           {onFullScreen ? (
             <SlateToolbarGroup>
-              <FullScreenButton onClick={onFullScreen} fullScreen={fullScreen}/>
+              <FullScreenButton onFullScreen={onFullScreen} fullScreen={fullScreen}/>
             </SlateToolbarGroup>
           ) : null}
 
