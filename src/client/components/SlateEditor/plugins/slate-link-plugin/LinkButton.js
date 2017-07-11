@@ -1,5 +1,5 @@
 import React from 'react';
-import Types from 'prop-types';
+import PropTypes from 'prop-types';
 import { getLink, getSelectedText, updateLink } from './LinkUtils';
 
 import LinkEditor from './LinkEditor';
@@ -7,17 +7,17 @@ import classnames from 'classnames';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
 
-const propTypes = {
-  state: Types.object,
-  autoCompletionLinks: Types.array,
-  onChange: Types.func
-};
-
-const defaultProps = {
-  onChange: () => {}
-};
-
 class LinkButton extends React.Component {
+  static propTypes = {
+    state: PropTypes.object,
+    onChange: TypPropTypeses.func
+  };
+
+  static defaultProps = {
+    onChange: () => {}
+  };
+
+
   state = {
     openEditor: false
   };
@@ -40,7 +40,7 @@ class LinkButton extends React.Component {
 
   render() {
     const { openEditor } = this.state;
-    const { state, autoCompletionLinks } = this.props;
+    const { state } = this.props;
 
 
     const link = getLink(state);
@@ -64,7 +64,6 @@ class LinkButton extends React.Component {
               href={link ? link.data.get('href') : ''}
               onChange={this.handleInsert}
               onCancel={this.handleCancel}
-              autoCompletionLinks={autoCompletionLinks}
             />
           ) : null }
           <i className="fa fa-link"/>
@@ -73,8 +72,5 @@ class LinkButton extends React.Component {
     );
   }
 }
-
-LinkButton.propTypes = propTypes;
-LinkButton.defaultProps = defaultProps;
 
 export default LinkButton;
