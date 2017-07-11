@@ -32,6 +32,7 @@ let serverOptions = {
     poll: true
   },
   headers: {'Access-Control-Allow-Origin': '*'},
+  noInfo: true,
   stats: {colors: true}
 };
 

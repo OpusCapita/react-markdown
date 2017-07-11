@@ -4,6 +4,7 @@ const path = require('path');
 const webpack = require('webpack');
 const WriteFilePlugin = require('write-file-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const ProgressBarPlugin = require('progress-bar-webpack-plugin');
 
 const PACKAGE_VERSION = require('../package.json').version;
 const PACKAGE_NAME = require('../package.json').name;
@@ -16,6 +17,7 @@ const IS_DOCS_MODE = NODE_ENV === 'docs';
 const WEBPACK_BUNDLE_ANALYZE = process.env.WEBPACK_BUNDLE_ANALYZE;
 
 let plugins = [
+    new ProgressBarPlugin(),
     new webpack.NoEmitOnErrorsPlugin(),
     new webpack.DefinePlugin({
       'process.env.HOST': JSON.stringify(HOST),
@@ -71,6 +73,7 @@ module.exports = {
   },
   devtool: IS_PRODUCTION_MODE ? false : 'inline-source-map',
   watch: !IS_PRODUCTION_MODE,
+  bail: true,
   plugins: plugins,
   externals: {
     react: {
