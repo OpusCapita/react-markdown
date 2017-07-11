@@ -1,7 +1,8 @@
 import React from 'react';
 import classnames from 'classnames';
 import Types from 'prop-types';
-import { OverlayTrigger, Tooltip } from 'react-bootstrap';
+import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
+import Tooltip from 'react-bootstrap/lib/Tooltip';
 
 const SwitchModeButton = function(props) {
   const { onChangeMode, mode } = props;
@@ -26,4 +27,3 @@ SwitchModeButton.propTypes = {
 };
 
 export default SwitchModeButton;
-

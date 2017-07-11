@@ -7,7 +7,7 @@ const host = require('../.env').HOST;
 const path = require('path');
 const port = require('../.env').PORT;
 const webpack = require('webpack');
-const compiler = webpack(require('../webpack.development.config'));
+const compiler = webpack(require('../config/webpack.config'));
 
 const app = express();
 

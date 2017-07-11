@@ -2,8 +2,8 @@ import React from 'react';
 import Types from 'prop-types';
 import classnames from 'classnames';
 import { hasBlock, unwrapBlock, wrapBlock } from './BlockquoteUtils';
-import { OverlayTrigger, Tooltip } from 'react-bootstrap';
-
+import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
+import Tooltip from 'react-bootstrap/lib/Tooltip';
 
 const BlockquoteButton = ({ state, onChange }) => {
   const active = hasBlock(state);
