@@ -1,0 +1,21 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/node:6
+    steps:
+      - checkout
+      - run:
+          name: install-dependencies
+          command: npm install
+      - run:
+          name: lint
+          command: npm run lint
+      - run:
+          name: test
+          command: npm test
+      - store_artifacts:
+          path: test-results.xml
+          prefix: tests
+      - store_test_results:
+          path: test-results.xml
