@@ -11,9 +11,6 @@ const compiler = webpack(require('../config/webpack.config'));
 
 const app = express();
 
-let componentsRoot = path.resolve(__dirname, '../src/client/components');
-require('@opuscapita/react-showroom-server').makeLocalScan(componentsRoot);
-
 let serverOptions = {
   watchOptions: {
     aggregateTimeout: 300,
