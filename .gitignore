@@ -4,8 +4,8 @@
 
 /tmp
 /lib
-/node_modules
-/.gh-pages-tmp
+node_modules
+.gh-pages-tmp
 
 package-lock.json
 yarn.lock
