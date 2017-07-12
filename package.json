@@ -3,7 +3,7 @@
   "version": "0.0.1-beta.0",
   "description": "Start write new project with no effort.",
   "scripts": {
-    "npm-build": "showroom-scan src && rimraf lib && cross-env NODE_ENV=production webpack --config ./config/webpack.config.js --hide-modules",
+    "npm-build": "rimraf lib && cross-env NODE_ENV=production webpack --config ./config/webpack.config.js --hide-modules",
     "link-mode": "cross-env NODE_ENV=link webpack --config ./config/webpack.config.js",
     "lint": "eslint src/client",
     "lint-fix": "eslint src/client --fix",
