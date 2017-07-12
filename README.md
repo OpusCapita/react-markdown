@@ -1,16 +1,18 @@
 [![CircleCI Status](https://circleci.com/gh/OpusCapita/react-markdown/tree/master.svg?style=shield&circle-token=:circle-token)](https://circleci.com/gh/OpusCapita/react-markdown)
 
-# React markdown (work in progress)
+# React Markdown Editor
+
+Based on [slate-js](https://github.com/ianstormtaylor/slate)
 
 ## Demo and documentation
 
-Online demo and components reference available here: https://opuscapita.github.io/react-markdown
+Demo and API reference available here: https://opuscapita.github.io/react-markdown
 
 > Demo powered by [React Showroom](https://github.com/OpusCapita/react-showroom-client)
 
 ## Installation
 
-`yarn add -D @opuscapita/react-markdown`
+`npm install -E @opuscapita/react-markdown`
 
 ## Contributors
 
