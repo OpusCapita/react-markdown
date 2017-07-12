@@ -1,15 +1,23 @@
-// Process empty lines
-//
 'use strict';
 
 
 module.exports = function emptyline_plugin(md) {
   function empty_line(state, startLine, endLine, silent) {
-    if (state.bMarks[startLine] === state.eMarks[startLine]) {
+    let currLine = startLine;
+    if (state.bMarks[currLine] === state.eMarks[currLine]) {
+      while (state.bMarks[currLine] === state.eMarks[currLine]) {
+        currLine++;
+      }
+
+      let lineCount = currLine - startLine;
+
       const token = new state.Token('empty', 'empty', 0);
       token.level = state.level;
+      token.meta  = { length: lineCount };
       state.tokens.push(token);
-      state.line = startLine + 1;
+      state.line = currLine;
+
+      // console.log('startLine:', startLine, ',length:', lineCount);
 
       return true;
     }

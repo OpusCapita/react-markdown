@@ -5,7 +5,7 @@ import MarkdownItIns from 'markdown-it-ins';
 import MarkdownItMark from 'markdown-it-mark';
 import MarkdownItEmoji from 'markdown-it-emoji';
 import MarkdownItDeflist from 'markdown-it-deflist';
-import MarkdownItAbbr from 'markdown-it-abbr';
+import MarkdownItAbbr from './plugins/markdown-it-abbr';
 import MarkdownItAnchor from './plugins/markdown-it-anchor';
 import MarkdownItEmptyLine from './plugins/markdown-it-emptyline';
 
@@ -51,12 +51,14 @@ const types = {
   'dt': 'dt',
   'dl': 'dl',
   'anchor': 'anchor',
+  'empty': 'empty',
+  'abbr-def': 'abbr-def',
 };
 
 const markups = {
   '**': 'bold',
   '__': 'bold',
-  '++': 'insert',
+  '++': 'underline',
   '==': 'mark',
   '*': 'italic',
   '^': 'sup',
@@ -85,11 +87,12 @@ class BlockNode {
     this.tag = token.tag;
     this.data = {};
 
-    if (token.type === 'list_item_open' && token.markup) {
+    if ((token.type === 'list_item_open' || token.type === 'hr')
+    &&  token.markup) {
       this.data.markup = token.markup;
     }
 
-    if (token.tag === 'hr') {
+    if (token.tag === 'hr' || token.tag === 'empty' || token.tag === 'abbr-def') {
       this.isVoid = true;
     }
 
@@ -629,7 +632,7 @@ const StateRender = {
           this.createBlock(token);
         }
 
-        else if (token.type === 'inline') {
+        else if (token.type === 'inline' && previousType !== 'empty') {
           if (this.currentBlock.type === 'dd' || this.currentBlock.type === 'blockquote') {
             token.tag = 'p';
             this.addInlineToBlock(token);
@@ -648,7 +651,7 @@ const StateRender = {
           this.addCodeBlock(token);
         }
 
-        else if (token.type === 'hr') {
+        else if (token.type === 'hr' || token.type === 'empty' || token.type === 'abbr-def') {
           this.addHRBlock(token);
         }
       }

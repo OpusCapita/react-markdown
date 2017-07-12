@@ -13,10 +13,12 @@ import DefinitionSimpleNode from './DefinitionSimpleNode';
 import AnchorNode from './AnchorNode';
 import ParagraphNode from './ParagraphNode';
 import HorizontalLineNode from './HorizontalLineNode';
+import EmptyNode from './EmptyNode';
 import CodeNode from './CodeNode';
 import SoftBreakNode from './SoftBreakNode';
 import ImgNode from './ImgNode';
 import AbbrNode from './AbbrNode';
+import AbbrDefNode from './AbbrDefNode';
 import SuperscriptMark from './SuperscriptMark';
 import SubscriptMark from './SubscriptMark';
 import HighlightMark from './HighlightMark';
@@ -45,9 +47,11 @@ const FormatSchema = {
     anchor: AnchorNode,
     paragraph: ParagraphNode,
     'horizontal-rule': HorizontalLineNode,
+    'empty': EmptyNode,
     code: CodeNode,
     image: ImgNode,
     abbr: AbbrNode,
+    'abbr-def': AbbrDefNode,
     softbreak: SoftBreakNode,
   }
 };

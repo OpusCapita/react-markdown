@@ -12,8 +12,16 @@ const String = new Record({
   text: ''
 });
 
-const abbreviations = {};
-let hasNewAbbr = false;
+const MARKUPS = {
+  code: '`',
+  underline: '++',
+  sup: '^',
+  sub: '~',
+  strikethrough: '~~',
+  mark: '==',
+  bold: '**',
+  italic: '*',
+};
 
 /**
  * Rules to (de)serialize nodes.
@@ -31,174 +39,175 @@ const RULES = [
   },
   {
     serialize(obj, children) {
-      if (obj.kind !== 'block') return;
-
-      let listLevel = 0;
-      let arrChildren, label;
-
-      switch (obj.type) {
-        case 'heading1':
-          return `# ${children}`;
-        case 'heading2':
-          return `## ${children}`;
-        case 'heading3':
-          return `### ${children}`;
-        case 'heading4':
-          return `#### ${children}`;
-        case 'heading5':
-          return `##### ${children}`;
-        case 'heading6':
-          return `###### ${children}`;
-        case 'paragraph':
-          return `${children}\n`;
-        case 'horizontal-rule':
-          return `---`;
-        case 'hr':
-          return `---`;
-        case 'code':
-          return `\`\`\`\n${children}\n\`\`\`\n`;
-
-        case 'blockquote':
-          arrChildren = children.split('\n');
-          for (let i = 0; i < arrChildren.length; i++) {
-            arrChildren[i] = `> ${arrChildren[i]}`;
-          }
-          return `\n${arrChildren.join('\n')}`;
-
-        case 'ordered-list':
-        case 'unordered-list':
-          children = children.replace('\n\n', '\n'); // Delete empty strings in the list
-          listLevel = obj.getIn(['data', 'level']);
-
-          arrChildren = children.split('\n');
-
-          if (listLevel > 0) {
-            for (let i = 0; i < arrChildren.length; i++) {
-              if (arrChildren[i] !== '') {
-                arrChildren[i] = `    ${arrChildren[i]}`;
-              }
-            }
-          }
-
-          children = arrChildren.join('\n');
-          children = children.replace('\n\n', '\n'); // Delete empty strings in the list
-          return `\n${children}`;
-
-        case 'list-item':
-          let parent = obj.getIn(['data', 'parent']);
-
-          if (parent === 'unordered-list') {
-            let pref;
-
-            if (obj.getIn(['data', 'markup'])) {
-              pref = obj.getIn(['data', 'markup']);
-            }
-
-            else {
-              let mod = obj.getIn(['data', 'level']) % 10;
-              pref = ['+', '+', '-', '-', '*', '*', '-', '+', '-', '*'][mod];
-            }
-
-            return `${pref} ${children}\n`;
-          }
-
-          else {
-            return `${obj.getIn(['data', 'itemNum'])}. ${children}\n`;
-          }
-
-        case 'table':
-          return children;
-        case 'thead':
-          // th tags count ( thead -> tr -> th )
-          const columnsCount = obj.nodes.get(0).nodes.size;
-          return `${children}|${new Array(columnsCount).fill(' --------- |').join('')}`;
-        case 'tbody':
-          return `\n${children}`;
-        case 'tr':
-          return `| ${children}\n`;
-        case 'th':
-        case 'td':
-          return `${children} |`;
-        case 'dl-simple':
-        case 'dl':
-          return children;
-        case 'dt-simple':
-        case 'dt':
-          return `${children}\n`;
-        case 'dd-simple':
-          return `  ~ ${children}\n`;
-        case 'dd':
-          arrChildren = children.split('\n');
-          for (let i = 0; i < arrChildren.length; i++) {
-            if (arrChildren[i] !== '') {
-              arrChildren[i] = i === 0 ? `:    ${arrChildren[i]}` : `     ${arrChildren[i]}`;
-            }
-          }
-          children = arrChildren.join('\n');
-          return `${children}\n`;
-        case 'anchor':
-          label = obj.getIn(['data', 'label']);
-          return `[^${label}]: ${children}`;
+      if (obj.kind === 'block' && NodeSerialize[obj.type]) {
+        return NodeSerialize[obj.type](obj, children);
       }
     }
   },
   {
     serialize(obj, children) {
-      let title = '';
-      if (obj.kind !== 'inline') return;
-      switch (obj.type) {
-        case 'link':
-          return `[${children}](${obj.getIn(['data', 'href'])})`;
-
-        case 'abbr':
-          title = obj.getIn(['data', 'title']);
-          let key = children;
-          if (!abbreviations[key]) {
-            abbreviations[key] = {
-              title,
-              use: false
-            };
-
-            hasNewAbbr = true;
-          }
-          return `${children}`;
-
-        case 'image':
-          title = obj.getIn(['data', 'title']);
-          let src = obj.getIn(['data', 'src']);
-          let alt = obj.getIn(['data', 'alt']);
-          return `![${title}](${src} "${alt}")`;
+      if (obj.kind === 'inline' && InlineSerialize[obj.type]) {
+        return InlineSerialize[obj.type](obj, children);
       }
     }
   },
   // Add a new rule that handles marks...
   {
     serialize(obj, children) {
-      if (obj.kind !== 'mark') return;
-      let markup = obj.getIn(['data', 'markup']);
-      switch (obj.type) {
-        case 'bold':
-          markup = markup ? markup : '**';
-          return `${markup}${children}${markup}`;
-        case 'italic':
-          markup = markup ? markup : '*';
-          return `${markup}${children}${markup}`;
-        case 'code':
-          return `\`${children}\``;
-        case 'insert':
-          return `++${children}++`;
-        case 'sup':
-          return `^${children}^`;
-        case 'sub':
-          return `~${children}~`;
-        case 'strikethrough':
-          return `~~${children}~~`;
-        case 'mark':
-          return `==${children}==`;
+      if (obj.kind === 'mark' && MARKUPS[obj.type]) {
+        let markup = obj.getIn(['data', 'markup']);
+        markup = markup ? markup : MARKUPS[obj.type];
+        return `${markup}${children}${markup}`;
       }
     }
   }
 ];
+
+
+/**
+ * Rules for block nodes
+ */
+
+const NodeSerialize = {
+  listLevel: 0,
+
+  // Text
+  heading1: (obj, children) => `# ${children}`,
+  heading2: (obj, children) => `## ${children}`,
+  heading3: (obj, children) => `### ${children}`,
+  heading4: (obj, children) => `#### ${children}`,
+  heading5: (obj, children) => `##### ${children}`,
+  heading6: (obj, children) => `###### ${children}`,
+  paragraph: (obj, children) => `${children}\n`,
+  code: (obj, children) => `\`\`\`\n${children}\n\`\`\`\n`,
+
+  // Tables
+  table: (obj, children) => children,
+  thead: (obj, children) => {
+    // th tags count ( thead -> tr -> th )
+    const columnsCount = obj.nodes.get(0).nodes.size;
+    return `${children}|${new Array(columnsCount).fill(' --------- |').join('')}`;
+  },
+  tbody: (obj, children) => `\n${children}`,
+  tr: (obj, children) => `| ${children}\n`,
+  th: (obj, children) => `${children} |`,
+  td: (obj, children) => `${children} |`,
+
+  // Lists
+  'ordered-list': listNodeRule,
+  'unordered-list': listNodeRule,
+  'list-item': (obj, children) => {
+    let parent = obj.getIn(['data', 'parent']);
+
+    if (parent === 'unordered-list') {
+      let pref;
+
+      if (obj.getIn(['data', 'markup'])) {
+        pref = obj.getIn(['data', 'markup']);
+      }
+
+      else {
+        let mod = obj.getIn(['data', 'level']) % 10;
+        pref = ['+', '+', '-', '-', '*', '*', '-', '+', '-', '*'][mod];
+      }
+
+      return `${pref} ${children}\n`;
+    }
+
+    else {
+      return `${obj.getIn(['data', 'itemNum'])}. ${children}\n`;
+    }
+  },
+
+  // Definition lists
+  'dl-simple': (obj, children) => children,
+  dl: (obj, children) => children,
+  'dt-simple': (obj, children) => `${obj.previousNodeType === 'dd-simple' ? `\n` : ``}${children}\n`,
+  dt: (obj, children) => `${children}\n`,
+  'dd-simple': (obj, children) => `  ~ ${children}\n`,
+  dd: (obj, children) => {
+    let arrChildren = children.split('\n');
+    for (let i = 0; i < arrChildren.length; i++) {
+      if (arrChildren[i] !== '') {
+        arrChildren[i] = i === 0 ? `:    ${arrChildren[i]}` : `     ${arrChildren[i]}`;
+      }
+    }
+    children = arrChildren.join('\n');
+    return `${children}\n`;
+  },
+
+  // Various blocks
+  blockquote: (obj, children) => {
+    const arrChildren = children.split('\n');
+    for (let i = 0; i < arrChildren.length; i++) {
+      arrChildren[i] = `> ${arrChildren[i]}`;
+    }
+    return `\n${arrChildren.join('\n')}`;
+  },
+  anchor: (obj, children) => {
+    const label = obj.getIn(['data', 'label']);
+    return `[^${label}]: ${children}`;
+  },
+
+  // Void blocks
+  'horizontal-rule': (obj, children) => {
+    const markup = obj.getIn(['data', 'markup']);
+    return markup ? markup : `---`;
+  },
+  'abbr-def': (obj, children) => {
+    const label = obj.getIn(['data', 'label']);
+    const title = obj.getIn(['data', 'title']);
+    return `*[${label}]: ${title}\n`;
+  },
+  empty: (obj, children) => {
+    const linesCount = obj.getIn(['data', 'length']);
+    return `${new Array(linesCount).fill('').join('\n')}`;
+  },
+};
+
+/**
+ * Rule for lists
+ *
+ * @param obj
+ * @param {string} children
+ * @returns {string}
+ */
+
+function listNodeRule(obj, children) {
+  children = children.replace('\n\n', '\n'); // Delete empty strings in the list
+  NodeSerialize.listLevel = obj.getIn(['data', 'level']);
+
+  const arrChildren = children.split('\n');
+
+  if (NodeSerialize.listLevel > 0) {
+    for (let i = 0; i < arrChildren.length; i++) {
+      if (arrChildren[i] !== '') {
+        arrChildren[i] = `    ${arrChildren[i]}`;
+      }
+    }
+  }
+
+  children = arrChildren.join('\n');
+  children = children.replace('\n\n', '\n'); // Delete empty strings in the list
+  return `${NodeSerialize.listLevel > 0 ? `\n` : ``}${children}`;
+}
+
+
+/**
+ * Rules for inline nodes
+ */
+
+const InlineSerialize = {
+  link: (obj, children) => `[${children}](${obj.getIn(['data', 'href'])})`,
+  abbr: (obj, children) => `${children}`,
+
+  image: obj => {
+    let title = obj.getIn(['data', 'title']);
+    let src = obj.getIn(['data', 'src']);
+    let alt = obj.getIn(['data', 'alt']);
+    return `![${title}](${src} "${alt}")`;
+  },
+};
 
 
 /**
@@ -222,6 +231,8 @@ class Markdown {
       ...(options.rules || []),
       ...RULES
     ];
+
+    this.previousNodeType = '';
 
     this.serializeNode = this.serializeNode.bind(this);
     this.serializeRange = this.serializeRange.bind(this);
@@ -255,6 +266,13 @@ class Markdown {
       return ranges.map(this.serializeRange);
     }
 
+    if (node.kind === 'block') {
+      if (this.previousNodeType) {
+        node.previousNodeType = this.previousNodeType;
+      }
+      this.previousNodeType = node.type;
+    }
+
     let children = node.nodes.map(this.serializeNode);
     children = children.flatten().length === 0 ? '' : children.flatten().join('');
 
@@ -263,18 +281,6 @@ class Markdown {
       let ret = rule.serialize(node, children);
 
       if (ret) {
-        if (node.data && node.data.get('level') === 0 && hasNewAbbr) {
-          for (let key in abbreviations) {
-            let abbr = abbreviations[key];
-            if (!abbr.use) {
-              ret += `*[${key}]: ${abbr.title}\n`;
-              abbr.use = true;
-            }
-          }
-
-          hasNewAbbr = false;
-        }
-
         return ret;
       }
     }

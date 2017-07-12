@@ -24,7 +24,8 @@ import {
   OrderedListButton,
   StrikethroughButton,
   StrikethroughPlugin,
-  UnorderedListButton
+  UnorderedListButton,
+  UnderlinePlugin
 } from '../SlateEditor/plugins';
 import { SlateContent, SlateEditor, SlateToolbar, SlateToolbarGroup } from '../SlateEditor';
 
@@ -55,6 +56,7 @@ class RichMarkdownEditor extends React.Component {
       StrikethroughPlugin(),
       BoldPlugin(),
       ItalicPlugin(),
+      UnderlinePlugin(),
       BlockquotePlugin(),
       HeaderPlugin(),
       FormatPlugin()
