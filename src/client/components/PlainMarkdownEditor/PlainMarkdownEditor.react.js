@@ -29,7 +29,7 @@ class PlainMarkdownEditor extends React.Component {
 
   componentWillMount = () => {
     this.plugins = [
-      AutocompletePlugin(),
+      // AutocompletePlugin(),
       MarkdownPreviewPlugin()
     ];
   };

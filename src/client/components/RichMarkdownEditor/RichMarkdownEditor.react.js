@@ -57,8 +57,9 @@ class RichMarkdownEditor extends React.Component {
       ItalicPlugin(),
       BlockquotePlugin(),
       HeaderPlugin(),
-      FormatPlugin(),
-      AutocompletePlugin()
+      FormatPlugin()
+      // ,
+      // AutocompletePlugin()
     ];
   };
 
