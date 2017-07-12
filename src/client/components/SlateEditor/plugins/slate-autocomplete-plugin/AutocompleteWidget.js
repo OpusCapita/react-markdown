@@ -1,6 +1,6 @@
 import React from 'react';
 import './Autocomplete.less';
-import Types from 'prop-types';
+import PropTypes from 'prop-types';
 
 const getSelectionTopLeft = function() {
   const selection = window.getSelection();
@@ -15,6 +15,14 @@ const getSelectionTopLeft = function() {
 };
 
 class AutocompleteWidget extends React.Component {
+  static propTypes = {
+    isMouseIndexSelected: PropTypes.bool,
+    onSelectedIndexChange: PropTypes.func,
+    items: PropTypes.array,
+    onSelectItem: PropTypes.func,
+    selectedIndex: PropTypes.number
+  };
+
   state = {
     left: 0,
     top: 0
@@ -32,10 +40,11 @@ class AutocompleteWidget extends React.Component {
   };
 
   componentWillUpdate = (nextProps, nextState) => {
+    let { isMouseIndexSelected } = this.props;
     let list = this.refs.autocompleteList;
     let targetLi = this.refs[`autocompleteItem${nextProps.selectedIndex}`];
 
-    if (list && targetLi) {
+    if (list && targetLi && !isMouseIndexSelected) {
       if ((this.props.selectedIndex < nextProps.selectedIndex) && (targetLi.offsetTop - list.scrollTop > 156)) {
         list.scrollTop = (targetLi.offsetTop - 156);
       }
@@ -52,7 +61,7 @@ class AutocompleteWidget extends React.Component {
 
   render() {
     const { left, top } = this.state;
-    const { items, selectedIndex } = this.props;
+    const { items, selectedIndex, onSelectedIndexChange } = this.props;
 
     const styles = {
       zIndex: 99999,
@@ -72,6 +81,7 @@ class AutocompleteWidget extends React.Component {
               <li key={index}
                 ref={`autocompleteItem${index}`}
                 onClick={this.handleSelectItem.bind(this, index)}
+                onMouseMove={(index) => {onSelectedIndexChange(index)}}
                 className={'textcomplete-item' + (selectedIndex === index ? ' active' : '')}
               >
                 <a href={void(0)}>{item._objectLabel}</a>
@@ -89,11 +99,5 @@ class AutocompleteWidget extends React.Component {
     }
   }
 }
-
-AutocompleteWidget.propTypes = {
-  items: Types.array,
-  onSelectItem: Types.func,
-  selectedIndex: Types.number,
-};
 
 export default AutocompleteWidget;

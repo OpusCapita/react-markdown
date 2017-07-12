@@ -1,7 +1,8 @@
 import React from 'react';
-import Types from 'prop-types';
+import PropTypes from 'prop-types';
 
 import AutocompleteWidget from './AutocompleteWidget';
+// what is that???? why???
 // polyfile Promise for IE
 import 'bluebird';
 
@@ -10,23 +11,24 @@ const arrowUpCode = 38;
 const arrowDownCode = 40;
 const enterCode = 13;
 
-const propTypes = {
-  state: Types.object,
-  editor: Types.object,
-  options: Types.object
-};
-
-const defaultProps = {
-  state: {},
-  editor: {},
-  options: {}
-};
-
 class AutocompleteContainer extends React.Component {
+  static propTypes = {
+    state: PropTypes.object,
+    editor: PropTypes.object,
+    options: PropTypes.object
+  };
+
+  static defaultProps = {
+    state: {},
+    editor: {},
+    options: {}
+  };
+
   state = {
     show: false,
     selectedIndex: 0,
-    isLoading: false
+    isLoading: false,
+    isMouseIndexSelected: false
   };
 
   componentDidMount = () => {
@@ -35,6 +37,14 @@ class AutocompleteContainer extends React.Component {
 
   componentWillReceiveProps = (nextProps) => {
     this.searchItems(nextProps);
+    if (this.state.items &&
+      (this.props.state.startOffset === nextProps.state.startOffset) &&
+      (this.props.state.startText.text === nextProps.state.startText.text) &&
+      nextProps.state.startText.text) {
+      this.handleSelectItem(this.state.selectedIndex);
+    } else {
+      this.setState({ show: false })
+    }
   };
 
   matchRule = (rules, token) => {
@@ -71,6 +81,14 @@ class AutocompleteContainer extends React.Component {
     return { term, text, offset };
   };
 
+  handleSelectedIndexChange = (selectedIndex) => {
+    if (this.state.isMouseIndexSelected) {
+      this.setState({ selectedIndex });
+    } else {
+      this.setState({ isMouseIndexSelected: true });
+    }
+  };
+
   handleKeyDown = (e) => {
     const { show, items, selectedIndex } = this.state;
 
@@ -86,6 +104,7 @@ class AutocompleteContainer extends React.Component {
       } else if (e.keyCode === arrowUpCode || e.keyCode === arrowDownCode) {
         e.preventDefault();
 
+        this.setState({ isMouseIndexSelected: false });
         const length = items.length;
         if (e.keyCode === arrowDownCode && selectedIndex < length - 1) {
           this.setState({ selectedIndex: selectedIndex + 1 });
@@ -151,6 +170,8 @@ class AutocompleteContainer extends React.Component {
             isLoading={isLoading}
             selectedIndex={selectedIndex}
             onSelectItem={this.handleSelectItem}
+            onSelectedIndexChange={this.handleSelectedIndexChange}
+            isMouseIndexSelected={this.state.isMouseIndexSelected}
           />
         ) : null}
         {children}
@@ -158,8 +179,5 @@ class AutocompleteContainer extends React.Component {
     );
   }
 }
-
-AutocompleteContainer.propTypes = propTypes;
-AutocompleteContainer.defaultProps = defaultProps;
 
 export default AutocompleteContainer;

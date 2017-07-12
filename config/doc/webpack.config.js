@@ -1,79 +1,34 @@
-'use strict';
-
 const path = require('path');
 const webpack = require('webpack');
-const WriteFilePlugin = require('write-file-webpack-plugin');
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
-const ProgressBarPlugin = require('progress-bar-webpack-plugin');
 
-const PACKAGE_VERSION = require('../package.json').version;
-const PACKAGE_NAME = require('../package.json').name;
-const HOST = require('../.env').HOST;
-const PORT = require('../.env').PORT;
+const PACKAGE_VERSION = require('../../package.json').version;
+const PACKAGE_NAME = require('../../package.json').name;
+const {HOST, PORT} = require('../../.env');
 const NODE_ENV = process.env.NODE_ENV;
-const IS_PRODUCTION_MODE = NODE_ENV === 'production';
-const IS_LINK_MODE = NODE_ENV === 'link';
-const WEBPACK_BUNDLE_ANALYZE = process.env.WEBPACK_BUNDLE_ANALYZE;
-
-let plugins = [
-    new ProgressBarPlugin(),
-    new webpack.NoEmitOnErrorsPlugin(),
-    new webpack.DefinePlugin({
-      'process.env.HOST': JSON.stringify(HOST),
-      'process.env.PORT': JSON.stringify(PORT),
-      'process.env.NODE_ENV': `"${NODE_ENV}"`
-    })
-];
-
-if(IS_LINK_MODE) {
-  plugins.push(new WriteFilePlugin());
-}
-
-if(IS_PRODUCTION_MODE) {
-  let uglifyPlugin = new webpack.optimize.UglifyJsPlugin({
-    compress: {
-      warnings: false,
-      screw_ie8: true
-    },
-    comments: false
-  });
-
-  plugins.push(uglifyPlugin);
-}
-
-if(WEBPACK_BUNDLE_ANALYZE && IS_PRODUCTION_MODE) {
-  let bundleAnalyzerPlugin = new BundleAnalyzerPlugin({
-    analyzerMode: 'static',
-    analyzerHost: '127.0.0.1',
-    analyzerPort: 8888,
-    reportFilename: 'report.html',
-    defaultSizes: 'parsed',
-    openAnalyzer: true,
-    generateStatsFile: false,
-    statsFilename: 'stats.json',
-    statsOptions: null,
-    logLevel: 'info'
-  });
-
-  plugins.push(bundleAnalyzerPlugin);
-}
 
 module.exports = {
-  entry: (IS_PRODUCTION_MODE || IS_LINK_MODE) ?
-    path.resolve(__dirname, '../src/client/index.js') :
-    path.resolve(__dirname, '../www/index-page.js'),
+  entry: path.resolve(__dirname, '../../www/index-page.js'),
   context: path.resolve(__dirname),
   output: {
     publicPath: '/',
-    path: path.resolve(__dirname, '../lib'),
+    path: path.resolve(__dirname, '../../lib'),
     filename: `index.js`,
     library: `${PACKAGE_NAME}`,
     libraryTarget: 'umd'
   },
-  devtool: IS_PRODUCTION_MODE ? false : 'inline-source-map',
-  watch: !IS_PRODUCTION_MODE,
   bail: true,
-  plugins: plugins,
+  plugins: [
+      new webpack.DefinePlugin({
+        'process.env.NODE_ENV': '"production"'
+      }),
+      new webpack.optimize.UglifyJsPlugin({
+        compress: {
+          warnings: false,
+          screw_ie8: true
+        },
+        comments: false
+      })
+  ],
   externals: {
     react: {
       root: 'React',
@@ -121,7 +76,7 @@ module.exports = {
           {
             loader: 'postcss-loader',
             options: {
-              config: path.resolve(__dirname, './postcss.config.js')
+              config: path.resolve(__dirname, '../postcss.config.js')
             }
           },
           { loader: 'less-loader', options: { sourceMap: true } }
@@ -136,7 +91,7 @@ module.exports = {
           {
             loader: 'postcss-loader',
             options: {
-              config: path.resolve(__dirname, './postcss.config.js')
+              config: path.resolve(__dirname, '../postcss.config.js')
             }
           },
           { loader: 'less-loader', options: { sourceMap: true } }
@@ -144,7 +99,7 @@ module.exports = {
         exclude: /\.module\.(css|less)$/
       },
       {
-        test: /.jsx?$/,
+        test: /.js?$/,
         use: [{
           loader: 'babel-loader',
           options: {
@@ -153,7 +108,8 @@ module.exports = {
           }
         }],
         include: [
-          path.resolve(__dirname, '../src')
+          path.join(__dirname, '../../src'),
+          path.join(__dirname, '../../www')
         ]
       }
     ]

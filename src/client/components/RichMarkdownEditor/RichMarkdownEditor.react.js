@@ -49,25 +49,17 @@ class RichMarkdownEditor extends React.Component {
   };
 
   componentWillMount = () => {
-    const { autocompletes = [], autoCompletionLinks = [] } = this.props;
     this.plugins = [
-      LinkPlugin(
-        {
-          links: autoCompletionLinks
-        }
-      ),
+      LinkPlugin(),
       ListPlugin(),
       StrikethroughPlugin(),
       BoldPlugin(),
       ItalicPlugin(),
       BlockquotePlugin(),
       HeaderPlugin(),
-      FormatPlugin(),
-      AutocompletePlugin(
-        {
-          rules: autocompletes
-        }
-      )
+      FormatPlugin()
+      // ,
+      // AutocompletePlugin()
     ];
   };
 
@@ -89,7 +81,7 @@ class RichMarkdownEditor extends React.Component {
    */
   render() {
     const { editorState } = this.state;
-    const { children, autoCompletionLinks, onFullScreen, fullScreen } = this.props;
+    const { children, onFullScreen, fullScreen } = this.props;
 
     return (
       <SlateEditor
@@ -104,7 +96,7 @@ class RichMarkdownEditor extends React.Component {
             <BoldButton/>
             <ItalicButton/>
             <StrikethroughButton/>
-            <LinkButton autoCompletionLinks={autoCompletionLinks}/>
+            <LinkButton/>
           </SlateToolbarGroup>
 
           <SlateToolbarGroup>
@@ -136,8 +128,6 @@ class RichMarkdownEditor extends React.Component {
 }
 
 RichMarkdownEditor.propTypes = {
-  autocompletes: Types.array,
-  autoCompletionLinks: Types.array,
   value: Types.string,
   onChange: Types.func,
   onFullScreen: Types.func,

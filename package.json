@@ -3,13 +3,13 @@
   "version": "0.0.1-beta.0",
   "description": "Start write new project with no effort.",
   "scripts": {
-    "build": "rimraf lib && babel --copy-files --no-babelrc --presets es2015,stage-0,react --plugins transform-decorators-legacy --ignore __tests__,*.spec.js,demo src/client/components --out-dir lib && cross-env NODE_ENV=production webpack --config ./config/webpack.config.js",
+    "npm-build": "rimraf lib && cross-env NODE_ENV=production webpack --config ./config/webpack.config.js --hide-modules",
     "link-mode": "cross-env NODE_ENV=link webpack --config ./config/webpack.config.js",
     "lint": "eslint src/client",
     "lint-fix": "eslint src/client --fix",
     "publish-release": "npm run npm-build && npm-publish --release",
-    "start": "node www/index",
-    "test": "mocha --compilers js:babel-core/register --require ignore-styles --require ./config/test/setup.js --recursive src/**/*.spec.js"
+    "start": "babel-node --presets es2015,stage-0 www/index",
+    "test": "mocha --require ignore-styles --require ./config/test/setup.js --recursive src/**/*.spec.js"
   },
   "license": "Apache-2.0",
   "repository": "OpusCapita/react-markdown",
@@ -23,8 +23,8 @@
     "README.md"
   ],
   "peerDependencies": {
-    "react": "15.4.2",
-    "react-dom": "15.4.2"
+    "react": "^0.14.8 || ^15.4.2",
+    "react-dom": "^0.14.8 || ^15.4.2"
   },
   "devDependencies": {
     "@opuscapita/npm-scripts": "1.0.8",
@@ -58,9 +58,11 @@
     "json-loader": "0.5.4",
     "less": "2.7.2",
     "less-loader": "2.2.3",
+    "mocha": "3.4.2",
     "nodemon": "1.11.0",
     "postcss-loader": "1.3.3",
     "postcss-modules": "0.6.4",
+    "progress-bar-webpack-plugin": "1.10.0",
     "raw-loader": "0.5.1",
     "react": "15.4.2",
     "react-addons-test-utils": "15.4.2",
@@ -89,14 +91,11 @@
     "markdown-it-ins": "2.0.0",
     "markdown-it-mark": "2.0.0",
     "markdown-it-sub": "1.0.0",
-    "markdown-it-sup": "^1.0.0",
-    "mocha": "3.4.2",
+    "markdown-it-sup": "1.0.0",
     "prismjs": "1.6.0",
     "prop-types": "15.5.10",
     "query-string": "4.3.4",
-    "react": "15.5.4",
     "react-bootstrap": "0.31.0",
-    "react-dom": "15.5.4",
     "slate": "0.20.3",
     "slate-markdown-serializer": "0.1.5"
   }

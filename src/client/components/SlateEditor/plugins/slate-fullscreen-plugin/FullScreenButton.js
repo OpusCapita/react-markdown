@@ -1,11 +1,10 @@
 import React from 'react';
 import classnames from 'classnames';
-import Types from 'prop-types';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
+import PropTypes from 'prop-types';
 
-const FullScreenButton = function(props) {
-  const { onFullScreen, fullScreen } = props;
+const FullScreenButton = function({ onFullScreen, fullScreen }) {
   return (
     <OverlayTrigger placement="bottom" overlay={<Tooltip id="switch-tp">Fullscreen</Tooltip>}>
       <button className={classnames('btn btn-default')} onClick={() => onFullScreen(!fullScreen)}>
@@ -16,8 +15,9 @@ const FullScreenButton = function(props) {
 };
 
 FullScreenButton.propTypes = {
-  fullScreen: Types.bool,
-  onFullScreen: Types.func
+  onFullScreen: PropTypes.func,
+  fullScreen: PropTypes.bool,
 };
+
 
 export default FullScreenButton;

@@ -1,5 +1,4 @@
 import Prism from 'prismjs';
-import React from 'react';
 import { Mark } from 'slate';
 
 /**
@@ -60,6 +59,7 @@ Prism.languages.insertBefore("markdown", "prolog", {
   },
 
   "url-reference": {
+    // eslint-disable-next-line
     pattern: /!?\[[^\]]+\]:[\t ]+(?:\S+|<(?:\\.|[^>\\])+>)(?:[\t ]+(?:"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|\((?:\\.|[^)\\])*\)))?/,
     inside: {
       variable: {
@@ -126,6 +126,33 @@ Prism.languages.markdown.italic.inside.bold = Prism.util.clone(Prism.languages.m
  * @param {Block} block
  */
 
+function addMarks(characters, tokens, offset) {
+  let updatedOffset = offset;
+  for (const token of tokens) {
+    if (typeof token === 'string') {
+      updatedOffset += token.length;
+      continue
+    }
+
+    const { content, length, type } = token;
+    const mark = Mark.create({ type });
+
+    for (let i = updatedOffset; i < updatedOffset + length; i++) {
+      let char = characters.get(i);
+      let { marks } = char;
+      marks = marks.add(mark);
+      char = char.set('marks', marks);
+      characters.set(i, char);
+    }
+
+    if (Array.isArray(content)) {
+      addMarks(characters, content, updatedOffset);
+    }
+
+    updatedOffset += length;
+  }
+}
+
 function markdownDecorator(text, block) {
   const characters = text.characters.asMutable();
   const language = 'markdown';
@@ -135,33 +162,6 @@ function markdownDecorator(text, block) {
   addMarks(characters, tokens, 0);
   return characters.asImmutable();
 }
-
-function addMarks(characters, tokens, offset) {
-  for (const token of tokens) {
-    if (typeof token === 'string') {
-      offset += token.length;
-      continue
-    }
-
-    const { content, length, type } = token;
-    const mark = Mark.create({ type });
-
-    for (let i = offset; i < offset + length; i++) {
-      let char = characters.get(i);
-      let { marks } = char;
-      marks = marks.add(mark);
-      char = char.set('marks', marks);
-      characters.set(i, char);
-    }
-
-    if (Array.isArray(content)) {
-      addMarks(characters, content, offset);
-    }
-
-    offset += length;
-  }
-}
-
 
 const MarkdownPreviewSchema = {
   marks: {
