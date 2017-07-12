@@ -10,7 +10,7 @@ import Tooltip from 'react-bootstrap/lib/Tooltip';
 class LinkButton extends React.Component {
   static propTypes = {
     state: PropTypes.object,
-    onChange: TypPropTypeses.func
+    onChange: PropTypes.func
   };
 
   static defaultProps = {
