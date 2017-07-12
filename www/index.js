@@ -14,18 +14,6 @@ const app = express();
 let componentsRoot = path.resolve(__dirname, '../src/client/components');
 require('@opuscapita/react-showroom-server').makeLocalScan(componentsRoot);
 
-const babelrc = fs.readFileSync(path.join(__dirname, '../.babelrc'));
-let config;
-
-try {
-  config = JSON.parse(babelrc);
-} catch (err) {
-  console.error('==>     ERROR: Error parsing your .babelrc.');
-  console.error(err);
-}
-
-require('babel-register')(config);
-
 let serverOptions = {
   watchOptions: {
     aggregateTimeout: 300,
