@@ -1,3 +1,5 @@
+[![CircleCI Status](https://circleci.com/gh/OpusCapita/react-markdown/tree/master.svg?style=shield&circle-token=:circle-token)](https://circleci.com/gh/OpusCapita/react-markdown)
+
 # React markdown (work in progress)
 
 ## Demo and documentation
