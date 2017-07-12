@@ -2,9 +2,10 @@
 *.iml
 .idea
 
-tmp
+/tmp
 /lib
-node_modules
+/node_modules
+/.gh-pages-tmp
 
 package-lock.json
 yarn.lock
