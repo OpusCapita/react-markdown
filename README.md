@@ -16,7 +16,7 @@ Online demo and components reference available here: https://opuscapita.github.i
 
 | [<img src="https://avatars.githubusercontent.com/u/24603787?v=3" width="100px;"/>](https://github.com/asergeev-sc) | [**Alexey Sergeev**](https://github.com/asergeev-sc)     |
 | :---: | :---: |
-| [<img src="https://avatars.githubusercontent.com/u/24652543?v=3" width="100px;"/>](https://github.com/asergeev-sc) | [**Kirill Volkovich**](https://github.com/kvolkovich-sc) |
+| [<img src="https://avatars.githubusercontent.com/u/24652543?v=3" width="100px;"/>](https://github.com/kvolkovich-sc) | [**Kirill Volkovich**](https://github.com/kvolkovich-sc) |
 
 ## License
 
