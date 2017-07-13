@@ -45,7 +45,8 @@ class RichMarkdownEditor extends React.Component {
    */
 
   state = {
-    editorState: markdown.deserialize(this.props.value || '')
+    editorState: markdown.deserialize(this.props.value || ''),
+    fullScreen: false
   };
 
   componentWillMount = () => {
@@ -73,6 +74,10 @@ class RichMarkdownEditor extends React.Component {
     this.setState({ editorState });
   };
 
+  handleFullScreen = (fullScreen) => {
+    this.setState({ fullScreen });
+  };
+
   /**
    * Render.
    *
@@ -80,7 +85,10 @@ class RichMarkdownEditor extends React.Component {
    */
   render() {
     const { editorState } = this.state;
-    const { children, onFullScreen, fullScreen } = this.props;
+    const { children } = this.props;
+
+    const onFullScreen = this.props.onFullScreen || this.handleFullScreen;
+    const fullScreen = this.props.onFullScreen ? this.props.fullScreen : this.state.fullScreen;
 
     return (
       <SlateEditor
@@ -112,11 +120,9 @@ class RichMarkdownEditor extends React.Component {
             <UnorderedListButton/>
           </SlateToolbarGroup>
 
-          {onFullScreen ? (
-            <SlateToolbarGroup>
-              <FullScreenButton onFullScreen={onFullScreen} fullScreen={fullScreen}/>
-            </SlateToolbarGroup>
-          ) : null}
+          <SlateToolbarGroup>
+            <FullScreenButton onFullScreen={onFullScreen} fullScreen={fullScreen}/>
+          </SlateToolbarGroup>
 
           {children}
         </SlateToolbar>
