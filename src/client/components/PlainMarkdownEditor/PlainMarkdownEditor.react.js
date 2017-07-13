@@ -1,7 +1,6 @@
 import React from 'react';
 import Types from 'prop-types';
 import {
-  AutocompletePlugin,
   FullScreenButton,
   MarkdownBoldButton,
   MarkdownHeaderFiveButton,
@@ -13,7 +12,7 @@ import {
   MarkdownItalicButton,
   MarkdownLinkButton,
   MarkdownOrderedListButton,
-  MarkdownPreviewPlugin,
+  MarkdownPlugin,
   MarkdownStrikethroughButton,
   MarkdownUnorderedListButton
 } from '../SlateEditor/plugins';
@@ -29,8 +28,7 @@ class PlainMarkdownEditor extends React.Component {
 
   componentWillMount = () => {
     this.plugins = [
-      AutocompletePlugin(),
-      MarkdownPreviewPlugin()
+      MarkdownPlugin()
     ];
   };
 
@@ -54,24 +52,27 @@ class PlainMarkdownEditor extends React.Component {
 
         <SlateToolbar>
           <SlateToolbarGroup>
-            <MarkdownBoldButton disabled={true}/>
-            <MarkdownItalicButton disabled={true}/>
-            <MarkdownStrikethroughButton disabled={true}/>
-            <MarkdownLinkButton disabled={true}/>
+            <MarkdownBoldButton/>
+            <MarkdownItalicButton/>
+            <MarkdownStrikethroughButton/>
           </SlateToolbarGroup>
 
           <SlateToolbarGroup>
-            <MarkdownHeaderOneButton disabled={true}/>
-            <MarkdownHeaderTwoButton disabled={true}/>
-            <MarkdownHeaderThreeButton disabled={true}/>
-            <MarkdownHeaderFourButton disabled={true}/>
-            <MarkdownHeaderFiveButton disabled={true}/>
-            <MarkdownHeaderSixButton disabled={true}/>
+            <MarkdownLinkButton/>
           </SlateToolbarGroup>
 
           <SlateToolbarGroup>
-            <MarkdownOrderedListButton disabled={true}/>
-            <MarkdownUnorderedListButton disabled={true}/>
+            <MarkdownHeaderOneButton/>
+            <MarkdownHeaderTwoButton/>
+            <MarkdownHeaderThreeButton/>
+            <MarkdownHeaderFourButton/>
+            <MarkdownHeaderFiveButton/>
+            <MarkdownHeaderSixButton/>
+          </SlateToolbarGroup>
+
+          <SlateToolbarGroup>
+            <MarkdownOrderedListButton/>
+            <MarkdownUnorderedListButton/>
           </SlateToolbarGroup>
 
           {onFullScreen ? (
