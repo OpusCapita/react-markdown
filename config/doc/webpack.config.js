@@ -10,7 +10,6 @@ module.exports = {
   entry: path.resolve(__dirname, '../../www/index-page.js'),
   context: path.resolve(__dirname),
   output: {
-    publicPath: '/',
     path: path.resolve(__dirname, '../../lib'),
     filename: `index.js`,
     library: `${PACKAGE_NAME}`,
