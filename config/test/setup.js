@@ -1,10 +1,15 @@
-import { jsdom } from 'jsdom';
-import chai from 'chai';
-import sinonChai from 'sinon-chai';
-import chaiEnzyme from 'chai-enzyme';
+process.env.NODE_ENV = 'test';
 
-chai.use(sinonChai);
-chai.use(chaiEnzyme());
+require('babel-register')({
+  presets: ['es2015', 'stage-0', 'react'],
+  plugins: ['transform-decorators-legacy']
+});
+
+var jsdom = require('jsdom').jsdom;
+var chai = require('chai');
+
+chai.use(require('sinon-chai'));
+chai.use(require('chai-enzyme')());
 
 global.document = jsdom('<!doctype html><html><body></body></html>');
 global.window = document.defaultView;

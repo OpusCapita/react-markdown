@@ -13,7 +13,6 @@ const PORT = require('../.env').PORT;
 const NODE_ENV = process.env.NODE_ENV;
 const IS_PRODUCTION_MODE = NODE_ENV === 'production';
 const IS_LINK_MODE = NODE_ENV === 'link';
-const IS_DOCS_MODE = NODE_ENV === 'docs';
 const WEBPACK_BUNDLE_ANALYZE = process.env.WEBPACK_BUNDLE_ANALYZE;
 
 let plugins = [
@@ -30,7 +29,7 @@ if(IS_LINK_MODE) {
   plugins.push(new WriteFilePlugin());
 }
 
-if(IS_PRODUCTION_MODE || IS_DOCS_MODE) {
+if(IS_PRODUCTION_MODE) {
   let uglifyPlugin = new webpack.optimize.UglifyJsPlugin({
     compress: {
       warnings: false,
@@ -65,7 +64,7 @@ module.exports = {
     path.resolve(__dirname, '../www/index-page.js'),
   context: path.resolve(__dirname),
   output: {
-    publicPath: IS_DOCS_MODE ? false : '/',
+    publicPath: '/',
     path: path.resolve(__dirname, '../lib'),
     filename: `index.js`,
     library: `${PACKAGE_NAME}`,

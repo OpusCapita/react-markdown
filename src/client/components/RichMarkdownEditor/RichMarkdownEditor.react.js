@@ -3,7 +3,7 @@ import Types from 'prop-types';
 import Markdown from '../serializer/MarkdownRenderer';
 
 import {
-  AutocompletePlugin,
+  // AutocompletePlugin,
   BlockquotePlugin,
   BoldButton,
   BoldPlugin,
@@ -24,7 +24,8 @@ import {
   OrderedListButton,
   StrikethroughButton,
   StrikethroughPlugin,
-  UnorderedListButton
+  UnorderedListButton,
+  UnderlinePlugin
 } from '../SlateEditor/plugins';
 import { SlateContent, SlateEditor, SlateToolbar, SlateToolbarGroup } from '../SlateEditor';
 
@@ -56,10 +57,12 @@ class RichMarkdownEditor extends React.Component {
       StrikethroughPlugin(),
       BoldPlugin(),
       ItalicPlugin(),
+      UnderlinePlugin(),
       BlockquotePlugin(),
       HeaderPlugin(),
-      FormatPlugin(),
-      AutocompletePlugin()
+      FormatPlugin()
+      // ,
+      // AutocompletePlugin()
     ];
   };
 

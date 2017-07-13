@@ -1,7 +1,7 @@
 import React from 'react';
 import Types from 'prop-types';
 import {
-  AutocompletePlugin,
+  // AutocompletePlugin,
   FullScreenButton,
   MarkdownBoldButton,
   MarkdownHeaderFiveButton,
@@ -30,7 +30,7 @@ class PlainMarkdownEditor extends React.Component {
 
   componentWillMount = () => {
     this.plugins = [
-      AutocompletePlugin(),
+      // AutocompletePlugin(),
       MarkdownPreviewPlugin()
     ];
   };
