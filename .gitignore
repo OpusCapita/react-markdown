@@ -1,12 +1,16 @@
 *.log
 *.iml
 .idea
-
 tmp
+npm-debug.log
+/static
+/build
 /lib
-node_modules
+/node_modules
+/.gh-pages-tmp
 
 package-lock.json
+/state-files/
 yarn.lock
 npm-debug.log
 yarn-debug.log
