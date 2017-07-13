@@ -1,7 +1,7 @@
 import React from 'react';
 import Types from 'prop-types';
 import {
-  AutocompletePlugin,
+  // AutocompletePlugin,
   FullScreenButton,
   MarkdownBoldButton,
   MarkdownHeaderFiveButton,

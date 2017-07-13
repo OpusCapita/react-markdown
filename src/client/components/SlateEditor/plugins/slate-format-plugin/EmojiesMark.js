@@ -4,7 +4,7 @@ const style = {
   fontStyle: 'normal',
 };
 
-const EmojiesMark = ({children}) => {
+const EmojiesMark = ({ children }) => {
   return <span style={style}>{children}</span>
 };
 

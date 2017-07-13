@@ -5,7 +5,7 @@ const style = {
   marginBottom: '20px'
 };
 
-const DefinitionListNode = ({children}) => {
+const DefinitionListNode = ({ children }) => {
   return <div style={style}>{children}</div>
 };
 

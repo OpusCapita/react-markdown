@@ -6,7 +6,7 @@ const style = {
   display: 'block'
 };
 
-const DefinitionSimpleNode = ({children}) => {
+const DefinitionSimpleNode = ({ children }) => {
   return <dd style={style}>{children}</dd>
 };
 

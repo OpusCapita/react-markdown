@@ -3,7 +3,7 @@ import Types from 'prop-types';
 import Markdown from '../serializer/MarkdownRenderer';
 
 import {
-  AutocompletePlugin,
+  // AutocompletePlugin,
   BlockquotePlugin,
   BoldButton,
   BoldPlugin,

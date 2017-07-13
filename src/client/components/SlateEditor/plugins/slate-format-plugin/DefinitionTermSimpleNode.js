@@ -5,7 +5,7 @@ const style = {
   lineHeight: 1.42857143
 };
 
-const DefinitionTermSimpleNode = ({children}) => {
+const DefinitionTermSimpleNode = ({ children }) => {
   return <dt style={style}>{children}</dt>
 };
 

@@ -5,7 +5,7 @@ const style = {
   marginBottom: '20px'
 };
 
-const DefinitionListSimpleNode = ({children}) => {
+const DefinitionListSimpleNode = ({ children }) => {
   return <dl style={style}>{children}</dl>
 };
 
