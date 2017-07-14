@@ -85,7 +85,7 @@ export const wrapItalicMarkdown = state => {
   const { startOffset, endOffset } = state;
   let t = state.transform();
   if (startOffset === endOffset) {
-    const text = 'italic text';
+    const text = '';
     t.insertText('_' + text + '_').
       move(-1).
       extend(text.length * -1)
@@ -133,7 +133,7 @@ export const wrapBoldMarkdown = state => {
   const { startOffset, endOffset } = state;
   let t = state.transform();
   if (startOffset === endOffset) {
-    const text = 'bold text';
+    const text = '';
     t.insertText('**' + text + '**').
       move(-2).
       extend(text.length * -1)
@@ -181,7 +181,7 @@ export const wrapStrikethroughMarkdown = state => {
   const { startOffset, endOffset } = state;
   let t = state.transform();
   if (startOffset === endOffset) {
-    const text = 'strikethrough text';
+    const text = '';
     t.insertText('~~' + text + '~~').
       move(-2).
       extend(text.length * -1)
@@ -274,4 +274,3 @@ export const wrapHeaderFiveMarkdown = wrapBlock.bind(null,
   [olRegExp, ulRegExp, h1RegExp, h2RegExp, h3RegExp, h4RegExp, h6RegExp], '##### ');
 export const wrapHeaderSixMarkdown = wrapBlock.bind(null,
   [olRegExp, ulRegExp, h1RegExp, h2RegExp, h3RegExp, h4RegExp, h5RegExp], '###### ');
-
