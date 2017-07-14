@@ -12,7 +12,7 @@ const MarkdownItalicButton = ({ state, onChange, disabled }) => {
   return (
     <OverlayTrigger placement="bottom" overlay={<Tooltip id="italic-tp">Italic (Ctrl+I)</Tooltip>}>
       <button className={classnames('btn btn-default', { active })} disabled={disabled || hasMultiLineSelection(state)}
-              onClick={e => onChange(active ? unwrapItalicMarkdown(state) : wrapItalicMarkdown(state))}
+        onClick={e => onChange(active ? unwrapItalicMarkdown(state) : wrapItalicMarkdown(state))}
       >
         <i className="fa fa-italic"/>
       </button>

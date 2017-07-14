@@ -18,8 +18,8 @@ const MarkdownHeaderSixButton = ({ state, onChange, disabled }) => {
   return (
     <OverlayTrigger placement="bottom" overlay={<Tooltip id="h6-tp">Header size 6</Tooltip>}>
       <button className={classnames('btn btn-default', { active })}
-              disabled={disabled || hasMultiLineSelection(state)}
-              onClick={e => onChange(active ? unwrapHeaderSixMarkdown(state) : wrapHeaderSixMarkdown(state))}
+        disabled={disabled || hasMultiLineSelection(state)}
+        onClick={e => onChange(active ? unwrapHeaderSixMarkdown(state) : wrapHeaderSixMarkdown(state))}
       >
         <i className="fa fa-header heading6"/>
       </button>

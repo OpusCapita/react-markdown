@@ -17,7 +17,7 @@ const MarkdownOrderedListButton = ({ state, onChange, disabled }) => {
   return (
     <OverlayTrigger placement="bottom" overlay={<Tooltip id="ordered-list-tp">Numbered list</Tooltip>}>
       <button className={classnames('btn btn-default', { active })} disabled={disabled || hasMultiLineSelection(state)}
-              onClick={e => onChange(active ? unwrapOrderedListMarkdown(state) : wrapOrderedListMarkdown(state))}
+        onClick={e => onChange(active ? unwrapOrderedListMarkdown(state) : wrapOrderedListMarkdown(state))}
       >
         <i className="fa fa-list-ol"/>
       </button>

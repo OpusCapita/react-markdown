@@ -13,8 +13,8 @@ const MarkdownBoldButton = ({ state, onChange, disabled }) => {
   return (
     <OverlayTrigger placement="bottom" overlay={<Tooltip id="bold-tp">Bold (Ctrl+B)</Tooltip>}>
       <button className={classnames('btn btn-default', { active })}
-              disabled={disabled || hasMultiLineSelection(state)}
-              onClick={e => onChange(active ? unwrapBoldMarkdown(state) : wrapBoldMarkdown(state))}
+        disabled={disabled || hasMultiLineSelection(state)}
+        onClick={e => onChange(active ? unwrapBoldMarkdown(state) : wrapBoldMarkdown(state))}
       >
         <i className="fa fa-bold"/>
       </button>

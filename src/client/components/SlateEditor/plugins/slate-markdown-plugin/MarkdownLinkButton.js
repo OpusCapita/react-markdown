@@ -9,7 +9,7 @@ import { wrapLinkMarkdown, hasMultiLineSelection } from './MarkdownUtils';
 const MarkdownLinkButton = ({ state, onChange, disabled }) => (
   <OverlayTrigger placement="bottom" overlay={<Tooltip id="link-tp">Insert link</Tooltip>}>
     <button className="btn btn-default" disabled={disabled || hasMultiLineSelection(state)}
-            onClick={e => onChange(wrapLinkMarkdown(state))}
+      onClick={e => onChange(wrapLinkMarkdown(state))}
     >
       <i className="fa fa-link"/>
     </button>

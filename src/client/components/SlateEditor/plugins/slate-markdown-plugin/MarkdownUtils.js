@@ -28,11 +28,11 @@ const hasBlock = function(regExp, state) {
  */
 const unwrapBlock = function(removedLength, state) {
   const { startOffset, endOffset } = state;
-  return state.transform()
-    .moveOffsetsTo(0)
-    .deleteForward(removedLength)
-    .moveOffsetsTo(startOffset - removedLength, endOffset - removedLength)
-    .focus().apply();
+  return state.transform().
+    moveOffsetsTo(0).
+    deleteForward(removedLength).
+    moveOffsetsTo(startOffset - removedLength, endOffset - removedLength).
+    focus().apply();
 };
 
 /**
@@ -55,9 +55,9 @@ const wrapBlock = function(matchRules, text, state) {
       break;
     }
   }
-  return t.insertText(text)
-    .moveOffsetsTo(startOffset + text.length - length, endOffset + text.length - length)
-    .focus().apply();
+  return t.insertText(text).
+    moveOffsetsTo(startOffset + text.length - length, endOffset + text.length - length).
+    focus().apply();
 };
 
 /**
@@ -86,9 +86,9 @@ export const wrapItalicMarkdown = state => {
   let t = state.transform();
   if (startOffset === endOffset) {
     const text = 'italic text';
-    t.insertText('_' + text + '_')
-      .move(-1)
-      .extend(text.length * -1)
+    t.insertText('_' + text + '_').
+      move(-1).
+      extend(text.length * -1)
   } else {
     t.wrapText('_', '_');
   }
@@ -102,10 +102,10 @@ export const wrapItalicMarkdown = state => {
  */
 export const unwrapItalicMarkdown = state => {
   const { startOffset, endOffset, focusText } = state;
-  return state.transform()
-    .removeTextByKey(focusText.key, endOffset, 1)
-    .removeTextByKey(focusText.key, startOffset - 1, 1)
-    .focus().apply();
+  return state.transform().
+    removeTextByKey(focusText.key, endOffset, 1).
+    removeTextByKey(focusText.key, startOffset - 1, 1).
+    focus().apply();
 };
 
 /**
@@ -134,9 +134,9 @@ export const wrapBoldMarkdown = state => {
   let t = state.transform();
   if (startOffset === endOffset) {
     const text = 'bold text';
-    t.insertText('**' + text + '**')
-      .move(-2)
-      .extend(text.length * -1)
+    t.insertText('**' + text + '**').
+      move(-2).
+      extend(text.length * -1)
   } else {
     t.wrapText('**', '**');
   }
@@ -150,10 +150,10 @@ export const wrapBoldMarkdown = state => {
  */
 export const unwrapBoldMarkdown = state => {
   const { startOffset, endOffset, focusText } = state;
-  return state.transform()
-    .removeTextByKey(focusText.key, endOffset, 2)
-    .removeTextByKey(focusText.key, startOffset - 2, 2)
-    .focus().apply()
+  return state.transform().
+    removeTextByKey(focusText.key, endOffset, 2).
+    removeTextByKey(focusText.key, startOffset - 2, 2).
+    focus().apply()
 };
 
 /**
@@ -182,9 +182,9 @@ export const wrapStrikethroughMarkdown = state => {
   let t = state.transform();
   if (startOffset === endOffset) {
     const text = 'strikethrough text';
-    t.insertText('~~' + text + '~~')
-      .move(-2)
-      .extend(text.length * -1)
+    t.insertText('~~' + text + '~~').
+      move(-2).
+      extend(text.length * -1)
   } else {
     t.wrapText('~~', '~~');
   }
@@ -198,10 +198,10 @@ export const wrapStrikethroughMarkdown = state => {
  */
 export const unwrapStrikethroughMarkdown = state => {
   const { startOffset, endOffset, focusText } = state;
-  return state.transform()
-    .removeTextByKey(focusText.key, endOffset, 2)
-    .removeTextByKey(focusText.key, startOffset - 2, 2)
-    .focus().apply()
+  return state.transform().
+    removeTextByKey(focusText.key, endOffset, 2).
+    removeTextByKey(focusText.key, startOffset - 2, 2).
+    focus().apply()
 };
 
 /**

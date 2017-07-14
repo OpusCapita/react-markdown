@@ -17,7 +17,7 @@ const MarkdownUnorderedListButton = ({ state, onChange, disabled }) => {
   return (
     <OverlayTrigger placement="bottom" overlay={<Tooltip id="unordered-list-tp">Bullet list</Tooltip>}>
       <button className={classnames('btn btn-default', { active })} disabled={disabled || hasMultiLineSelection(state)}
-              onClick={e => onChange(active ? unwrapUnorderedListMarkdown(state) : wrapUnorderedListMarkdown(state))}
+        onClick={e => onChange(active ? unwrapUnorderedListMarkdown(state) : wrapUnorderedListMarkdown(state))}
       >
         <i className="fa fa-list-ul"/>
       </button>

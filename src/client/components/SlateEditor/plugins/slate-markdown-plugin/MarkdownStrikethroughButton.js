@@ -17,7 +17,7 @@ const MarkdownStrikethroughButton = ({ state, onChange, disabled }) => {
   return (
     <OverlayTrigger placement="bottom" overlay={<Tooltip id="strikethrough-tp">Strikethrough (Ctrl+S)</Tooltip>}>
       <button className={classnames('btn btn-default', { active })} disabled={disabled || hasMultiLineSelection(state)}
-              onClick={e => onChange(active ? unwrapStrikethroughMarkdown(state) : wrapStrikethroughMarkdown(state))}
+        onClick={e => onChange(active ? unwrapStrikethroughMarkdown(state) : wrapStrikethroughMarkdown(state))}
       >
         <i className="fa fa-strikethrough"/>
       </button>
