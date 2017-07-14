@@ -65,7 +65,8 @@ const markups = {
   '_': 'italic',
   '~~': 'strikethrough',
   '~': 'sub',
-  '`': 'code'
+  '`': 'code',
+  'linkify': 'linkify'
 };
 
 function parseAttrs(attrs) {
@@ -109,8 +110,6 @@ class BlockNode {
     }
 
     if (token.meta) {
-      // console.log(token);
-
       this.data = Object.assign(this.data, token.meta);
     }
   }
@@ -214,7 +213,12 @@ class TextBlock {
     this.text = '';
 
     if (token.type === 'emoji') {
-      this.marks = [{type: 'emoji'}];
+      this.marks = [
+        {
+          type: 'emoji',
+          data: {markup: token.markup}
+        }
+      ];
     }
 
     else if (token.markup && markups[token.markup]) {
@@ -230,6 +234,19 @@ class TextBlock {
   setText(text) {
     this.text = text;
   }
+
+  setMarks(marks) {
+    this.marks = [];
+
+    for (let mark in marks) {
+      if (mark !== '') {
+        this.marks.push({
+          type: markups[mark],
+          data: {markup: mark}
+        });
+      }
+    }
+  }
 }
 
 class Children {
@@ -237,6 +254,7 @@ class Children {
     this._nodes = [];
     this.currNode = null;
     this.currTextBlock = null;
+    this.marks = {};
 
     this.createNodes(tokens);
   }
@@ -324,21 +342,37 @@ class Children {
       this.currNode = new TextNode();
     }
 
-    if (lastElem === 'open' || token.type === 'code_inline' || token.type === 'emoji') {
+    if (token.type === 'code_inline' || token.type === 'emoji') {
       this.addTextBlock();
-
       this.currTextBlock = new TextBlock(token);
-    }
-
-    if (token.type === 'text' || token.type === 'code_inline' || token.type === 'emoji') {
-      if (!this.currTextBlock) {
-        this.currTextBlock = new TextBlock(token);
-      }
       this.currTextBlock.setText(token.content);
+      this.addTextBlock();
     }
 
-    if (lastElem === 'close' || token.type === 'code_inline' || token.type === 'emoji') {
+    // Add token's mark to this marks
+    if (lastElem === 'open') {
+      if (token.markup !== '') {
+        this.marks[token.markup] = true;
+      }
+    }
+
+    // Add this marks to text's block
+    if (token.type === 'text') {
+      this.currTextBlock = new TextBlock(token);
+      this.currTextBlock.setText(token.content);
+
+      if (this.marks !== {}) {
+        this.currTextBlock.setMarks(this.marks);
+      }
+
       this.addTextBlock();
+    }
+
+    // Remove token's mark from this marks
+    if (lastElem === 'close') {
+      if (token.markup !== '') {
+        delete this.marks[token.markup];
+      }
     }
   }
 
