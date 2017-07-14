@@ -14,7 +14,18 @@ _italic text_
 
 ==Title==
 
+Title
+===
+
+Title
+---
+
+text `inline code` text
+
 text ```inline code``` text
+
+`inline code`
+```inline code```
 
 ```
 code block

@@ -8,7 +8,7 @@ import { Mark } from 'slate';
 // eslint-disable-next-line
 Prism.languages.markdown = Prism.languages.extend("markup", {});
 
-Prism.languages.insertBefore("markdown", "prolog", {
+Prism.languages.insertBefore("markdown", {
 
   // OK
   blockquote: {
@@ -17,17 +17,21 @@ Prism.languages.insertBefore("markdown", "prolog", {
 
   // OK, except for new line
   code: [{
-    pattern: /^(?: {4}|\t).+/m,
+    pattern: /(^|[^\\\`])`[^`][^\n\r].+`/,
     alias: "keyword"
   }, {
-    pattern: /``.+?``|`[^`\n]+`/,
+    pattern: /(^|[^\\\`])```[^`][^\n\r].+```/,
     alias: "keyword"
   }],
 
-  // ERROR
   '==title1==': [{
     pattern: /(^|[^\\=])==[^=][^\n\r]*?==/,
     lookbehind: true,
+    alias: "important"
+  }],
+
+  'title1===or---': [{
+    pattern: /\w+.*(?:\r?\n|\r)(?:==+|--+)/,
     alias: "important"
   }],
 
@@ -37,31 +41,31 @@ Prism.languages.insertBefore("markdown", "prolog", {
     alias: "important"
   }],
 
-  title2: [ {
+  title2: [{
     pattern: /(^\s*)#{2}[\s]+.*/m,
     lookbehind: true,
     alias: "important"
   }],
 
-  title3: [ {
+  title3: [{
     pattern: /(^\s*)#{3}[\s]+.*/m,
     lookbehind: true,
     alias: "important"
   }],
 
-  title4: [ {
+  title4: [{
     pattern: /(^\s*)#{4}[\s]+.*/m,
     lookbehind: true,
     alias: "important"
   }],
 
-  title5: [ {
+  title5: [{
     pattern: /(^\s*)#{5}[\s]+.*/m,
     lookbehind: true,
     alias: "important"
   }],
 
-  title6: [ {
+  title6: [{
     pattern: /(^\s*)#{6}[\s]+.*/m,
     lookbehind: true,
     alias: "important"
@@ -221,6 +225,7 @@ const titleStyle = {
 const MarkdownPreviewSchema = {
   marks: {
     '==title1==': { ...titleStyle },
+    'title1===or---': { ...titleStyle },
     'title1': { ...titleStyle, left: '-2ch' },
     'title2': { ...titleStyle, left: '-3ch' },
     'title3': { ...titleStyle, left: '-4ch' },
@@ -245,7 +250,11 @@ const MarkdownPreviewSchema = {
     },
     'code': {
       display: 'inline-block',
-      padding: '2px 1px'
+      backgroundColor: '#eee'
+    },
+    'codeBlock': {
+      display: 'block',
+      backgroundColor: '#eee'
     },
     'list': {
       paddingLeft: '10px',
