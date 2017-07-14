@@ -20,7 +20,36 @@ const MARKUPS = {
   strikethrough: '~~',
   mark: '==',
   bold: '**',
-  italic: '*',
+  italic: '_',
+};
+
+const EMOJI = {
+  angry:            [ '>:(', '>:-(' ],
+  blush:            [ ':")', ':-")' ],
+  broken_heart:     [ '</3', '<\\3' ],
+  // :\ and :-\ not used because of conflict with markdown escaping
+  confused:         [ ':/', ':-/' ], // twemoji shows question
+  cry:              [ ':,-(', ":'-(", ":'(", ':,(' ],
+  frowning:         [ ':(', ':-(' ],
+  heart:            [ '<3' ],
+  imp:              [ ']:(', ']:-(' ],
+  innocent:         [ 'o:)', 'O:)', 'o:-)', 'O:-)', '0:)', '0:-)' ],
+  joy:              [ ":')", ":'-)", ':,)', ':,-)', ":'D", ":'-D", ':,D', ':,-D' ],
+  kissing:          [ ':*', ':-*' ],
+  laughing:         [ 'x-)', 'X-)' ],
+  neutral_face:     [ ':|', ':-|' ],
+  open_mouth:       [ ':o', ':-o', ':O', ':-O' ],
+  rage:             [ ':@', ':-@' ],
+  smile:            [ ':D', ':-D' ],
+  smiley:           [ ':)', ':-)' ],
+  smiling_imp:      [ ']:)', ']:-)' ],
+  sob:              [ ":,'(", ":,'-(", ';(', ';-(' ],
+  stuck_out_tongue: [ ':P', ':-P' ],
+  sunglasses:       [ '8-)', 'B-)' ],
+  sweat:            [ ',:(', ',:-(' ],
+  sweat_smile:      [ ',:)', ',:-)' ],
+  unamused:         [ ':s', ':-S', ':z', ':-Z', ':$', ':-$' ],
+  wink:             [ ';)', ';-)' ]
 };
 
 /**
@@ -54,10 +83,25 @@ const RULES = [
   // Add a new rule that handles marks...
   {
     serialize(obj, children) {
-      if (obj.kind === 'mark' && MARKUPS[obj.type]) {
-        let markup = obj.getIn(['data', 'markup']);
-        markup = markup ? markup : MARKUPS[obj.type];
-        return `${markup}${children}${markup}`;
+      if (obj.kind === 'mark') {
+        if (MARKUPS[obj.type]) {
+          let markup = obj.getIn(['data', 'markup']);
+          markup = markup ? markup : MARKUPS[obj.type];
+          return `${markup}${children}${markup}`;
+        }
+
+        else if (obj.type === 'emoji') {
+          let markup = obj.getIn(['data', 'markup']);
+          if (markup) {
+            if (EMOJI[markup]) {
+              return EMOJI[markup][0];
+            }
+
+            return `:${markup}:`;
+          }
+
+          return children;
+        }
       }
     }
   }
@@ -78,8 +122,14 @@ const NodeSerialize = {
   heading4: (obj, children) => `#### ${children}`,
   heading5: (obj, children) => `##### ${children}`,
   heading6: (obj, children) => `###### ${children}`,
-  paragraph: (obj, children) => `${children}\n`,
   code: (obj, children) => `\`\`\`\n${children}\n\`\`\`\n`,
+  paragraph: (obj, children) => {
+    // If the previous node is a paragraph,
+    // and the current node in blockquote
+    let condition = obj.previousNodeType === 'paragraph'
+                    && obj.getIn(['data', 'parent']) === 'blockquote';
+    return `${condition ? '\n' : ''}${children}\n`;
+  },
 
   // Tables
   table: (obj, children) => children,
@@ -142,7 +192,44 @@ const NodeSerialize = {
     for (let i = 0; i < arrChildren.length; i++) {
       arrChildren[i] = `> ${arrChildren[i]}`;
     }
-    return `\n${arrChildren.join('\n')}`;
+
+    let level = obj.getIn(['data', 'level']);
+
+    /**
+     // This block shorten a line's prefix of the root blockquote on the next line
+     //
+     // Example:
+     // > > >
+     // > information
+     //
+     // change to
+     //
+     // >
+     // > information
+     */
+    {
+      if (level === 0) {
+        const prefLength = [];
+        const isEmpty = [];
+        for (let i = 0; i < arrChildren.length; i++) {
+          prefLength[i] = arrChildren[i].match(/>/g).length;
+          // prefLength[i] = arrChildren[i].match(/> |>/g).length;
+          isEmpty[i] = !arrChildren[i].match(/[^> ]/g);
+        }
+        for (let i = 0; i < arrChildren.length - 1; i++) {
+          if (isEmpty[i] && prefLength[i] > prefLength[i + 1]) {
+            arrChildren[i] = new Array(prefLength[i + 1]).fill('> ').join('');
+          }
+        }
+
+        // Remove last empty line
+        if (arrChildren.length > 0 && isEmpty[arrChildren.length - 1]) {
+          arrChildren.length--;
+        }
+      }
+    }
+
+    return `${arrChildren.join('\n')}${level === 0 ? `\n` : ``}`;
   },
   anchor: (obj, children) => {
     const label = obj.getIn(['data', 'label']);
@@ -233,6 +320,7 @@ class Markdown {
     ];
 
     this.previousNodeType = '';
+    this.previousNodeLevel = 0;
 
     this.serializeNode = this.serializeNode.bind(this);
     this.serializeRange = this.serializeRange.bind(this);
@@ -271,6 +359,13 @@ class Markdown {
         node.previousNodeType = this.previousNodeType;
       }
       this.previousNodeType = node.type;
+      if (this.previousNodeLevel) {
+        node.previousNodeLevel = this.previousNodeLevel;
+      }
+      let level = node.getIn(['data', 'level']);
+      if (level === 0 || level) {
+        this.previousNodeLevel = level;
+      }
     }
 
     let children = node.nodes.map(this.serializeNode);
@@ -281,6 +376,10 @@ class Markdown {
       let ret = rule.serialize(node, children);
 
       if (ret) {
+        ret = ret.replace(/_\*\*_/g, '**');
+        ret = ret.replace(/\*\*__/g, '**');
+        ret = ret.replace(/__\*\*/g, '**');
+
         return ret;
       }
     }
