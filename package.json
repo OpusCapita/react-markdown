@@ -9,7 +9,8 @@
     "lint-fix": "eslint src/client --fix",
     "publish-release": "npm run npm-build && npm-publish --release",
     "start": "showroom-scan src && babel-node --presets es2015,stage-0 www/index",
-    "gh-pages": "showroom-scan src && sh gh-pages-update.sh",
+    "gh-pages-update": "showroom-scan src && sh gh-pages-make.sh && gh-pages-push.sh",
+    "create-demo-tarball": "showroom-scan src && sh gh-pages-make.sh",
     "test": "mocha --require ignore-styles --require ./config/test/setup.js --recursive src/**/*.spec.js"
   },
   "license": "Apache-2.0",
