@@ -193,11 +193,43 @@ const NodeSerialize = {
       arrChildren[i] = `> ${arrChildren[i]}`;
     }
 
-    if (obj.previousNodeType === 'blockquote') {
+    let level = obj.getIn(['data', 'level']);
 
+    /**
+     // This block shorten a line's prefix of the root blockquote on the next line
+     //
+     // Example:
+     // > > >
+     // > information
+     //
+     // change to
+     //
+     // >
+     // > information
+     */
+    {
+      if (level === 0) {
+        const prefLength = [];
+        const isEmpty = [];
+        for (let i = 0; i < arrChildren.length; i++) {
+          prefLength[i] = arrChildren[i].match(/>/g).length;
+          // prefLength[i] = arrChildren[i].match(/> |>/g).length;
+          isEmpty[i] = !arrChildren[i].match(/[^> ]/g);
+        }
+        for (let i = 0; i < arrChildren.length - 1; i++) {
+          if (isEmpty[i] && prefLength[i] > prefLength[i + 1]) {
+            arrChildren[i] = new Array(prefLength[i + 1]).fill('> ').join('');
+          }
+        }
+
+        // Remove last empty line
+        if (arrChildren.length > 0 && isEmpty[arrChildren.length - 1]) {
+          arrChildren.length--;
+        }
+      }
     }
 
-    return `\n${arrChildren.join('\n')}`;
+    return `${arrChildren.join('\n')}${level === 0 ? `\n` : ``}`;
   },
   anchor: (obj, children) => {
     const label = obj.getIn(['data', 'label']);
@@ -288,6 +320,7 @@ class Markdown {
     ];
 
     this.previousNodeType = '';
+    this.previousNodeLevel = 0;
 
     this.serializeNode = this.serializeNode.bind(this);
     this.serializeRange = this.serializeRange.bind(this);
@@ -326,6 +359,13 @@ class Markdown {
         node.previousNodeType = this.previousNodeType;
       }
       this.previousNodeType = node.type;
+      if (this.previousNodeLevel) {
+        node.previousNodeLevel = this.previousNodeLevel;
+      }
+      let level = node.getIn(['data', 'level']);
+      if (level === 0 || level) {
+        this.previousNodeLevel = level;
+      }
     }
 
     let children = node.nodes.map(this.serializeNode);
