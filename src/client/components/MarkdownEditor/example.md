@@ -1,7 +1,41 @@
+just a text
+**bold text**
+*italic text*
+_italic text_
+~~strike-through text~~
+[opuscapita](https://www.opuscapita.com/)
+
+# h1
+## h2
+### h3
+#### h4
+##### h5
+###### h6
+
+==Title==
+
+text ```inline code``` text
+
+```
+code block
+
+<strong></strong>
+```
+
+| c1 | c2 | c3 | c4 |
+|--|--|--|--|
+| a | b | c | d |
+| 1 | 2 | 3 | 4 |
+
+Footnote [^first].
+
+> blockquotes
+>> nested blockquotes 
+
 ---
 __Advertisement :)__
 
-- __[pica](#second)__ - high quality and fast image
+- [pica](#second) - high quality and fast image
   resize in browser.
 - __[babelfish](https://github.com/nodeca/babelfish/)__ - developer friendly
   i18n with plurals support and easy syntax.

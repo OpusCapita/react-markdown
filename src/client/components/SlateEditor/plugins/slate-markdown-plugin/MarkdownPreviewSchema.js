@@ -12,11 +12,7 @@ Prism.languages.insertBefore("markdown", "prolog", {
 
   // OK
   blockquote: {
-    pattern: /^>(?:[\t ]*>)*.*/m,
-    alias: "punctuation",
-    inside: {
-      punctuation: /^>(?:[\t ]*>)*/
-    }
+    pattern: /^>(?:[\t ]*>)*.*/m
   },
 
   // OK, except for new line
@@ -29,22 +25,50 @@ Prism.languages.insertBefore("markdown", "prolog", {
   }],
 
   // ERROR
-  title: [{
-    pattern: /\w+.*(?:\r?\n|\r)(?:==+|--+)/,
-    alias: "important",
-    inside: {
-      punctuation: /==+$|--+$/
-    }
-  }, {
-    pattern: /(^\s*)#+.+/m,
+  '==title1==': [{
+    pattern: /(^|[^\\=])==[^=][^\n\r]*?==/,
     lookbehind: true,
-    alias: "important",
-    inside: {
-      punctuation: /^#+|#+$/
-    }
+    alias: "important"
+  }],
+
+  title1: [{
+    pattern: /(^\s*)#{1}[\s]+.*/m,
+    lookbehind: true,
+    alias: "important"
+  }],
+
+  title2: [ {
+    pattern: /(^\s*)#{2}[\s]+.*/m,
+    lookbehind: true,
+    alias: "important"
+  }],
+
+  title3: [ {
+    pattern: /(^\s*)#{3}[\s]+.*/m,
+    lookbehind: true,
+    alias: "important"
+  }],
+
+  title4: [ {
+    pattern: /(^\s*)#{4}[\s]+.*/m,
+    lookbehind: true,
+    alias: "important"
+  }],
+
+  title5: [ {
+    pattern: /(^\s*)#{5}[\s]+.*/m,
+    lookbehind: true,
+    alias: "important"
+  }],
+
+  title6: [ {
+    pattern: /(^\s*)#{6}[\s]+.*/m,
+    lookbehind: true,
+    alias: "important"
   }],
 
   // OK
+  // TODO - check how looks in iA Writer
   hr: {
     pattern: /(^\s*)([*-])([\t ]*\2){2,}(?=\s*$)/m,
     lookbehind: true,
@@ -73,31 +97,57 @@ Prism.languages.insertBefore("markdown", "prolog", {
   },
 
   // OK
-  bold: {
-    pattern: /(^|[^\\])(\*\*|__)(?:(?:\r?\n|\r)(?!\r?\n|\r)|.)+?\2/,
+  bold: [{
+    pattern: /(^|[^\\*])\*\*[^*][^\n\r]*?\*\*/,
     lookbehind: true,
     inside: {
-      punctuation: /^\*\*|^__|\*\*$|__$/
+      punctuation: /(?!.*)/
     }
-  },
+  }, {
+    pattern: /(^|[^\\_])__[^_][^\n\r]*?__/,
+    lookbehind: true,
+    inside: {
+      punctuation: /(?!.*)/
+    }
+  }],
 
   // OK
   strikethrough: {
-    pattern: /(^|[^\\])(\~\~|__)(?:(?:\r?\n|\r)(?!\r?\n|\r)|.)+?\2/,
+    pattern: /(^|[^\\])(\~\~)(?:(?:\r?\n|\r)(?!\r?\n|\r)|.)+?\2/,
     lookbehind: true,
     inside: {
-      punctuation: /^\~\~|^__|\~\~$|__$/
+      punctuation: /(?!.*)/
     }
   },
 
   // OK
-  italic: {
-    pattern: /(^|[^\\])([*_])(?:(?:\r?\n|\r)(?!\r?\n|\r)|.)+?\2/,
+  italic: [{
+    pattern: /(^|[^\\*])\*[^*][^\n\r]*?\*/,
     lookbehind: true,
     inside: {
-      punctuation: /^[*_]|[*_]$/
+      punctuation: /(?!.*)/
     }
-  },
+  }, {
+    pattern: /(^|[^\\_])_[^_][^\n\r]*?_/,
+    lookbehind: true,
+    inside: {
+      punctuation: /(?!.*)/
+    }
+  }],
+
+  boldItalic: [{
+    pattern: /(^|[^\\*])\*\*\*[^*][^\n\r]*?\*\*\*/,
+    lookbehind: true,
+    inside: {
+      punctuation: /(?!.*)/
+    }
+  }, {
+    pattern: /(^|[^\\_])___[^_][^\n\r]*?___/,
+    lookbehind: true,
+    inside: {
+      punctuation: /(?!.*)/
+    }
+  }],
 
   url: {
     pattern: /!?\[[^\]]+\](?:\([^\s)]+(?:[\t ]+"(?:\\.|[^"\\])*")?\)| ?\[[^\]\n]*\])/,
@@ -113,10 +163,10 @@ Prism.languages.insertBefore("markdown", "prolog", {
   }
 });
 
-Prism.languages.markdown.bold.inside.url = Prism.util.clone(Prism.languages.markdown.url);
-Prism.languages.markdown.italic.inside.url = Prism.util.clone(Prism.languages.markdown.url);
-Prism.languages.markdown.bold.inside.italic = Prism.util.clone(Prism.languages.markdown.italic);
-Prism.languages.markdown.italic.inside.bold = Prism.util.clone(Prism.languages.markdown.bold);
+// Prism.languages.markdown.bold.inside.url = Prism.util.clone(Prism.languages.markdown.url);
+// Prism.languages.markdown.italic.inside.url = Prism.util.clone(Prism.languages.markdown.url);
+// Prism.languages.markdown.bold.inside.italic = Prism.util.clone(Prism.languages.markdown.italic);
+// Prism.languages.markdown.italic.inside.bold = Prism.util.clone(Prism.languages.markdown.bold);
 
 
 /**
@@ -163,50 +213,55 @@ function markdownDecorator(text, block) {
   return characters.asImmutable();
 }
 
+const titleStyle = {
+  fontWeight: 'bold',
+  display: 'block',
+  position: 'relative'
+};
 const MarkdownPreviewSchema = {
   marks: {
-    'title': {
-      fontWeight: 'bold',
-      fontSize: '20px',
-      margin: '20px 0 10px 0',
-      display: 'inline-block'
-    },
+    '==title1==': { ...titleStyle },
+    'title1': { ...titleStyle, left: '-2ch' },
+    'title2': { ...titleStyle, left: '-3ch' },
+    'title3': { ...titleStyle, left: '-4ch' },
+    'title4': { ...titleStyle, left: '-5ch' },
+    'title5': { ...titleStyle, left: '-6ch' },
+    'title6': { ...titleStyle, left: '-7ch' },
     'bold': {
       fontWeight: 'bold'
     },
     'italic': {
       fontStyle: 'italic'
     },
+    'boldItalic': {
+      fontStyle: 'italic',
+      fontWeight: 'bold'
+    },
     'punctuation': {
-      opacity: 0.2
+      color: '#777'
     },
     'blockquote': {
-      fontFamily: 'monospace',
-      display: 'inline-block',
-      padding: '2px 1px',
-      fontWeight: 'bold',
-      color: 'ForestGreen'
+      display: 'inline-block'
     },
     'code': {
-      fontFamily: 'monospace',
       display: 'inline-block',
-      padding: '2px 1px',
+      padding: '2px 1px'
     },
     'list': {
       paddingLeft: '10px',
       lineHeight: '10px',
-      fontSize: '20px'
+      position: 'relative',
+      left: '-2ch'
     },
     'hr': {
-      borderBottom: '2px solid #000',
       display: 'block',
-      opacity: 0.2
+      color: '#777'
     },
     'strikethrough': {
       textDecoration: 'line-through'
     },
     'url': {
-      color: 'red'
+      color: '#777'
     },
     'variable': {
       color: 'blue'
