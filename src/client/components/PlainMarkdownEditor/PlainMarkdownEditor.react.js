@@ -24,7 +24,8 @@ import { Plain } from 'slate';
 
 class PlainMarkdownEditor extends React.Component {
   state = {
-    editorState: Plain.deserialize(this.props.value || '')
+    editorState: Plain.deserialize(this.props.value || ''),
+    fullScreen: false
   };
 
   componentWillMount = () => {
@@ -40,9 +41,16 @@ class PlainMarkdownEditor extends React.Component {
     this.setState({ editorState });
   };
 
+  handleFullScreen = (fullScreen) => {
+    this.setState({ fullScreen });
+  };
+
   render() {
     const { editorState } = this.state;
-    const { children, onFullScreen, fullScreen } = this.props;
+    const { children } = this.props;
+
+    const onFullScreen = this.props.onFullScreen || this.handleFullScreen;
+    const fullScreen = this.props.onFullScreen ? this.props.fullScreen : this.state.fullScreen;
 
     return (
       <SlateEditor
@@ -74,11 +82,9 @@ class PlainMarkdownEditor extends React.Component {
             <MarkdownUnorderedListButton disabled={true}/>
           </SlateToolbarGroup>
 
-          {onFullScreen ? (
-            <SlateToolbarGroup>
-              <FullScreenButton onFullScreen={onFullScreen} fullScreen={fullScreen}/>
-            </SlateToolbarGroup>
-          ) : null}
+          <SlateToolbarGroup>
+            <FullScreenButton onFullScreen={onFullScreen} fullScreen={fullScreen}/>
+          </SlateToolbarGroup>
 
           {children}
         </SlateToolbar>
