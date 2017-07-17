@@ -10,63 +10,47 @@ Prism.languages.markdown = Prism.languages.extend("markup", {});
 
 Prism.languages.insertBefore("markdown", {
 
-  // OK
   blockquote: {
     pattern: /^>(?:[\t ]*>)*.*/m
   },
-
-  // OK, except for new line
+  codeBlock: [{
+    pattern: /\`\`\`[^\`]+\`\`\`$/
+  }],
   code: [{
-    pattern: /\`\`\`[^\`]+\`\`\`/,
-    lookbehid: true
+    pattern: /\`\`\`[^\`][^\n\r]*?\`\`\`/
   }, {
-    pattern: /\`[^\`][^\n\r]*?\`/,
-    lookbehid: true
+    pattern: /\`[^\`][^\n\r]*?\`/
   }],
 
   header1: [{
-    pattern: /(^\s*)#{1}[\s]+.*/m,
-    lookbehind: true
+    pattern: /(^\s*)#{1}[\s]+.*/m
   }],
-
   header2: [{
-    pattern: /(^\s*)#{2}[\s]+.*/m,
-    lookbehind: true
+    pattern: /(^\s*)#{2}[\s]+.*/m
   }],
-
   header3: [{
-    pattern: /(^\s*)#{3}[\s]+.*/m,
-    lookbehind: true
+    pattern: /(^\s*)#{3}[\s]+.*/m
   }],
-
   header4: [{
-    pattern: /(^\s*)#{4}[\s]+.*/m,
-    lookbehind: true
+    pattern: /(^\s*)#{4}[\s]+.*/m
   }],
-
   header5: [{
-    pattern: /(^\s*)#{5}[\s]+.*/m,
-    lookbehind: true
+    pattern: /(^\s*)#{5}[\s]+.*/m
   }],
-
   header6: [{
-    pattern: /(^\s*)#{6}[\s]+.*/m,
-    lookbehind: true
+    pattern: /(^\s*)#{6}[\s]+.*/m
   }],
 
-  // OK
-  // TODO - check how looks in iA Writer
   hr: {
-    pattern: /(^\s*)([*-])([\t ]*\2){2,}(?=\s*$)/m,
-    lookbehind: true
+    pattern: /(^\s*)([*-])([\t ]*\2){2,}(?=\s*$)/m
+  },
+  emptyLine: {
+    pattern: /^[\s\S]*$/
   },
 
-  // ERROR: span after bullet goes through buth should not, like *`code`
   list: {
-    pattern: /(^\s*)(?:[*+\-]|\d+\.)(?=$|[\t ])/,
-    lookbehind: true,
+    pattern: /^\s*[\+\-\*]\s.+/
   },
-
   "url-reference": {
     // eslint-disable-next-line
     pattern: /!?\[[^\]]+\]:[\t ]+(?:\S+|<(?:\\.|[^>\\])+>)(?:[\t ]+(?:"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|\((?:\\.|[^)\\])*\)))?/,
@@ -81,7 +65,6 @@ Prism.languages.insertBefore("markdown", {
     alias: "url"
   },
 
-  // OK
   bold: [{
     pattern: /(^|[^\\*])\*\*[^*][^\n\r]*?\*\*/,
     lookbehind: true
@@ -89,14 +72,10 @@ Prism.languages.insertBefore("markdown", {
     pattern: /(^|[^\\_])__[^_][^\n\r]*?__/,
     lookbehind: true
   }],
-
-  // OK
   strikethrough: {
     pattern: /(^|[^\\])(\~\~)(?:(?:\r?\n|\r)(?!\r?\n|\r)|.)+?\2/,
     lookbehind: true
   },
-
-  // OK
   italic: [{
     pattern: /(^|[^\\*])\*[^*][^\n\r]*?\*/,
     lookbehind: true
@@ -104,7 +83,6 @@ Prism.languages.insertBefore("markdown", {
     pattern: /(^|[^\\_])_[^_][^\n\r]*?_/,
     lookbehind: true
   }],
-
   boldItalic: [{
     pattern: /(^|[^\\*])\*\*\*[^*][^\n\r]*?\*\*\*/,
     lookbehind: true
@@ -216,12 +194,14 @@ const MarkdownPreviewSchema = {
     },
     'list': {
       position: 'relative',
-      backgroundColor: '#777',
       left: '-2ch'
     },
     'hr': {
       display: 'block',
       color: '#777'
+    },
+    emptyLine: {
+      lineHeight: '2'
     },
     'strikethrough': {
       textDecoration: 'line-through'
