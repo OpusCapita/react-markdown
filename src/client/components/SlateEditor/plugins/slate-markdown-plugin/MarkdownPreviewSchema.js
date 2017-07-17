@@ -13,14 +13,16 @@ Prism.languages.insertBefore("markdown", {
   blockquote: {
     pattern: /^>(?:[\t ]*>)*.*/m
   },
-  codeBlock: [{
-    pattern: /\`\`\`[^\`]+\`\`\`$/
-  }],
   code: [{
     pattern: /\`\`\`[^\`][^\n\r]*?\`\`\`/
   }, {
     pattern: /\`[^\`][^\n\r]*?\`/
   }],
+  // codeBlock: [{
+  //   // pattern: /(```)(\\\n|\\?.)*?\1/g
+  //   // pattern: /\`\`\`[^\`][^]*?\`\`\`/g
+  // }],
+
 
   header1: [{
     pattern: /(^\s*)#{1}[\s]+.*/m
@@ -44,27 +46,17 @@ Prism.languages.insertBefore("markdown", {
   hr: {
     pattern: /(^\s*)([*-])([\t ]*\2){2,}(?=\s*$)/m
   },
-  emptyLine: {
-    pattern: /^[\s\S]*$/
-  },
 
   list: {
     pattern: /^\s*[\+\-\*]\s.+/
   },
-  "url-reference": {
-    // eslint-disable-next-line
-    pattern: /!?\[[^\]]+\]:[\t ]+(?:\S+|<(?:\\.|[^>\\])+>)(?:[\t ]+(?:"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|\((?:\\.|[^)\\])*\)))?/,
-    inside: {
-      variable: {
-        pattern: /^(!?\[)[^\]]+/,
-        lookbehind: true
-      },
-      string: /(?:"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|\((?:\\.|[^)\\])*\))$/,
-      punctuation: /^[\[\]!:]|[<>]/
-    },
-    alias: "url"
-  },
 
+  url: {
+    pattern: /\[.+\]\(.+\)/,
+    inside: {
+      punctuation: /[\[\]!:]|[<>]|\(.*\)/
+    }
+  },
   bold: [{
     pattern: /(^|[^\\*])\*\*[^*][^\n\r]*?\*\*/,
     lookbehind: true
@@ -89,20 +81,7 @@ Prism.languages.insertBefore("markdown", {
   }, {
     pattern: /(^|[^\\_])___[^_][^\n\r]*?___/,
     lookbehind: true
-  }],
-
-  url: {
-    pattern: /!?\[[^\]]+\](?:\([^\s)]+(?:[\t ]+"(?:\\.|[^"\\])*")?\)| ?\[[^\]\n]*\])/,
-    inside: {
-      variable: {
-        pattern: /(!?\[)[^\]]+(?=\]$)/,
-        lookbehind: true
-      },
-      string: {
-        pattern: /"(?:\\.|[^"\\])*"(?=\)$)/
-      }
-    }
-  }
+  }]
 });
 
 // Prism.languages.markdown.bold.inside.url = Prism.util.clone(Prism.languages.markdown.url);
@@ -200,14 +179,11 @@ const MarkdownPreviewSchema = {
       display: 'block',
       color: '#777'
     },
-    emptyLine: {
-      lineHeight: '2'
-    },
     'strikethrough': {
       textDecoration: 'line-through'
     },
     'url': {
-      color: '#777'
+
     },
     'variable': {
       color: 'blue'

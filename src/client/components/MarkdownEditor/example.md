@@ -4,6 +4,10 @@ just a text
 _italic text_
 ~~strike-through text~~
 [opuscapita](https://www.opuscapita.com/)
+**[opuscapita](https://www.opuscapita.com/)**
+[**opuscapita**](https://www.opuscapita.com/)
+*[**opuscapita**](https://www.opuscapita.com/)*
+
 
 # h1
 ## h2
