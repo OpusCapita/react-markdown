@@ -8,21 +8,25 @@ import { Mark } from 'slate';
 // eslint-disable-next-line
 Prism.languages.markdown = Prism.languages.extend("markup", {});
 
-Prism.languages.insertBefore("markdown", {
+Prism.languages.insertBefore('markdown', 'prolog', {
 
   blockquote: {
     pattern: /^>(?:[\t ]*>)*.*/m
   },
   code: [{
-    pattern: /\`\`\`[^\`][^\n\r]*?\`\`\`/
+    // pattern: /```[^]+```|`.+`/,
+    pattern: /```[^]+```/,
+    inside: {
+      pattern: /.*/m,
+      // alias: 'code'
+    }
   }, {
-    pattern: /\`[^\`][^\n\r]*?\`/
+    pattern: /\`[^\`][^\n\r]+?\`/
   }],
   // codeBlock: [{
   //   // pattern: /(```)(\\\n|\\?.)*?\1/g
   //   // pattern: /\`\`\`[^\`][^]*?\`\`\`/g
   // }],
-
 
   header1: [{
     pattern: /(^\s*)#{1}[\s]+.*/m
@@ -75,13 +79,13 @@ Prism.languages.insertBefore("markdown", {
     pattern: /(^|[^\\_])_[^_][^\n\r]*?_/,
     lookbehind: true
   }],
-  boldItalic: [{
-    pattern: /(^|[^\\*])\*\*\*[^*][^\n\r]*?\*\*\*/,
-    lookbehind: true
-  }, {
-    pattern: /(^|[^\\_])___[^_][^\n\r]*?___/,
-    lookbehind: true
-  }]
+  // boldItalic: [{
+  //   pattern: /(^|[^\\*])\*\*\*[^*][^\n\r]*?\*\*\*/,
+  //   lookbehind: true
+  // }, {
+  //   pattern: /(^|[^\\_])___[^_][^\n\r]*?___/,
+  //   lookbehind: true
+  // }]
 });
 
 // Prism.languages.markdown.bold.inside.url = Prism.util.clone(Prism.languages.markdown.url);
@@ -153,10 +157,10 @@ const MarkdownPreviewSchema = {
     'italic': {
       fontStyle: 'italic'
     },
-    'boldItalic': {
-      fontStyle: 'italic',
-      fontWeight: 'bold'
-    },
+    // 'boldItalic': {
+    //   fontStyle: 'italic',
+    //   fontWeight: 'bold'
+    // },
     'punctuation': {
       color: '#777'
     },
@@ -181,9 +185,6 @@ const MarkdownPreviewSchema = {
     },
     'strikethrough': {
       textDecoration: 'line-through'
-    },
-    'url': {
-
     },
     'variable': {
       color: 'blue'
