@@ -17,10 +17,11 @@ Prism.languages.insertBefore("markdown", {
 
   // OK, except for new line
   code: [{
-    pattern: /(^|[^\\\`])`[^`][^\n\r].+`/,
+    pattern: /(`).*\1/,
     alias: "keyword"
-  }, {
-    pattern: /(^|[^\\\`])```[^`][^\n\r].+```/,
+  },
+  {
+    pattern: /(```).*\1/,
     alias: "keyword"
   }],
 
@@ -279,7 +280,7 @@ const MarkdownPreviewSchema = {
   rules: [
     {
       match: () => true,
-      decorate: markdownDecorator,
+      decorate: markdownDecorator
     }
   ]
 };
