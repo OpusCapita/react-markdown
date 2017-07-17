@@ -17,59 +17,47 @@ Prism.languages.insertBefore("markdown", {
 
   // OK, except for new line
   code: [{
-    pattern: /(`).*\1/,
-    alias: "keyword"
-  },
-  {
-    pattern: /(```).*\1/,
-    alias: "keyword"
+    pattern: /```[^]+```|`.+`/m,
+    lookbehid: true
   }],
 
   '==title1==': [{
     pattern: /(^|[^\\=])==[^=][^\n\r]*?==/,
-    lookbehind: true,
-    alias: "important"
+    lookbehind: true
   }],
 
   'title1===or---': [{
-    pattern: /\w+.*(?:\r?\n|\r)(?:==+|--+)/,
-    alias: "important"
+    pattern: /\w+.*(?:\r?\n|\r)(?:==+|--+)/
   }],
 
   title1: [{
     pattern: /(^\s*)#{1}[\s]+.*/m,
-    lookbehind: true,
-    alias: "important"
+    lookbehind: true
   }],
 
   title2: [{
     pattern: /(^\s*)#{2}[\s]+.*/m,
-    lookbehind: true,
-    alias: "important"
+    lookbehind: true
   }],
 
   title3: [{
     pattern: /(^\s*)#{3}[\s]+.*/m,
-    lookbehind: true,
-    alias: "important"
+    lookbehind: true
   }],
 
   title4: [{
     pattern: /(^\s*)#{4}[\s]+.*/m,
-    lookbehind: true,
-    alias: "important"
+    lookbehind: true
   }],
 
   title5: [{
     pattern: /(^\s*)#{5}[\s]+.*/m,
-    lookbehind: true,
-    alias: "important"
+    lookbehind: true
   }],
 
   title6: [{
     pattern: /(^\s*)#{6}[\s]+.*/m,
-    lookbehind: true,
-    alias: "important"
+    lookbehind: true
   }],
 
   // OK
