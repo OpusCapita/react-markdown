@@ -12,14 +12,6 @@ _italic text_
 ##### h5
 ###### h6
 
-==Title==
-
-Title
-===
-
-Title
----
-
 text `inline code` text
 
 text ```inline code``` text
@@ -28,6 +20,7 @@ text ```inline code``` text
 ```inline code```
 
 ```
+
 code block
 
 <strong></strong>

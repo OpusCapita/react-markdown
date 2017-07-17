@@ -17,45 +17,39 @@ Prism.languages.insertBefore("markdown", {
 
   // OK, except for new line
   code: [{
-    pattern: /```[^]+```|`.+`/m,
+    pattern: /\`\`\`[^\`]+\`\`\`/,
+    lookbehid: true
+  }, {
+    pattern: /\`[^\`][^\n\r]*?\`/,
     lookbehid: true
   }],
 
-  '==title1==': [{
-    pattern: /(^|[^\\=])==[^=][^\n\r]*?==/,
-    lookbehind: true
-  }],
-
-  'title1===or---': [{
-    pattern: /\w+.*(?:\r?\n|\r)(?:==+|--+)/
-  }],
-
-  title1: [{
+  header1: [{
     pattern: /(^\s*)#{1}[\s]+.*/m,
     lookbehind: true
   }],
 
-  title2: [{
+  header2: [{
     pattern: /(^\s*)#{2}[\s]+.*/m,
     lookbehind: true
   }],
 
-  title3: [{
+  header3: [{
     pattern: /(^\s*)#{3}[\s]+.*/m,
     lookbehind: true
   }],
 
-  title4: [{
+  header4: [{
     pattern: /(^\s*)#{4}[\s]+.*/m,
     lookbehind: true
   }],
 
-  title5: [{
+  header5: [{
     pattern: /(^\s*)#{5}[\s]+.*/m,
     lookbehind: true
   }],
 
-  title6: [{
+  header6: [{
     pattern: /(^\s*)#{6}[\s]+.*/m,
     lookbehind: true
   }],
@@ -64,15 +58,13 @@ Prism.languages.insertBefore("markdown", {
   // TODO - check how looks in iA Writer
   hr: {
     pattern: /(^\s*)([*-])([\t ]*\2){2,}(?=\s*$)/m,
-    lookbehind: true,
-    alias: "punctuation"
+    lookbehind: true
   },
 
   // ERROR: span after bullet goes through buth should not, like *`code`
   list: {
-    pattern: /(^\s*)(?:[*+\-]|\d+\.)(?=$|[\t ])/m,
+    pattern: /(^\s*)(?:[*+\-]|\d+\.)(?=$|[\t ])/,
     lookbehind: true,
-    alias: "punctuation"
   },
 
   "url-reference": {
@@ -92,54 +84,33 @@ Prism.languages.insertBefore("markdown", {
   // OK
   bold: [{
     pattern: /(^|[^\\*])\*\*[^*][^\n\r]*?\*\*/,
-    lookbehind: true,
-    inside: {
-      punctuation: /(?!.*)/
-    }
+    lookbehind: true
   }, {
     pattern: /(^|[^\\_])__[^_][^\n\r]*?__/,
-    lookbehind: true,
-    inside: {
-      punctuation: /(?!.*)/
-    }
+    lookbehind: true
   }],
 
   // OK
   strikethrough: {
     pattern: /(^|[^\\])(\~\~)(?:(?:\r?\n|\r)(?!\r?\n|\r)|.)+?\2/,
-    lookbehind: true,
-    inside: {
-      punctuation: /(?!.*)/
-    }
+    lookbehind: true
   },
 
   // OK
   italic: [{
     pattern: /(^|[^\\*])\*[^*][^\n\r]*?\*/,
-    lookbehind: true,
-    inside: {
-      punctuation: /(?!.*)/
-    }
+    lookbehind: true
   }, {
     pattern: /(^|[^\\_])_[^_][^\n\r]*?_/,
-    lookbehind: true,
-    inside: {
-      punctuation: /(?!.*)/
-    }
+    lookbehind: true
   }],
 
   boldItalic: [{
     pattern: /(^|[^\\*])\*\*\*[^*][^\n\r]*?\*\*\*/,
-    lookbehind: true,
-    inside: {
-      punctuation: /(?!.*)/
-    }
+    lookbehind: true
   }, {
     pattern: /(^|[^\\_])___[^_][^\n\r]*?___/,
-    lookbehind: true,
-    inside: {
-      punctuation: /(?!.*)/
-    }
+    lookbehind: true
   }],
 
   url: {
@@ -206,21 +177,19 @@ function markdownDecorator(text, block) {
   return characters.asImmutable();
 }
 
-const titleStyle = {
+const headerStyle = {
   fontWeight: 'bold',
   display: 'block',
   position: 'relative'
 };
 const MarkdownPreviewSchema = {
   marks: {
-    '==title1==': { ...titleStyle },
-    'title1===or---': { ...titleStyle },
-    'title1': { ...titleStyle, left: '-2ch' },
-    'title2': { ...titleStyle, left: '-3ch' },
-    'title3': { ...titleStyle, left: '-4ch' },
-    'title4': { ...titleStyle, left: '-5ch' },
-    'title5': { ...titleStyle, left: '-6ch' },
-    'title6': { ...titleStyle, left: '-7ch' },
+    'header1': { ...headerStyle, left: '-2ch' },
+    'header2': { ...headerStyle, left: '-3ch' },
+    'header3': { ...headerStyle, left: '-4ch' },
+    'header4': { ...headerStyle, left: '-5ch' },
+    'header5': { ...headerStyle, left: '-6ch' },
+    'header6': { ...headerStyle, left: '-7ch' },
     'bold': {
       fontWeight: 'bold'
     },
@@ -246,9 +215,8 @@ const MarkdownPreviewSchema = {
       backgroundColor: '#eee'
     },
     'list': {
-      paddingLeft: '10px',
-      lineHeight: '10px',
       position: 'relative',
+      backgroundColor: '#777',
       left: '-2ch'
     },
     'hr': {
