@@ -2,6 +2,16 @@ import Prism from 'prismjs';
 import { grammar } from './MarkdownPreviewSchema';
 import { assert } from 'chai';
 
+let allTypesEqual = (type, str, grammar) => {
+  let tokens = Prism.tokenize(str, grammar);
+  return tokens.every(token => token.type === type);
+};
+
+let allTypesNotEqual = (type, str, grammar) => {
+  let tokens = Prism.tokenize(str, grammar);
+  return tokens.every(token => token.type !== type);
+};
+
 let typeEqual = (type, str, grammar) => {
   let tokens = Prism.tokenize(str, grammar);
   return tokens.some(token => token.type === type);
@@ -13,13 +23,13 @@ let typeNotEqual = (type, str, grammar) => {
 };
 
 describe('highlighter', () => {
-  it('should highlight blockquote', ()=> {
+  // it('should highlight blockquote', ()=> {
 
-  });
+  // });
 
-  it('should highlight code', ()=> {
+  // it('should highlight code', ()=> {
 
-  });
+  // });
 
   it('should highlight header1', ()=> {
     assert.isTrue(typeEqual('header1', '# Header header header', grammar));
@@ -113,22 +123,42 @@ describe('highlighter', () => {
   });
 
   it('should highlight list', ()=> {
-
+    assert.isTrue(typeNotEqual('hr', '- asdf', grammar));
+    assert.isTrue(typeNotEqual('hr', 'some text - some tesxt', grammar));
   });
 
-  it('should highlight url', ()=> {
+  // it('should highlight url', ()=> {
 
-  });
+  // });
 
   it('should highlight bold', ()=> {
+    let str = '__bold__';
+    let tokens = Prism.tokenize(str, grammar);
+    assert.equal(tokens[0].type, 'bold');
 
+    // let str2 = '**bold**';
+    // let tokens2 = Prism.tokenize(str, grammar);
+    // assert.equal(tokens2[0].type, 'bold');
   });
 
   it('should highlight italic', ()=> {
+    let str = '_italic_';
+    let tokens = Prism.tokenize(str, grammar);
+    assert.equal(tokens[0].type, 'italic');
 
+    // let str2 = '*italic*';
+    // let tokens2 = Prism.tokenize(str2, grammar);
+    // assert.equal(tokens2[0].type, 'italic');
   });
 
-  it('should highlight strikethrough', ()=> {
-
+  it('should highlight bold-italic', ()=> {
+    let str = '___bold-italic___';
+    let tokens = Prism.tokenize(str, grammar);
+    console.log(tokens);
+    assert.equal(tokens[0].type, 'italic');
   });
+
+  // it('should highlight strikethrough', ()=> {
+
+  // });
 });
