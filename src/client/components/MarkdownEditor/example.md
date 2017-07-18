@@ -1,13 +1,24 @@
 just a text
 **bold text**
 *italic text*
+***bold italic text***
+
+__bold text__
 _italic text_
+___bold italic text___
+
 ~~strike-through text~~
+*~~strike-through text inside italic~~*
+~~*italic inside strike-through text*~~
+**~~strike-through text inside bold~~**
+~~**bold inside strike-through text**~~
+
 [opuscapita](https://www.opuscapita.com/)
 **[opuscapita](https://www.opuscapita.com/)**
 [**opuscapita**](https://www.opuscapita.com/)
 *[**opuscapita**](https://www.opuscapita.com/)*
-
+~~[**opuscapita**](https://www.opuscapita.com/)~~
+**~~[**opuscapita**](https://www.opuscapita.com/)~~
 
 # h1
 ## h2

@@ -13,18 +13,15 @@ Prism.languages.insertBefore('markdown', 'prolog', {
     pattern: /^>(?:[\t ]*>)*.*/m
   },
   code: [{
-    // pattern: /```[^]+```|`.+`/,
-    pattern: /```[^]+```/,
+    pattern: /```[^`]+```/,
     inside: {
-      pattern: /.*/m,
-      // alias: 'code'
+      pattern: /.*/m
     }
   }, {
-    pattern: /\`[^\`][^\n\r]+?\`/
+    pattern: /`[^`]+`/
   }],
   // codeBlock: [{
-  //   // pattern: /(```)(\\\n|\\?.)*?\1/g
-  //   // pattern: /\`\`\`[^\`][^]*?\`\`\`/g
+  //   pattern: /```[^]*```/m
   // }],
   header1: {
     pattern: /(^\s*)#{1}[\s]+.*/m
@@ -53,31 +50,29 @@ Prism.languages.insertBefore('markdown', 'prolog', {
   url: {
 		pattern: /!?\[[^\]]+\](?:\([^\s)]+(?:[\t ]+"(?:\\.|[^"\\])*")?\)| ?\[[^\]\n]*\])/,
     inside: {
-      punctuation: /[\[\]!:]|[<>]|\(.*\)/
-    }
+      punctuation: {
+        pattern: /[\[\]!:]|[<>]|\(.*\)/
+      }
+		}
   },
   bold: {
-    pattern: /(^|[^\\])(\*\*|__)[^*_](?:(?:\r?\n|\r)(?!\r?\n|\r)|.)+?\2/,
-    lookbehind: true,
-    inside: {}
-  },
-  strikethrough: {
-    pattern: /(^|[^\\])(\~\~)(?:(?:\r?\n|\r)(?!\r?\n|\r)|.)+?\2/,
-    lookbehind: true,
+    pattern: /[\*_]{2}.+[\*_]{2}/,
     inside: {}
   },
   italic: {
-    pattern: /(^|[^\\])([*_])[^*_](?:(?:\r?\n|\r)(?!\r?\n|\r)|.)+?\2/,
-    lookbehind: true,
+    pattern: /[\*_]{1}.+[\*_]{1}/,
+    inside: {}
+  },
+  strikethrough: {
+    pattern: /[~]{2}.+[~]{2}/,
     inside: {}
   }
 });
 
 Prism.languages.markdown.bold.inside.url = Prism.util.clone(Prism.languages.markdown.url);
 Prism.languages.markdown.italic.inside.url = Prism.util.clone(Prism.languages.markdown.url);
-Prism.languages.markdown.bold.inside.italic = Prism.util.clone(Prism.languages.markdown.italic);
-Prism.languages.markdown.italic.inside.bold = Prism.util.clone(Prism.languages.markdown.bold);
-
+Prism.languages.markdown.url.inside.bold = Prism.util.clone(Prism.languages.markdown.bold);
+Prism.languages.markdown.url.inside.italic = Prism.util.clone(Prism.languages.markdown.italic);
 
 /**
  * Define a decorator for markdown styles.
@@ -161,8 +156,7 @@ const MarkdownPreviewSchema = {
       left: '-2ch'
     },
     'hr': {
-      display: 'block',
-      color: '#777'
+      display: 'block'
     },
     'strikethrough': {
       textDecoration: 'line-through'
