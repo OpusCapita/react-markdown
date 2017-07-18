@@ -13,12 +13,11 @@ Prism.languages.insertBefore('markdown', 'prolog', {
     pattern: /^>(?:[\t ]*>)*.*/m
   },
   code: [{
-    pattern: /```[^`]+```/,
-    inside: {
-      pattern: /.*/m
-    }
+    pattern: /```[^`]+```/g,
+    greedy: true
   }, {
-    pattern: /`[^`]+`/
+    pattern: /`[^`]+`/g,
+    greedy: true
   }],
   // codeBlock: [{
   //   pattern: /```[^]*```/m
