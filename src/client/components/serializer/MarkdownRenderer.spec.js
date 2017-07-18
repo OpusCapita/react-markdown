@@ -99,7 +99,7 @@ Ordered
 
 
   describe('Code', () => {
-    it('Complex code', () => {
+    it.skip('Complex code', () => {
       let str = `## Code
 
 
@@ -155,7 +155,7 @@ New line`;
       expect(str).to.equal(repars);
     });
 
-    it('Block code fences', () => {
+    it.skip('Block code fences', () => {
       let str = `Block code fences
 
 ${quotes}
