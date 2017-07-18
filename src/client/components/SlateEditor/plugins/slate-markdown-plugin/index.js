@@ -15,7 +15,6 @@ import MarkdownHeaderSixButton from './MarkdownHeaderSixButton';
 
 import MarkdownPreviewSchema from './MarkdownPreviewSchema';
 
-
 const MarkdownPreviewPlugin = options => ({
   schema: MarkdownPreviewSchema
 });
