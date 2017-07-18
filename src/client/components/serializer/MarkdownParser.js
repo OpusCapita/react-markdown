@@ -746,19 +746,8 @@ const StateRender = {
     return this.blocks;
   },
 
-// rules = [ { regex: /\$(\w+)/, id: 'term'}, { regex: /\#(\w+)/, id: 'product'}]
-//
-// {
-//   kind: 'autocomplete',
-//     data: {id: 'term'},
-//   text: '$text'
-// }
-
-
   render(markdownData, rules = []) {
     this.init();
-
-    rules = [{ regex: '\\$(\\w+)', id: 'term'}, { regex: '\\#(\\w+)', id: 'product'}];
 
     const markdownAutocomplete = new MarkdownAutocomplete(rules);
     markdown.use(markdownAutocomplete);

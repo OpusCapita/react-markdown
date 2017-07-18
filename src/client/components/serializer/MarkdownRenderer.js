@@ -486,9 +486,23 @@ class Markdown {
    * Deserialize a markdown `string`.
    *
    * @param {String} markdown
+   * @param {Array} options
+   *    example:
+   *    options = [{ regex: '\\$(\\w+)', id: 'term'}, { regex: '\\#(\\w+)', id: 'product'}]
+   *    markdown = #code
+   *            ->
+   *    {
+   *      "kind": "inline",
+   *      "isVoid": false,
+   *      "nodes": [{"kind": "text", "ranges": [{"text": "#code"}]}],
+   *      "type": "autocomplete",
+   *      "data": {"id": "product"}
+   *    }
+   *
    * @return {State} state
+   *
    */
-  deserialize(markdown, options = []) {
+  deserialize(markdown, options=[]) {
     const nodes = MarkdownParser.parse(markdown, options);
     const state = Raw.deserialize(nodes, {terse: true});
     return state;
