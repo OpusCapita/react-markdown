@@ -9,7 +9,6 @@ import { Mark } from 'slate';
 Prism.languages.markdown = Prism.languages.extend("markup", {});
 
 Prism.languages.insertBefore('markdown', 'prolog', {
-
   blockquote: {
     pattern: /^>(?:[\t ]*>)*.*/m
   },
@@ -27,71 +26,57 @@ Prism.languages.insertBefore('markdown', 'prolog', {
   //   // pattern: /(```)(\\\n|\\?.)*?\1/g
   //   // pattern: /\`\`\`[^\`][^]*?\`\`\`/g
   // }],
-
-  header1: [{
+  header1: {
     pattern: /(^\s*)#{1}[\s]+.*/m
-  }],
-  header2: [{
+  },
+  header2: {
     pattern: /(^\s*)#{2}[\s]+.*/m
-  }],
-  header3: [{
+  },
+  header3: {
     pattern: /(^\s*)#{3}[\s]+.*/m
-  }],
-  header4: [{
+  },
+  header4: {
     pattern: /(^\s*)#{4}[\s]+.*/m
-  }],
-  header5: [{
+  },
+  header5: {
     pattern: /(^\s*)#{5}[\s]+.*/m
-  }],
-  header6: [{
+  },
+  header6: {
     pattern: /(^\s*)#{6}[\s]+.*/m
-  }],
-
+  },
   hr: {
     pattern: /(^\s*)([*-])([\t ]*\2){2,}(?=\s*$)/m
   },
-
   list: {
     pattern: /^\s*[\+\-\*]\s.+/
   },
-
   url: {
-    pattern: /\[.+\]\(.+\)/,
+		pattern: /!?\[[^\]]+\](?:\([^\s)]+(?:[\t ]+"(?:\\.|[^"\\])*")?\)| ?\[[^\]\n]*\])/,
     inside: {
       punctuation: /[\[\]!:]|[<>]|\(.*\)/
     }
   },
-  bold: [{
-    pattern: /(^|[^\\*])\*\*[^*][^\n\r]*?\*\*/,
-    lookbehind: true
-  }, {
-    pattern: /(^|[^\\_])__[^_][^\n\r]*?__/,
-    lookbehind: true
-  }],
+  bold: {
+    pattern: /(^|[^\\])(\*\*|__)[^*_](?:(?:\r?\n|\r)(?!\r?\n|\r)|.)+?\2/,
+    lookbehind: true,
+    inside: {}
+  },
   strikethrough: {
     pattern: /(^|[^\\])(\~\~)(?:(?:\r?\n|\r)(?!\r?\n|\r)|.)+?\2/,
-    lookbehind: true
+    lookbehind: true,
+    inside: {}
   },
-  italic: [{
-    pattern: /(^|[^\\*])\*[^*][^\n\r]*?\*/,
-    lookbehind: true
-  }, {
-    pattern: /(^|[^\\_])_[^_][^\n\r]*?_/,
-    lookbehind: true
-  }],
-  // boldItalic: [{
-  //   pattern: /(^|[^\\*])\*\*\*[^*][^\n\r]*?\*\*\*/,
-  //   lookbehind: true
-  // }, {
-  //   pattern: /(^|[^\\_])___[^_][^\n\r]*?___/,
-  //   lookbehind: true
-  // }]
+  italic: {
+    pattern: /(^|[^\\])([*_])[^*_](?:(?:\r?\n|\r)(?!\r?\n|\r)|.)+?\2/,
+    lookbehind: true,
+    inside: {}
+  }
 });
 
-// Prism.languages.markdown.bold.inside.url = Prism.util.clone(Prism.languages.markdown.url);
-// Prism.languages.markdown.italic.inside.url = Prism.util.clone(Prism.languages.markdown.url);
-// Prism.languages.markdown.bold.inside.italic = Prism.util.clone(Prism.languages.markdown.italic);
-// Prism.languages.markdown.italic.inside.bold = Prism.util.clone(Prism.languages.markdown.bold);
+Prism.languages.markdown.bold.inside.url = Prism.util.clone(Prism.languages.markdown.url);
+Prism.languages.markdown.italic.inside.url = Prism.util.clone(Prism.languages.markdown.url);
+Prism.languages.markdown.bold.inside.italic = Prism.util.clone(Prism.languages.markdown.italic);
+Prism.languages.markdown.italic.inside.bold = Prism.util.clone(Prism.languages.markdown.bold);
 
 
 /**
@@ -157,10 +142,6 @@ const MarkdownPreviewSchema = {
     'italic': {
       fontStyle: 'italic'
     },
-    // 'boldItalic': {
-    //   fontStyle: 'italic',
-    //   fontWeight: 'bold'
-    // },
     'punctuation': {
       color: '#777'
     },
