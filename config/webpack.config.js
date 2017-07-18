@@ -59,9 +59,12 @@ if(WEBPACK_BUNDLE_ANALYZE && IS_PRODUCTION_MODE) {
 }
 
 module.exports = {
-  entry: (IS_PRODUCTION_MODE || IS_LINK_MODE) ?
-    path.resolve(__dirname, '../src/client/index.js') :
-    path.resolve(__dirname, '../www/index-page.js'),
+  entry: [
+    'babel-polyfill',
+    (IS_PRODUCTION_MODE || IS_LINK_MODE) ?
+      path.resolve(__dirname, '../src/client/index.js') :
+      path.resolve(__dirname, '../www/index-page.js')
+  ],
   context: path.resolve(__dirname),
   output: {
     publicPath: '/',
@@ -144,7 +147,7 @@ module.exports = {
         exclude: /\.module\.(css|less)$/
       },
       {
-        test: /.jsx?$/,
+        test: /.js?$/,
         use: [{
           loader: 'babel-loader',
           options: {

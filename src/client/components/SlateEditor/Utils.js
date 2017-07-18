@@ -1,4 +1,5 @@
 import React from 'react';
+import filter from 'lodash/filter';
 
 const cloneElement = (children, props) => {
   let result = children;
@@ -6,8 +7,7 @@ const cloneElement = (children, props) => {
     result = [result];
   }
 
-  return result.
-      filter((it) => it !== null && it !== undefined).
+  return filter(result, (it) => it !== null && it !== undefined).
       map((child, index) => React.cloneElement(child, {
         ...props,
         key: index

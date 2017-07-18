@@ -1,3 +1,5 @@
+import filter from 'lodash/filter';
+
 export const isList = state => state.blocks.some(block => block.type === 'list-item');
 
 export const hasParentOfType = (state, type) => state.blocks.some(
@@ -6,7 +8,7 @@ export const hasParentOfType = (state, type) => state.blocks.some(
 export const isUnorderedList = state => hasParentOfType(state, 'unordered-list');
 export const isOrderedList = state => hasParentOfType(state, 'ordered-list');
 
-export const getNodeOfType = (state, type) => state.blocks.filter(block => block.type === type).first();
+export const getNodeOfType = (state, type) => filter(state.blocks, block => block.type === type).first();
 export const getUnorderedListNode = state => getNodeOfType(state, 'unordered-list');
 export const getOrderedListNode = state => getNodeOfType(state, 'ordered-list');
 
