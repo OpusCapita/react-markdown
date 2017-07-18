@@ -230,7 +230,7 @@ export const wrapLinkMarkdown = state => {
     const text = `[link text](${url})`;
     t.insertText(text).move((text.length - 1) * -1).extend(text.length - 2);
   } else {
-    t.wrapText('[', `](${(url)})`).moveOffsetsTo(endOffset - startOffset + 3).extend(url.length);
+    t.wrapText('[', `](${(url)})`).moveOffsetsTo(endOffset + 3, endOffset + 3 + url.length)
   }
   return t.focus().apply();
 };
