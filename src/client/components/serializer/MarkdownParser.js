@@ -737,11 +737,11 @@ const StateRender = {
     this.processing(tokens);
     this.postprocessing(this.blocks);
 
-    console.log('markdown it:\n', JSON.stringify(tokens));
-    console.log(' ');
-    console.log(' ');
-    console.log('StateRender:');
-    console.log(JSON.stringify(this.blocks));
+    // console.log('markdown it:\n', JSON.stringify(tokens));
+    // console.log(' ');
+    // console.log(' ');
+    // console.log('StateRender:');
+    // console.log(JSON.stringify(this.blocks));
 
     return this.blocks;
   },
