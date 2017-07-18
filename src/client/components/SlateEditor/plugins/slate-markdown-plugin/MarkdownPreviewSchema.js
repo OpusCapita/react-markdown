@@ -54,24 +54,30 @@ Prism.languages.insertBefore('markdown', 'prolog', {
       }
 		}
   },
-  bold: {
-    pattern: /[\*_]{2}.+[\*_]{2}/,
+  bold: [{
+    pattern: /\*{2}[^\*].+[^\*]\*{2}/,
     inside: {}
-  },
-  italic: {
-    pattern: /[\*_]{1}.+[\*_]{1}/,
+  }, {
+    pattern: /_{2}[^_].+[^_]_{2}/,
     inside: {}
-  },
+  }],
+  italic: [{
+    pattern: /\*{1}[^\*].+[^\*]\*{1}/,
+    inside: {}
+  }, {
+    pattern: /_{1}[^\_].+[^\_]_{1}/,
+    inside: {}
+  }],
   strikethrough: {
     pattern: /[~]{2}.+[~]{2}/,
     inside: {}
   }
 });
 
-Prism.languages.markdown.bold.inside.url = Prism.util.clone(Prism.languages.markdown.url);
-Prism.languages.markdown.italic.inside.url = Prism.util.clone(Prism.languages.markdown.url);
-Prism.languages.markdown.url.inside.bold = Prism.util.clone(Prism.languages.markdown.bold);
-Prism.languages.markdown.url.inside.italic = Prism.util.clone(Prism.languages.markdown.italic);
+// Prism.languages.markdown.bold.inside.url = Prism.util.clone(Prism.languages.markdown.url);
+// Prism.languages.markdown.italic.inside.url = Prism.util.clone(Prism.languages.markdown.url);
+// Prism.languages.markdown.url.inside.bold = Prism.util.clone(Prism.languages.markdown.bold);
+// Prism.languages.markdown.url.inside.italic = Prism.util.clone(Prism.languages.markdown.italic);
 
 /**
  * Define a decorator for markdown styles.
