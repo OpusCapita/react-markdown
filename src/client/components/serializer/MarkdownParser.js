@@ -8,6 +8,7 @@ import MarkdownItDeflist from 'markdown-it-deflist';
 import MarkdownItAbbr from './plugins/markdown-it-abbr';
 import MarkdownItAnchor from './plugins/markdown-it-anchor';
 import MarkdownItEmptyLine from './plugins/markdown-it-emptyline';
+import MarkdownAutocomplete from './plugins/markdown-it-autocomplete';
 
 
 const markdown = new MarkdownIt({
@@ -66,7 +67,8 @@ const markups = {
   '~~': 'strikethrough',
   '~': 'sub',
   '`': 'code',
-  'linkify': 'linkify'
+  linkify: 'linkify',
+  autocomplete: 'autocomplete'
 };
 
 function parseAttrs(attrs) {
@@ -88,7 +90,7 @@ class BlockNode {
     this.tag = token.tag;
     this.data = {};
 
-    if ((token.type === 'list_item_open' || token.type === 'hr')
+    if ((token.type === 'list_item_open' || token.type === 'hr' || token.type === 'fence')
     &&  token.markup) {
       this.data.markup = token.markup;
     }
@@ -182,6 +184,32 @@ class AbbrNode extends InlineNode {
     ];
     this.data = {
       title: title
+    };
+  }
+
+  addText(text) {
+    this.nodes[0].ranges[0].text = text;
+  }
+}
+
+class AutocompleteNode extends InlineNode {
+  constructor(id) {
+    super();
+
+    this.type = "autocomplete";
+    this.isVoid = false;
+    this.nodes = [
+      {
+        kind: "text",
+        ranges: [
+          {
+            "text": ''
+          }
+        ]
+      }
+    ];
+    this.data = {
+      id: id
     };
   }
 
@@ -329,6 +357,12 @@ class Children {
     this.addCurrNode();
   }
 
+  createAutocomplete(token) {
+    this.currNode = new AutocompleteNode(token.meta.id);
+    this.currNode.addText(token.content);
+    this.addCurrNode();
+  }
+
   createSoftbreak() {
     this.addCurrNode();
     this.currNode = new SoftBreakNode();
@@ -388,6 +422,10 @@ class Children {
 
       else if (token.type === 'image') {
         this.createImage(token);
+      }
+
+      else if (token.type === 'autocomplete') {
+        this.createAutocomplete(token);
       }
 
       else if (token.type === 'softbreak') {
@@ -522,7 +560,7 @@ const StateRender = {
         case 'unordered-list':
         case 'blockquote':
           parent = token.type;
-          let num = 1;
+          let num = token.type === 'ordered-list' && token.attrs && token.attrs.start ? token.attrs.start : 1;
 
           for (let item of token.nodes) {
             if (!item.data) {
@@ -699,17 +737,32 @@ const StateRender = {
     this.processing(tokens);
     this.postprocessing(this.blocks);
 
-    // console.log('markdown it:\n', JSON.stringify(tokens));
-    // console.log(' ');
-    // console.log(' ');
-    // console.log('StateRender:');
-    // console.log(JSON.stringify(this.blocks));
+    console.log('markdown it:\n', JSON.stringify(tokens));
+    console.log(' ');
+    console.log(' ');
+    console.log('StateRender:');
+    console.log(JSON.stringify(this.blocks));
 
     return this.blocks;
   },
 
-  render(markdownData) {
+// rules = [ { regex: /\$(\w+)/, id: 'term'}, { regex: /\#(\w+)/, id: 'product'}]
+//
+// {
+//   kind: 'autocomplete',
+//     data: {id: 'term'},
+//   text: '$text'
+// }
+
+
+  render(markdownData, rules = []) {
     this.init();
+
+    rules = [{ regex: '\\$(\\w+)', id: 'term'}, { regex: '\\#(\\w+)', id: 'product'}];
+
+    const markdownAutocomplete = new MarkdownAutocomplete(rules);
+    markdown.use(markdownAutocomplete);
+
     let tokens = markdown.parse(markdownData || '');
 
     return this.parse(tokens);
@@ -737,8 +790,7 @@ let defaults = {
 };
 
 const MDParser = {
-  parse(src, options) {
-    options = assign({}, defaults, options);
+  parse(src, options = []) {
     let fragment = null;
 
     if (src === '') {
@@ -760,31 +812,24 @@ const MDParser = {
 
     else {
       try {
-        fragment = StateRender.render(src);
+        fragment = StateRender.render(src, options);
       }
 
       catch (e) {
-        if (options.silent) {
-          fragment = [{
-            kind: "block",
-            type: "paragraph",
-            nodes: [
-              {
-                kind: "text",
-                ranges: [
-                  {
-                    text: "An error occured:"
-                  },
-                  {
-                    text: e.message
-                  }
-                ]
-              }
-            ]
-          }];
-        } else {
-          throw e;
-        }
+        fragment = [{
+          kind: "block",
+          type: "paragraph",
+          nodes: [
+            {
+              kind: "text",
+              ranges: [
+                {
+                  text: ""
+                }
+              ]
+            }
+          ]
+        }];
       }
     }
 

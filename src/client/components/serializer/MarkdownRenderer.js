@@ -107,6 +107,9 @@ const RULES = [
   }
 ];
 
+function getHeadingSuffix(obj) {
+  return obj.nextNodeType === 'empty' ? `\n` : ``;
+}
 
 /**
  * Rules for block nodes
@@ -116,13 +119,26 @@ const NodeSerialize = {
   listLevel: 0,
 
   // Text
-  heading1: (obj, children) => `# ${children}`,
-  heading2: (obj, children) => `## ${children}`,
-  heading3: (obj, children) => `### ${children}`,
-  heading4: (obj, children) => `#### ${children}`,
-  heading5: (obj, children) => `##### ${children}`,
-  heading6: (obj, children) => `###### ${children}`,
-  code: (obj, children) => `\`\`\`\n${children}\n\`\`\`\n`,
+  heading1: (obj, children) => `# ${children}${getHeadingSuffix(obj)}`,
+  heading2: (obj, children) => `## ${children}${getHeadingSuffix(obj)}`,
+  heading3: (obj, children) => `### ${children}${getHeadingSuffix(obj)}`,
+  heading4: (obj, children) => `#### ${children}${getHeadingSuffix(obj)}`,
+  heading5: (obj, children) => `##### ${children}${getHeadingSuffix(obj)}`,
+  heading6: (obj, children) => `###### ${children}${getHeadingSuffix(obj)}`,
+  code: (obj, children) => {
+    const markup = obj.getIn(['data', 'markup']);
+    if (markup) {
+      return `\`\`\`\n${children}\n\`\`\`\n`;
+    }
+
+    else {
+      const arrChildren = children.split('\n');
+      for (let i = 0; i < arrChildren.length; i++) {
+        arrChildren[i] = `    ${arrChildren[i]}`;
+      }
+      return `${arrChildren.join('\n')}\n`;
+    }
+  },
   paragraph: (obj, children) => {
     // If the previous node is a paragraph,
     // and the current node in blockquote
@@ -229,7 +245,8 @@ const NodeSerialize = {
       }
     }
 
-    return `${arrChildren.join('\n')}${level === 0 ? `\n` : ``}`;
+    // return `${arrChildren.join('\n')}${level === 0 ? `\n` : ``}`;
+    return `${level === 0 ? `\n` : ``}${arrChildren.join('\n')}${level === 0 ? `\n` : ``}`;
   },
   anchor: (obj, children) => {
     const label = obj.getIn(['data', 'label']);
@@ -262,11 +279,12 @@ const NodeSerialize = {
 
 function listNodeRule(obj, children) {
   children = children.replace('\n\n', '\n'); // Delete empty strings in the list
-  NodeSerialize.listLevel = obj.getIn(['data', 'level']);
+  const listLevel = obj.getIn(['data', 'level']);
+  NodeSerialize.listLevel = listLevel;
 
   const arrChildren = children.split('\n');
 
-  if (NodeSerialize.listLevel > 0) {
+  if (listLevel > 0) {
     for (let i = 0; i < arrChildren.length; i++) {
       if (arrChildren[i] !== '') {
         arrChildren[i] = `    ${arrChildren[i]}`;
@@ -276,7 +294,7 @@ function listNodeRule(obj, children) {
 
   children = arrChildren.join('\n');
   children = children.replace('\n\n', '\n'); // Delete empty strings in the list
-  return `${NodeSerialize.listLevel > 0 ? `\n` : ``}${children}`;
+  return `${listLevel > 0 ? `\n` : ``}${children}${listLevel > 0 ? `` : `\n`}`;
 }
 
 
@@ -319,12 +337,14 @@ class Markdown {
       ...RULES
     ];
 
+    this.previousNode = null;
     this.previousNodeType = '';
     this.previousNodeLevel = 0;
 
     this.serializeNode = this.serializeNode.bind(this);
     this.serializeRange = this.serializeRange.bind(this);
     this.serializeString = this.serializeString.bind(this);
+    this.setSiblingNodesType = this.setSiblingNodesType.bind(this);
   }
 
 
@@ -337,8 +357,34 @@ class Markdown {
 
   serialize(state) {
     const {document} = state;
+    document.nodes.map(this.setSiblingNodesType);
     const elements = document.nodes.map(this.serializeNode);
     return elements.join('\n').trim();
+  }
+
+  setSiblingNodesType(node) {
+    if (node.kind === 'block') {
+      if (this.previousNodeType) {
+        node.previousNodeType = this.previousNodeType;
+      }
+      this.previousNodeType = node.type;
+      if (this.previousNodeLevel) {
+        node.previousNodeLevel = this.previousNodeLevel;
+      }
+      let level = node.getIn(['data', 'level']);
+      if (level === 0 || level) {
+        this.previousNodeLevel = level;
+      }
+
+      if (this.previousNode) {
+        if (level === 0 || level) {
+          this.previousNode.nextNodeLevel = level;
+        }
+        this.previousNode.nextNodeType = node.type;
+      }
+
+      this.previousNode = node;
+    }
   }
 
   /**
@@ -354,20 +400,7 @@ class Markdown {
       return ranges.map(this.serializeRange);
     }
 
-    if (node.kind === 'block') {
-      if (this.previousNodeType) {
-        node.previousNodeType = this.previousNodeType;
-      }
-      this.previousNodeType = node.type;
-      if (this.previousNodeLevel) {
-        node.previousNodeLevel = this.previousNodeLevel;
-      }
-      let level = node.getIn(['data', 'level']);
-      if (level === 0 || level) {
-        this.previousNodeLevel = level;
-      }
-    }
-
+    node.nodes.map(this.setSiblingNodesType);
     let children = node.nodes.map(this.serializeNode);
     children = children.flatten().length === 0 ? '' : children.flatten().join('');
 
@@ -440,14 +473,23 @@ class Markdown {
     }
   }
 
+  trimStr(str) {
+    const arrStr = str.split('\n');
+    for (let i = 0; i < arrStr.length; i++) {
+      arrStr[i] = arrStr[i].trimRight();
+    }
+
+    return arrStr.join('\n');
+  }
+
   /**
    * Deserialize a markdown `string`.
    *
    * @param {String} markdown
    * @return {State} state
    */
-  deserialize(markdown) {
-    const nodes = MarkdownParser.parse(markdown);
+  deserialize(markdown, options = []) {
+    const nodes = MarkdownParser.parse(markdown, options);
     const state = Raw.deserialize(nodes, {terse: true});
     return state;
   }
