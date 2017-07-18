@@ -154,8 +154,25 @@ describe('highlighter', () => {
   it('should highlight bold-italic', ()=> {
     let str = '___bold-italic___';
     let tokens = Prism.tokenize(str, grammar);
-    console.log(tokens);
+
+    assert.equal(tokens[0].type, 'bold');
+    assert.equal(tokens[0].content[0].type, 'italic');
+
+    // let str2 = '***bold-italic***';
+    // let tokens2 = Prism.tokenize(str2, grammar);
+
+    // assert.equal(tokens2[0].type, 'bold');
+    // assert.equal(tokens2[0].content[0].type, 'italic');
+  });
+
+  it('should highlight bold inside italic', ()=> {
+    let str = '___bold-italic__ italic_';
+    let tokens = Prism.tokenize(str, grammar);
+
+    assert.equal(tokens[0].content[1], ' italic_');
+    assert.equal(tokens[0].content[0].content, '___bold-italic__');
     assert.equal(tokens[0].type, 'italic');
+    assert.equal(tokens[0].content[0].type, 'bold');
   });
 
   // it('should highlight strikethrough', ()=> {
