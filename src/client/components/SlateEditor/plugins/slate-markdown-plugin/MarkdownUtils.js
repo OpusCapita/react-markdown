@@ -31,7 +31,7 @@ const unwrapBlock = function(removedLength, state) {
   return state.transform().
     moveOffsetsTo(0).
     deleteForward(removedLength).
-    moveOffsetsTo(startOffset - removedLength, endOffset - removedLength).
+    moveOffsetsTo(Math.max(startOffset - removedLength, 0), Math.max(endOffset - removedLength, 0)).
     focus().apply();
 };
 
@@ -56,7 +56,7 @@ const wrapBlock = function(matchRules, text, state) {
     }
   }
   return t.insertText(text).
-    moveOffsetsTo(startOffset + text.length - length, endOffset + text.length - length).
+    moveOffsetsTo(Math.max(startOffset + text.length - length, 0), Math.max(endOffset + text.length - length, 0)).
     focus().apply();
 };
 
