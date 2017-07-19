@@ -271,56 +271,53 @@ describe('highlighter', () => {
   });
 
   it('should highlight bold-italic (underscores / asterisks mixed) v1', ()=> {
-    let html = '_**bold-italic**_';
-    let candidate = escapeRegExp(
-      `<span class="token italic">_<span class="token bold">**bold-italic**</span>_</span>`
-    );
+    let html = '__*bold-italic*__';
+    let candidate = `<span class="token bold">__<span class="token italic">*bold-italic*</span>__</span>`;
 
-    assert.match(getHtml(html), new RegExp(candidate));
-
+    assert.equal(getHtml(html), candidate);
   });
 
-  // it('should highlight bold-italic (underscores / asterisks mixed) v2', ()=> {
+  it('should highlight bold-italic (underscores / asterisks mixed) v2', ()=> {
+    let html = '**_bold-italic_**';
+    let candidate = `<span class="token bold">**<span class="token italic">_bold-italic_</span>**</span>`;
+
+    assert.equal(getHtml(html), candidate);
+  });
+
+  it('should highlight bold-italic (underscores / asterisks mixed) v3', ()=> {
+    let html = '_**bold-italic**_';
+    let candidate = `<span class="token italic">_<span class="token bold">**bold-italic**</span>_</span>`;
+
+    assert.equal(getHtml(html), candidate);
+  });
+
+  it('should highlight bold-italic (underscores / asterisks mixed) v4', ()=> {
+    let html = '*__bold-italic__*';
+    let candidate = `<span class="token italic">*<span class="token bold">__bold-italic__</span>*</span>`;
+
+    assert.equal(getHtml(html), candidate);
+  });
+
+  it('should highlight bold-italic (underscores / asterisks mixed) v5', ()=> {
+    let html;
+    let candidate;
+
+    html = '*__bold-italic__italic*';
+    candidate = `<span class="token italic">*<span class="token bold">__bold-italic__</span>italic*</span>`;
+
+    assert.equal(getHtml(html), candidate);
+
+    html = '*italic__bold-italic__*';
+    candidate = `<span class="token italic">*italic<span class="token bold">__bold-italic__</span>*</span>`;
+
+    assert.equal(getHtml(html), candidate);
+  });
+
+  // it('should highlight bold-italic (underscores / asterisks mixed) v6', ()=> {
   //   let html = '*__bold-italic__*';
-  //   let candidate = escapeRegExp(
-  //     `<span class="token italic">*<span class="token bold">__bold-italic__</span>*</span>`
-  //   );
+  //   let candidate = `<span class="token italic">*<span class="token bold">__bold-italic__</span>italic*</span>`;
 
-  //   assert.match(getHtml(html), new RegExp(candidate));
+  //   assert.equal(getHtml(html), candidate);
   // });
 
-  // it('should highlight bold-italic (underscores / asterisks mixed) v3', ()=> {
-  //   let html = '__*bold-italic*__';
-  //   let candidate = escapeRegExp(
-  //     `<span class="token bold">__<span class="token italic">*bold-italic*</span>__</span>`
-  //   );
-
-  //   assert.match(getHtml(html), new RegExp(candidate));
-  // });
-
-  // it('should highlight bold-italic (underscores / asterisks mixed) v4', ()=> {
-  //   let html = '**_bold-italic_**';
-  //   let candidate = escapeRegExp(
-  //     `<span class="token bold">**<span class="token italic">_bold-italic_</span>**</span>`
-  //   );
-
-  //   assert.match(getHtml(html), new RegExp(candidate));
-  // });
-
-  //   it('should highlight bold-italic (asterisks)', ()=> {
-  //   let html;
-  //   let candidate1;
-  //   let candidate2;
-
-  //   html = '***bold-italic***';
-
-  //   candidate1 = escapeRegExp(
-  //     `<span class="token bold">**<span class="token italic">*bold-italic*</span>**</span>`
-  //   );
-  //   candidate2 = escapeRegExp(
-  //     `<span class="token italic">*<span class="token bold">**bold-italic**</span>*</span>`
-  //   );
-
-  //   assert.match(getHtml(html), new RegExp(`(${candidate1}|${candidate2})`));
-  // });
 });
