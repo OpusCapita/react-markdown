@@ -20,7 +20,7 @@ Prism.languages.insertBefore('markdown', 'prolog', {
     greedy: true
   }],
   // codeBlock: [{
-  //   pattern: /```[^]*```/m
+  //   pattern: /^`{3}([\S]+)?\n([\s\S]+)\n`{3}/
   // }],
   header1: {
     pattern: /(^\s*)#{1}[\s]+.*/m
@@ -56,7 +56,7 @@ Prism.languages.insertBefore('markdown', 'prolog', {
   },
 
   bold: [{
-    pattern: /(^|[^_*])__([^_\r\n]*(_[^_\r\n]+_[^_\r\n]*)+|[^_\r\n]+)__/,
+    pattern: /(^|[^_*])__([^_\r\n]*(_[^_\r\n]+_[^_\r\n]*)+|[^\r\n]+)__/,
     lookbehind: true,
     inside: {
       italic: [{
@@ -67,7 +67,7 @@ Prism.languages.insertBefore('markdown', 'prolog', {
       }]
     }
   }, {
-    pattern: /(^|[^_*])\*\*([^\*\r\n]*(\*[^\*\r\n]+\*[^\*\r\n]*)+|[^\*\r\n]+)\*\*/,
+    pattern: /(^|[^_*])\*\*([^\*\r\n]*(\*[^\*\r\n]+\*[^\*\r\n]*)+|[^*\r\n]+)\*\*/,
     lookbehind: true,
     inside: {
       italic: [{
@@ -103,10 +103,21 @@ Prism.languages.insertBefore('markdown', 'prolog', {
   }],
 
   strikethrough: {
-    pattern: /[~]{2}.+[~]{2}/,
+    pattern: /(^|[^~])~~([^~\r\n]*(~~[^~\r\n]+~~[^~\r\n]*)+|[^~\r\n]+)~/,
+    lookbehind: true,
     inside: {}
   }
 });
+
+Prism.languages.markdown.strikethrough.inside.italic = [
+  Prism.util.clone(Prism.languages.markdown.italic[0]),
+  Prism.util.clone(Prism.languages.markdown.italic[1]),
+];
+
+Prism.languages.markdown.strikethrough.inside.bold = [
+  Prism.util.clone(Prism.languages.markdown.bold[0]),
+  Prism.util.clone(Prism.languages.markdown.bold[1]),
+];
 
 // Prism.languages.markdown.bold[0].inside.italic = Prism.util.clone(Prism.languages.markdown.italic[0]);
 // Prism.languages.markdown.bold[1].inside.italic = Prism.util.clone(Prism.languages.markdown.italic[1]);

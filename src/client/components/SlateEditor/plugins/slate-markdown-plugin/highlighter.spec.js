@@ -3,9 +3,7 @@ import { grammar } from './MarkdownPreviewSchema';
 import { assert } from 'chai';
 
 let getHtml = (str) => Prism.highlight(str, grammar);
-let escapeRegExp= function(str) {
-    return str.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
-};
+let escapeRegExp= (str) => str.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
 
 describe('highlighter', () => {
   it('should highlight blockquote', ()=> {
@@ -216,24 +214,144 @@ describe('highlighter', () => {
     assert.equal(getHtml(html), candidate);
   });
 
-  it('should highlight bold', ()=> {
+  it('should highlight bold (underscores)', ()=> {
     let html;
+    let candidate;
 
     html = '__bold__';
-    assert.equal(getHtml(html), '<span class="token bold">__bold__</span>');
+    candidate = '<span class="token bold">__bold__</span>';
+    assert.equal(getHtml(html), candidate);
 
-    html = '**bold**';
-    assert.equal(getHtml(html), '<span class="token bold">**bold**</span>');
+    html = '__bold text_bold__';
+    candidate = `<span class="token bold">__bold text_bold__</span>`;
+    assert.equal(getHtml(html), candidate);
+
+    html = '__bold_text bold__';
+    candidate = `<span class="token bold">__bold_text bold__</span>`;
+    assert.equal(getHtml(html), candidate);
   });
 
-  it('should highlight italic', ()=> {
+  it('should highlight bold (asterisks)', ()=> {
     let html;
+    let candidate;
+
+    html = '**bold**';
+    candidate = '<span class="token bold">**bold**</span>';
+    assert.equal(getHtml(html), candidate);
+
+    html = '**bold bold*bold**';
+    candidate = `<span class="token bold">**bold bold*bold**</span>`;
+    assert.equal(getHtml(html), candidate);
+
+    html = '**bold*bold bold**';
+    candidate = `<span class="token bold">**bold*bold bold**</span>`;
+    assert.equal(getHtml(html), candidate);
+  });
+
+  it('should highlight italic (underscores)', ()=> {
+    let html;
+    let candidate;
 
     html = '_italic_';
-    assert.equal(getHtml(html), '<span class="token italic">_italic_</span>');
+    candidate = '<span class="token italic">_italic_</span>';
+    assert.equal(getHtml(html), candidate);
+
+    html = '_italic_italic';
+    candidate = `_italic_italic`;
+    assert.equal(getHtml(html), candidate);
+
+    html = 'italic_italic_';
+    candidate = `italic_italic_`;
+    assert.equal(getHtml(html), candidate);
+
+    html = '_italic_italic_italic_';
+    candidate = '<span class="token italic">_italic_italic_italic_</span>';
+    assert.equal(getHtml(html), candidate);
+
+    html = '_italic italic_italic_';
+    candidate = '<span class="token italic">_italic italic_italic_</span>';
+    assert.equal(getHtml(html), candidate);
+
+    html = '_italic_italic italic_';
+    candidate = '<span class="token italic">_italic_italic italic_</span>';
+    assert.equal(getHtml(html), candidate);
+
+    html = '__italic_italic italic_';
+    candidate = '<span class="token italic">__italic_italic italic_</span>';
+    assert.equal(getHtml(html), candidate);
+
+    html = '__italic_italic_italic_';
+    candidate = '<span class="token italic">__italic_italic_italic_</span>';
+    assert.equal(getHtml(html), candidate);
+
+    html = '_italic_italic italic__';
+    candidate = '<span class="token italic">_italic_italic italic__</span>';
+    assert.equal(getHtml(html), candidate);
+
+    html = '_italic_italic_italic__';
+    candidate = '<span class="token italic">_italic_italic_italic__</span>';
+    assert.equal(getHtml(html), candidate);
+
+    html = '_italic_italic__italic_';
+    candidate = '<span class="token italic">_italic_italic__italic_</span>';
+    assert.equal(getHtml(html), candidate);
+
+    html = '_italic__italic_italic_';
+    candidate = '<span class="token italic">_italic__italic_italic_</span>';
+    assert.equal(getHtml(html), candidate);
+  });
+
+  it('should highlight italic (asterisks)', ()=> {
+    let html;
+    let candidate;
 
     html = '*italic*';
-    assert.equal(getHtml(html), '<span class="token italic">*italic*</span>');
+    candidate = '<span class="token italic">*italic*</span>';
+    assert.equal(getHtml(html), candidate);
+
+    html = '*italic*italic';
+    candidate = `*italic*italic`;
+    assert.equal(getHtml(html), candidate);
+
+    html = 'italic*italic*';
+    candidate = `italic*italic*`;
+    assert.equal(getHtml(html), candidate);
+
+    html = '*italic*italic*italic*';
+    candidate = '<span class="token italic">*italic*italic*italic*</span>';
+    assert.equal(getHtml(html), candidate);
+
+    html = '*italic italic*italic*';
+    candidate = '<span class="token italic">*italic italic*italic*</span>';
+    assert.equal(getHtml(html), candidate);
+
+    html = '*italic*italic italic*';
+    candidate = '<span class="token italic">*italic*italic italic*</span>';
+    assert.equal(getHtml(html), candidate);
+
+    html = '**italic*italic italic*';
+    candidate = '<span class="token italic">**italic*italic italic*</span>';
+    assert.equal(getHtml(html), candidate);
+
+    html = '**italic*italic*italic*';
+    candidate = '<span class="token italic">**italic*italic*italic*</span>';
+    assert.equal(getHtml(html), candidate);
+
+    html = '*italic*italic italic**';
+    candidate = '<span class="token italic">*italic*italic italic**</span>';
+    assert.equal(getHtml(html), candidate);
+
+    html = '*italic*italic*italic**';
+    candidate = '<span class="token italic">*italic*italic*italic**</span>';
+    assert.equal(getHtml(html), candidate);
+
+    html = '*italic*italic**italic*';
+    candidate = '<span class="token italic">*italic*italic**italic*</span>';
+    assert.equal(getHtml(html), candidate);
+
+    html = '*italic**italic*italic*';
+    candidate = '<span class="token italic">*italic**italic*italic*</span>';
+    assert.equal(getHtml(html), candidate);
   });
 
   it('should highlight bold-italic (underscores)', ()=> {
@@ -312,6 +430,16 @@ describe('highlighter', () => {
 
     assert.equal(getHtml(html), candidate);
   });
+
+  // it('should highlight bold-italic (underscores / asterisks mixed) v7', ()=> {
+  //   let html;
+  //   let candidate;
+
+  //   html = '__bold italic text_bold__';
+  //   candidate = `<span class="token bold">__bold italic text_bold__</span>`;
+
+  //   assert.equal(getHtml(html), candidate);
+  // });
 
   // it('should highlight bold-italic (underscores / asterisks mixed) v6', ()=> {
   //   let html = '*__bold-italic__*';
