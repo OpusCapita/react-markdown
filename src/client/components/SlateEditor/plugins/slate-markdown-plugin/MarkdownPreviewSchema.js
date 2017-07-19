@@ -79,7 +79,7 @@ Prism.languages.insertBefore('markdown', 'prolog', {
     }
   }],
   italic: [{
-    pattern: /_([^_\r\n]*(__[^_\r\n]+__[^_\r\n]*)+|[^_\r\n]+).*_(?=\b)/,
+    pattern: /(?=\b)_.*([^_\r\n]*(__[^_\r\n]+__[^_\r\n]*)+|[^_\r\n]+).*_(?=\b)/,
     inside: {
       bold: [{
         lookbehind: true,
