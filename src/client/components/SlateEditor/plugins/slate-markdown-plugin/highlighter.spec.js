@@ -1,27 +1,6 @@
 import Prism from 'prismjs';
 import { grammar } from './MarkdownPreviewSchema';
 import { assert } from 'chai';
-import $ from 'cheerio';
-
-let allTypesEqual = (type, str, grammar) => {
-  let tokens = Prism.tokenize(str, grammar);
-  return tokens.every(token => token.type === type);
-};
-
-let allTypesNotEqual = (type, str, grammar) => {
-  let tokens = Prism.tokenize(str, grammar);
-  return tokens.every(token => token.type !== type);
-};
-
-let typeEqual = (type, str, grammar) => {
-  let tokens = Prism.tokenize(str, grammar);
-  return tokens.some(token => token.type === type);
-};
-
-let typeNotEqual = (type, str, grammar) => {
-  let tokens = Prism.tokenize(str, grammar);
-  return tokens.every(token => token.type !== type);
-};
 
 let getHtml = (str) => Prism.highlight(str, grammar);
 let escapeRegExp= function(str) {

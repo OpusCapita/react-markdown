@@ -45,7 +45,6 @@
     "babel-register": "6.23.0",
     "chai": "3.5.0",
     "chai-enzyme": "0.6.1",
-    "cheerio": "1.0.0-rc.2",
     "compression": "1.6.2",
     "cross-env": "5.0.1",
     "css-loader": "0.26.2",
