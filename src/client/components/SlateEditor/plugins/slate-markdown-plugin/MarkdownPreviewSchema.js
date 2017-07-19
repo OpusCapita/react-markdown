@@ -47,7 +47,7 @@ Prism.languages.insertBefore('markdown', 'prolog', {
     pattern: /^\s*[\+\-\*]\s.+/
   },
   url: {
-		pattern: /!?\[[^\]]+\](?:\([^\s)]+(?:[\t ]+"(?:\\.|[^"\\])*")?\)| ?\[[^\]\n]*\])/,
+		pattern: /!?\[[^\]]*\](?:\([^)]*(?:[\t ]+"(?:\\.|[^"\\])*")?\)| ?\[[^\]\n]*\])/,
     inside: {
       punctuation: {
         pattern: /[\[\]!:]|[<>]|\(.*\)/

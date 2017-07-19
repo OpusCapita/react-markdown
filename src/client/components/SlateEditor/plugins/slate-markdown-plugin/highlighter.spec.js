@@ -29,13 +29,60 @@ let escapeRegExp= function(str) {
 };
 
 describe('highlighter', () => {
-  // it('should highlight blockquote', ()=> {
+  it('should highlight blockquote', ()=> {
+    let html;
 
-  // });
+    html = '> quote text';
+    assert.equal(getHtml(html), '<span class="token blockquote">> quote text</span>');
 
-  // it('should highlight code', ()=> {
+    html = '>> quote text';
+    assert.equal(getHtml(html), '<span class="token blockquote">>> quote text</span>');
 
-  // });
+    html = 'word > quote text';
+    assert.equal(getHtml(html), 'word > quote text');
+  });
+
+  it('should highlight code (single tick)', ()=> {
+    let html;
+
+    html = '`code`';
+    assert.equal(getHtml(html), '<span class="token code">`code`</span>');
+
+    html = '``code`';
+    assert.equal(getHtml(html), '`<span class="token code">`code`</span>');
+
+    html = '`code``';
+    assert.equal(getHtml(html), '<span class="token code">`code`</span>`');
+  });
+
+  it('should highlight code (tripple ticks)', ()=> {
+    let html;
+
+    html = '```code```';
+    assert.equal(getHtml(html), '<span class="token code">```code```</span>');
+
+    html = '````code```';
+    assert.equal(getHtml(html), '`<span class="token code">```code```</span>');
+
+    html = '```code````';
+    assert.equal(getHtml(html), '<span class="token code">```code```</span>`');
+  });
+
+//   it('should highlight code block', ()=> {
+//     let html;
+
+//     html =
+// `\`\`\`
+// code
+// \`\`\``;
+//     assert.equal(getHtml(html), '<span class="token code">```code```</span>');
+
+//     html = '````code```';
+//     assert.equal(getHtml(html), '`<span class="token code">```code```</span>');
+
+//     html = '```code````';
+//     assert.equal(getHtml(html), '<span class="token code">```code```</span>`');
+//   });
 
   it('should highlight header1', ()=> {
     let html;
@@ -124,7 +171,7 @@ describe('highlighter', () => {
     assert.equal(getHtml(html), '*****word');
   });
 
-  it('should highlight list', ()=> {
+  it('should highlight list (single item)', ()=> {
     let html;
 
     html = '- item-1';
@@ -138,13 +185,57 @@ describe('highlighter', () => {
 
     html = 'word * item-1';
     assert.equal(getHtml(html), 'word * item-1');
-
-    // TODO - write more tests
   });
 
-  // it('should highlight url', ()=> {
+  it('should highlight list (multiple items)', ()=> {
+    let html;
+    let candidate;
 
-  // });
+    html =
+`- item-1
+- item-2
+- item-3`;
+    candidate = `<span class="token list">- item-1</span><span class="token list">\n- item-2</span><span class="token list">\n- item-3</span>`;
+
+    assert.equal(getHtml(html), candidate);
+
+    html =
+`- item-1
+  - item-1-1
+  - item-1-2
+- item-2
+  - item-1-2
+- item-3`;
+
+    candidate = '<span class="token list">- item-1</span><span class="token list">\n  - item-1-1</span><span class="token list">\n  - item-1-2</span><span class="token list">\n- item-2</span><span class="token list">\n  - item-1-2</span><span class="token list">\n- item-3</span>';
+
+    assert.equal(getHtml(html), candidate);
+  });
+
+  it('should highlight url', ()=> {
+    let html;
+    let candidate;
+
+    html = '[opuscapita](https://www.opuscapita.com/)';
+    candidate = '<span class="token url"><span class="token punctuation">[</span>opuscapita<span class="token punctuation">]</span><span class="token punctuation">(https://www.opuscapita.com/)</span></span>';
+
+    assert.equal(getHtml(html), candidate);
+
+    html = '[](https://www.opuscapita.com/)';
+    candidate = '<span class="token url"><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">(https://www.opuscapita.com/)</span></span>';
+
+    assert.equal(getHtml(html), candidate);
+
+    html = '[]()';
+    candidate = '<span class="token url"><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">()</span></span>';
+
+    assert.equal(getHtml(html), candidate);
+
+    html = '[opuscapita]()';
+    candidate = '<span class="token url"><span class="token punctuation">[</span>opuscapita<span class="token punctuation">]</span><span class="token punctuation">()</span></span>';
+
+    assert.equal(getHtml(html), candidate);
+  });
 
   it('should highlight bold', ()=> {
     let html;
