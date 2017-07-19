@@ -310,47 +310,47 @@ describe('highlighter', () => {
     assert.equal(getHtml(html), candidate);
 
     html = '*italic*italic';
-    candidate = `*italic*italic`;
+    candidate = `<span class="token italic">*italic*</span>italic`;
     assert.equal(getHtml(html), candidate);
 
     html = 'italic*italic*';
-    candidate = `italic*italic*`;
+    candidate = `italic<span class="token italic">*italic*</span>`;
     assert.equal(getHtml(html), candidate);
 
     html = '*italic*italic*italic*';
-    candidate = '<span class="token italic">*italic*italic*italic*</span>';
+    candidate = '<span class="token italic">*italic*</span><span>italic</span><span class="token italic">*italic*</span>';
     assert.equal(getHtml(html), candidate);
 
     html = '*italic italic*italic*';
-    candidate = '<span class="token italic">*italic italic*italic*</span>';
+    candidate = '<span class="token italic">*italic italic*</span>italic*';
     assert.equal(getHtml(html), candidate);
 
     html = '*italic*italic italic*';
-    candidate = '<span class="token italic">*italic*italic italic*</span>';
+    candidate = '<span class="token italic">*italic*</span>italic italic*';
     assert.equal(getHtml(html), candidate);
 
     html = '**italic*italic italic*';
-    candidate = '<span class="token italic">**italic*italic italic*</span>';
+    candidate = '**italic<span class="token italic">*italic italic*</span>';
     assert.equal(getHtml(html), candidate);
 
     html = '**italic*italic*italic*';
-    candidate = '<span class="token italic">**italic*italic*italic*</span>';
+    candidate = '*<span class="token italic">*italic*italic*italic*</span>';
     assert.equal(getHtml(html), candidate);
 
     html = '*italic*italic italic**';
-    candidate = '<span class="token italic">*italic*italic italic**</span>';
+    candidate = '<span class="token italic">*italic*</span>italic italic**';
     assert.equal(getHtml(html), candidate);
 
     html = '*italic*italic*italic**';
-    candidate = '<span class="token italic">*italic*italic*italic**</span>';
+    candidate = '<span class="token italic">*italic*</span>italic*italic**';
     assert.equal(getHtml(html), candidate);
 
     html = '*italic*italic**italic*';
-    candidate = '<span class="token italic">*italic*italic**italic*</span>';
+    candidate = '<span class="token italic">*italic*</span>italic**italic*';
     assert.equal(getHtml(html), candidate);
 
     html = '*italic**italic*italic*';
-    candidate = '<span class="token italic">*italic**italic*italic*</span>';
+    candidate = '<span class="token italic">*italic**italic*</span>italic*';
     assert.equal(getHtml(html), candidate);
   });
 
