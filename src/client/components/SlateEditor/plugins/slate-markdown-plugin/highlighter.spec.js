@@ -237,6 +237,60 @@ describe('highlighter', () => {
     assert.match(getHtml(html), new RegExp(candidate));
   });
 
+    it('should highlight bold-italic (asterisks)', ()=> {
+    let html;
+    let candidate1;
+    let candidate2;
+
+    html = '***bold-italic***';
+
+    candidate1 = escapeRegExp(
+      `<span class="token bold">**<span class="token italic">*bold-italic*</span>**</span>`
+    );
+    candidate2 = escapeRegExp(
+      `<span class="token italic">*<span class="token bold">**bold-italic**</span>*</span>`
+    );
+
+    assert.match(getHtml(html), new RegExp(`(${candidate1}|${candidate2})`));
+  });
+
+  // it('should highlight bold-italic (underscores / asterisks mixed) v5', ()=> {
+  //   let html = '_**bold-italic**italic_';
+  //   let candidate = escapeRegExp(
+  //     `<span class="token italic">_<span class="token bold">**bold-italic**</span>_</span>`
+  //   );
+
+  //   assert.match(getHtml(html), new RegExp(candidate));
+
+  // });
+
+  // it('should highlight bold-italic (underscores / asterisks mixed) v6', ()=> {
+  //   let html = '*__bold-italic__*';
+  //   let candidate = escapeRegExp(
+  //     `<span class="token italic">*<span class="token bold">__bold-italic__</span>*</span>`
+  //   );
+
+  //   assert.match(getHtml(html), new RegExp(candidate));
+  // });
+
+  // it('should highlight bold-italic (underscores / asterisks mixed) v7', ()=> {
+  //   let html = '__*bold-italic*__';
+  //   let candidate = escapeRegExp(
+  //     `<span class="token bold">__<span class="token italic">*bold-italic*</span>__</span>`
+  //   );
+
+  //   assert.match(getHtml(html), new RegExp(candidate));
+  // });
+
+  // it('should highlight bold-italic (underscores / asterisks mixed) v8', ()=> {
+  //   let html = '**_bold-italic_**';
+  //   let candidate = escapeRegExp(
+  //     `<span class="token bold">**<span class="token italic">_bold-italic_</span>**</span>`
+  //   );
+
+  //   assert.match(getHtml(html), new RegExp(candidate));
+  // });
+
   // it('should highlight bold inside italic', ()=> {
 
   // });
