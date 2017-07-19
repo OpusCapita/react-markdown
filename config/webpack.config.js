@@ -58,13 +58,20 @@ if(WEBPACK_BUNDLE_ANALYZE && IS_PRODUCTION_MODE) {
   plugins.push(bundleAnalyzerPlugin);
 }
 
+const entries = [];
+
+if (IS_PRODUCTION_MODE) {
+  entries.push('babel-polyfill');
+}
+
+entries.push(
+  (IS_PRODUCTION_MODE || IS_LINK_MODE) ?
+    path.resolve(__dirname, '../src/client/index.js') :
+    path.resolve(__dirname, '../www/index-page.js')
+);
+
 module.exports = {
-  entry: [
-    'babel-polyfill',
-    (IS_PRODUCTION_MODE || IS_LINK_MODE) ?
-      path.resolve(__dirname, '../src/client/index.js') :
-      path.resolve(__dirname, '../www/index-page.js')
-  ],
+  entry: entries,
   context: path.resolve(__dirname),
   output: {
     publicPath: '/',

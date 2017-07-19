@@ -1,6 +1,6 @@
-import filter from 'lodash/filter';
-
-export const getLink = state => filter(state.inlines, inline => inline.type === 'link').first();
+export const getLink = (state) => {
+  return state.inlines.asImmutable().filter(inline => inline.type === 'link').first()
+};
 export const getSelectedText = state => {
   const { selection, document } = state;
   return document.getFragmentAtRange(selection).text;
@@ -20,7 +20,7 @@ export const updateLink = (state, { href, text }) => {
   const transform = state.transform();
 
   if (startOffset === endOffset) {
-    const link = filter(state.inlines, inline => inline.type === 'link').first();
+    const link = state.inlines.asImmutable().filter(inline => inline.type === 'link');
     if (link) {
       // change exists link
       transform.removeNodeByKey(link.key)

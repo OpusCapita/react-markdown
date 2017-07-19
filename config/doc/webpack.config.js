@@ -8,7 +8,7 @@ const NODE_ENV = process.env.NODE_ENV;
 
 module.exports = {
   entry: [
-    'babel-polyfill',
+    // 'babel-polyfill',
     path.resolve(__dirname, '../../www/index-page.js')
   ],
   context: path.resolve(__dirname),
