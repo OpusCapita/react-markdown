@@ -146,6 +146,34 @@ describe('highlighter', () => {
 
     html = '*****word';
     assert.equal(getHtml(html), '*****word');
+
+    // One to three spaces indent are allowed:
+
+    html = ' ---';
+    assert.equal(getHtml(html), '<span class="token hr">---</span>');
+
+    html = '  ---';
+    assert.equal(getHtml(html), '<span class="token hr">---</span>');
+
+    html = '   ---';
+    assert.equal(getHtml(html), '<span class="token hr">---</span>');
+
+    html = ' ***';
+    assert.equal(getHtml(html), '<span class="token hr">***</span>');
+
+    html = '  ***';
+    assert.equal(getHtml(html), '<span class="token hr">***</span>');
+
+    html = '   ***';
+    assert.equal(getHtml(html), '<span class="token hr">***</span>');
+
+    // Four spaces is too many:
+
+    html = '    ---';
+    assert.equal(getHtml(html), '---');
+
+    html = '    ***';
+    assert.equal(getHtml(html), '***');
   });
 
   it('should highlight list (single item)', ()=> {
