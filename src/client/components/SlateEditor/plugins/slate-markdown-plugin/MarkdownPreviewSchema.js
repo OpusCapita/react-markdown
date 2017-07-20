@@ -13,11 +13,11 @@ Prism.languages.insertBefore('markdown', 'prolog', {
     pattern: /^>(?:[\t ]*>)*.*/m
   },
   code: [{
-    pattern: /```[^`]+```/g,
-    greedy: true
+    pattern: /(^|[^`])```[^`].*[^`]```(?!`)/,
+    lookbehind: true
   }, {
-    pattern: /`[^`]+`/g,
-    greedy: true
+    pattern: /(^|[^`])`[^`].*[^`]`(?!`)/,
+    lookbehind: true
   }],
   // codeBlock: [{
   //   pattern: /^`{3}([\S]+)?\n([\s\S]+)\n`{3}/
@@ -39,9 +39,6 @@ Prism.languages.insertBefore('markdown', 'prolog', {
   },
   header6: {
     pattern: /(^\s*)#{6}[\s]+.*/m
-  },
-  hr: {
-    pattern: /(^\s*)([*-])([\t ]*\2){2,}(?=\s*$)/m
   },
   list: {
     pattern: /^\s*[\+\-\*]\s.+/
@@ -85,7 +82,8 @@ Prism.languages.insertBefore('markdown', 'prolog', {
         lookbehind: true,
         pattern: /(.+?)__[^_\r\n]+__(?=.+)/
       }, {
-        pattern: /\*\*[^*\r\n]+\*\*/
+        lookbehind: true,
+        pattern: /(.+?)\*\*[^*\r\n]+\*\*(?=.+)/
       }]
     }
   }, {
@@ -96,11 +94,11 @@ Prism.languages.insertBefore('markdown', 'prolog', {
         lookbehind: true,
         pattern: /(.+?)__[^_\r\n]+__(?=.+)/
       }, {
-        pattern: /__[^_\r\n]+__/
+        lookbehind: true,
+        pattern: /(.+?)\*\*[^*\r\n]+\*\*(?=.+)/
       }]
     }
-  },
-  ],
+  }],
 
   strikethrough: {
     pattern: /(^|[^~])~~([^~\r\n]*(~~[^~\r\n]+~~[^~\r\n]*)+|[^~\r\n]+)~/,
@@ -119,9 +117,9 @@ Prism.languages.insertBefore('markdown', 'prolog', {
 //   Prism.util.clone(Prism.languages.markdown.bold[1]),
 // ];
 
- // Prism.languages.markdown.bold[0].inside.italic = Prism.util.clone(Prism.languages.markdown.italic[0]);
+//  Prism.languages.markdown.bold[0].inside.italic = Prism.util.clone(Prism.languages.markdown.italic[0]);
 // Prism.languages.markdown.bold[1].inside.italic = Prism.util.clone(Prism.languages.markdown.italic[1]);
-// Prism.languages.markdown.italic[1].inside.italic = Prism.util.clone(Prism.languages.markdown.italic[1]);
+// Prism.languages.markdown.italic[1].inside.bold = Prism.util.clone(Prism.languages.markdown.bold[0]);
 // Prism.languages.markdown.italic[1].inside.bold = Prism.util.clone(Prism.languages.markdown.bold[1]);
 // Prism.languages.markdown.url.inside.bold = Prism.util.clone(Prism.languages.markdown.bold);
 // Prism.languages.markdown.url.inside.italic = Prism.util.clone(Prism.languages.markdown.italic);

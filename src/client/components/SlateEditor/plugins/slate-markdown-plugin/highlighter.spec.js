@@ -28,10 +28,10 @@ describe('highlighter', () => {
     assert.equal(getHtml(html), '<span class="token code">`code`</span>');
 
     html = '``code`';
-    assert.equal(getHtml(html), '`<span class="token code">`code`</span>');
+    assert.equal(getHtml(html), '``code`');
 
     html = '`code``';
-    assert.equal(getHtml(html), '<span class="token code">`code`</span>`');
+    assert.equal(getHtml(html), '`code``');
   });
 
   it('should highlight code (tripple ticks)', () => {
@@ -41,27 +41,33 @@ describe('highlighter', () => {
     assert.equal(getHtml(html), '<span class="token code">```code```</span>');
 
     html = '````code```';
-    assert.equal(getHtml(html), '`<span class="token code">```code```</span>');
+    assert.equal(getHtml(html), '````code```');
 
     html = '```code````';
-    assert.equal(getHtml(html), '<span class="token code">```code```</span>`');
+    assert.equal(getHtml(html), '```code````');
   });
 
-//   it('should highlight code block', ()=> {
-//     let html;
+  it('should highlight code block', ()=> {
+    let html;
 
-//     html =
-// `\`\`\`
-// code
-// \`\`\``;
-//     assert.equal(getHtml(html), '<span class="token code">```code```</span>');
+    html =
+`\`\`\`
+code
+\`\`\``;
+    // assert.equal(getHtml(html), '<span class="token code">```\ncode\n```</span>');
 
-//     html = '````code```';
-//     assert.equal(getHtml(html), '`<span class="token code">```code```</span>');
+    // html = '````code```';
+    // assert.equal(getHtml(html), '`<span class="token code">```code```</span>');
 
-//     html = '```code````';
-//     assert.equal(getHtml(html), '<span class="token code">```code```</span>`');
-//   });
+    // html = '```code````';
+    // assert.equal(getHtml(html), '<span class="token code">```code```</span>`');
+
+    // html = '```````';
+    // assert.equal(getHtml(html), '`<span class="token code">``````</span>');
+
+    // html = '```````';
+    // assert.equal(getHtml(html), '<span class="token code">``````</span>`');
+  });
 
   it('should highlight header1', () => {
     let html;
@@ -123,59 +129,61 @@ describe('highlighter', () => {
   });
 
   it('should highlight hr', () => {
-    let html;
+    // Not implemented because in reference iA writter hr's are not highlighted
 
-    html = '---';
-    assert.equal(getHtml(html), '<span class="token hr">---</span>');
+    // let html;
 
-    html = '***';
-    assert.equal(getHtml(html), '<span class="token hr">***</span>');
+    // html = '---';
+    // assert.equal(getHtml(html), '<span class="token hr">---</span>');
 
-    html = '-----';
-    assert.equal(getHtml(html), '<span class="token hr">-----</span>');
+    // html = '***';
+    // assert.equal(getHtml(html), '<span class="token hr">***</span>');
 
-    html = '*****';
-    assert.equal(getHtml(html), '<span class="token hr">*****</span>');
+    // html = '-----';
+    // assert.equal(getHtml(html), '<span class="token hr">-----</span>');
 
-    html = 'word-----';
-    assert.equal(getHtml(html), 'word-----');
+    // html = '*****';
+    // assert.equal(getHtml(html), '<span class="token hr">*****</span>');
 
-    html = 'word*****';
-    assert.equal(getHtml(html), 'word*****');
+    // html = 'word-----';
+    // assert.equal(getHtml(html), 'word-----');
 
-    html = '-----word';
-    assert.equal(getHtml(html), '-----word');
+    // html = 'word*****';
+    // assert.equal(getHtml(html), 'word*****');
 
-    html = '*****word';
-    assert.equal(getHtml(html), '*****word');
+    // html = '-----word';
+    // assert.equal(getHtml(html), '-----word');
+
+    // html = '*****word';
+    // assert.equal(getHtml(html), '*****word');
 
     // One to three spaces indent are allowed:
 
-    html = ' ---';
-    assert.equal(getHtml(html), '<span class="token hr">---</span>');
+    // html = ' ---';
+    // assert.equal(getHtml(html), '<span class="token hr">---</span>');
 
-    html = '  ---';
-    assert.equal(getHtml(html), '<span class="token hr">---</span>');
+    // html = '  ---';
+    // assert.equal(getHtml(html), '<span class="token hr">---</span>');
 
-    html = '   ---';
-    assert.equal(getHtml(html), '<span class="token hr">---</span>');
+    // html = '   ---';
+    // assert.equal(getHtml(html), '<span class="token hr">---</span>');
 
-    html = ' ***';
-    assert.equal(getHtml(html), '<span class="token hr">***</span>');
+    // html = ' ***';
+    // assert.equal(getHtml(html), '<span class="token hr">***</span>');
 
-    html = '  ***';
-    assert.equal(getHtml(html), '<span class="token hr">***</span>');
+    // html = '  ***';
+    // assert.equal(getHtml(html), '<span class="token hr">***</span>');
 
-    html = '   ***';
-    assert.equal(getHtml(html), '<span class="token hr">***</span>');
+    // html = '   ***';
+    // assert.equal(getHtml(html), '<span class="token hr">***</span>');
 
     // Four spaces is too many:
 
-    html = '    ---';
-    assert.equal(getHtml(html), '---');
+    // html = '    ---';
+    // assert.equal(getHtml(html), '---');
 
-    html = '    ***';
-    assert.equal(getHtml(html), '***');
+    // html = '    ***';
+    // assert.equal(getHtml(html), '***');
   });
 
   it('should highlight list (single item)', () => {
