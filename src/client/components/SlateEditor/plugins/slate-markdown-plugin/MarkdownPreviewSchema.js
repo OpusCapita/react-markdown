@@ -89,11 +89,19 @@ Prism.languages.insertBefore('markdown', 'prolog', {
       }]
     }
   }, {
-    pattern: /(?!\*)\*.*([^*\r\n]*(\*\*[^\*\r\n]+\*\*[^*\r\n]*)+|[^*\r\n]+).*\*(?!\*)/,
-    lookbehind: true,
+    // (?:[^*]|^)\*[^*]*([^*\r\n]*(\*\*[^\*\r\n]+\*\*[^*\r\n]*)+|[^*\r\n]+)[^*]*\*(?![\*].*)
+    // *italic* fasdf
+    // *italic*italic
+    // italic*italic*
+    // *italic*italic*italic*
+    // italic italic*italic*
+    // *italic*italic italic*
+    // *italic*italic*italic*
+    // **italic*italic italic*
+    pattern: /\*[^*]*([^*\r\n]*(\*\*[^\*\r\n]+\*\*[^*\r\n]*)+|[^*\r\n]+)[^*]*\*(?![\*].*)/,
     inside: {
       bold: [{
-        lookbehind: true,
+        // lookbehind: true,
         pattern: /(.+?)__[^_\r\n]+__(?=.+)/
       }, {
         pattern: /__[^_\r\n]+__/
