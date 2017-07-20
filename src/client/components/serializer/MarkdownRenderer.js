@@ -12,6 +12,16 @@ const String = new Record({
   text: ''
 });
 
+const AFTER_HEADINGS_WITHOUT_SUFFIX = new Set([
+  'heading1',
+  'heading2',
+  'heading3',
+  'heading4',
+  'heading5',
+  'heading6',
+  'paragraph',
+]);
+
 const MARKUPS = {
   code: '`',
   underline: '++',
@@ -108,7 +118,9 @@ const RULES = [
 ];
 
 function getHeadingSuffix(obj) {
-  return obj.nextNodeType === 'empty' ? `\n` : ``;
+  return ``;
+  // return AFTER_HEADINGS_WITHOUT_SUFFIX.has(obj.nextNodeType) ? `` : `\n`;
+  // return obj.nextNodeType === 'empty' ? `\n` : ``;
 }
 
 /**
@@ -128,7 +140,7 @@ const NodeSerialize = {
   code: (obj, children) => {
     const markup = obj.getIn(['data', 'markup']);
     if (markup) {
-      return `\`\`\`\n${children}\n\`\`\`\n`;
+      return `\`\`\`\n${children}\n\`\`\``;
     }
 
     else {
@@ -136,7 +148,7 @@ const NodeSerialize = {
       for (let i = 0; i < arrChildren.length; i++) {
         arrChildren[i] = `    ${arrChildren[i]}`;
       }
-      return `${arrChildren.join('\n')}\n`;
+      return `${arrChildren.join('\n')}`;
     }
   },
   paragraph: (obj, children) => {
@@ -144,7 +156,8 @@ const NodeSerialize = {
     // and the current node in blockquote
     let condition = obj.previousNodeType === 'paragraph'
                     && obj.getIn(['data', 'parent']) === 'blockquote';
-    return `${condition ? '\n' : ''}${children}\n`;
+    return `${condition ? '\n' : ''}${children}`;
+    // return `${condition ? '\n' : ''}${children}\n`;
   },
 
   // Tables
@@ -154,10 +167,15 @@ const NodeSerialize = {
     const columnsCount = obj.nodes.get(0).nodes.size;
     return `${children}|${new Array(columnsCount).fill(' --------- |').join('')}`;
   },
-  tbody: (obj, children) => `\n${children}`,
-  tr: (obj, children) => `| ${children}\n`,
-  th: (obj, children) => `${children} |`,
-  td: (obj, children) => `${children} |`,
+  tbody: (obj, children) => `${children}`,
+  // tbody: (obj, children) => `\n${children}`,
+  tr: (obj, children) => {
+    const parent = obj.getIn(['data', 'parent']);
+    const isBody = parent === 'tbody';
+    return `${isBody ? `\n` : ``}|${children}${isBody ? `` : `\n`}`;
+  },
+  th: (obj, children) => ` ${children} |`,
+  td: (obj, children) => ` ${children} |`,
 
   // Lists
   'ordered-list': listNodeRule,
@@ -204,7 +222,7 @@ const NodeSerialize = {
 
   // Various blocks
   blockquote: (obj, children) => {
-    const arrChildren = children.split('\n');
+    let arrChildren = children.split('\n');
     for (let i = 0; i < arrChildren.length; i++) {
       arrChildren[i] = `> ${arrChildren[i]}`;
     }
@@ -225,28 +243,89 @@ const NodeSerialize = {
      */
     {
       if (level === 0) {
-        const prefLength = [];
-        const isEmpty = [];
+        let prefLength = [];
+        let isEmpty = [];
+        let nextLevel = [];
+        let nextFullNum = [];
         for (let i = 0; i < arrChildren.length; i++) {
           prefLength[i] = arrChildren[i].match(/>/g).length;
-          // prefLength[i] = arrChildren[i].match(/> |>/g).length;
           isEmpty[i] = !arrChildren[i].match(/[^> ]/g);
-        }
-        for (let i = 0; i < arrChildren.length - 1; i++) {
-          if (isEmpty[i] && prefLength[i] > prefLength[i + 1]) {
-            arrChildren[i] = new Array(prefLength[i + 1]).fill('> ').join('');
+
+          if (!isEmpty[i]) {
+            for (let j = i - 1; j >= 0 && isEmpty[j]; j--) {
+              nextLevel[j] = prefLength[i];
+              nextFullNum[j] = i;
+            }
           }
         }
 
-        // Remove last empty line
-        if (arrChildren.length > 0 && isEmpty[arrChildren.length - 1]) {
-          arrChildren.length--;
+        let newArrChildren = [];
+        let i = 0;
+        while (i < arrChildren.length) {
+          if (!isEmpty[i]) {
+            newArrChildren.push(arrChildren[i]);
+            i++;
+
+            if (i < arrChildren.length && !isEmpty[i] && prefLength[i - 1] >= prefLength[i]) {
+              let pref = new Array(prefLength[i]).fill('> ').join('');
+              newArrChildren.push(pref);
+            }
+          }
+
+          else {
+            if (!nextFullNum[i]) {
+              break;
+            }
+
+            if (i === 0) {
+              i = nextFullNum[i];
+            }
+
+            else {
+              if (prefLength[i] >= nextLevel[i]) {
+                let pref = new Array(nextLevel[i]).fill('> ').join('');
+                newArrChildren.push(pref);
+
+                i = nextFullNum[i];
+              }
+
+              else {
+                i++;
+              }
+            }
+          }
         }
+
+        arrChildren = newArrChildren;
+
+        prefLength = [];
+        isEmpty = [];
+        for (let i = 0; i < arrChildren.length; i++) {
+          prefLength[i] = arrChildren[i].match(/>/g).length;
+          isEmpty[i] = !arrChildren[i].match(/[^> ]/g);
+        }
+
+        i = 0;
+        newArrChildren = [];
+        while (i < arrChildren.length) {
+          if (isEmpty[i] && prefLength[i + 1]
+          &&  i > 0 && prefLength[i - 1] < prefLength[i + 1]) {
+            //
+          }
+
+          else {
+            newArrChildren.push(arrChildren[i]);
+          }
+
+          i++;
+        }
+
+        arrChildren = newArrChildren;
       }
     }
 
-    // return `${arrChildren.join('\n')}${level === 0 ? `\n` : ``}`;
-    return `${level === 0 ? `\n` : ``}${arrChildren.join('\n')}${level === 0 ? `\n` : ``}`;
+    return `${level === 0 ? `` : `\n`}${arrChildren.join('\n')}${level === 0 ? `` : `\n`}`;
+    // return `${level === 0 ? `` : `\n`}${arrChildren.join('\n')}\n`;
   },
   anchor: (obj, children) => {
     const label = obj.getIn(['data', 'label']);
@@ -261,7 +340,8 @@ const NodeSerialize = {
   'abbr-def': (obj, children) => {
     const label = obj.getIn(['data', 'label']);
     const title = obj.getIn(['data', 'title']);
-    return `*[${label}]: ${title}\n`;
+    return `*[${label}]: ${title}`;
+    // return `*[${label}]: ${title}\n`;
   },
   empty: (obj, children) => {
     const linesCount = obj.getIn(['data', 'length']);
@@ -292,9 +372,14 @@ function listNodeRule(obj, children) {
     }
   }
 
+  if (arrChildren[arrChildren.length - 1].trim() === '') {
+    arrChildren.length--;
+  }
+
   children = arrChildren.join('\n');
   children = children.replace('\n\n', '\n'); // Delete empty strings in the list
-  return `${listLevel > 0 ? `\n` : ``}${children}${listLevel > 0 ? `` : `\n`}`;
+  // return `${listLevel > 0 ? `\n` : ``}${children}${listLevel > 0 ? `` : `\n`}`;
+  return `${listLevel > 0 ? `\n` : ``}${children}`;
 }
 
 
@@ -303,14 +388,19 @@ function listNodeRule(obj, children) {
  */
 
 const InlineSerialize = {
-  link: (obj, children) => `[${children}](${obj.getIn(['data', 'href'])})`,
+  link: (obj, children) => {
+    const href = obj.getIn(['data', 'href']);
+    const title = obj.getIn(['data', 'title']);
+    return `[${children}](${href}${title ? ` "${title}"` : ``})`;
+  },
   abbr: (obj, children) => `${children}`,
+  autocomplete: (obj, children) => `${children}`,
 
   image: obj => {
     let title = obj.getIn(['data', 'title']);
     let src = obj.getIn(['data', 'src']);
     let alt = obj.getIn(['data', 'alt']);
-    return `![${title}](${src} "${alt}")`;
+    return `![${title}](${src}${alt ? ` "${alt}"` : ``})`;
   },
 };
 
@@ -503,6 +593,8 @@ class Markdown {
    *
    */
   deserialize(markdown, options=[]) {
+    options = [{ regex: '\\$(\\w+)', id: 'term'}, { regex: '\\#(\\w+)', id: 'product'}];
+
     const nodes = MarkdownParser.parse(markdown, options);
     const state = Raw.deserialize(nodes, {terse: true});
     return state;

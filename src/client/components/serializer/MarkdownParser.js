@@ -71,6 +71,9 @@ const markups = {
   autocomplete: 'autocomplete'
 };
 
+const LISTS_BLOCKQUOTES = new Set(['ordered-list', 'unordered-list', 'blockquote']);
+const TABLES = new Set(['table', 'thead', 'tbody']);
+
 function parseAttrs(attrs) {
   let objAttrs = {};
 
@@ -141,7 +144,7 @@ class InlineNode {
 }
 
 class LinkNode extends InlineNode {
-  constructor(link) {
+  constructor(link, title) {
     super();
 
     this.type = "link";
@@ -159,6 +162,10 @@ class LinkNode extends InlineNode {
     this.data = {
       href: link
     };
+
+    if (title !== '') {
+      this.data.title = title;
+    }
   }
 
   addText(text) {
@@ -219,13 +226,17 @@ class AutocompleteNode extends InlineNode {
 }
 
 class ImageNode extends InlineNode {
-  constructor(src, alt) {
+  constructor(title, src, alt) {
     super();
     this.type = "image";
     this.data = {
+      title: title,
       src: src,
-      alt: alt,
     };
+
+    if (alt !== '') {
+      this.data.alt = alt;
+    }
   }
 }
 
@@ -313,15 +324,22 @@ class Children {
     this.addCurrNode();
 
     let link = '';
+    let title = '';
 
     for (let attr of token.attrs) {
-      if (attr[0] === 'href') {
-        link = attr[1];
-        break;
+      switch (attr[0]) {
+        case 'href':
+          link = attr[1];
+          break;
+
+        case 'title':
+          title = attr[1];
+          break;
+
       }
     }
 
-    this.currNode = new LinkNode(link);
+    this.currNode = new LinkNode(link, title);
   }
 
   createAbbr(token) {
@@ -342,6 +360,7 @@ class Children {
   createImage(token) {
     let src = '';
     let alt = '';
+    let title = token.content;
 
     for (let attr of token.attrs) {
       if (attr[0] === 'src') {
@@ -353,11 +372,12 @@ class Children {
       }
     }
 
-    this.currNode = new ImageNode(src, alt);
+    this.currNode = new ImageNode(title, src, alt);
     this.addCurrNode();
   }
 
   createAutocomplete(token) {
+    this.addCurrNode();
     this.currNode = new AutocompleteNode(token.meta.id);
     this.currNode.addText(token.content);
     this.addCurrNode();
@@ -490,7 +510,12 @@ const StateRender = {
 
     while (i + 1 < tokens.length) {
       let token = tokens[i];
-      if ((blockquoteLevel > 0 || bulletListLevel > 0
+
+      if (token.type === 'empty' && token.level > 0) {
+        tokens.splice(i, 1);
+      }
+
+      else if ((blockquoteLevel > 0 || bulletListLevel > 0
         ||  orderedListLevel > 0 || ddLevel > 0 || anchorLevel > 0)
         && (token.type === 'paragraph_open' || token.type === 'paragraph_close')) {
         tokens.splice(i, 1);
@@ -551,23 +576,80 @@ const StateRender = {
     }
   },
 
+  childrenHandler(token, parentType) {
+    let parent = token.type;
+    let num = token.type === 'ordered-list' && token.attrs && token.attrs.start ? token.attrs.start : 1;
+
+    for (let item of token.nodes) {
+      if (!item.data) {
+        item.data = {};
+      }
+
+      if (LISTS_BLOCKQUOTES.has(parent)) {
+        item.data.parent = parent;
+      }
+
+      else if (parentType === 'blockquote'){
+        item.data.parent = parentType;
+      }
+
+      if (token.type === 'ordered-list') {
+        item.data.itemNum = num++;
+      }
+
+      if (item.nodes) {
+        this.postprocessing(item.nodes, item.data.parent);
+        // this.postprocessing(item.nodes, parent);
+      }
+    }
+
+    return parent;
+  },
+
+  setRecursiveParent(nodes, parent) {
+    for (let item of nodes) {
+      if (!item.data) {
+        item.data = {};
+      }
+
+      item.data.parent = parent;
+
+      if (item.nodes) {
+        if (TABLES.has(item.type)) {
+          this.setRecursiveParent(item.nodes, item.type);
+        }
+
+        else {
+          this.setRecursiveParent(item.nodes, parent);
+        }
+      }
+    }
+  },
+
   postprocessing(tokens) {
     for (let token of tokens) {
       let parent = '';
 
       switch (token.type) {
+        case 'table':
+        case 'thead':
+        case 'tbody':
+          parent = token.type;
+          this.setRecursiveParent(token.nodes, parent);
+          break;
+
         case 'ordered-list':
         case 'unordered-list':
         case 'blockquote':
           parent = token.type;
           let num = token.type === 'ordered-list' && token.attrs && token.attrs.start ? token.attrs.start : 1;
 
+          this.setRecursiveParent(token.nodes, parent);
+
           for (let item of token.nodes) {
             if (!item.data) {
               item.data = {};
             }
-
-            item.data.parent = parent;
 
             if (token.type === 'ordered-list') {
               item.data.itemNum = num++;
@@ -742,6 +824,8 @@ const StateRender = {
     // console.log(' ');
     // console.log('StateRender:');
     // console.log(JSON.stringify(this.blocks));
+    // console.log(' ');
+    // console.log(' ');
 
     return this.blocks;
   },
