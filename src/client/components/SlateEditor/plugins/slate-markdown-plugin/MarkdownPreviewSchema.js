@@ -89,25 +89,18 @@ Prism.languages.insertBefore('markdown', 'prolog', {
       }]
     }
   }, {
-    // (?:[^*]|^)\*[^*]*([^*\r\n]*(\*\*[^\*\r\n]+\*\*[^*\r\n]*)+|[^*\r\n]+)[^*]*\*(?![\*].*)
-    // *italic* fasdf
-    // *italic*italic
-    // italic*italic*
-    // *italic*italic*italic*
-    // italic italic*italic*
-    // *italic*italic italic*
-    // *italic*italic*italic*
-    // **italic*italic italic*
-    pattern: /\*[^*]*([^*\r\n]*(\*\*[^\*\r\n]+\*\*[^*\r\n]*)+|[^*\r\n]+)[^*]*\*(?![\*].*)/,
-    inside: {
-      bold: [{
+    pattern: /([^*]|^)\*([^*\r\n]*(\*\*[^*\r\n]+\*\*[^*\r\n]*)+|[^*\r\n]+)\*/,
+    lookbehind: true,
+    // inside: {
+    //   bold: [{
         // lookbehind: true,
-        pattern: /(.+?)__[^_\r\n]+__(?=.+)/
-      }, {
-        pattern: /__[^_\r\n]+__/
-      }]
-    }
-  }],
+      //   pattern: /(.+?)__[^_\r\n]+__(?=.+)/
+      // }, {
+      //   pattern: /__[^_\r\n]+__/
+      // }]
+    // }
+  },
+          ],
 
   strikethrough: {
     pattern: /(^|[^~])~~([^~\r\n]*(~~[^~\r\n]+~~[^~\r\n]*)+|[^~\r\n]+)~/,
@@ -126,9 +119,9 @@ Prism.languages.insertBefore('markdown', 'prolog', {
 //   Prism.util.clone(Prism.languages.markdown.bold[1]),
 // ];
 
-// Prism.languages.markdown.bold[0].inside.italic = Prism.util.clone(Prism.languages.markdown.italic[0]);
+ // Prism.languages.markdown.bold[0].inside.italic = Prism.util.clone(Prism.languages.markdown.italic[0]);
 // Prism.languages.markdown.bold[1].inside.italic = Prism.util.clone(Prism.languages.markdown.italic[1]);
-// Prism.languages.markdown.italic[0].inside.bold = Prism.util.clone(Prism.languages.markdown.bold[0]);
+// Prism.languages.markdown.italic[1].inside.italic = Prism.util.clone(Prism.languages.markdown.italic[1]);
 // Prism.languages.markdown.italic[1].inside.bold = Prism.util.clone(Prism.languages.markdown.bold[1]);
 // Prism.languages.markdown.url.inside.bold = Prism.util.clone(Prism.languages.markdown.bold);
 // Prism.languages.markdown.url.inside.italic = Prism.util.clone(Prism.languages.markdown.italic);
