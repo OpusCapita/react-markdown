@@ -19,9 +19,13 @@ Prism.languages.insertBefore('markdown', 'prolog', {
     pattern: /(^|[^`])`[^`].*[^`]`(?!`)/,
     lookbehind: true
   }],
-  // codeBlock: [{
-  //   pattern: /^`{3}([\S]+)?\n([\s\S]+)\n`{3}/
-  // }],
+  codeBlock: [{
+    pattern: /(`)[^]*\1/,
+    greedy: true
+  }, {
+    pattern: /(`)(\\\n|\\?.)*\1/,
+    greedy: true
+  }],
   header1: {
     pattern: /(^\s*)#{1}[\s]+.*/m
   },
@@ -164,6 +168,7 @@ function markdownDecorator(text, block) {
   const string = text.text;
   const grammar = Prism.languages[language];
   const tokens = Prism.tokenize(string, grammar);
+
   addMarks(characters, tokens, 0);
   return characters.asImmutable();
 }

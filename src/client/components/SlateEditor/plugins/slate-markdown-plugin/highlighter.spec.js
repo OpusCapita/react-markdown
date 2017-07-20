@@ -9,6 +9,14 @@ let escapeRegExp = (str) => str.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
 
 describe('highlighter', () => {
   it('should highlight blockquote', () => {
+
+        let ht =
+`\`\`\`
+hello world
+hello world
+\`\`\``;
+    console.log('html::', getHtml(ht));
+
     let html;
 
     html = '> quote text';
@@ -32,6 +40,13 @@ describe('highlighter', () => {
 
     html = '`code``';
     assert.equal(getHtml(html), '`code``');
+
+
+
+
+    // TODO
+    // html = '`+`, `-`, or `*`';
+    // assert.equal(getHtml(html), '`code``');
   });
 
   it('should highlight code (tripple ticks)', () => {
