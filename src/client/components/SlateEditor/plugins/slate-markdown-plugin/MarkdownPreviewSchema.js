@@ -47,12 +47,12 @@ Prism.languages.insertBefore('markdown', 'prolog', {
     pattern: /^\s*[\+\-\*]\s.+/
   },
   url: {
-		pattern: /!?\[[^\]]*\](?:\([^)]*(?:[\t ]+"(?:\\.|[^"\\])*")?\)| ?\[[^\]\n]*\])/,
+    pattern: /!?\[[^\]]*\](?:\([^)]*(?:[\t ]+"(?:\\.|[^"\\])*")?\)| ?\[[^\]\n]*\])/,
     inside: {
       punctuation: {
         pattern: /[\[\]!:]|[<>]|\(.*\)/
       }
-		}
+    }
   },
 
   bold: [{
@@ -91,16 +91,16 @@ Prism.languages.insertBefore('markdown', 'prolog', {
   }, {
     pattern: /([^*]|^)\*([^*\r\n]*(\*\*[^*\r\n]+\*\*[^*\r\n]*)+|[^*\r\n]+)\*/,
     lookbehind: true,
-    // inside: {
-    //   bold: [{
-        // lookbehind: true,
-      //   pattern: /(.+?)__[^_\r\n]+__(?=.+)/
-      // }, {
-      //   pattern: /__[^_\r\n]+__/
-      // }]
-    // }
+    inside: {
+      bold: [{
+        lookbehind: true,
+        pattern: /(.+?)__[^_\r\n]+__(?=.+)/
+      }, {
+        pattern: /__[^_\r\n]+__/
+      }]
+    }
   },
-          ],
+  ],
 
   strikethrough: {
     pattern: /(^|[^~])~~([^~\r\n]*(~~[^~\r\n]+~~[^~\r\n]*)+|[^~\r\n]+)~/,

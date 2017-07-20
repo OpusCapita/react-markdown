@@ -1,12 +1,14 @@
+/* eslint-disable max-len */
+
 import Prism from 'prismjs';
 import { grammar } from './MarkdownPreviewSchema';
 import { assert } from 'chai';
 
 let getHtml = (str) => Prism.highlight(str, grammar);
-let escapeRegExp= (str) => str.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+let escapeRegExp = (str) => str.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
 
 describe('highlighter', () => {
-  it('should highlight blockquote', ()=> {
+  it('should highlight blockquote', () => {
     let html;
 
     html = '> quote text';
@@ -19,7 +21,7 @@ describe('highlighter', () => {
     assert.equal(getHtml(html), 'word > quote text');
   });
 
-  it('should highlight code (single tick)', ()=> {
+  it('should highlight code (single tick)', () => {
     let html;
 
     html = '`code`';
@@ -32,7 +34,7 @@ describe('highlighter', () => {
     assert.equal(getHtml(html), '<span class="token code">`code`</span>`');
   });
 
-  it('should highlight code (tripple ticks)', ()=> {
+  it('should highlight code (tripple ticks)', () => {
     let html;
 
     html = '```code```';
@@ -61,7 +63,7 @@ describe('highlighter', () => {
 //     assert.equal(getHtml(html), '<span class="token code">```code```</span>`');
 //   });
 
-  it('should highlight header1', ()=> {
+  it('should highlight header1', () => {
     let html;
 
     html = '# Header';
@@ -71,7 +73,7 @@ describe('highlighter', () => {
     assert.equal(getHtml(html), '#Header');
   });
 
-  it('should highlight header2', ()=> {
+  it('should highlight header2', () => {
     let html;
 
     html = '## Header';
@@ -81,7 +83,7 @@ describe('highlighter', () => {
     assert.equal(getHtml(html), '##Header');
   });
 
-  it('should highlight header3', ()=> {
+  it('should highlight header3', () => {
     let html;
 
     html = '### Header';
@@ -91,7 +93,7 @@ describe('highlighter', () => {
     assert.equal(getHtml(html), '###Header');
   });
 
-  it('should highlight header4', ()=> {
+  it('should highlight header4', () => {
     let html;
 
     html = '#### Header';
@@ -101,7 +103,7 @@ describe('highlighter', () => {
     assert.equal(getHtml(html), '####Header');
   });
 
-  it('should highlight header5', ()=> {
+  it('should highlight header5', () => {
     let html;
     html = '##### Header';
     assert.equal(getHtml(html), '<span class="token header5">##### Header</span>');
@@ -110,7 +112,7 @@ describe('highlighter', () => {
     assert.equal(getHtml(html), '#####Header');
   });
 
-  it('should highlight header6', ()=> {
+  it('should highlight header6', () => {
     let html;
 
     html = '###### Header';
@@ -120,7 +122,7 @@ describe('highlighter', () => {
     assert.equal(getHtml(html), '######Header');
   });
 
-  it('should highlight hr', ()=> {
+  it('should highlight hr', () => {
     let html;
 
     html = '---';
@@ -176,7 +178,7 @@ describe('highlighter', () => {
     assert.equal(getHtml(html), '***');
   });
 
-  it('should highlight list (single item)', ()=> {
+  it('should highlight list (single item)', () => {
     let html;
 
     html = '- item-1';
@@ -192,7 +194,7 @@ describe('highlighter', () => {
     assert.equal(getHtml(html), 'word * item-1');
   });
 
-  it('should highlight list (multiple items)', ()=> {
+  it('should highlight list (multiple items)', () => {
     let html;
     let candidate;
 
@@ -217,7 +219,7 @@ describe('highlighter', () => {
     assert.equal(getHtml(html), candidate);
   });
 
-  it('should highlight url', ()=> {
+  it('should highlight url', () => {
     let html;
     let candidate;
 
@@ -242,7 +244,7 @@ describe('highlighter', () => {
     assert.equal(getHtml(html), candidate);
   });
 
-  it('should highlight bold (underscores)', ()=> {
+  it('should highlight bold (underscores)', () => {
     let html;
     let candidate;
 
@@ -259,7 +261,7 @@ describe('highlighter', () => {
     assert.equal(getHtml(html), candidate);
   });
 
-  it('should highlight bold (asterisks)', ()=> {
+  it('should highlight bold (asterisks)', () => {
     let html;
     let candidate;
 
@@ -267,16 +269,54 @@ describe('highlighter', () => {
     candidate = '<span class="token bold">**bold**</span>';
     assert.equal(getHtml(html), candidate);
 
-    html = '**bold bold*bold**';
-    candidate = `<span class="token bold">**bold bold*bold**</span>`;
+    html = '**bold**bold';
+    candidate = `<span class="token bold">**bold**</span>bold`;
     assert.equal(getHtml(html), candidate);
 
-    html = '**bold*bold bold**';
-    candidate = `<span class="token bold">**bold*bold bold**</span>`;
+    html = 'bold**bold**';
+    candidate = `bold<span class="token bold">**bold**</span>`;
+    assert.equal(getHtml(html), candidate);
+
+    html = '**bold**bold**bold**';
+    candidate = '<span class="token bold">**bold**</span>bold<span class="token bold">**bold**</span>';
+    assert.equal(getHtml(html), candidate);
+
+    html = '**bold bold**bold**';
+    candidate = '<span class="token bold">**bold bold**</span>bold**';
+    assert.equal(getHtml(html), candidate);
+
+    html = '**bold**bold bold**';
+    candidate = '<span class="token bold">**bold**</span>bold bold**';
+    assert.equal(getHtml(html), candidate);
+
+    html = '***bold**bold bold**';
+    candidate = '***bold<span class="token bold">**bold bold**</span>';
+    assert.equal(getHtml(html), candidate);
+
+    html = '***bold**bold**bold**';
+    // uncompatible with Commonmark. should be:
+    // candidate = '*<span class="token bold">**bold**bold**bold**</span>';
+    candidate = '***bold<span class="token bold">**bold**</span>bold**';
+    assert.equal(getHtml(html), candidate);
+
+    html = '**bold**bold bold***';
+    candidate = '<span class="token bold">**bold**</span>bold bold***';
+    assert.equal(getHtml(html), candidate);
+
+    html = '**bold**bold**bold***';
+    candidate = '<span class="token bold">**bold**</span>bold<span class="token bold">**bold**</span>*';
+    assert.equal(getHtml(html), candidate);
+
+    html = '**bold**bold***bold**';
+    candidate = '<span class="token bold">**bold**</span>bold***bold**';
+    assert.equal(getHtml(html), candidate);
+
+    html = '**bold***bold**bold**';
+    candidate = '<span class="token bold">**bold**</span>*bold<span class="token bold">**bold**</span>';
     assert.equal(getHtml(html), candidate);
   });
 
-  it('should highlight italic (underscores)', ()=> {
+  it('should highlight italic (underscores)', () => {
     let html;
     let candidate;
 
@@ -329,7 +369,7 @@ describe('highlighter', () => {
     assert.equal(getHtml(html), candidate);
   });
 
-  it('should highlight italic (asterisks)', ()=> {
+  it('should highlight italic (asterisks)', () => {
     let html;
     let candidate;
 
@@ -362,7 +402,7 @@ describe('highlighter', () => {
     assert.equal(getHtml(html), candidate);
 
     html = '**italic*italic*italic*';
-    // uncompatible with commonmark. should be:
+    // uncompatible with Commonmark. should be:
     // candidate = '*<span class="token italic">*italic*italic*italic*</span>';
     candidate = '**italic<span class="token italic">*italic*</span>italic*';
     assert.equal(getHtml(html), candidate);
@@ -372,7 +412,7 @@ describe('highlighter', () => {
     assert.equal(getHtml(html), candidate);
 
     html = '*italic*italic*italic**';
-    // uncompatible with commonmark. should be:
+    // uncompatible with Commonmark. should be:
     // '<span class="token italic">*italic*</span>italic*italic**';
     candidate = '<span class="token italic">*italic*</span>italic<span class="token italic">*italic*</span>*';
     assert.equal(getHtml(html), candidate);
@@ -386,7 +426,7 @@ describe('highlighter', () => {
     assert.equal(getHtml(html), candidate);
   });
 
-  it('should highlight bold-italic (underscores)', ()=> {
+  it('should highlight bold-italic (underscores)', () => {
     let html;
     let candidate1;
     let candidate2;
@@ -403,7 +443,7 @@ describe('highlighter', () => {
     assert.match(getHtml(html), new RegExp(`(${candidate1}|${candidate2})`));
   });
 
-  it('should highlight bold-italic (asterisks)', ()=> {
+  it('should highlight bold-italic (asterisks)', () => {
     let html;
     let candidate1;
     let candidate2;
@@ -420,35 +460,35 @@ describe('highlighter', () => {
     assert.match(getHtml(html), new RegExp(`(${candidate1}|${candidate2})`));
   });
 
-  it('should highlight bold-italic (underscores / asterisks mixed) v1', ()=> {
+  it('should highlight bold-italic (underscores / asterisks mixed) v1', () => {
     let html = '__*bold-italic*__';
     let candidate = `<span class="token bold">__<span class="token italic">*bold-italic*</span>__</span>`;
 
     assert.equal(getHtml(html), candidate);
   });
 
-  it('should highlight bold-italic (underscores / asterisks mixed) v2', ()=> {
+  it('should highlight bold-italic (underscores / asterisks mixed) v2', () => {
     let html = '**_bold-italic_**';
     let candidate = `<span class="token bold">**<span class="token italic">_bold-italic_</span>**</span>`;
 
     assert.equal(getHtml(html), candidate);
   });
 
-  it('should highlight bold-italic (underscores / asterisks mixed) v3', ()=> {
+  it('should highlight bold-italic (underscores / asterisks mixed) v3', () => {
     let html = '_**bold-italic**_';
     let candidate = `<span class="token italic">_<span class="token bold">**bold-italic**</span>_</span>`;
 
     assert.equal(getHtml(html), candidate);
   });
 
-  it('should highlight bold-italic (underscores / asterisks mixed) v4', ()=> {
+  it('should highlight bold-italic (underscores / asterisks mixed) v4', () => {
     let html = '*__bold-italic__*';
     let candidate = `<span class="token italic">*<span class="token bold">__bold-italic__</span>*</span>`;
 
     assert.equal(getHtml(html), candidate);
   });
 
-  it('should highlight bold-italic (underscores / asterisks mixed) v5', ()=> {
+  it('should highlight bold-italic (underscores / asterisks mixed) v5', () => {
     let html;
     let candidate;
 
@@ -479,5 +519,4 @@ describe('highlighter', () => {
 
   //   assert.equal(getHtml(html), candidate);
   // });
-
 });
