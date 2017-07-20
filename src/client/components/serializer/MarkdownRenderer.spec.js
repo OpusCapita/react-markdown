@@ -620,8 +620,14 @@ End Links`;
       expect(trimStr(str)).to.equal(trimStr(repars));
     });
 
-    it.skip('Anchors', () => {
+    it('Anchors', () => {
+      let str = `## Anchor
 
+[^label]: Text text text
+
+End Anchor`;
+      let repars = reparser(str);
+      expect(trimStr(str)).to.equal(trimStr(repars));
     });
 
     it('Simple image', () => {
@@ -790,12 +796,25 @@ It is simple text.
 > > >
 > > > Blockquote 3-5
 
-##Indented code
+## Code
+### Inline code
+
+Inline ${oneQuote}code${oneQuote}
+
+
+### Indented code
 
     // Some comments
     line 1 of code
     line 2 of code
     line 3 of code
+    
+    
+### Block code fences
+
+${quotes}
+Sample text here...
+${quotes}
 
 
 ## Links
@@ -817,7 +836,7 @@ It is simple text.
 Like links, Images also have a footnote style syntax
 
 ## Lists
-###Unordered
+### Unordered
 
 + Create a list by starting a line with
 + Sub-lists are made by indenting 2 spaces:
@@ -839,7 +858,7 @@ Like links, Images also have a footnote style syntax
 + Very easy!
 
 
-###Ordered
+### Ordered
 
 1. Create a list by starting a line with
 2. Sub-lists are made by indenting 2 spaces:
@@ -859,6 +878,13 @@ This is PHP abbreviation example.
 It converts PHP, but keep intact partial entries like xxxPHPyyy and so on.
 
 *[PHP]: Personal Home Page
+
+
+## Anchor
+
+[^label]: Text text text
+
+it is text.
 
 
 End text`;
