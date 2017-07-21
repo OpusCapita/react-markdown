@@ -41,12 +41,8 @@ hello world
     html = '`code``';
     assert.equal(getHtml(html), '`code``');
 
-
-
-
-    // TODO
-    // html = '`+`, `-`, or `*`';
-    // assert.equal(getHtml(html), '`code``');
+    html = '`+`, `-`, or `*`';
+    assert.equal(getHtml(html), '<span class="token code">`+`</span>, <span class="token code">`-`</span>, or <span class="token code">`*`</span>');
   });
 
   it('should highlight code (tripple ticks)', () => {
@@ -62,27 +58,27 @@ hello world
     assert.equal(getHtml(html), '```code````');
   });
 
-  it('should highlight code block', ()=> {
-    let html;
+//   it('should highlight code block', ()=> {
+//     let html;
 
-    html =
-`\`\`\`
-code
-\`\`\``;
-    // assert.equal(getHtml(html), '<span class="token code">```\ncode\n```</span>');
+//     html =
+// `\`\`\`
+// code
+// \`\`\``;
+//     assert.equal(getHtml(html), '<span class="token code">```\ncode\n```</span>');
 
-    // html = '````code```';
-    // assert.equal(getHtml(html), '`<span class="token code">```code```</span>');
+//     html = '````code```';
+//     assert.equal(getHtml(html), '`<span class="token code">```code```</span>');
 
-    // html = '```code````';
-    // assert.equal(getHtml(html), '<span class="token code">```code```</span>`');
+//     html = '```code````';
+//     assert.equal(getHtml(html), '<span class="token code">```code```</span>`');
 
-    // html = '```````';
-    // assert.equal(getHtml(html), '`<span class="token code">``````</span>');
+//     html = '```````';
+//     assert.equal(getHtml(html), '`<span class="token code">``````</span>');
 
-    // html = '```````';
-    // assert.equal(getHtml(html), '<span class="token code">``````</span>`');
-  });
+//     html = '```````';
+//     assert.equal(getHtml(html), '<span class="token code">``````</span>`');
+//   });
 
   it('should highlight header1', () => {
     let html;

@@ -12,19 +12,18 @@ Prism.languages.insertBefore('markdown', 'prolog', {
   blockquote: {
     pattern: /^>(?:[\t ]*>)*.*/m
   },
+  //   codeBlock: [{
+  //   pattern: /(`)[^]*\1/
+  // }, {
+  //   pattern: /(`)(\\\n|\\?.)*\1/
+  // }],
   code: [{
-    pattern: /(^|[^`])```[^`].*[^`]```(?!`)/,
-    lookbehind: true
-  }, {
-    pattern: /(^|[^`])`[^`].*[^`]`(?!`)/,
-    lookbehind: true
-  }],
-  codeBlock: [{
-    pattern: /(`)[^]*\1/,
-    greedy: true
-  }, {
-    pattern: /(`)(\\\n|\\?.)*\1/,
-    greedy: true
+    pattern: /(^|[^`])```[^`\n\r]*[^`\n\r]```(?!`)/,
+     lookbehind: true
+   },
+    {
+      pattern: /(^|[^`])`[^`\n\r]*[^`\n\r]`(?!`)/,
+      lookbehind: true
   }],
   header1: {
     pattern: /(^\s*)#{1}[\s]+.*/m
