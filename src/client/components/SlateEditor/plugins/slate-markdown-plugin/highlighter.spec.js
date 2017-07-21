@@ -142,59 +142,60 @@ hello world
   it('should highlight hr', () => {
     // Not implemented because in reference iA writter hr's are not highlighted
 
-    // let html;
+    let html;
 
-    // html = '---';
-    // assert.equal(getHtml(html), '<span class="token hr">---</span>');
+    html = '---';
+    console.log(`html:${getHtml(html)}`);
+    assert.equal(getHtml(html), '<span class="token hr">---</span>');
 
-    // html = '***';
-    // assert.equal(getHtml(html), '<span class="token hr">***</span>');
+    html = '***';
+    assert.equal(getHtml(html), '<span class="token hr">***</span>');
 
-    // html = '-----';
-    // assert.equal(getHtml(html), '<span class="token hr">-----</span>');
+    html = '-----';
+    assert.equal(getHtml(html), '<span class="token hr">-----</span>');
 
-    // html = '*****';
-    // assert.equal(getHtml(html), '<span class="token hr">*****</span>');
+    html = '*****';
+    assert.equal(getHtml(html), '<span class="token hr">*****</span>');
 
-    // html = 'word-----';
-    // assert.equal(getHtml(html), 'word-----');
+    html = 'word-----';
+    assert.equal(getHtml(html), 'word-----');
 
-    // html = 'word*****';
-    // assert.equal(getHtml(html), 'word*****');
+    html = 'word*****';
+    assert.equal(getHtml(html), 'word*****');
 
-    // html = '-----word';
-    // assert.equal(getHtml(html), '-----word');
+    html = '-----word';
+    assert.equal(getHtml(html), '-----word');
 
-    // html = '*****word';
-    // assert.equal(getHtml(html), '*****word');
+    html = '*****word';
+    assert.equal(getHtml(html), '*****word');
 
     // One to three spaces indent are allowed:
 
-    // html = ' ---';
-    // assert.equal(getHtml(html), '<span class="token hr">---</span>');
+    html = ' ---';
+    assert.equal(getHtml(html), ' <span class="token hr">---</span>');
 
-    // html = '  ---';
-    // assert.equal(getHtml(html), '<span class="token hr">---</span>');
+    html = '  ---';
+    assert.equal(getHtml(html), '  <span class="token hr">---</span>');
 
-    // html = '   ---';
-    // assert.equal(getHtml(html), '<span class="token hr">---</span>');
+    html = '   ---';
+    assert.equal(getHtml(html), '   <span class="token hr">---</span>');
 
-    // html = ' ***';
-    // assert.equal(getHtml(html), '<span class="token hr">***</span>');
+    html = ' ***';
+    assert.equal(getHtml(html), ' <span class="token hr">***</span>');
 
-    // html = '  ***';
-    // assert.equal(getHtml(html), '<span class="token hr">***</span>');
+    html = '  ***';
+    assert.equal(getHtml(html), '  <span class="token hr">***</span>');
 
-    // html = '   ***';
-    // assert.equal(getHtml(html), '<span class="token hr">***</span>');
+    html = '   ***';
+    assert.equal(getHtml(html), '   <span class="token hr">***</span>');
 
     // Four spaces is too many:
 
-    // html = '    ---';
-    // assert.equal(getHtml(html), '---');
+    html = '    ---';
+    assert.equal(getHtml(html), '---');
 
-    // html = '    ***';
-    // assert.equal(getHtml(html), '***');
+    html = '    ***';
+    assert.equal(getHtml(html), '***');
   });
 
   it('should highlight list (single item)', () => {

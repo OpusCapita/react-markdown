@@ -20,11 +20,16 @@ Prism.languages.insertBefore('markdown', 'prolog', {
   code: [{
     pattern: /(^|[^`])```[^`\n\r]*[^`\n\r]```(?!`)/,
      lookbehind: true
-   },
-    {
-      pattern: /(^|[^`])`[^`\n\r]*[^`\n\r]`(?!`)/,
-      lookbehind: true
+  }, {
+    pattern: /(^|[^`])`[^`\n\r]*[^`\n\r]`(?!`)/,
+    lookbehind: true
   }],
+
+  hr: {
+    pattern: /(^|^[\s{0,3}])[-*]{3,}(?=(\s).*|$)/,
+    lookbehind: true
+  },
+
   header1: {
     pattern: /(^\s*)#{1}[\s]+.*/m
   },
@@ -102,7 +107,6 @@ Prism.languages.insertBefore('markdown', 'prolog', {
       }]
     }
   }],
-
   strikethrough: {
     pattern: /(^|[^~])~~([^~\r\n]*(~~[^~\r\n]+~~[^~\r\n]*)+|[^~\r\n]+)~/,
     lookbehind: true,
