@@ -599,7 +599,6 @@ const StateRender = {
 
       if (item.nodes) {
         this.postprocessing(item.nodes, item.data.parent);
-        // this.postprocessing(item.nodes, parent);
       }
     }
 
@@ -819,6 +818,7 @@ const StateRender = {
     this.processing(tokens);
     this.postprocessing(this.blocks);
 
+    // This console.log is necessary for debugging
     // console.log('markdown it:\n', JSON.stringify(tokens));
     // console.log(' ');
     // console.log(' ');

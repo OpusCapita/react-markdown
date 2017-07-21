@@ -18,8 +18,6 @@ module.exports = function emptyline_plugin(md) {
       token.map = [ startLine, state.line ];
       state.tokens.push(token);
 
-      // console.log('startLine:', startLine, ',length:', lineCount);
-
       return true;
     }
 

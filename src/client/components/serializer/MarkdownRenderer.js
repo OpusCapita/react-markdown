@@ -12,16 +12,6 @@ const String = new Record({
   text: ''
 });
 
-const AFTER_HEADINGS_WITHOUT_SUFFIX = new Set([
-  'heading1',
-  'heading2',
-  'heading3',
-  'heading4',
-  'heading5',
-  'heading6',
-  'paragraph',
-]);
-
 const MARKUPS = {
   code: '`',
   underline: '++',
@@ -117,12 +107,6 @@ const RULES = [
   }
 ];
 
-function getHeadingSuffix(obj) {
-  return ``;
-  // return AFTER_HEADINGS_WITHOUT_SUFFIX.has(obj.nextNodeType) ? `` : `\n`;
-  // return obj.nextNodeType === 'empty' ? `\n` : ``;
-}
-
 /**
  * Rules for block nodes
  */
@@ -131,12 +115,12 @@ const NodeSerialize = {
   listLevel: 0,
 
   // Text
-  heading1: (obj, children) => `# ${children}${getHeadingSuffix(obj)}`,
-  heading2: (obj, children) => `## ${children}${getHeadingSuffix(obj)}`,
-  heading3: (obj, children) => `### ${children}${getHeadingSuffix(obj)}`,
-  heading4: (obj, children) => `#### ${children}${getHeadingSuffix(obj)}`,
-  heading5: (obj, children) => `##### ${children}${getHeadingSuffix(obj)}`,
-  heading6: (obj, children) => `###### ${children}${getHeadingSuffix(obj)}`,
+  heading1: (obj, children) => `# ${children}`,
+  heading2: (obj, children) => `## ${children}`,
+  heading3: (obj, children) => `### ${children}`,
+  heading4: (obj, children) => `#### ${children}`,
+  heading5: (obj, children) => `##### ${children}`,
+  heading6: (obj, children) => `###### ${children}`,
   code: (obj, children) => {
     const markup = obj.getIn(['data', 'markup']);
     if (markup) {
@@ -157,7 +141,6 @@ const NodeSerialize = {
     let condition = obj.previousNodeType === 'paragraph'
                     && obj.getIn(['data', 'parent']) === 'blockquote';
     return `${condition ? '\n' : ''}${children}`;
-    // return `${condition ? '\n' : ''}${children}\n`;
   },
 
   // Tables
@@ -168,7 +151,6 @@ const NodeSerialize = {
     return `${children}|${new Array(columnsCount).fill(' --------- |').join('')}`;
   },
   tbody: (obj, children) => `${children}`,
-  // tbody: (obj, children) => `\n${children}`,
   tr: (obj, children) => {
     const parent = obj.getIn(['data', 'parent']);
     const isBody = parent === 'tbody';
@@ -325,7 +307,6 @@ const NodeSerialize = {
     }
 
     return `${level === 0 ? `` : `\n`}${arrChildren.join('\n')}${level === 0 ? `` : `\n`}`;
-    // return `${level === 0 ? `` : `\n`}${arrChildren.join('\n')}\n`;
   },
   anchor: (obj, children) => {
     const label = obj.getIn(['data', 'label']);
@@ -341,7 +322,6 @@ const NodeSerialize = {
     const label = obj.getIn(['data', 'label']);
     const title = obj.getIn(['data', 'title']);
     return `*[${label}]: ${title}`;
-    // return `*[${label}]: ${title}\n`;
   },
   empty: (obj, children) => {
     const linesCount = obj.getIn(['data', 'length']);
@@ -378,7 +358,6 @@ function listNodeRule(obj, children) {
 
   children = arrChildren.join('\n');
   children = children.replace('\n\n', '\n'); // Delete empty strings in the list
-  // return `${listLevel > 0 ? `\n` : ``}${children}${listLevel > 0 ? `` : `\n`}`;
   return `${listLevel > 0 ? `\n` : ``}${children}`;
 }
 
