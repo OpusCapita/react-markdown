@@ -7,7 +7,10 @@ const {HOST, PORT} = require('../../.env');
 const NODE_ENV = process.env.NODE_ENV;
 
 module.exports = {
-  entry: path.resolve(__dirname, '../../www/index-page.js'),
+  entry: [
+    // 'babel-polyfill',
+    path.resolve(__dirname, '../../www/index-page.js')
+  ],
   context: path.resolve(__dirname),
   output: {
     path: path.resolve(__dirname, '../../lib'),

@@ -1,17 +1,31 @@
 import React from 'react';
 import Types from 'prop-types';
+import classnames from 'classnames';
 
-import { wrapHeaderSixMarkdown } from './MarkdownUtils';
+import {
+  wrapHeaderSixMarkdown,
+  hasMultiLineSelection,
+  hasHeaderSixMarkdown,
+  unwrapHeaderSixMarkdown
+} from './MarkdownUtils';
+import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
+import Tooltip from 'react-bootstrap/lib/Tooltip';
 
 import './HeaderStyles.css';
 
-const MarkdownHeaderSixButton = ({ state, onChange, disabled }) => (
-  <button className="btn btn-default" disabled={disabled}
-    onClick={e => onChange(wrapHeaderSixMarkdown(state))}
-  >
-    <i className="fa fa-header heading6"/>
-  </button>
-);
+const MarkdownHeaderSixButton = ({ state, onChange, disabled }) => {
+  const active = hasHeaderSixMarkdown(state);
+  return (
+    <OverlayTrigger placement="bottom" overlay={<Tooltip id="h6-tp">Header size 6</Tooltip>}>
+      <button className={classnames('btn btn-default', { active })}
+        disabled={disabled || hasMultiLineSelection(state)}
+        onClick={e => onChange(active ? unwrapHeaderSixMarkdown(state) : wrapHeaderSixMarkdown(state))}
+      >
+        <i className="fa fa-header heading6"/>
+      </button>
+    </OverlayTrigger>
+  );
+};
 
 MarkdownHeaderSixButton.propTypes = {
   disabled: Types.bool,
