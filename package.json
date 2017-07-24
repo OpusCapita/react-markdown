@@ -6,7 +6,7 @@
     "npm-build": "rimraf lib && cross-env NODE_ENV=production webpack --config ./config/webpack.config.js --hide-modules",
     "link-mode": "cross-env NODE_ENV=link webpack --config ./config/webpack.config.js",
     "lint": "eslint src/client",
-    "test": "mocha --require config/test/mocha-setup.js --recursive 'src/**/*.spec.js' --require ignore-styles --reporter spec",
+    "test": "mocha --require config/test/mocha-setup.js --recursive 'src/**/*.spec.js' --require ignore-styles",
     "publish-release": "npm run npm-build && npm-publish --release",
     "start": "showroom-scan src && babel-node --presets es2015,stage-0 www/index",
     "gh-pages-generate": "showroom-scan src && sh scripts/gh-pages/generate.sh",
