@@ -33,8 +33,6 @@ jobs:
           command: |
             mkdir junit
             npm test -- --reporter mocha-junit-reporter
-            ls
-            ls junit
 
           environment:
             MOCHA_FILE: junit/test-results.xml
