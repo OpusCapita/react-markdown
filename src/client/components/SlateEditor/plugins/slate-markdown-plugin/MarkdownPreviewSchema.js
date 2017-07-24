@@ -54,17 +54,6 @@ Prism.languages.insertBefore('markdown', 'prolog', {
     }
   },
   bold: [{
-    pattern: /(^|[^_*])__([^_\r\n]*(_[^_\r\n]+_[^_\r\n]*)+|[^\r\n]+)__/,
-    lookbehind: true,
-    inside: {
-      italic: [{
-        lookbehind: true,
-        pattern: /(.{2,}?)_[^_\r\n]+_(?=.{2,})/
-      }, {
-        pattern: /\*[^*\r\n]+\*/
-      }]
-    }
-  }, {
     pattern: /(^|[^_*])\*\*([^\*\r\n]*(\*[^\*\r\n]+\*[^\*\r\n]*)+|[^*\r\n]+)\*\*/,
     lookbehind: true,
     inside: {
@@ -73,6 +62,17 @@ Prism.languages.insertBefore('markdown', 'prolog', {
         pattern: /(.{2,}?)\*[^\*\r\n]+\*(?=.{2,})/
       }, {
         pattern: /_[^_\r\n]+_/
+      }]
+    }
+  },{
+    pattern: /(^|[^_*]\b)__([^_\r\n]*(_[^_\r\n]+_[^_\r\n]*)+|[^\r\n]+)__/,
+    lookbehind: true,
+    inside: {
+      italic: [{
+        lookbehind: true,
+        pattern: /(.{2,}?)_[^_\r\n]+_(?=.{2,})/
+      }, {
+        pattern: /\*[^*\r\n]+\*/
       }]
     }
   }],
@@ -106,7 +106,7 @@ Prism.languages.insertBefore('markdown', 'prolog', {
     inside: {}
   },
   hr: {
-    pattern: /(^\s{0,3})[-*]{3,}$/,
+    pattern: /(^\s{0,3})[-*]{3,}[\s]*$/,
     lookbehind: true
   }
 });
