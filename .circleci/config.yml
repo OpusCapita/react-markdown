@@ -36,8 +36,8 @@ jobs:
       - store_test_results:
           path: test-results.xml
 
-      - deploy:
-          command: |
-            if [ "${CIRCLE_BRANCH}" == "master" ]; then
-              ./scripts/gh-pages/generate.sh && ./scripts/gh-pages/deploy.sh
-            fi
+      # - deploy:
+      #     command: |
+      #       if [ "${CIRCLE_BRANCH}" == "master" ]; then
+      #         ./scripts/gh-pages/generate.sh && ./scripts/gh-pages/deploy.sh
+      #       fi
