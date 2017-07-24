@@ -9,4 +9,4 @@ cp -R www/index.html .gh-pages-tmp &&
 cp -R .gitignore .gh-pages-tmp &&
 tar -cvzf demo.tar.gz .gh-pages-tmp
 
-
+cd scripts/gh-pages
