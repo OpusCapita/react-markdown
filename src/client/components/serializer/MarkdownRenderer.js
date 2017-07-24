@@ -3,6 +3,15 @@ import {Raw} from 'slate'
 import {Record} from 'immutable'
 
 
+function createArrayJoined(length, value, sep='') {
+  const arrFill = [];
+  for (let i = 0; i < length; i++) {
+    arrFill.push(value);
+  }
+
+  return arrFill.join(sep);
+}
+
 /**
  * String.
  */
@@ -148,7 +157,7 @@ const NodeSerialize = {
   thead: (obj, children) => {
     // th tags count ( thead -> tr -> th )
     const columnsCount = obj.nodes.get(0).nodes.size;
-    return `${children}|${new Array(columnsCount).fill(' --------- |').join('')}`;
+    return `${children}|${createArrayJoined(columnsCount, ' --------- |')}`;
   },
   tbody: (obj, children) => `${children}`,
   tr: (obj, children) => {
@@ -249,7 +258,7 @@ const NodeSerialize = {
             i++;
 
             if (i < arrChildren.length && !isEmpty[i] && prefLength[i - 1] >= prefLength[i]) {
-              let pref = new Array(prefLength[i]).fill('> ').join('');
+              let pref = createArrayJoined(prefLength[i], '> ');
               newArrChildren.push(pref);
             }
           }
@@ -265,7 +274,7 @@ const NodeSerialize = {
 
             else {
               if (prefLength[i] >= nextLevel[i]) {
-                let pref = new Array(nextLevel[i]).fill('> ').join('');
+                let pref = createArrayJoined(nextLevel[i], '> ');
                 newArrChildren.push(pref);
 
                 i = nextFullNum[i];
@@ -325,7 +334,7 @@ const NodeSerialize = {
   },
   empty: (obj, children) => {
     const linesCount = obj.getIn(['data', 'length']);
-    return `${new Array(linesCount).fill('').join('\n')}`;
+    return `${createArrayJoined(linesCount, '', '\n')}`;
   },
 };
 
