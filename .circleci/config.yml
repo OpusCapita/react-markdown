@@ -27,14 +27,15 @@ jobs:
 
       - run:
           name: test
-          command: npm test
-
-      - store_artifacts:
-          path: test-results.xml
-          prefix: tests
+          command: npm test -- --reporter mocha-junit-reporter
+          environment:
+            MOCHA_FILE: junit/core-test-results.xml
 
       - store_test_results:
-          path: test-results.xml
+          path: /junit
+
+      - store_artifacts:
+          path: /junit
 
       # - deploy:
       #     command: |
