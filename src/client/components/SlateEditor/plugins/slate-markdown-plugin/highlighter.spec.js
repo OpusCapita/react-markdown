@@ -508,10 +508,10 @@ hello world
     let html;
     let candidate;
 
-    // html = '*__bold-italic__italic*';
-    // candidate = `<span class="token italic">*__bold-italic__italic*</span>`;
+    html = '*__bold-italic__italic*';
+    candidate = `<span class="token italic">*__bold-italic__italic*</span>`;
 
-    // assert.equal(getHtml(html), candidate);
+    assert.equal(getHtml(html), candidate);
 
     html = '*italic__bold-italic__*';
     candidate = `<span class="token italic">*italic__bold-italic__*</span>`;
@@ -519,20 +519,13 @@ hello world
     assert.equal(getHtml(html), candidate);
   });
 
-  // it('should highlight bold-italic (underscores / asterisks mixed) v7', ()=> {
-  //   let html;
-  //   let candidate;
+  it('should highlight bold-italic (underscores / asterisks mixed) v7', ()=> {
+    let html;
+    let candidate;
 
-  //   html = '__bold italic text_bold__';
-  //   candidate = `<span class="token bold">__bold italic text_bold__</span>`;
+    html = '__bold italic text_bold__';
+    candidate = `<span class="token bold">__bold italic text_bold__</span>`;
 
-  //   assert.equal(getHtml(html), candidate);
-  // });
-
-  // it('should highlight bold-italic (underscores / asterisks mixed) v6', ()=> {
-  //   let html = '*__bold-italic__*';
-  //   let candidate = `<span class="token italic">*<span class="token bold">__bold-italic__</span>italic*</span>`;
-
-  //   assert.equal(getHtml(html), candidate);
-  // });
+    assert.equal(getHtml(html), candidate);
+  });
 });
