@@ -1,6 +1,9 @@
 version: 2
 jobs:
   build:
+    branches:
+      ignore:
+        - gh-pages
     docker:
       - image: circleci/node:6
     working_directory: ~/repo
@@ -27,11 +30,23 @@ jobs:
 
       - run:
           name: test
-          command: npm test
+          command: |
+            mkdir junit
+            npm test -- --reporter mocha-junit-reporter
+            ls
+            ls junit
 
-      - store_artifacts:
-          path: test-results.xml
-          prefix: tests
+          environment:
+            MOCHA_FILE: junit/test-results.xml
 
       - store_test_results:
-          path: test-results.xml
+          path: junit
+
+      - store_artifacts:
+          path: junit
+
+      # - deploy:
+      #     command: |
+      #       if [ "${CIRCLE_BRANCH}" == "master" ]; then
+      #         ./scripts/gh-pages/generate.sh && ./scripts/gh-pages/deploy.sh
+      #       fi
