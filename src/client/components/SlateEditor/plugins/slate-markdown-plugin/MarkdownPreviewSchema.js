@@ -12,16 +12,17 @@ Prism.languages.insertBefore('markdown', 'prolog', {
   blockquote: {
     pattern: /^>(?:[\t ]*>)*.*/m
   },
-  //   codeBlock: [{
-  //   pattern: /(`)[^]*\1/
-  // }, {
-  //   pattern: /(`)(\\\n|\\?.)*\1/
-  // }],
   code: [{
     pattern: /(^|[^`])```[^`\n\r]*[^`\n\r]```(?!`)/,
-     lookbehind: true
+    lookbehind: true
   }, {
     pattern: /(^|[^`])`[^`\n\r]*[^`\n\r]`(?!`)/,
+    lookbehind: true
+  }, {
+    pattern: /(^|[^~])~[^~\n\r]*[^~\n\r]~(?!~)/,
+    lookbehind: true
+  }, {
+    pattern: /(^|[^~])~~~[^~\n\r]*[^~\n\r]~~~(?!~)/,
     lookbehind: true
   }],
   header1: {
@@ -64,7 +65,7 @@ Prism.languages.insertBefore('markdown', 'prolog', {
         pattern: /_[^_\r\n]+_/
       }]
     }
-  },{
+  }, {
     pattern: /(^|[^_*]\b)__([^_\r\n]*(_[^_\r\n]+_[^_\r\n]*)+|[^\r\n]+)__/,
     lookbehind: true,
     inside: {
@@ -101,7 +102,7 @@ Prism.languages.insertBefore('markdown', 'prolog', {
     }
   }],
   strikethrough: {
-    pattern: /(^|[^~])~~([^~\r\n]*(~[^~\r\n]+~[^~\r\n]*)+|[^\r\n]+)~~/,
+    pattern: /(^|[^~])~~[^~\r\n]+~~/,
     lookbehind: true,
     inside: {}
   },
@@ -174,17 +175,16 @@ function markdownDecorator(text, block) {
 
 const headerStyle = {
   fontWeight: 'bold',
-  display: 'block',
-  position: 'relative'
+  display: 'inline-block'
 };
 const MarkdownPreviewSchema = {
   marks: {
-    'header1': { ...headerStyle, left: '-2ch' },
-    'header2': { ...headerStyle, left: '-3ch' },
-    'header3': { ...headerStyle, left: '-4ch' },
-    'header4': { ...headerStyle, left: '-5ch' },
-    'header5': { ...headerStyle, left: '-6ch' },
-    'header6': { ...headerStyle, left: '-7ch' },
+    'header1': { ...headerStyle, marginLeft: '-2ch' },
+    'header2': { ...headerStyle, marginLeft: '-3ch' },
+    'header3': { ...headerStyle, marginLeft: '-4ch' },
+    'header4': { ...headerStyle, marginLeft: '-5ch' },
+    'header5': { ...headerStyle, marginLeft: '-6ch' },
+    'header6': { ...headerStyle, marginLeft: '-7ch' },
     'bold': {
       fontWeight: 'bold'
     },
@@ -206,8 +206,7 @@ const MarkdownPreviewSchema = {
       backgroundColor: '#eee'
     },
     'list': {
-      position: 'relative',
-      left: '-2ch'
+      marginLeft: '-2ch'
     },
     'hr': {
       display: 'block'
@@ -219,12 +218,10 @@ const MarkdownPreviewSchema = {
       color: 'blue'
     }
   },
-  rules: [
-    {
-      match: () => true,
-      decorate: markdownDecorator
-    }
-  ]
+  rules: [{
+    match: () => true,
+    decorate: markdownDecorator
+  }]
 };
 
 export default MarkdownPreviewSchema;

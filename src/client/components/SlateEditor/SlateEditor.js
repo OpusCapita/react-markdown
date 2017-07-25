@@ -16,7 +16,7 @@ class SlateEditor extends React.Component {
       )}>
         {Utils.cloneElement(children, { plugins, state, onChange })}
       </div>
-    )
+    );
   }
 }
 
@@ -24,7 +24,7 @@ SlateEditor.propTypes = {
   plugins: Types.any,
   state: Types.any,
   onChange: Types.func,
-  fullScreen: Types.bool,
+  fullScreen: Types.bool
 };
 
 export default SlateEditor;
