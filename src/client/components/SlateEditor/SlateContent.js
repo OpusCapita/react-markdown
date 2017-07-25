@@ -17,7 +17,8 @@ const SlateContent = ({
       className={classnames(
         'react-markdown--slate-content',
         { 'react-markdown--slate-content--plain-mode': isPlainMode }
-    )}>
+      )}
+    >
       <Editor
         spellCheck={false}
         plugins={plugins}

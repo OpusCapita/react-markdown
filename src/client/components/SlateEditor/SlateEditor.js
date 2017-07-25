@@ -13,7 +13,8 @@ class SlateEditor extends React.Component {
         className={classnames(
           'react-markdown--slate-editor',
           { 'react-markdown--slate-editor--fulscreen': fullScreen }
-      )}>
+        )}
+      >
         {Utils.cloneElement(children, { plugins, state, onChange })}
       </div>
     );
