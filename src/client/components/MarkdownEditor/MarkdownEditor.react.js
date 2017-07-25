@@ -15,7 +15,7 @@ class MarkdownEditor extends React.Component {
   };
 
   static defaultProps = {
-    mode: 'plain',
+    mode: 'rich',
     value: '',
     onChange: () => {}
   };

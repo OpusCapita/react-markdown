@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 
 import Prism from 'prismjs';
-import { grammar } from './MarkdownPreviewSchema';
+import { grammar } from './MarkdownSchema';
 import { assert } from 'chai';
 
 let getHtml = (str) => Prism.highlight(str, grammar);

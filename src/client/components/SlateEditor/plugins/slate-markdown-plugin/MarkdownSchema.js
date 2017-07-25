@@ -177,7 +177,7 @@ const headerStyle = {
   fontWeight: 'bold',
   display: 'inline-block'
 };
-const MarkdownPreviewSchema = {
+const MarkdownSchema = {
   marks: {
     'header1': { ...headerStyle, marginLeft: '-2ch' },
     'header2': { ...headerStyle, marginLeft: '-3ch' },
@@ -224,5 +224,5 @@ const MarkdownPreviewSchema = {
   }]
 };
 
-export default MarkdownPreviewSchema;
+export default MarkdownSchema;
 export const grammar = Prism.languages.markdown;
