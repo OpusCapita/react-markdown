@@ -173,7 +173,7 @@ class TextBlock {
   }
 }
 
-class Children {
+class ChildrenParser {
   constructor(tokens) {
     this._nodes = [];
     this.currNode = null;
@@ -363,4 +363,4 @@ class Children {
   }
 }
 
-export default { Children, TextNode, TextBlock };
+export default { ChildrenParser, TextNode, TextBlock };
