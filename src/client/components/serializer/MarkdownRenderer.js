@@ -333,8 +333,9 @@ const NodeSerialize = {
     return `*[${label}]: ${title}`;
   },
   empty: (obj, children) => {
-    const linesCount = obj.getIn(['data', 'length']);
-    return `${createArrayJoined(linesCount, '', '\n')}`;
+    // const linesCount = obj.getIn(['data', 'length']);
+    // return `${createArrayJoined(linesCount, '', '\n')}`;
+    return ``;
   },
 };
 

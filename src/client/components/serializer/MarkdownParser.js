@@ -1,32 +1,20 @@
-import MarkdownIt from 'js-slate-markdown-serializer';
+import MarkdownIt from 'markdown-it';
 import MarkdownItSub from 'markdown-it-sub';
 import MarkdownItSup from 'markdown-it-sup';
 import MarkdownItIns from 'markdown-it-ins';
 import MarkdownItMark from 'markdown-it-mark';
-import MarkdownItEmoji from 'markdown-it-emoji';
-import MarkdownItDeflist from 'markdown-it-deflist';
-import MarkdownItAbbr from './plugins/markdown-it-abbr';
-import MarkdownItAnchor from './plugins/markdown-it-anchor';
-import MarkdownItEmptyLine from './plugins/markdown-it-emptyline';
+
+// import MarkdownItEmoji from 'markdown-it-emoji';
+// import MarkdownItDeflist from 'markdown-it-deflist';
+// import MarkdownItAnchor from './plugins/markdown-it-anchor';
+// import MarkdownItAbbr from './plugins/markdown-it-abbr';
+// import MarkdownItEmptyLine from './plugins/markdown-it-emptyline';
+// import MarkdownItParagraph from './plugins/markdown-it-paragraph';
 import MarkdownAutocomplete from './plugins/markdown-it-autocomplete';
 
-
-const markdown = new MarkdownIt({
-  linkify: true,
-  typographer: true
-});
-
-markdown
-  .use(MarkdownItSub)
-  .use(MarkdownItSup)
-  .use(MarkdownItIns)
-  .use(MarkdownItEmoji)
-  .use(MarkdownItDeflist)
-  .use(MarkdownItAnchor)
-  .use(MarkdownItAbbr)
-  .use(MarkdownItEmptyLine)
-  .use(MarkdownItMark);
-
+import Utils from './Utils';
+import Nodes from './Children';
+const { Children, TextNode, TextBlock } = Nodes;
 
 const types = {
   'h1': 'heading1',
@@ -56,49 +44,419 @@ const types = {
   'abbr-def': 'abbr-def',
 };
 
-const markups = {
-  '**': 'bold',
-  '__': 'bold',
-  '++': 'underline',
-  '==': 'mark',
-  '*': 'italic',
-  '^': 'sup',
-  '_': 'italic',
-  '~~': 'strikethrough',
-  '~': 'sub',
-  '`': 'code',
-  linkify: 'linkify',
-  autocomplete: 'autocomplete'
-};
+// const markups = {
+//   '**': 'bold',
+//   '__': 'bold',
+//   '++': 'underline',
+//   '==': 'mark',
+//   '*': 'italic',
+//   '^': 'sup',
+//   '_': 'italic',
+//   '~~': 'strikethrough',
+//   '~': 'sub',
+//   '`': 'code',
+//   linkify: 'linkify',
+//   autocomplete: 'autocomplete'
+// };
 
 const LISTS_BLOCKQUOTES = new Set(['ordered-list', 'unordered-list', 'blockquote']);
 const TABLES = new Set(['table', 'thead', 'tbody']);
 
-function parseAttrs(attrs) {
-  let objAttrs = {};
+// function parseAttrs(attrs) {
+//   let objAttrs = {};
+//
+//   for (let attr of attrs) {
+//     objAttrs[attr[0]] = attr[1];
+//   }
+//
+//   return objAttrs;
+// }
+// const hasOwnProperty = Object.prototype.hasOwnProperty;
+//
+// const assign = Object.assign || function (obj) {
+//   for (let i = 1; i < arguments.length; i++) {
+//     let target = arguments[i];
+//     for (let key in target) {
+//       if (hasOwnProperty.call(target, key)) {
+//         obj[key] = target[key];
+//       }
+//     }
+//   }
+//   return obj;
+// };
 
-  for (let attr of attrs) {
-    objAttrs[attr[0]] = attr[1];
-  }
+// function getLastElemTokenType(token) {
+//   const tokenData = token.type.split('_');
+//   return tokenData[tokenData.length - 1];
+// }
 
-  return objAttrs;
-}
+
+// class TextNode {
+//   kind = 'text';
+//   ranges = [];
+//
+//   addTextBlock = textBlock => this.ranges.push(textBlock);
+// }
+//
+// class InlineNode {
+//   kind = 'inline';
+//   isVoid = true;
+//   nodes = [];
+// }
+//
+// class LinkNode extends InlineNode {
+//   constructor(link, title) {
+//     super();
+//
+//     this.type = "link";
+//     this.isVoid = false;
+//     this.nodes = [
+//       {
+//         kind: "text",
+//         ranges: [
+//           {
+//             "text": ''
+//           }
+//         ]
+//       }
+//     ];
+//     this.data = {
+//       href: link
+//     };
+//
+//     if (title !== '') {
+//       this.data.title = title;
+//     }
+//   }
+//
+//   addText(text) {
+//     this.nodes[0].ranges[0].text = text;
+//   }
+// }
+//
+// class AbbrNode extends InlineNode {
+//   constructor(title) {
+//     super();
+//
+//     this.type = "abbr";
+//     this.isVoid = false;
+//     this.nodes = [
+//       {
+//         kind: "text",
+//         ranges: [
+//           {
+//             "text": ''
+//           }
+//         ]
+//       }
+//     ];
+//     this.data = {
+//       title: title
+//     };
+//   }
+//
+//   addText(text) {
+//     this.nodes[0].ranges[0].text = text;
+//   }
+// }
+//
+// class AutocompleteNode extends InlineNode {
+//   constructor(id) {
+//     super();
+//
+//     this.type = "autocomplete";
+//     this.isVoid = false;
+//     this.nodes = [
+//       {
+//         kind: "text",
+//         ranges: [
+//           {
+//             "text": ''
+//           }
+//         ]
+//       }
+//     ];
+//     this.data = {
+//       id: id
+//     };
+//   }
+//
+//   addText(text) {
+//     this.nodes[0].ranges[0].text = text;
+//   }
+// }
+//
+// class ImageNode extends InlineNode {
+//   constructor(title, src, alt) {
+//     super();
+//     this.type = "image";
+//     this.data = {
+//       title: title,
+//       src: src,
+//     };
+//
+//     if (alt !== '') {
+//       this.data.alt = alt;
+//     }
+//   }
+// }
+//
+// class SoftBreakNode extends InlineNode {
+//   constructor() {
+//     super();
+//     this.type = "softbreak";
+//   }
+// }
+//
+// class TextBlock {
+//   constructor(token) {
+//     this.text = '';
+//
+//     if (token.type === 'emoji') {
+//       this.marks = [
+//         {
+//           type: 'emoji',
+//           data: {markup: token.markup}
+//         }
+//       ];
+//     }
+//
+//     else if (token.markup && markups[token.markup]) {
+//       this.marks = [
+//         {
+//           type: markups[token.markup],
+//           data: {markup: token.markup}
+//         }
+//       ];
+//     }
+//   }
+//
+//   setText(text) {
+//     this.text = text;
+//   }
+//
+//   setMarks(marks) {
+//     this.marks = [];
+//
+//     for (let mark in marks) {
+//       if (mark !== '') {
+//         this.marks.push({
+//           type: markups[mark],
+//           data: {markup: mark}
+//         });
+//       }
+//     }
+//   }
+// }
+//
+// class Children {
+//   constructor(tokens) {
+//     this._nodes = [];
+//     this.currNode = null;
+//     this.currTextBlock = null;
+//     this.marks = {};
+//
+//     this.createNodes(tokens);
+//   }
+//
+//   get nodes() {
+//     return this._nodes;
+//   }
+//
+//   addCurrNode() {
+//     if (this.currNode) {
+//       if (this.currNode.kind === 'text') {
+//         this.addTextBlock();
+//       }
+//
+//       this._nodes.push(this.currNode);
+//       this.currNode = null;
+//     }
+//   }
+//
+//   addTextBlock() {
+//     if (this.currTextBlock) {
+//       this.currNode.addTextBlock(this.currTextBlock);
+//       this.currTextBlock = null;
+//     }
+//   }
+//
+//   createLink(token) {
+//     this.addCurrNode();
+//
+//     let link = '';
+//     let title = '';
+//
+//     for (let attr of token.attrs) {
+//       switch (attr[0]) {
+//         case 'href':
+//           link = attr[1];
+//           break;
+//
+//         case 'title':
+//           title = attr[1];
+//           break;
+//
+//       }
+//     }
+//
+//     this.currNode = new LinkNode(link, title);
+//   }
+//
+//   createAbbr(token) {
+//     this.addCurrNode();
+//
+//     let title = '';
+//
+//     for (let attr of token.attrs) {
+//       if (attr[0] === 'title') {
+//         title = attr[1];
+//         break;
+//       }
+//     }
+//
+//     this.currNode = new AbbrNode(title);
+//   }
+//
+//   createImage(token) {
+//     let src = '';
+//     let alt = '';
+//     let title = token.content;
+//
+//     for (let attr of token.attrs) {
+//       if (attr[0] === 'src') {
+//         src = attr[1];
+//       }
+//
+//       else if (attr[0] === 'title') {
+//         alt = attr[1];
+//       }
+//     }
+//
+//     this.currNode = new ImageNode(title, src, alt);
+//     this.addCurrNode();
+//   }
+//
+//   createAutocomplete(token) {
+//     this.addCurrNode();
+//     this.currNode = new AutocompleteNode(token.meta.id);
+//     this.currNode.addText(token.content);
+//     this.addCurrNode();
+//   }
+//
+//   createSoftbreak() {
+//     this.addCurrNode();
+//     this.currNode = new SoftBreakNode();
+//     this.addCurrNode();
+//   }
+//
+//   addTextToNode(token) {
+//     const lastElem = Utils.getLastElemTokenType(token);
+//
+//     if (!this.currNode) {
+//       this.currNode = new TextNode();
+//     }
+//
+//     if (token.type === 'code_inline' || token.type === 'emoji') {
+//       this.addTextBlock();
+//       this.currTextBlock = new TextBlock(token);
+//       this.currTextBlock.setText(token.content);
+//       this.addTextBlock();
+//     }
+//
+//     // Add token's mark to this marks
+//     if (lastElem === 'open') {
+//       if (token.markup !== '') {
+//         this.marks[token.markup] = true;
+//       }
+//     }
+//
+//     // Add this marks to text's block
+//     if (token.type === 'text') {
+//       this.currTextBlock = new TextBlock(token);
+//       this.currTextBlock.setText(token.content);
+//
+//       if (this.marks !== {}) {
+//         this.currTextBlock.setMarks(this.marks);
+//       }
+//
+//       this.addTextBlock();
+//     }
+//
+//     // Remove token's mark from this marks
+//     if (lastElem === 'close') {
+//       if (token.markup !== '') {
+//         delete this.marks[token.markup];
+//       }
+//     }
+//   }
+//
+//   createNodes(tokens) {
+//     for (let token of tokens) {
+//       if (token.type === 'link_open') {
+//         this.createLink(token);
+//       }
+//
+//       if (token.type === 'abbr_open') {
+//         this.createAbbr(token);
+//       }
+//
+//       else if (token.type === 'image') {
+//         this.createImage(token);
+//       }
+//
+//       else if (token.type === 'autocomplete') {
+//         this.createAutocomplete(token);
+//       }
+//
+//       else if (token.type === 'softbreak') {
+//         this.createSoftbreak();
+//       }
+//
+//       else if (token.type === 'text' && this.currNode
+//         &&  (this.currNode.type === 'link' || this.currNode.type === 'abbr')) {
+//         this.currNode.addText(token.content);
+//       }
+//
+//       else if (token.type === 'link_close' || token.type === 'abbr_close') {
+//         this.addCurrNode();
+//       }
+//
+//       else {
+//         this.addTextToNode(token);
+//       }
+//     }
+//
+//     if (this.currNode) {
+//       if (this.currTextBlock) {
+//         this.addTextBlock();
+//       }
+//
+//       this.addCurrNode();
+//     }
+//
+//     return this._nodes;
+//   }
+// }
+
+
 
 class BlockNode {
-  constructor(token, isDefault) {
-    isDefault = isDefault || false;
+  constructor(token/*, isDefault*/) {
+    // isDefault = isDefault || false;
     this.kind = "block";
-    this.type = isDefault ? 'default' : types[token.tag];
+    // this.type = isDefault ? 'default' : types[token.tag];
+    this.type = !(token.tag in types) ? 'default' : types[token.tag];
     this.nodes = [];
     this.tag = token.tag;
     this.data = {};
 
     if ((token.type === 'list_item_open' || token.type === 'hr' || token.type === 'fence')
-    &&  token.markup) {
+      &&  token.markup) {
       this.data.markup = token.markup;
     }
 
-    if (token.tag === 'hr' || token.tag === 'empty' || token.tag === 'abbr-def') {
+    if (token.tag === 'hr' || token.tag === 'abbr-def') {
       this.isVoid = true;
     }
 
@@ -107,7 +465,7 @@ class BlockNode {
     }
 
     if (token.attrs) {
-      this.attrs = parseAttrs(token.attrs);
+      this.attrs = Utils.parseAttrs(token.attrs);
 
       if (this.attrs.style) {
         this.style = this.attrs.style;
@@ -115,7 +473,7 @@ class BlockNode {
     }
 
     if (token.meta) {
-      this.data = Object.assign(this.data, token.meta);
+      this.data = Utils.assign(this.data, token.meta);
     }
   }
 }
@@ -130,362 +488,8 @@ function getBlockNode(token) {
   }
 }
 
-class TextNode {
-  kind = 'text';
-  ranges = [];
-
-  addTextBlock = textBlock => this.ranges.push(textBlock);
-}
-
-class InlineNode {
-  kind = 'inline';
-  isVoid = true;
-  nodes = [];
-}
-
-class LinkNode extends InlineNode {
-  constructor(link, title) {
-    super();
-
-    this.type = "link";
-    this.isVoid = false;
-    this.nodes = [
-      {
-        kind: "text",
-        ranges: [
-          {
-            "text": ''
-          }
-        ]
-      }
-    ];
-    this.data = {
-      href: link
-    };
-
-    if (title !== '') {
-      this.data.title = title;
-    }
-  }
-
-  addText(text) {
-    this.nodes[0].ranges[0].text = text;
-  }
-}
-
-class AbbrNode extends InlineNode {
-  constructor(title) {
-    super();
-
-    this.type = "abbr";
-    this.isVoid = false;
-    this.nodes = [
-      {
-        kind: "text",
-        ranges: [
-          {
-            "text": ''
-          }
-        ]
-      }
-    ];
-    this.data = {
-      title: title
-    };
-  }
-
-  addText(text) {
-    this.nodes[0].ranges[0].text = text;
-  }
-}
-
-class AutocompleteNode extends InlineNode {
-  constructor(id) {
-    super();
-
-    this.type = "autocomplete";
-    this.isVoid = false;
-    this.nodes = [
-      {
-        kind: "text",
-        ranges: [
-          {
-            "text": ''
-          }
-        ]
-      }
-    ];
-    this.data = {
-      id: id
-    };
-  }
-
-  addText(text) {
-    this.nodes[0].ranges[0].text = text;
-  }
-}
-
-class ImageNode extends InlineNode {
-  constructor(title, src, alt) {
-    super();
-    this.type = "image";
-    this.data = {
-      title: title,
-      src: src,
-    };
-
-    if (alt !== '') {
-      this.data.alt = alt;
-    }
-  }
-}
-
-class SoftBreakNode extends InlineNode {
-  constructor() {
-    super();
-    this.type = "softbreak";
-  }
-}
-
-class TextBlock {
-  constructor(token) {
-    this.text = '';
-
-    if (token.type === 'emoji') {
-      this.marks = [
-        {
-          type: 'emoji',
-          data: {markup: token.markup}
-        }
-      ];
-    }
-
-    else if (token.markup && markups[token.markup]) {
-      this.marks = [
-        {
-          type: markups[token.markup],
-          data: {markup: token.markup}
-        }
-      ];
-    }
-  }
-
-  setText(text) {
-    this.text = text;
-  }
-
-  setMarks(marks) {
-    this.marks = [];
-
-    for (let mark in marks) {
-      if (mark !== '') {
-        this.marks.push({
-          type: markups[mark],
-          data: {markup: mark}
-        });
-      }
-    }
-  }
-}
-
-class Children {
-  constructor(tokens) {
-    this._nodes = [];
-    this.currNode = null;
-    this.currTextBlock = null;
-    this.marks = {};
-
-    this.createNodes(tokens);
-  }
-
-  get nodes() {
-    return this._nodes;
-  }
-
-  addCurrNode() {
-    if (this.currNode) {
-      if (this.currNode.kind === 'text') {
-        this.addTextBlock();
-      }
-
-      this._nodes.push(this.currNode);
-      this.currNode = null;
-    }
-  }
-
-  addTextBlock() {
-    if (this.currTextBlock) {
-      this.currNode.addTextBlock(this.currTextBlock);
-      this.currTextBlock = null;
-    }
-  }
-
-  createLink(token) {
-    this.addCurrNode();
-
-    let link = '';
-    let title = '';
-
-    for (let attr of token.attrs) {
-      switch (attr[0]) {
-        case 'href':
-          link = attr[1];
-          break;
-
-        case 'title':
-          title = attr[1];
-          break;
-
-      }
-    }
-
-    this.currNode = new LinkNode(link, title);
-  }
-
-  createAbbr(token) {
-    this.addCurrNode();
-
-    let title = '';
-
-    for (let attr of token.attrs) {
-      if (attr[0] === 'title') {
-        title = attr[1];
-        break;
-      }
-    }
-
-    this.currNode = new AbbrNode(title);
-  }
-
-  createImage(token) {
-    let src = '';
-    let alt = '';
-    let title = token.content;
-
-    for (let attr of token.attrs) {
-      if (attr[0] === 'src') {
-        src = attr[1];
-      }
-
-      else if (attr[0] === 'title') {
-        alt = attr[1];
-      }
-    }
-
-    this.currNode = new ImageNode(title, src, alt);
-    this.addCurrNode();
-  }
-
-  createAutocomplete(token) {
-    this.addCurrNode();
-    this.currNode = new AutocompleteNode(token.meta.id);
-    this.currNode.addText(token.content);
-    this.addCurrNode();
-  }
-
-  createSoftbreak() {
-    this.addCurrNode();
-    this.currNode = new SoftBreakNode();
-    this.addCurrNode();
-  }
-
-  addTextToNode(token) {
-    const lastElem = getLastElemTokenType(token);
-
-    if (!this.currNode) {
-      this.currNode = new TextNode();
-    }
-
-    if (token.type === 'code_inline' || token.type === 'emoji') {
-      this.addTextBlock();
-      this.currTextBlock = new TextBlock(token);
-      this.currTextBlock.setText(token.content);
-      this.addTextBlock();
-    }
-
-    // Add token's mark to this marks
-    if (lastElem === 'open') {
-      if (token.markup !== '') {
-        this.marks[token.markup] = true;
-      }
-    }
-
-    // Add this marks to text's block
-    if (token.type === 'text') {
-      this.currTextBlock = new TextBlock(token);
-      this.currTextBlock.setText(token.content);
-
-      if (this.marks !== {}) {
-        this.currTextBlock.setMarks(this.marks);
-      }
-
-      this.addTextBlock();
-    }
-
-    // Remove token's mark from this marks
-    if (lastElem === 'close') {
-      if (token.markup !== '') {
-        delete this.marks[token.markup];
-      }
-    }
-  }
-
-  createNodes(tokens) {
-    for (let token of tokens) {
-      if (token.type === 'link_open') {
-        this.createLink(token);
-      }
-
-      if (token.type === 'abbr_open') {
-        this.createAbbr(token);
-      }
-
-      else if (token.type === 'image') {
-        this.createImage(token);
-      }
-
-      else if (token.type === 'autocomplete') {
-        this.createAutocomplete(token);
-      }
-
-      else if (token.type === 'softbreak') {
-        this.createSoftbreak();
-      }
-
-      else if (token.type === 'text' && this.currNode
-        &&  (this.currNode.type === 'link' || this.currNode.type === 'abbr')) {
-        this.currNode.addText(token.content);
-      }
-
-      else if (token.type === 'link_close' || token.type === 'abbr_close') {
-        this.addCurrNode();
-      }
-
-      else {
-        this.addTextToNode(token);
-      }
-    }
-
-    if (this.currNode) {
-      if (this.currTextBlock) {
-        this.addTextBlock();
-      }
-
-      this.addCurrNode();
-    }
-
-    return this._nodes;
-  }
-}
-
-
-function getLastElemTokenType(token) {
-  const tokenData = token.type.split('_');
-  return tokenData[tokenData.length - 1];
-}
-
-
-const StateRender = {
+// const StateRender = {
+const MarkdownParser = {
   stack: [],
   level: 0,
   currentBlock: null,
@@ -726,12 +730,14 @@ const StateRender = {
       this.parentBlock = this.currentBlock;
     }
 
-    this.currentBlock = getBlockNode(token);
+    this.currentBlock = new BlockNode(token);
+    // this.currentBlock = getBlockNode(token);
     this.level++;
   },
 
   addInlineToBlock(token) {
-    let node = getBlockNode(token);
+    let node = new BlockNode(token);
+    // let node = getBlockNode(token);
 
     if (token.children) {
       node.nodes = new Children(token.children).nodes;
@@ -753,7 +759,8 @@ const StateRender = {
   },
 
   addCodeBlock(token) {
-    let blockNode = getBlockNode(token);
+    let blockNode = new BlockNode(token);
+    // let blockNode = getBlockNode(token);
     let textNode = new TextNode();
     let textBlock = new TextBlock({});
     textBlock.setText(token.content);
@@ -771,15 +778,33 @@ const StateRender = {
   },
 
   addHRBlock(token) {
-    this.currentBlock = getBlockNode(token);
+    this.currentBlock = new BlockNode(token);
+    // this.currentBlock = getBlockNode(token);
     this.saveCurrentBlock();
+  },
+
+  getDefaultFragment() {
+    return [{
+      kind: "block",
+      type: "paragraph",
+      nodes: [
+        {
+          kind: "text",
+          ranges: [
+            {
+              text: ""
+            }
+          ]
+        }
+      ]
+    }];
   },
 
   processing(tokens) {
     let previousType = '';
     for (let token of tokens) {
       if (token.type) {
-        const lastElem = getLastElemTokenType(token);
+        const lastElem = Utils.getLastElemTokenType(token);
 
         if (lastElem === 'open') {
           this.createBlock(token);
@@ -813,13 +838,13 @@ const StateRender = {
     }
   },
 
-  parse(tokens) {
-    this.preprocessing(tokens);
-    this.processing(tokens);
+  eventParse(eventTokens) {
+    this.preprocessing(eventTokens);
+    this.processing(eventTokens);
     this.postprocessing(this.blocks);
 
     // This console.log is necessary for debugging
-    // console.log('markdown it:\n', JSON.stringify(tokens));
+    // console.log('markdown it:\n', JSON.stringify(eventTokens));
     // console.log(' ');
     // console.log(' ');
     // console.log('StateRender:');
@@ -830,84 +855,94 @@ const StateRender = {
     return this.blocks;
   },
 
-  render(markdownData, rules = []) {
+  render(markdownData, options = []) {
     this.init();
 
-    const markdownAutocomplete = new MarkdownAutocomplete(rules);
+    const markdown = new MarkdownIt({
+      linkify: true,
+      typographer: true,
+      breaks: true
+    });
+
+    markdown
+      .use(MarkdownItSub)
+      .use(MarkdownItSup)
+      .use(MarkdownItIns)
+      .use(MarkdownItMark)
+      // .use(MarkdownItEmoji)
+      // .use(MarkdownItDeflist)
+      // .use(MarkdownItAnchor)
+      // .use(MarkdownItAbbr)
+      // .use(MarkdownItEmptyLine)
+      // .use(MarkdownItParagraph)
+      ;
+
+    const markdownAutocomplete = new MarkdownAutocomplete(options);
     markdown.use(markdownAutocomplete);
+    let eventTokens = markdown.parse(markdownData || '', {});
+    return this.eventParse(eventTokens);
+  },
 
-    let tokens = markdown.parse(markdownData || '');
-
-    return this.parse(tokens);
-  }
-};
-
-
-const hasOwnProperty = Object.prototype.hasOwnProperty;
-
-const assign = Object.assign || function (obj) {
-    for (let i = 1; i < arguments.length; i++) {
-      let target = arguments[i];
-      for (let key in target) {
-        if (hasOwnProperty.call(target, key)) {
-          obj[key] = target[key];
-        }
-      }
-    }
-    return obj;
-  };
-
-
-let defaults = {
-  silent: false,
-};
-
-const MDParser = {
-  parse(src, options = []) {
+  parse(markdownData, options = []) {
     let fragment = null;
 
-    if (src === '') {
-      fragment = [{
-        kind: "block",
-        type: "paragraph",
-        nodes: [
-          {
-            kind: "text",
-            ranges: [
-              {
-                text: ""
-              }
-            ]
-          }
-        ]
-      }];
+    if (markdownData === '') {
+      fragment = this.getDefaultFragment();
     }
 
     else {
       try {
-        fragment = StateRender.render(src, options);
+        fragment = this.render(markdownData, options);
       }
 
       catch (e) {
-        fragment = [{
-          kind: "block",
-          type: "paragraph",
-          nodes: [
-            {
-              kind: "text",
-              ranges: [
-                {
-                  text: ""
-                }
-              ]
-            }
-          ]
-        }];
+        fragment = this.getDefaultFragment();
       }
     }
 
     return {nodes: fragment};
   },
+
 };
 
-export default MDParser;
+
+// function getDefaultFragment() {
+//   return [{
+//     kind: "block",
+//     type: "paragraph",
+//     nodes: [
+//       {
+//         kind: "text",
+//         ranges: [
+//           {
+//             text: ""
+//           }
+//         ]
+//       }
+//     ]
+//   }];
+// }
+//
+// const MarkdownParser = {
+//   parse(markdownData, options = []) {
+//     let fragment = null;
+//
+//     if (markdownData === '') {
+//       fragment = getDefaultFragment();
+//     }
+//
+//     else {
+//       try {
+//         fragment = StateRender.render(markdownData, options);
+//       }
+//
+//       catch (e) {
+//         fragment = getDefaultFragment();
+//       }
+//     }
+//
+//     return {nodes: fragment};
+//   },
+// };
+
+export default MarkdownParser;
