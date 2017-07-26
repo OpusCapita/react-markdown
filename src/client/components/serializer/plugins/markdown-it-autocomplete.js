@@ -23,7 +23,7 @@ class MarkdownAutocomplete {
   pluginFunc(md) {
     const RULES = this.rules;
 
-    function autocomplete(state, silent) {
+    function autocomplete(state) {
       let token,
         start = state.pos;
 

@@ -4,17 +4,14 @@ import MarkdownItSup from 'markdown-it-sup';
 import MarkdownItIns from 'markdown-it-ins';
 import MarkdownItMark from 'markdown-it-mark';
 import MarkdownItAbbr from './plugins/markdown-it-abbr';
-
-// import MarkdownItEmoji from 'markdown-it-emoji';
-// import MarkdownItDeflist from 'markdown-it-deflist';
-// import MarkdownItAnchor from './plugins/markdown-it-anchor';
-// import MarkdownItEmptyLine from './plugins/markdown-it-emptyline';
-// import MarkdownItParagraph from './plugins/markdown-it-paragraph';
+import MarkdownItLineCounter from './plugins/markdown-it-line-counter';
+import MarkdownItDeflist from 'markdown-it-deflist';
+import MarkdownItAnchor from './plugins/markdown-it-anchor';
 import MarkdownAutocomplete from './plugins/markdown-it-autocomplete';
 
 import Utils from './Utils';
 import Nodes from './ChildrenParser';
-const { ChildrenParser, TextNode, TextBlock } = Nodes;
+const { ChildrenParser, TextNode, TextBlock, SoftBreakNode } = Nodes;
 
 const types = {
   'h1': 'heading1',
@@ -69,6 +66,10 @@ class BlockNode {
       this.data.level = token.level;
     }
 
+    if (token.map) {
+      this.data.map = token.map;
+    }
+
     if (token.attrs) {
       this.attrs = Utils.parseAttrs(token.attrs);
 
@@ -89,6 +90,7 @@ const MarkdownParser = {
   currentBlock: null,
   blocks: [],
   parentBlock: null,
+  lineCount: 0,
 
   init() {
     this.stack = [];
@@ -96,6 +98,7 @@ const MarkdownParser = {
     this.currentBlock = null;
     this.blocks = [];
     this.parentBlock = null;
+    this.lineCount = 0;
   },
 
   preprocessing(tokens) {
@@ -196,7 +199,7 @@ const MarkdownParser = {
       }
 
       if (item.nodes) {
-        this.postprocessing(item.nodes, item.data.parent);
+        this.addParents(item.nodes, item.data.parent);
       }
     }
 
@@ -223,7 +226,92 @@ const MarkdownParser = {
     }
   },
 
-  postprocessing(tokens) {
+  getEmptyParagraph(begin, end) {
+    const paragraph = {
+      kind: "block",
+      type: "paragraph",
+      data: {
+        map: [begin, end]
+      },
+      nodes: [
+        {
+          kind: "text",
+          ranges: [
+            {
+              text: ""
+            }
+          ]
+        }
+      ]
+    };
+
+    if (end > begin) {
+      for (let i = begin; i < end; i++) {
+        paragraph.nodes.push(new SoftBreakNode());
+        let textNode = new TextNode();
+        textNode.addTextBlock(new TextBlock({}));
+        paragraph.nodes.push(textNode);
+      }
+    }
+
+    return paragraph;
+  },
+
+  recalcListItemMap(tokens) {
+    for (let token of tokens) {
+      if (token.type === 'unordered-list' || token.type === 'ordered-list') {
+        for (let item of token.nodes) {
+          // li
+          if (item.nodes.length === 1) {
+            item.data.map[1] = item.data.map[0] + 1;
+          }
+
+          // li with sublist
+          else if (item.nodes.length > 1) {
+            this.recalcListItemMap(item.nodes);
+
+            item.data.map[1] = item.nodes[item.nodes.length - 1].data.map[1];
+          }
+        }
+
+        token.data.map[1] = token.nodes[token.nodes.length - 1].data.map[1];
+      }
+    }
+  },
+
+  addEmptyParagraps(tokens) {
+    if (tokens.length === 0) {
+      return tokens;
+    }
+
+    let newTokens = [];
+
+    if (tokens[0].data.map[0] > 0) {
+      newTokens.push(this.getEmptyParagraph(0, tokens[0].data.map[0] - 1));
+    }
+
+    for (let i = 0; i < tokens.length - 1; i++) {
+      newTokens.push(tokens[i]);
+
+      const firstLine = tokens[i].data.map[1];
+      const lastLine = tokens[i + 1].data.map[0];
+
+      // Add empty paragraph
+      if (firstLine < lastLine) {
+        newTokens.push(this.getEmptyParagraph(firstLine, lastLine - 1));
+      }
+    }
+    const lastToken = tokens[tokens.length - 1];
+    newTokens.push(lastToken);
+
+    if (this.lineCount - 1 > lastToken.data.map[1]) {
+      newTokens.push(this.getEmptyParagraph(lastToken.data.map[1], this.lineCount - 1));
+    }
+
+    return newTokens;
+  },
+
+  addParents(tokens) {
     for (let token of tokens) {
       let parent = '';
 
@@ -253,7 +341,7 @@ const MarkdownParser = {
             }
 
             if (item.nodes) {
-              this.postprocessing(item.nodes);
+              this.addParents(item.nodes);
             }
           }
 
@@ -263,7 +351,7 @@ const MarkdownParser = {
           let isSimple = true;
 
           for (let item of token.nodes) {
-            if (item.type === 'dd' && item.nodes.length > 1) {
+            if(item.type === 'dd' && item.nodes.length > 1) {
               isSimple = false;
               break;
             }
@@ -289,6 +377,7 @@ const MarkdownParser = {
       }
     }
   },
+
 
   saveCurrentBlock() {
     if (this.currentBlock) {
@@ -396,6 +485,10 @@ const MarkdownParser = {
       if (token.type) {
         const lastElem = Utils.getLastElemTokenType(token);
 
+        if (token.type === 'line_count') {
+          this.lineCount = token.endLine + 1;
+        }
+
         if (lastElem === 'open') {
           this.createBlock(token);
         }
@@ -431,7 +524,9 @@ const MarkdownParser = {
   eventParse(eventTokens) {
     this.preprocessing(eventTokens);
     this.processing(eventTokens);
-    this.postprocessing(this.blocks);
+    this.recalcListItemMap(this.blocks);
+    this.blocks = this.addEmptyParagraps(this.blocks);
+    this.addParents(this.blocks);
 
     // This console.log is necessary for debugging
     // console.log('markdown it:\n', JSON.stringify(eventTokens));
@@ -460,15 +555,13 @@ const MarkdownParser = {
       .use(MarkdownItIns)
       .use(MarkdownItMark)
       .use(MarkdownItAbbr)
-    // .use(MarkdownItEmoji)
-    // .use(MarkdownItDeflist)
-    // .use(MarkdownItAnchor)
-    // .use(MarkdownItEmptyLine)
-    // .use(MarkdownItParagraph)
-    ;
+      .use(MarkdownItLineCounter)
+      .use(MarkdownItDeflist)
+      .use(MarkdownItAnchor);
 
     const markdownAutocomplete = new MarkdownAutocomplete(options);
     markdown.use(markdownAutocomplete);
+
     let eventTokens = markdown.parse(markdownData || '', {});
     return this.eventParse(eventTokens);
   },

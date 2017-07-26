@@ -15,6 +15,19 @@ const markups = {
   autocomplete: 'autocomplete'
 };
 
+function getSimpleNodes() {
+  return [
+    {
+      kind: "text",
+      ranges: [
+        {
+          "text": ''
+        }
+      ]
+    }
+  ];
+}
+
 class TextNode {
   kind = 'text';
   ranges = [];
@@ -34,16 +47,7 @@ class LinkNode extends InlineNode {
 
     this.type = "link";
     this.isVoid = false;
-    this.nodes = [
-      {
-        kind: "text",
-        ranges: [
-          {
-            "text": ''
-          }
-        ]
-      }
-    ];
+    this.nodes = getSimpleNodes();
     this.data = {
       href: link
     };
@@ -64,16 +68,7 @@ class AbbrNode extends InlineNode {
 
     this.type = "abbr";
     this.isVoid = false;
-    this.nodes = [
-      {
-        kind: "text",
-        ranges: [
-          {
-            "text": ''
-          }
-        ]
-      }
-    ];
+    this.nodes = getSimpleNodes();
     this.data = {
       title: title
     };
@@ -90,16 +85,7 @@ class AutocompleteNode extends InlineNode {
 
     this.type = "autocomplete";
     this.isVoid = false;
-    this.nodes = [
-      {
-        kind: "text",
-        ranges: [
-          {
-            "text": ''
-          }
-        ]
-      }
-    ];
+    this.nodes = getSimpleNodes();
     this.data = {
       id: id
     };
@@ -363,4 +349,4 @@ class ChildrenParser {
   }
 }
 
-export default { ChildrenParser, TextNode, TextBlock };
+export default { ChildrenParser, TextNode, TextBlock, SoftBreakNode };

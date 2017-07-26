@@ -213,4 +213,18 @@ It converts PHP, but keep intact partial entries like xxxPHPyyy and so on.
 it is text.
 
 
+### Definition lists
+
+_Compact style:_
+
+Term 1
+  ~ Definition 1
+
+Term 2
+  ~ Definition 2a
+  ~ Definition 2b
+
+End Definition lists
+
+
 End text

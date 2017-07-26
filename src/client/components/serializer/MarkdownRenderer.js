@@ -149,7 +149,7 @@ const NodeSerialize = {
     // and the current node in blockquote
     let condition = obj.previousNodeType === 'paragraph'
                     && obj.getIn(['data', 'parent']) === 'blockquote';
-    return `${condition ? '\n' : ''}${children}`;
+    return `${condition ? '\n\n' : ''}${children}`;
   },
 
   // Tables
@@ -233,7 +233,7 @@ const NodeSerialize = {
      // > information
      */
     {
-      if (level === 0) {
+      if (level === 1) {
         let prefLength = [];
         let isEmpty = [];
         let nextLevel = [];
@@ -315,7 +315,7 @@ const NodeSerialize = {
       }
     }
 
-    return `${level === 0 ? `` : `\n`}${arrChildren.join('\n')}${level === 0 ? `` : `\n`}`;
+    return `${level === 1 ? `` : `\n`}${arrChildren.join('\n')}${level === 1 ? `` : `\n`}`;
   },
   anchor: (obj, children) => {
     const label = obj.getIn(['data', 'label']);
@@ -333,8 +333,6 @@ const NodeSerialize = {
     return `*[${label}]: ${title}`;
   },
   empty: (obj, children) => {
-    // const linesCount = obj.getIn(['data', 'length']);
-    // return `${createArrayJoined(linesCount, '', '\n')}`;
     return ``;
   },
 };
@@ -354,7 +352,7 @@ function listNodeRule(obj, children) {
 
   const arrChildren = children.split('\n');
 
-  if (listLevel > 0) {
+  if (listLevel > 1) {
     for (let i = 0; i < arrChildren.length; i++) {
       if (arrChildren[i] !== '') {
         arrChildren[i] = `    ${arrChildren[i]}`;
@@ -368,7 +366,7 @@ function listNodeRule(obj, children) {
 
   children = arrChildren.join('\n');
   children = children.replace('\n\n', '\n'); // Delete empty strings in the list
-  return `${listLevel > 0 ? `\n` : ``}${children}`;
+  return `${listLevel > 1 ? `\n` : ``}${children}`;
 }
 
 
@@ -391,6 +389,8 @@ const InlineSerialize = {
     let alt = obj.getIn(['data', 'alt']);
     return `![${title}](${src}${alt ? ` "${alt}"` : ``})`;
   },
+
+  softbreak: () => `\n`,
 };
 
 
@@ -582,8 +582,6 @@ class Markdown {
    *
    */
   deserialize(markdown, options=[]) {
-    options = [{ regex: '\\$(\\w+)', id: 'term'}, { regex: '\\#(\\w+)', id: 'product'}];
-
     const nodes = MarkdownParser.parse(markdown, options);
     const state = Raw.deserialize(nodes, {terse: true});
     return state;

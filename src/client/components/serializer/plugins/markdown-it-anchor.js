@@ -6,8 +6,8 @@
 // Renderer partials
 
 function render_footnote_anchor_name(tokens, idx, options, env/*, slf*/) {
-  var n = Number(tokens[idx].meta.id + 1).toString();
-  var prefix = '';
+  let n = Number(tokens[idx].meta.id + 1).toString();
+  let prefix = '';
 
   if (typeof env.docId === 'string') {
     prefix = '-' + env.docId + '-';
@@ -17,7 +17,7 @@ function render_footnote_anchor_name(tokens, idx, options, env/*, slf*/) {
 }
 
 function render_footnote_caption(tokens, idx/*, options, env, slf*/) {
-  var n = Number(tokens[idx].meta.id + 1).toString();
+  let n = Number(tokens[idx].meta.id + 1).toString();
 
   if (tokens[idx].meta.subId > 0) {
     n += ':' + tokens[idx].meta.subId;
@@ -27,9 +27,9 @@ function render_footnote_caption(tokens, idx/*, options, env, slf*/) {
 }
 
 function render_footnote_ref(tokens, idx, options, env, slf) {
-  var id      = slf.rules.footnote_anchor_name(tokens, idx, options, env, slf);
-  var caption = slf.rules.footnote_caption(tokens, idx, options, env, slf);
-  var refid   = id;
+  let id      = slf.rules.footnote_anchor_name(tokens, idx, options, env, slf);
+  let caption = slf.rules.footnote_caption(tokens, idx, options, env, slf);
+  let refid   = id;
 
   if (tokens[idx].meta.subId > 0) {
     refid += ':' + tokens[idx].meta.subId;
@@ -49,7 +49,7 @@ function render_footnote_block_close() {
 }
 
 function render_footnote_open(tokens, idx, options, env, slf) {
-  var id = slf.rules.footnote_anchor_name(tokens, idx, options, env, slf);
+  let id = slf.rules.footnote_anchor_name(tokens, idx, options, env, slf);
 
   if (tokens[idx].meta.subId > 0) {
     id += ':' + tokens[idx].meta.subId;
@@ -63,7 +63,7 @@ function render_footnote_close() {
 }
 
 function render_footnote_anchor(tokens, idx, options, env, slf) {
-  var id = slf.rules.footnote_anchor_name(tokens, idx, options, env, slf);
+  let id = slf.rules.footnote_anchor_name(tokens, idx, options, env, slf);
 
   if (tokens[idx].meta.subId > 0) {
     id += ':' + tokens[idx].meta.subId;
@@ -75,7 +75,7 @@ function render_footnote_anchor(tokens, idx, options, env, slf) {
 
 
 module.exports = function footnote_plugin(md) {
-  var parseLinkLabel = md.helpers.parseLinkLabel,
+  let parseLinkLabel = md.helpers.parseLinkLabel,
     isSpace = md.utils.isSpace;
 
   md.renderer.rules.footnote_ref          = render_footnote_ref;
@@ -91,7 +91,7 @@ module.exports = function footnote_plugin(md) {
 
   // Process footnote block definition
   function anchor_def(state, startLine, endLine, silent) {
-    var oldBMark, oldTShift, oldSCount, oldParentType, pos, label, token,
+    let oldBMark, oldTShift, oldSCount, oldParentType, pos, label, token,
       initial, offset, ch, posAfterColon,
       start = state.bMarks[startLine] + state.tShift[startLine],
       max = state.eMarks[startLine];
@@ -122,6 +122,7 @@ module.exports = function footnote_plugin(md) {
     token       = new state.Token('anchor_open', 'anchor', 1);
     token.meta  = { label: label };
     token.level = state.level++;
+    token.map = [ startLine, startLine + 1 ];
     state.tokens.push(token);
 
     oldBMark = state.bMarks[startLine];

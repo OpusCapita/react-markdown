@@ -53,7 +53,7 @@ describe('MarkdownRenderer', () => {
     markdownRenderer = new MarkdownRenderer();
   });
 
-  describe.skip('Lists', () => {
+  describe('Lists', () => {
     it('Unordered list (5 levels)', () => {
       let str = `## Lists
 Unordered
@@ -76,6 +76,12 @@ Unordered
         + Nulla volutpat aliquam velit
         + Nulla volutpat aliquam velit
 + Very easy!
+
+
+
+String
+
+
 
 
 End list`;
@@ -118,7 +124,7 @@ End list`;
       expect(trimStr(str)).to.equal(trimStr(repars));
     });
 
-    it.skip('Complex Blockquotes', () => {
+    it('Complex Blockquotes', () => {
       let str = `## Blockquotes
 
 
@@ -171,7 +177,7 @@ Blockquotes`;
   });
 
 
-  describe.skip('Code', () => {
+  describe('Code', () => {
     it('Complex code', () => {
       let str = `## Code
 
@@ -218,7 +224,7 @@ New line`;
 End code`;
 
       let repars = reparser(str);
-      expect(str).to.equal(repars);
+      expect(trimStr(str)).to.equal(trimStr(repars));
     });
 
     it('Block code fences', () => {
@@ -237,7 +243,7 @@ New line`;
   });
 
 
-  describe.skip('Texts', () => {
+  describe('Texts', () => {
     it('Paragraphs', () => {
       let str = `Paragraph one.
 
@@ -246,7 +252,7 @@ Paragraph two.
 Paragraph three`;
 
       let repars = reparser(str);
-      expect(str).to.equal(repars);
+      expect(trimStr(str)).to.equal(trimStr(repars));
     });
 
     it('Headings', () => {
@@ -258,7 +264,7 @@ Paragraph three`;
 ###### Heading 6.`;
 
       let repars = reparser(str);
-      expect(str).to.equal(repars);
+      expect(trimStr(str)).to.equal(trimStr(repars));
     });
 
     it('Headings', () => {
@@ -286,7 +292,7 @@ Paragraph three`;
 ###### Heading 6.`;
 
       let repars = reparser(str);
-      expect(str).to.equal(repars);
+      expect(trimStr(str)).to.equal(trimStr(repars));
     });
 
     it('Repeat Headings', () => {
@@ -460,7 +466,7 @@ Paragraph 3`;
       expect(str).to.equal(repars);
     });
 
-    it.skip('Complex', () => {
+    it('Complex', () => {
       let str = `This is text with $product. 
 
 It is #simple text.
@@ -477,7 +483,7 @@ It is simple text.`;
   });
 
 
-  describe.skip('Tables', () => {
+  describe('Tables', () => {
     it('Table', () => {
       let str = `## Tables
 
@@ -495,7 +501,7 @@ End tables`;
   });
 
 
-  describe.skip('Typographic replacements', () => {
+  describe('Typographic replacements', () => {
     it('Typographic replacements', () => {
       let str = `## Typographic replacements
 
@@ -513,7 +519,7 @@ test... test... test... test?.. test!..
   });
 
 
-  describe.skip('Various Block Elements', () => {
+  describe('Various Block Elements', () => {
     it('Horizontal Rules', () => {
       let str = `## Horizontal Rules
 ___
@@ -527,7 +533,7 @@ End Horizontal Rules`;
       expect(trimStr(str)).to.equal(trimStr(repars));
     });
 
-    it.skip('Definition lists. Compact style', () => {
+    it('Definition lists. Compact style', () => {
       let str = `### Definition lists
 
 _Compact style:_
@@ -540,8 +546,8 @@ Term 2
   ~ Definition 2b
 
 End Definition lists`;
-      let repars = reparser(str, true);
-      // expect(trimStr(str)).to.equal(trimStr(repars));
+      let repars = reparser(str);
+      expect(trimStr(str)).to.equal(trimStr(repars));
     });
 
     it.skip('Definition lists', () => {
@@ -570,8 +576,8 @@ Term 2
   ~ Definition 2b
 
 End Definition lists`;
-      let repars = reparser(str, true);
-      // expect(trimStr(str)).to.equal(trimStr(repars));
+      let repars = reparser(str);
+      expect(trimStr(str)).to.equal(trimStr(repars));
     });
 
     it('Abbreviations', () => {
@@ -598,7 +604,7 @@ End Abbreviations`;
       expect(trimStr(str)).to.equal(trimStr(repars));
     });
 
-    it.skip('Simple link 2', () => {
+    it('Simple link 2', () => {
       let str = `## Links
 
 [link text](http://dev.nodeca.com)
@@ -608,7 +614,7 @@ End Links`;
       expect(trimStr(str)).to.equal(trimStr(repars));
     });
 
-    it.skip('Links with title', () => {
+    it('Links with title', () => {
       let str = `## Links
 
 [link text](http://dev.nodeca.com)
@@ -620,7 +626,7 @@ End Links`;
       expect(trimStr(str)).to.equal(trimStr(repars));
     });
 
-    it.skip('Anchors', () => {
+    it('Anchors', () => {
       let str = `## Anchor
 
 [^label]: Text text text
@@ -630,7 +636,7 @@ End Anchor`;
       expect(trimStr(str)).to.equal(trimStr(repars));
     });
 
-    it.skip('Simple image', () => {
+    it('Simple image', () => {
       let str = `## Images
 
 ![Minion](https://octodex.github.com/images/minion.png)
@@ -641,7 +647,7 @@ End Images`;
       expect(trimStr(str)).to.equal(trimStr(repars));
     });
 
-    it.skip('Image with title', () => {
+    it('Image with title', () => {
       let str = `## Images
 
 ![Minion](https://octodex.github.com/images/minion.png)
@@ -656,7 +662,7 @@ End Images`;
       expect(trimStr(str)).to.equal(trimStr(repars));
     });
 
-    it.skip('Images', () => {
+    it('Images', () => {
       let str = `## Images
 
 ![Minion](https://octodex.github.com/images/minion.png)![Stormtroopocat](https://octodex.github.com/images/stormtroopocat.jpg "The Stormtroopocat")
@@ -670,7 +676,7 @@ End Images`;
   });
 
 
-  describe.skip('Complex', () => {
+  describe('Complex', () => {
     it('Complex', () => {
       let str = `## Headings
 
@@ -885,6 +891,20 @@ It converts PHP, but keep intact partial entries like xxxPHPyyy and so on.
 [^label]: Text text text
 
 it is text.
+
+
+### Definition lists
+
+_Compact style:_
+
+Term 1
+  ~ Definition 1
+
+Term 2
+  ~ Definition 2a
+  ~ Definition 2b
+
+End Definition lists
 
 
 End text`;

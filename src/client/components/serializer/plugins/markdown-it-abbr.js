@@ -4,20 +4,20 @@
 
 
 module.exports = function sub_plugin(md) {
-  var escapeRE        = md.utils.escapeRE,
+  let escapeRE        = md.utils.escapeRE,
       arrayReplaceAt  = md.utils.arrayReplaceAt;
 
   // ASCII characters in Cc, Sc, Sm, Sk categories we should terminate on;
   // you can check character classes here:
   // http://www.unicode.org/Public/UNIDATA/UnicodeData.txt
-  var OTHER_CHARS      = ' \r\n$+<=>^`|~';
+  const OTHER_CHARS      = ' \r\n$+<=>^`|~';
 
-  var UNICODE_PUNCT_RE = md.utils.lib.ucmicro.P.source;
-  var UNICODE_SPACE_RE = md.utils.lib.ucmicro.Z.source;
+  const UNICODE_PUNCT_RE = md.utils.lib.ucmicro.P.source;
+  const UNICODE_SPACE_RE = md.utils.lib.ucmicro.Z.source;
 
 
   function abbr_def(state, startLine, endLine, silent) {
-    var label, title, ch, labelStart, labelEnd,
+    let label, title, ch, labelStart, labelEnd,
         pos = state.bMarks[startLine] + state.tShift[startLine],
         max = state.eMarks[startLine];
 
@@ -59,6 +59,8 @@ module.exports = function sub_plugin(md) {
       const token = new state.Token('abbr-def', 'abbr-def', 0);
       token.level = state.level;
       token.meta  = { label: label, title: title };
+      token.map = [ startLine, startLine + 1 ];
+
       state.tokens.push(token);
     }
 
@@ -68,7 +70,7 @@ module.exports = function sub_plugin(md) {
 
 
   function abbr_replace(state) {
-    var i, j, l, tokens, token, text, nodes, pos, reg, m, regText, regSimple,
+    let i, j, l, tokens, token, text, nodes, pos, reg, m, regText, regSimple,
         currentToken,
         blockTokens = state.tokens;
 
