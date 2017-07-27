@@ -1,17 +1,8 @@
-import MarkdownIt from 'markdown-it';
-import MarkdownItSub from 'markdown-it-sub';
-import MarkdownItSup from 'markdown-it-sup';
-import MarkdownItIns from 'markdown-it-ins';
-import MarkdownItMark from 'markdown-it-mark';
-import MarkdownItAbbr from './plugins/markdown-it-abbr';
-import MarkdownItLineCounter from './plugins/markdown-it-line-counter';
-import MarkdownItDeflist from 'markdown-it-deflist';
-import MarkdownItAnchor from './plugins/markdown-it-anchor';
-import MarkdownAutocomplete from './plugins/markdown-it-autocomplete';
+import MarkdownIt from '../../markdown-it';
+import {Raw} from 'slate'
 
-import Utils from './Utils';
-import Nodes from './ChildrenParser';
-const { ChildrenParser, TextNode, TextBlock } = Nodes;
+import utils from './utils';
+import { ChildrenParser, TextNode, TextBlock } from './ChildrenParser';
 
 const types = {
   'h1': 'heading1',
@@ -71,7 +62,7 @@ class BlockNode {
     }
 
     if (token.attrs) {
-      this.attrs = Utils.parseAttrs(token.attrs);
+      this.attrs = utils.parseAttrs(token.attrs);
 
       if (this.attrs.style) {
         this.style = this.attrs.style;
@@ -79,12 +70,12 @@ class BlockNode {
     }
 
     if (token.meta) {
-      this.data = Utils.assign(this.data, token.meta);
+      this.data = utils.assign(this.data, token.meta);
     }
   }
 }
 
-const MarkdownParser = {
+const RichMarkdownDeserializer = {
   stack: [],
   level: 0,
   currentBlock: null,
@@ -100,6 +91,14 @@ const MarkdownParser = {
     this.parentBlock = null;
     this.lineCount = 0;
   },
+
+  /**
+   * Method preprocessing get tokens list from markdown-it parser
+   * and remove from this list tokens with types 'paragraph_open' and 'paragraph_close'
+   * if they are between opening and closing tokens of one type
+   *
+   * @param tokens
+   */
 
   preprocessing(tokens) {
     let i = 0;
@@ -478,7 +477,7 @@ const MarkdownParser = {
     let previousType = '';
     for (let token of tokens) {
       if (token.type) {
-        const lastElem = Utils.getLastElemTokenType(token);
+        const lastElem = utils.getLastElemTokenType(token);
 
         if (token.type === 'line_count') {
           this.lineCount = token.endLine + 1;
@@ -535,33 +534,8 @@ const MarkdownParser = {
     return this.blocks;
   },
 
-  render(markdownData, options = []) {
-    this.init();
-
-    const markdown = new MarkdownIt({
-      linkify: true,
-      typographer: true,
-      breaks: true
-    });
-
-    markdown
-      .use(MarkdownItSub)
-      .use(MarkdownItSup)
-      .use(MarkdownItIns)
-      .use(MarkdownItMark)
-      .use(MarkdownItAbbr)
-      .use(MarkdownItLineCounter)
-      .use(MarkdownItDeflist)
-      .use(MarkdownItAnchor);
-
-    const markdownAutocomplete = new MarkdownAutocomplete(options);
-    markdown.use(markdownAutocomplete);
-
-    let eventTokens = markdown.parse(markdownData || '', {});
-    return this.eventParse(eventTokens);
-  },
-
   parse(markdownData, options = []) {
+    this.init();
     let fragment = null;
 
     if (markdownData === '') {
@@ -570,7 +544,9 @@ const MarkdownParser = {
 
     else {
       try {
-        fragment = this.render(markdownData, options);
+        let eventTokens = MarkdownIt.parse(markdownData || '', {});
+        fragment = this.eventParse(eventTokens);
+        // fragment = this.render(markdownData, options);
       }
 
       catch (e) {
@@ -580,6 +556,31 @@ const MarkdownParser = {
 
     return {nodes: fragment};
   },
+
+  /**
+   * Deserialize a markdown `string`.
+   *
+   * @param {String} markdown
+   * @param {Array} options
+   *    example:
+   *    options = [{ regex: '\\$(\\w+)', id: 'term'}, { regex: '\\#(\\w+)', id: 'product'}]
+   *    markdown = #code
+   *            ->
+   *    {
+   *      "kind": "inline",
+   *      "isVoid": false,
+   *      "nodes": [{"kind": "text", "ranges": [{"text": "#code"}]}],
+   *      "type": "autocomplete",
+   *      "data": {"id": "product"}
+   *    }
+   *
+   * @return {State} state
+   *
+   */
+  deserialize(markdown, options=[]) {
+    const nodes = this.parse(markdown, options);
+    return Raw.deserialize(nodes, {terse: true});
+  }
 };
 
-export default MarkdownParser;
+export default RichMarkdownDeserializer;

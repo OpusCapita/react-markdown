@@ -1,6 +1,7 @@
-import MarkdownParser from './MarkdownParser'
+import MarkdownParser from './RichMarkdownDeserializer'
 import {Raw} from 'slate'
 import {Record} from 'immutable'
+import Utils from './utils'
 
 
 function createArrayJoined(length, value, sep='') {
@@ -76,9 +77,9 @@ const RULES = [
     }
   },
   {
-    serialize(obj, children) {
+    serialize(obj, children, previousNodeType) {
       if (obj.kind === 'block' && NodeSerialize[obj.type]) {
-        return NodeSerialize[obj.type](obj, children);
+        return NodeSerialize[obj.type](obj, children, previousNodeType);
       }
     }
   },
@@ -144,11 +145,10 @@ const NodeSerialize = {
       return `${arrChildren.join('\n')}`;
     }
   },
-  paragraph: (obj, children) => {
+  paragraph: (obj, children, previousNodeType) => {
     // If the previous node is a paragraph,
     // and the current node in blockquote
-    let condition = obj.previousNodeType === 'paragraph'
-                    && obj.getIn(['data', 'parent']) === 'blockquote';
+    let condition = previousNodeType === 'paragraph' && obj.getIn(['data', 'parent']) === 'blockquote';
     return `${condition ? '\n\n' : ''}${children}`;
   },
 
@@ -197,7 +197,7 @@ const NodeSerialize = {
   // Definition lists
   'dl-simple': (obj, children) => children,
   dl: (obj, children) => children,
-  'dt-simple': (obj, children) => `${obj.previousNodeType === 'dd-simple' ? `\n` : ``}${children}\n`,
+  'dt-simple': (obj, children, previousNodeType) => `${previousNodeType === 'dd-simple' ? `\n` : ``}${children}\n`,
   dt: (obj, children) => `${children}\n`,
   'dd-simple': (obj, children) => `  ~ ${children}\n`,
   dd: (obj, children) => {
@@ -218,7 +218,7 @@ const NodeSerialize = {
       arrChildren[i] = `> ${arrChildren[i]}`;
     }
 
-    let level = obj.getIn(['data', 'level']);
+    let level = obj.getIn(['data', 'level']); // Level this blockquote
 
     /**
      // This block shorten a line's prefix of the root blockquote on the next line
@@ -234,10 +234,10 @@ const NodeSerialize = {
      */
     {
       if (level === 1) {
-        let prefLength = [];
-        let isEmpty = [];
-        let nextLevel = [];
-        let nextFullNum = [];
+        let prefLength = []; // Level this line (prefix length)
+        let isEmpty = []; // This line is empty or not
+        let nextLevel = []; // Levels next not empty line
+        let nextFullNum = []; // Numbers next not empty line
         for (let i = 0; i < arrChildren.length; i++) {
           prefLength[i] = arrChildren[i].match(/>/g).length;
           isEmpty[i] = !arrChildren[i].match(/[^> ]/g);
@@ -416,14 +416,10 @@ class Markdown {
       ...RULES
     ];
 
-    this.previousNode = null;
     this.previousNodeType = '';
-    this.previousNodeLevel = 0;
 
-    this.serializeNode = this.serializeNode.bind(this);
     this.serializeRange = this.serializeRange.bind(this);
     this.serializeString = this.serializeString.bind(this);
-    this.setSiblingNodesType = this.setSiblingNodesType.bind(this);
   }
 
 
@@ -436,34 +432,12 @@ class Markdown {
 
   serialize(state) {
     const {document} = state;
-    document.nodes.map(this.setSiblingNodesType);
-    const elements = document.nodes.map(this.serializeNode);
-    return elements.join('\n').trim();
-  }
-
-  setSiblingNodesType(node) {
-    if (node.kind === 'block') {
-      if (this.previousNodeType) {
-        node.previousNodeType = this.previousNodeType;
-      }
-      this.previousNodeType = node.type;
-      if (this.previousNodeLevel) {
-        node.previousNodeLevel = this.previousNodeLevel;
-      }
-      let level = node.getIn(['data', 'level']);
-      if (level === 0 || level) {
-        this.previousNodeLevel = level;
-      }
-
-      if (this.previousNode) {
-        if (level === 0 || level) {
-          this.previousNode.nextNodeLevel = level;
-        }
-        this.previousNode.nextNodeType = node.type;
-      }
-
-      this.previousNode = node;
+    const elements = [];
+    for (let node of document.nodes) {
+      elements.push(this.serializeNode(node));
     }
+
+    return elements.join('\n').trim();
   }
 
   /**
@@ -479,21 +453,43 @@ class Markdown {
       return ranges.map(this.serializeRange);
     }
 
-    node.nodes.map(this.setSiblingNodesType);
-    let children = node.nodes.map(this.serializeNode);
-    children = children.flatten().length === 0 ? '' : children.flatten().join('');
+    let children = [];
+    for (let childNode of node.nodes) {
+      children.push(this.serializeNode(childNode));
+    }
+
+    let childrenFlatten = Utils.flatten(children);
+    children = childrenFlatten.length === 0 ? '' : childrenFlatten.join('');
+
+    let ret = null;
 
     for (const rule of this.rules) {
       if (!rule.serialize) continue;
-      let ret = rule.serialize(node, children);
+      ret = rule.serialize(node, children);
+
+      if (node.kind === 'block') {
+        ret = rule.serialize(node, children, this.previousNodeType);
+      }
+
+      else {
+        ret = rule.serialize(node, children);
+      }
 
       if (ret) {
-        ret = ret.replace(/_\*\*_/g, '**');
-        ret = ret.replace(/\*\*__/g, '**');
-        ret = ret.replace(/__\*\*/g, '**');
-
-        return ret;
+        break;
       }
+    }
+
+    if (node.kind === 'block') {
+     this.previousNodeType = node.type;
+    }
+
+    if (ret) {
+      ret = ret.replace(/_\*\*_/g, '**');
+      ret = ret.replace(/\*\*__/g, '**');
+      ret = ret.replace(/__\*\*/g, '**');
+
+      return ret;
     }
   }
 
@@ -550,41 +546,6 @@ class Markdown {
       const ret = rule.serialize(string, strVal);
       if (ret) return ret;
     }
-  }
-
-  trimStr(str) {
-    const arrStr = str.split('\n');
-    for (let i = 0; i < arrStr.length; i++) {
-      arrStr[i] = arrStr[i].trimRight();
-    }
-
-    return arrStr.join('\n');
-  }
-
-  /**
-   * Deserialize a markdown `string`.
-   *
-   * @param {String} markdown
-   * @param {Array} options
-   *    example:
-   *    options = [{ regex: '\\$(\\w+)', id: 'term'}, { regex: '\\#(\\w+)', id: 'product'}]
-   *    markdown = #code
-   *            ->
-   *    {
-   *      "kind": "inline",
-   *      "isVoid": false,
-   *      "nodes": [{"kind": "text", "ranges": [{"text": "#code"}]}],
-   *      "type": "autocomplete",
-   *      "data": {"id": "product"}
-   *    }
-   *
-   * @return {State} state
-   *
-   */
-  deserialize(markdown, options=[]) {
-    const nodes = MarkdownParser.parse(markdown, options);
-    const state = Raw.deserialize(nodes, {terse: true});
-    return state;
   }
 }
 

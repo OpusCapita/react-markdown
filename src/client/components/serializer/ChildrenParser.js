@@ -1,4 +1,4 @@
-import Utils from './Utils';
+import Utils from './utils';
 
 const markups = {
   '**': 'bold',
@@ -349,4 +349,4 @@ class ChildrenParser {
   }
 }
 
-export default { ChildrenParser, TextNode, TextBlock };
+export { ChildrenParser, TextNode, TextBlock };

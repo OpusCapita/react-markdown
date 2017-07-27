@@ -1,3 +1,5 @@
+import List from 'immutable';
+
 function parseAttrs(attrs) {
   let objAttrs = {};
 
@@ -26,4 +28,30 @@ function getLastElemTokenType(token) {
   return tokenData[tokenData.length - 1];
 }
 
-export default { parseAttrs, assign, getLastElemTokenType, };
+/**
+ * Flattens nested Collections from arrays or list
+ * @param {List|Array} arr
+ * @returns {Array}
+ */
+
+function flatten(arr) {
+  let newArr = [];
+
+  for (let el of arr) {
+    if (typeof el === 'string') {
+      newArr.push(el);
+    }
+
+    else if (el && (el.size || el.length)) {
+      newArr = newArr.concat(flatten(el));
+    }
+
+    else {
+      newArr.push('');
+    }
+  }
+
+  return newArr;
+}
+
+export default { parseAttrs, assign, getLastElemTokenType, flatten, };
