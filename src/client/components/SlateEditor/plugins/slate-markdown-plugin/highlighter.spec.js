@@ -656,6 +656,14 @@ describe('highlighter', () => {
     html = '_**~~strikethrough~~**_';
     candidate = `<span class="token italic">_<span class="token bold">**<span class="token strikethrough">~~strikethrough~~</span>**</span>_</span>`;
     assert.equal(getHtml(html), candidate);
+
+    html = '_**~~~strikethrough~~**_';
+    candidate = `<span class="token italic">_<span class="token bold">**~<span class="token strikethrough">~~strikethrough~~</span>**</span>_</span>`;
+    assert.equal(getHtml(html), candidate);
+
+    html = '_**~~strikethrough~~~**_';
+    candidate = `<span class="token italic">_<span class="token bold">**<span class="token strikethrough">~~strikethrough~~</span>~**</span>_</span>`;
+    assert.equal(getHtml(html), candidate);
   });
 
   it('shouldn highlight italic inside strikethrough', () => {
