@@ -100,6 +100,7 @@ Prism.languages.insertBefore('markdown', 'prolog', {
   strikethrough: {
     pattern: /(^|[^~])~~[^~\r\n]+~~/,
     lookbehind: true,
+    greedy: true,
     inside: {}
   },
   hr: {

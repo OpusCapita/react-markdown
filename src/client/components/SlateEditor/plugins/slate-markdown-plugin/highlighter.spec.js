@@ -603,33 +603,58 @@ describe('highlighter', () => {
     assert.equal(getHtml(html), candidate);
   });
 
-  // it('shouldn highlight bold inside strikethrough', () => {
-    // uncompatible with markdown-it. should be:
-    // let html;
-    // let candidate;
+  it('shouldn highlight italic inside strikethrough', () => {
+    let html;
+    let candidate;
 
-    // html = '~~**bold**~~';
-    // candidate = `<span class="token strikethrough">~~<span class="token bold">**bold**</span>~~</span>`;
-    // assert.equal(getHtml(html), candidate);
+    html = '~~_italic_~~';
+    candidate = `<span class="token strikethrough">~~<span class="token italic">_italic_</span>~~</span>`;
+    assert.equal(getHtml(html), candidate);
 
-    // html = '~~__bold__~~';
-    // candidate = `<span class="token strikethrough">~~<span class="token bold">__bold__</span>~~</span>`;
-    // assert.equal(getHtml(html), candidate);
+    html = '~~*italic*~~';
+    candidate = `<span class="token strikethrough">~~<span class="token italic">*italic*</span>~~</span>`;
+    assert.equal(getHtml(html), candidate);
+  });
 
-    // html = '~~**bold*~~';
-    // candidate = `<span class="token strikethrough">~~*<span class="token italic">*bold*</span>~~</span>`;
-    // assert.equal(getHtml(html), candidate);
+  it('shouldn highlight bold inside strikethrough', () => {
+    let html;
+    let candidate;
 
-    // html = '~~__bold_~~';
-    // candidate = `<span class="token strikethrough">~~<span class="token italic">_bold_</span>_~~</span>`;
-    // assert.equal(getHtml(html), candidate);
+    html = '~~__bold__~~';
+    candidate = `<span class="token strikethrough">~~<span class="token bold">__bold__</span>~~</span>`;
+    assert.equal(getHtml(html), candidate);
 
-    // html = '~~*bold**~~';
-    // candidate = `<span class="token strikethrough">~~<span class="token italic">*bold*</span>*~~</span>`;
-    // assert.equal(getHtml(html), candidate);
+    html = '~~**bold**~~';
+    candidate = `<span class="token strikethrough">~~<span class="token bold">**bold**</span>~~</span>`;
+    assert.equal(getHtml(html), candidate);
+  });
 
-    // html = '~~_bold__~~';
-    // candidate = `<span class="token strikethrough">~~<span class="token italic">_bold_</span>_~~</span>`;
-    // assert.equal(getHtml(html), candidate);
-  // });
+  it('shouldn highlight bold-italic inside strikethrough', () => {
+    let html;
+    let candidate;
+
+    html = '~~*__bold__*~~';
+    candidate = `<span class="token strikethrough">~~<span class="token italic">*<span class="token bold">__bold__</span>*</span>~~</span>`;
+    assert.equal(getHtml(html), candidate);
+
+    html = '~~**_bold_**~~';
+    candidate = `<span class="token strikethrough">~~<span class="token bold">**<span class="token italic">_bold_</span>**</span>~~</span>`;
+    assert.equal(getHtml(html), candidate);
+
+    html = '~~**_bold_**~~';
+    candidate = `<span class="token strikethrough">~~<span class="token bold">**<span class="token italic">_bold_</span>**</span>~~</span>`;
+    assert.equal(getHtml(html), candidate);
+
+    html = '~~__*bold*__~~';
+    candidate = `<span class="token strikethrough">~~<span class="token bold">__<span class="token italic">*bold*</span>__</span>~~</span>`;
+    assert.equal(getHtml(html), candidate);
+
+    html = '~~___bold___~~';
+    candidate = `<span class="token strikethrough">~~<span class="token bold">__<span class="token italic">_bold_</span>__</span>~~</span>`;
+    assert.equal(getHtml(html), candidate);
+
+    html = '~~***bold***~~';
+    candidate = `<span class="token strikethrough">~~<span class="token bold">**<span class="token italic">*bold*</span>**</span>~~</span>`;
+    assert.equal(getHtml(html), candidate);
+  });
 });
