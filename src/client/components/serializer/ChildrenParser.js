@@ -349,4 +349,4 @@ class ChildrenParser {
   }
 }
 
-export default { ChildrenParser, TextNode, TextBlock, SoftBreakNode };
+export default { ChildrenParser, TextNode, TextBlock };

@@ -11,7 +11,7 @@ import MarkdownAutocomplete from './plugins/markdown-it-autocomplete';
 
 import Utils from './Utils';
 import Nodes from './ChildrenParser';
-const { ChildrenParser, TextNode, TextBlock, SoftBreakNode } = Nodes;
+const { ChildrenParser, TextNode, TextBlock } = Nodes;
 
 const types = {
   'h1': 'heading1',
@@ -252,37 +252,6 @@ const MarkdownParser = {
     }
   },
 
-  // getEmptyParagraph(begin, end) {
-  //   const paragraph = {
-  //     kind: "block",
-  //     type: "paragraph",
-  //     data: {
-  //       map: [begin, end]
-  //     },
-  //     nodes: [
-  //       {
-  //         kind: "text",
-  //         ranges: [
-  //           {
-  //             text: ""
-  //           }
-  //         ]
-  //       }
-  //     ]
-  //   };
-  //
-  //   if (end > begin) {
-  //     for (let i = begin; i < end; i++) {
-  //       paragraph.nodes.push(new SoftBreakNode());
-  //       let textNode = new TextNode();
-  //       textNode.addTextBlock(new TextBlock({}));
-  //       paragraph.nodes.push(textNode);
-  //     }
-  //   }
-  //
-  //   return paragraph;
-  // },
-
   recalcListItemMap(tokens) {
     for (let token of tokens) {
       if (token.type === 'unordered-list' || token.type === 'ordered-list') {
@@ -314,7 +283,6 @@ const MarkdownParser = {
 
     if (tokens[0].data.map[0] > 0) {
       this.getEmptyParagraphs(newTokens, 0, tokens[0].data.map[0] - 1);
-      // newTokens.push(this.getEmptyParagraph(0, tokens[0].data.map[0] - 1));
     }
 
     for (let i = 0; i < tokens.length - 1; i++) {
@@ -326,7 +294,6 @@ const MarkdownParser = {
       // Add empty paragraph
       if (firstLine < lastLine) {
         this.getEmptyParagraphs(newTokens, firstLine, lastLine - 1);
-        // newTokens.push(this.getEmptyParagraph(firstLine, lastLine - 1));
       }
     }
     const lastToken = tokens[tokens.length - 1];
@@ -334,7 +301,6 @@ const MarkdownParser = {
 
     if (this.lineCount - 1 > lastToken.data.map[1]) {
       this.getEmptyParagraphs(newTokens, lastToken.data.map[1], this.lineCount - 1);
-      // newTokens.push(this.getEmptyParagraph(lastToken.data.map[1], this.lineCount - 1));
     }
 
     return newTokens;
