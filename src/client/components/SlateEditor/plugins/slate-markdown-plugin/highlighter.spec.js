@@ -343,6 +343,18 @@ describe('highlighter', () => {
     html = '__bold_text bold__';
     candidate = `<span class="token bold">__bold_text bold__</span>`;
     assert.equal(getHtml(html), candidate);
+
+    html = '_**bold**';
+    candidate = `_<span class="token bold">**bold**</span>`;
+    assert.equal(getHtml(html), candidate);
+
+    html = '**bold**_';
+    candidate = `<span class="token bold">**bold**</span>_`;
+    assert.equal(getHtml(html), candidate);
+
+    html = '**bold***';
+    candidate = `<span class="token bold">**bold**</span>*`;
+    assert.equal(getHtml(html), candidate);
   });
 
   it('should highlight bold (asterisks)', () => {
