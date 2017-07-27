@@ -207,6 +207,18 @@ describe('highlighter', () => {
     let html;
     let candidate;
 
+    html = '-';
+    candidate = `<span class="token list">-</span>`;
+    assert.equal(getHtml(html), candidate);
+
+    html = '-item';
+    candidate = `-item`;
+    assert.equal(getHtml(html), candidate);
+
+    html = '- item';
+    candidate = `<span class="token list">- item</span>`;
+    assert.equal(getHtml(html), candidate);
+
     html =
 `- item-1
 - item-2
