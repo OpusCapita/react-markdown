@@ -226,12 +226,12 @@ const MarkdownParser = {
     }
   },
 
-  getEmptyParagraph(begin, end) {
-    const paragraph = {
+  getOneEmptyParagraph(begin) {
+    return {
       kind: "block",
       type: "paragraph",
       data: {
-        map: [begin, end]
+        map: [begin, begin + 1]
       },
       nodes: [
         {
@@ -244,18 +244,44 @@ const MarkdownParser = {
         }
       ]
     };
-
-    if (end > begin) {
-      for (let i = begin; i < end; i++) {
-        paragraph.nodes.push(new SoftBreakNode());
-        let textNode = new TextNode();
-        textNode.addTextBlock(new TextBlock({}));
-        paragraph.nodes.push(textNode);
-      }
-    }
-
-    return paragraph;
   },
+
+  getEmptyParagraphs(tokens, begin, end) {
+    for (let i = begin; i <= end; i++) {
+      tokens.push(this.getOneEmptyParagraph(i));
+    }
+  },
+
+  // getEmptyParagraph(begin, end) {
+  //   const paragraph = {
+  //     kind: "block",
+  //     type: "paragraph",
+  //     data: {
+  //       map: [begin, end]
+  //     },
+  //     nodes: [
+  //       {
+  //         kind: "text",
+  //         ranges: [
+  //           {
+  //             text: ""
+  //           }
+  //         ]
+  //       }
+  //     ]
+  //   };
+  //
+  //   if (end > begin) {
+  //     for (let i = begin; i < end; i++) {
+  //       paragraph.nodes.push(new SoftBreakNode());
+  //       let textNode = new TextNode();
+  //       textNode.addTextBlock(new TextBlock({}));
+  //       paragraph.nodes.push(textNode);
+  //     }
+  //   }
+  //
+  //   return paragraph;
+  // },
 
   recalcListItemMap(tokens) {
     for (let token of tokens) {
@@ -279,7 +305,7 @@ const MarkdownParser = {
     }
   },
 
-  addEmptyParagraps(tokens) {
+  addEmptyParagraphs(tokens) {
     if (tokens.length === 0) {
       return tokens;
     }
@@ -287,7 +313,8 @@ const MarkdownParser = {
     let newTokens = [];
 
     if (tokens[0].data.map[0] > 0) {
-      newTokens.push(this.getEmptyParagraph(0, tokens[0].data.map[0] - 1));
+      this.getEmptyParagraphs(newTokens, 0, tokens[0].data.map[0] - 1);
+      // newTokens.push(this.getEmptyParagraph(0, tokens[0].data.map[0] - 1));
     }
 
     for (let i = 0; i < tokens.length - 1; i++) {
@@ -298,14 +325,16 @@ const MarkdownParser = {
 
       // Add empty paragraph
       if (firstLine < lastLine) {
-        newTokens.push(this.getEmptyParagraph(firstLine, lastLine - 1));
+        this.getEmptyParagraphs(newTokens, firstLine, lastLine - 1);
+        // newTokens.push(this.getEmptyParagraph(firstLine, lastLine - 1));
       }
     }
     const lastToken = tokens[tokens.length - 1];
     newTokens.push(lastToken);
 
     if (this.lineCount - 1 > lastToken.data.map[1]) {
-      newTokens.push(this.getEmptyParagraph(lastToken.data.map[1], this.lineCount - 1));
+      this.getEmptyParagraphs(newTokens, lastToken.data.map[1], this.lineCount - 1);
+      // newTokens.push(this.getEmptyParagraph(lastToken.data.map[1], this.lineCount - 1));
     }
 
     return newTokens;
@@ -525,7 +554,7 @@ const MarkdownParser = {
     this.preprocessing(eventTokens);
     this.processing(eventTokens);
     this.recalcListItemMap(this.blocks);
-    this.blocks = this.addEmptyParagraps(this.blocks);
+    this.blocks = this.addEmptyParagraphs(this.blocks);
     this.addParents(this.blocks);
 
     // This console.log is necessary for debugging
