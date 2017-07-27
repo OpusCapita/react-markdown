@@ -301,6 +301,33 @@ describe('highlighter', () => {
     assert.equal(getHtml(html), candidate);
   });
 
+  it('should highlight url inside bold', () => {
+    let html;
+    let candidate;
+
+    html = '**[opuscapita](https://www.opuscapita.com/)**';
+    candidate = '<span class="token bold">**<span class="token url"><span class="token punctuation">[</span>opuscapita<span class="token punctuation">]</span><span class="token punctuation">(https://www.opuscapita.com/)</span></span>**</span>';
+    assert.equal(getHtml(html), candidate);
+  });
+
+  it('should highlight url inside italic', () => {
+    let html;
+    let candidate;
+
+    html = '*[opuscapita](https://www.opuscapita.com/)*';
+    candidate = '<span class="token italic">*<span class="token url"><span class="token punctuation">[</span>opuscapita<span class="token punctuation">]</span><span class="token punctuation">(https://www.opuscapita.com/)</span></span>*</span>';
+    assert.equal(getHtml(html), candidate);
+  });
+
+  it('should highlight url inside strikethrough', () => {
+    let html;
+    let candidate;
+
+    html = '~~[opuscapita](https://www.opuscapita.com/)~~';
+    candidate = '<span class="token strikethrough">~~<span class="token url"><span class="token punctuation">[</span>opuscapita<span class="token punctuation">]</span><span class="token punctuation">(https://www.opuscapita.com/)</span></span>~~</span>';
+    assert.equal(getHtml(html), candidate);
+  });
+
   it('should highlight bold (underscores)', () => {
     let html;
     let candidate;
