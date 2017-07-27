@@ -118,11 +118,13 @@ Prism.languages.markdown.italic[1].inside.strikethrough = Prism.util.clone(Prism
 
 Prism.languages.markdown.url.inside.bold = Prism.util.clone(Prism.languages.markdown.bold);
 Prism.languages.markdown.url.inside.italic = Prism.util.clone(Prism.languages.markdown.italic);
+Prism.languages.markdown.url.inside.strikethrough = Prism.util.clone(Prism.languages.markdown.strikethrough);
 
 Prism.languages.markdown.bold[0].inside.url = Prism.util.clone(Prism.languages.markdown.url);
 Prism.languages.markdown.bold[1].inside.url = Prism.util.clone(Prism.languages.markdown.url);
 Prism.languages.markdown.italic[0].inside.url = Prism.util.clone(Prism.languages.markdown.url);
 Prism.languages.markdown.italic[1].inside.url = Prism.util.clone(Prism.languages.markdown.url);
+
 
 /**
  * Define a decorator for markdown styles.

@@ -265,6 +265,42 @@ describe('highlighter', () => {
     assert.equal(getHtml(html), candidate);
   });
 
+  it('should highlight italic inside url text', () => {
+    let html;
+    let candidate;
+
+    html = '[_opuscapita_](https://www.opuscapita.com/)';
+    candidate = '<span class="token url"><span class="token punctuation">[</span><span class="token italic">_opuscapita_</span><span class="token punctuation">]</span><span class="token punctuation">(https://www.opuscapita.com/)</span></span>';
+    assert.equal(getHtml(html), candidate);
+
+
+    html = '[*opuscapita*](https://www.opuscapita.com/)';
+    candidate = '<span class="token url"><span class="token punctuation">[</span><span class="token italic">*opuscapita*</span><span class="token punctuation">]</span><span class="token punctuation">(https://www.opuscapita.com/)</span></span>';
+    assert.equal(getHtml(html), candidate);
+  });
+
+  it('should highlight bold inside url text', () => {
+    let html;
+    let candidate;
+
+    html = '[__opuscapita__](https://www.opuscapita.com/)';
+    candidate = '<span class="token url"><span class="token punctuation">[</span><span class="token bold">__opuscapita__</span><span class="token punctuation">]</span><span class="token punctuation">(https://www.opuscapita.com/)</span></span>';
+    assert.equal(getHtml(html), candidate);
+
+    html = '[**opuscapita**](https://www.opuscapita.com/)';
+    candidate = '<span class="token url"><span class="token punctuation">[</span><span class="token bold">**opuscapita**</span><span class="token punctuation">]</span><span class="token punctuation">(https://www.opuscapita.com/)</span></span>';
+    assert.equal(getHtml(html), candidate);
+  });
+
+  it('should highlight strikethrough inside url text', () => {
+    let html;
+    let candidate;
+
+    html = '[~~opuscapita~~](https://www.opuscapita.com/)';
+    candidate = '<span class="token url"><span class="token punctuation">[</span><span class="token strikethrough">~~opuscapita~~</span><span class="token punctuation">]</span><span class="token punctuation">(https://www.opuscapita.com/)</span></span>';
+    assert.equal(getHtml(html), candidate);
+  });
+
   it('should highlight bold (underscores)', () => {
     let html;
     let candidate;
