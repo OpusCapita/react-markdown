@@ -129,15 +129,23 @@ Prism.languages.markdown.bold[1].inside.strikethrough = Prism.util.clone(Prism.l
 Prism.languages.markdown.italic[0].inside.strikethrough = Prism.util.clone(Prism.languages.markdown.strikethrough);
 Prism.languages.markdown.italic[1].inside.strikethrough = Prism.util.clone(Prism.languages.markdown.strikethrough);
 
-Prism.languages.markdown.bold[0].inside.italic[0].inside.strikethrough = Prism.util.clone(Prism.languages.markdown.strikethrough);
-Prism.languages.markdown.bold[0].inside.italic[1].inside.strikethrough = Prism.util.clone(Prism.languages.markdown.strikethrough);
-Prism.languages.markdown.bold[1].inside.italic[0].inside.strikethrough = Prism.util.clone(Prism.languages.markdown.strikethrough);
-Prism.languages.markdown.bold[1].inside.italic[1].inside.strikethrough = Prism.util.clone(Prism.languages.markdown.strikethrough);
+Prism.languages.markdown.bold[0].inside.italic[0].inside.strikethrough =
+  Prism.util.clone(Prism.languages.markdown.strikethrough);
+Prism.languages.markdown.bold[0].inside.italic[1].inside.strikethrough =
+  Prism.util.clone(Prism.languages.markdown.strikethrough);
+Prism.languages.markdown.bold[1].inside.italic[0].inside.strikethrough =
+  Prism.util.clone(Prism.languages.markdown.strikethrough);
+Prism.languages.markdown.bold[1].inside.italic[1].inside.strikethrough =
+  Prism.util.clone(Prism.languages.markdown.strikethrough);
 
-Prism.languages.markdown.italic[0].inside.bold[0].inside.strikethrough = Prism.util.clone(Prism.languages.markdown.strikethrough);
-Prism.languages.markdown.italic[0].inside.bold[1].inside.strikethrough = Prism.util.clone(Prism.languages.markdown.strikethrough);
-Prism.languages.markdown.italic[1].inside.bold[0].inside.strikethrough = Prism.util.clone(Prism.languages.markdown.strikethrough);
-Prism.languages.markdown.italic[1].inside.bold[1].inside.strikethrough = Prism.util.clone(Prism.languages.markdown.strikethrough);
+Prism.languages.markdown.italic[0].inside.bold[0].inside.strikethrough =
+  Prism.util.clone(Prism.languages.markdown.strikethrough);
+Prism.languages.markdown.italic[0].inside.bold[1].inside.strikethrough =
+  Prism.util.clone(Prism.languages.markdown.strikethrough);
+Prism.languages.markdown.italic[1].inside.bold[0].inside.strikethrough =
+  Prism.util.clone(Prism.languages.markdown.strikethrough);
+Prism.languages.markdown.italic[1].inside.bold[1].inside.strikethrough =
+  Prism.util.clone(Prism.languages.markdown.strikethrough);
 
 Prism.languages.markdown.url.inside.bold = Prism.util.clone(Prism.languages.markdown.bold);
 Prism.languages.markdown.url.inside.italic = Prism.util.clone(Prism.languages.markdown.italic);
