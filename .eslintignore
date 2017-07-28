@@ -1,4 +1,4 @@
 /webpack.*.config.js
 /test/**
 tmp/**
-src/client/components/serializer/**
+/src/client/markdown-it/**

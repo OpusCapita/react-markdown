@@ -5,8 +5,8 @@ import RichMarkdownSerializer from './RichMarkdownSerializer'
 
 function reparser(str, isPrint = false) {
   const options = [
-    {regex: '\\$(\\w+)', id: 'term'},
-    {regex: '\\#(\\w+)', id: 'product'}
+    { regex: '\\$(\\w+)', id: 'term' },
+    { regex: '\\#(\\w+)', id: 'product' }
   ];
   const richMarkdownSerializer = new RichMarkdownSerializer();
   let repars = richMarkdownSerializer.serialize(RichMarkdownDeserializer.deserialize(str, options));
@@ -40,13 +40,8 @@ function printData(str, repars) {
 
 
 describe('MarkdownRenderer', () => {
-  let markdownRenderer;
   let oneQuote = '`';
   let quotes = '```';
-
-  beforeEach(function() {
-    markdownRenderer = new RichMarkdownSerializer();
-  });
 
   describe('Lists', () => {
     it('Unordered list (5 levels)', () => {
@@ -374,7 +369,6 @@ Paragraph 3`;
       let repars = reparser(str);
       expect(str).to.equal(repars);
     });
-
   });
 
 
@@ -444,7 +438,6 @@ Paragraph 3`;
       let repars = reparser(str);
       expect(str).to.equal(repars);
     });
-
   });
 
 
@@ -474,7 +467,6 @@ It is simple text.`;
       let repars = reparser(str);
       expect(trimStr(str)).to.equal(trimStr(repars));
     });
-
   });
 
 
@@ -492,7 +484,6 @@ End tables`;
       let repars = reparser(str);
       expect(trimStr(str)).to.equal(trimStr(repars));
     });
-
   });
 
 
@@ -510,7 +501,6 @@ test... test... test... test?.. test!..
       let repars = reparser(str);
       expect(trimStr(str)).to.equal(trimStr(repars));
     });
-
   });
 
 

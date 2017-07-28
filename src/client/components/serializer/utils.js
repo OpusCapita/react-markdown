@@ -1,5 +1,3 @@
-import List from 'immutable';
-
 function parseAttrs(attrs) {
   let objAttrs = {};
 
@@ -11,12 +9,12 @@ function parseAttrs(attrs) {
 }
 const hasOwnProperty = Object.prototype.hasOwnProperty;
 
-const assign = Object.assign || function (obj) {
+const assign = Object.assign || function(obj) {
   for (let i = 1; i < arguments.length; i++) {
     let target = arguments[i];
     for (let key in target) {
       if (hasOwnProperty.call(target, key)) {
-        obj[key] = target[key];
+        obj[key] = target[key]; // eslint-disable-line
       }
     }
   }
@@ -40,13 +38,9 @@ function flatten(arr) {
   for (let el of arr) {
     if (typeof el === 'string') {
       newArr.push(el);
-    }
-
-    else if (el && (el.size || el.length)) {
+    } else if (el && (el.size || el.length)) {
       newArr = newArr.concat(flatten(el));
-    }
-
-    else {
+    } else {
       newArr.push('');
     }
   }

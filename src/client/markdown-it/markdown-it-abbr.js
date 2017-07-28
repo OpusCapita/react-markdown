@@ -3,23 +3,23 @@
 'use strict';
 
 
-module.exports = function sub_plugin(md) {
-  let escapeRE        = md.utils.escapeRE,
-      arrayReplaceAt  = md.utils.arrayReplaceAt;
+module.exports = function subPlugin(md) {
+  let escapeRE = md.utils.escapeRE;
+  let arrayReplaceAt = md.utils.arrayReplaceAt;
 
   // ASCII characters in Cc, Sc, Sm, Sk categories we should terminate on;
   // you can check character classes here:
   // http://www.unicode.org/Public/UNIDATA/UnicodeData.txt
-  const OTHER_CHARS      = ' \r\n$+<=>^`|~';
+  const OTHER_CHARS = ' \r\n$+<=>^`|~';
 
   const UNICODE_PUNCT_RE = md.utils.lib.ucmicro.P.source;
   const UNICODE_SPACE_RE = md.utils.lib.ucmicro.Z.source;
 
 
-  function abbr_def(state, startLine, endLine, silent) {
+  function abbrDef(state, startLine, endLine, silent) {
     let label, title, ch, labelStart, labelEnd,
-        pos = state.bMarks[startLine] + state.tShift[startLine],
-        max = state.eMarks[startLine];
+      pos = state.bMarks[startLine] + state.tShift[startLine],
+      max = state.eMarks[startLine];
 
     if (pos + 2 >= max) { return false; }
 
@@ -150,7 +150,7 @@ module.exports = function sub_plugin(md) {
     }
   }
 
-  md.block.ruler.before('reference', 'abbr_def', abbr_def, { alt: [ 'paragraph', 'reference' ] });
+  md.block.ruler.before('reference', 'abbrDef', abbrDef, { alt: [ 'paragraph', 'reference' ] });
 
   md.core.ruler.after('linkify', 'abbr_replace', abbr_replace);
 };

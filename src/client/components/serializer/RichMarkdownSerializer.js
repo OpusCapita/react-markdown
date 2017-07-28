@@ -1,10 +1,8 @@
-import MarkdownParser from './RichMarkdownDeserializer'
-import {Raw} from 'slate'
-import {Record} from 'immutable'
+import { Record } from 'immutable'
 import Utils from './utils'
 
 
-function createArrayJoined(length, value, sep='') {
+function createArrayJoined(length, value, sep = '') {
   const arrFill = [];
   for (let i = 0; i < length; i++) {
     arrFill.push(value);
@@ -34,32 +32,32 @@ const MARKUPS = {
 };
 
 const EMOJI = {
-  angry:            [ '>:(', '>:-(' ],
-  blush:            [ ':")', ':-")' ],
-  broken_heart:     [ '</3', '<\\3' ],
+  angry: ['>:(', '>:-('],
+  blush: [':")', ':-")'],
+  broken_heart: ['</3', '<\\3'],
   // :\ and :-\ not used because of conflict with markdown escaping
-  confused:         [ ':/', ':-/' ], // twemoji shows question
-  cry:              [ ':,-(', ":'-(", ":'(", ':,(' ],
-  frowning:         [ ':(', ':-(' ],
-  heart:            [ '<3' ],
-  imp:              [ ']:(', ']:-(' ],
-  innocent:         [ 'o:)', 'O:)', 'o:-)', 'O:-)', '0:)', '0:-)' ],
-  joy:              [ ":')", ":'-)", ':,)', ':,-)', ":'D", ":'-D", ':,D', ':,-D' ],
-  kissing:          [ ':*', ':-*' ],
-  laughing:         [ 'x-)', 'X-)' ],
-  neutral_face:     [ ':|', ':-|' ],
-  open_mouth:       [ ':o', ':-o', ':O', ':-O' ],
-  rage:             [ ':@', ':-@' ],
-  smile:            [ ':D', ':-D' ],
-  smiley:           [ ':)', ':-)' ],
-  smiling_imp:      [ ']:)', ']:-)' ],
-  sob:              [ ":,'(", ":,'-(", ';(', ';-(' ],
-  stuck_out_tongue: [ ':P', ':-P' ],
-  sunglasses:       [ '8-)', 'B-)' ],
-  sweat:            [ ',:(', ',:-(' ],
-  sweat_smile:      [ ',:)', ',:-)' ],
-  unamused:         [ ':s', ':-S', ':z', ':-Z', ':$', ':-$' ],
-  wink:             [ ';)', ';-)' ]
+  confused: [':/', ':-/'], // twemoji shows question
+  cry: [':,-(', ":'-(", ":'(", ':,('],
+  frowning: [':(', ':-('],
+  heart: ['<3'],
+  imp: [']:(', ']:-('],
+  innocent: ['o:)', 'O:)', 'o:-)', 'O:-)', '0:)', '0:-)'],
+  joy: [":')", ":'-)", ':,)', ':,-)', ":'D", ":'-D", ':,D', ':,-D'],
+  kissing: [':*', ':-*'],
+  laughing: ['x-)', 'X-)'],
+  neutral_face: [':|', ':-|'],
+  open_mouth: [':o', ':-o', ':O', ':-O'],
+  rage: [':@', ':-@'],
+  smile: [':D', ':-D'],
+  smiley: [':)', ':-)'],
+  smiling_imp: [']:)', ']:-)'],
+  sob: [":,'(", ":,'-(", ';(', ';-('],
+  stuck_out_tongue: [':P', ':-P'],
+  sunglasses: ['8-)', 'B-)'],
+  sweat: [',:(', ',:-('],
+  sweat_smile: [',:)', ',:-)'],
+  unamused: [':s', ':-S', ':z', ':-Z', ':$', ':-$'],
+  wink: [';)', ';-)']
 };
 
 /**
@@ -74,20 +72,26 @@ const RULES = [
       if (obj.kind === 'string') {
         return children
       }
+
+      return undefined;
     }
   },
   {
     serialize(obj, children, previousNodeType) {
-      if (obj.kind === 'block' && NodeSerialize[obj.type]) {
+      if (obj.kind === 'block' && NodeSerialize[obj.type]) { // eslint-disable-line
         return NodeSerialize[obj.type](obj, children, previousNodeType);
       }
+
+      return undefined;
     }
   },
   {
     serialize(obj, children) {
-      if (obj.kind === 'inline' && InlineSerialize[obj.type]) {
+      if (obj.kind === 'inline' && InlineSerialize[obj.type]) { // eslint-disable-line
         return InlineSerialize[obj.type](obj, children);
       }
+
+      return undefined;
     }
   },
   // Add a new rule that handles marks...
@@ -98,9 +102,7 @@ const RULES = [
           let markup = obj.getIn(['data', 'markup']);
           markup = markup ? markup : MARKUPS[obj.type];
           return `${markup}${children}${markup}`;
-        }
-
-        else if (obj.type === 'emoji') {
+        } else if (obj.type === 'emoji') {
           let markup = obj.getIn(['data', 'markup']);
           if (markup) {
             if (EMOJI[markup]) {
@@ -113,6 +115,8 @@ const RULES = [
           return children;
         }
       }
+
+      return undefined;
     }
   }
 ];
@@ -135,9 +139,7 @@ const NodeSerialize = {
     const markup = obj.getIn(['data', 'markup']);
     if (markup) {
       return `\`\`\`\n${children}\n\`\`\``;
-    }
-
-    else {
+    } else {
       const arrChildren = children.split('\n');
       for (let i = 0; i < arrChildren.length; i++) {
         arrChildren[i] = `    ${arrChildren[i]}`;
@@ -169,8 +171,8 @@ const NodeSerialize = {
   td: (obj, children) => ` ${children} |`,
 
   // Lists
-  'ordered-list': listNodeRule,
-  'unordered-list': listNodeRule,
+  'ordered-list': listNodeRule, // eslint-disable-line
+  'unordered-list': listNodeRule, // eslint-disable-line
   'list-item': (obj, children) => {
     let parent = obj.getIn(['data', 'parent']);
 
@@ -179,17 +181,13 @@ const NodeSerialize = {
 
       if (obj.getIn(['data', 'markup'])) {
         pref = obj.getIn(['data', 'markup']);
-      }
-
-      else {
+      } else {
         let mod = obj.getIn(['data', 'level']) % 10;
         pref = ['+', '+', '-', '-', '*', '*', '-', '+', '-', '*'][mod];
       }
 
       return `${pref} ${children}\n`;
-    }
-
-    else {
+    } else {
       return `${obj.getIn(['data', 'itemNum'])}. ${children}\n`;
     }
   },
@@ -207,7 +205,7 @@ const NodeSerialize = {
         arrChildren[i] = i === 0 ? `:    ${arrChildren[i]}` : `     ${arrChildren[i]}`;
       }
     }
-    children = arrChildren.join('\n');
+    children = arrChildren.join('\n'); // eslint-disable-line
     return `${children}\n`;
   },
 
@@ -232,87 +230,77 @@ const NodeSerialize = {
      // >
      // > information
      */
-    {
-      if (level === 1) {
-        let prefLength = []; // Level this line (prefix length)
-        let isEmpty = []; // This line is empty or not
-        let nextLevel = []; // Levels next not empty line
-        let nextFullNum = []; // Numbers next not empty line
-        for (let i = 0; i < arrChildren.length; i++) {
-          prefLength[i] = arrChildren[i].match(/>/g).length;
-          isEmpty[i] = !arrChildren[i].match(/[^> ]/g);
+    if (level === 1) {
+      let prefLength = []; // Level this line (prefix length)
+      let isEmpty = []; // This line is empty or not
+      let nextLevel = []; // Levels next not empty line
+      let nextFullNum = []; // Numbers next not empty line
+      for (let i = 0; i < arrChildren.length; i++) {
+        prefLength[i] = arrChildren[i].match(/>/g).length;
+        isEmpty[i] = !arrChildren[i].match(/[^> ]/g);
 
-          if (!isEmpty[i]) {
-            for (let j = i - 1; j >= 0 && isEmpty[j]; j--) {
-              nextLevel[j] = prefLength[i];
-              nextFullNum[j] = i;
-            }
+        if (!isEmpty[i]) {
+          for (let j = i - 1; j >= 0 && isEmpty[j]; j--) {
+            nextLevel[j] = prefLength[i];
+            nextFullNum[j] = i;
           }
         }
-
-        let newArrChildren = [];
-        let i = 0;
-        while (i < arrChildren.length) {
-          if (!isEmpty[i]) {
-            newArrChildren.push(arrChildren[i]);
-            i++;
-
-            if (i < arrChildren.length && !isEmpty[i] && prefLength[i - 1] >= prefLength[i]) {
-              let pref = createArrayJoined(prefLength[i], '> ');
-              newArrChildren.push(pref);
-            }
-          }
-
-          else {
-            if (!nextFullNum[i]) {
-              break;
-            }
-
-            if (i === 0) {
-              i = nextFullNum[i];
-            }
-
-            else {
-              if (prefLength[i] >= nextLevel[i]) {
-                let pref = createArrayJoined(nextLevel[i], '> ');
-                newArrChildren.push(pref);
-
-                i = nextFullNum[i];
-              }
-
-              else {
-                i++;
-              }
-            }
-          }
-        }
-
-        arrChildren = newArrChildren;
-
-        prefLength = [];
-        isEmpty = [];
-        for (let i = 0; i < arrChildren.length; i++) {
-          prefLength[i] = arrChildren[i].match(/>/g).length;
-          isEmpty[i] = !arrChildren[i].match(/[^> ]/g);
-        }
-
-        i = 0;
-        newArrChildren = [];
-        while (i < arrChildren.length) {
-          if (isEmpty[i] && prefLength[i + 1]
-          &&  i > 0 && prefLength[i - 1] < prefLength[i + 1]) {
-            //
-          }
-
-          else {
-            newArrChildren.push(arrChildren[i]);
-          }
-
-          i++;
-        }
-
-        arrChildren = newArrChildren;
       }
+
+      let newArrChildren = [];
+      let i = 0;
+      while (i < arrChildren.length) {
+        if (!isEmpty[i]) {
+          newArrChildren.push(arrChildren[i]);
+          i++;
+
+          if (i < arrChildren.length && !isEmpty[i] && prefLength[i - 1] >= prefLength[i]) {
+            let pref = createArrayJoined(prefLength[i], '> ');
+            newArrChildren.push(pref);
+          }
+        } else {
+          if (!nextFullNum[i]) {
+            break;
+          }
+
+          if (i === 0) {
+            i = nextFullNum[i];
+          } else {
+            if (prefLength[i] >= nextLevel[i]) {
+              let pref = createArrayJoined(nextLevel[i], '> ');
+              newArrChildren.push(pref);
+
+              i = nextFullNum[i];
+            } else {
+              i++;
+            }
+          }
+        }
+      }
+
+      arrChildren = newArrChildren;
+
+      prefLength = [];
+      isEmpty = [];
+      for (let i = 0; i < arrChildren.length; i++) {
+        prefLength[i] = arrChildren[i].match(/>/g).length;
+        isEmpty[i] = !arrChildren[i].match(/[^> ]/g);
+      }
+
+      i = 0;
+      newArrChildren = [];
+      while (i < arrChildren.length) {
+        if (isEmpty[i] && prefLength[i + 1] &&
+          i > 0 && prefLength[i - 1] < prefLength[i + 1]) {
+          //
+        } else {
+          newArrChildren.push(arrChildren[i]);
+        }
+
+        i++;
+      }
+
+      arrChildren = newArrChildren;
     }
 
     return `${level === 1 ? `` : `\n`}${arrChildren.join('\n')}${level === 1 ? `` : `\n`}`;
@@ -346,7 +334,8 @@ const NodeSerialize = {
  */
 
 function listNodeRule(obj, children) {
-  children = children.replace('\n\n', '\n'); // Delete empty strings in the list
+  // Delete empty strings in the list
+  children = children.replace('\n\n', '\n'); // eslint-disable-line
   const listLevel = obj.getIn(['data', 'level']);
   NodeSerialize.listLevel = listLevel;
 
@@ -364,8 +353,9 @@ function listNodeRule(obj, children) {
     arrChildren.length--;
   }
 
-  children = arrChildren.join('\n');
-  children = children.replace('\n\n', '\n'); // Delete empty strings in the list
+  children = arrChildren.join('\n'); // eslint-disable-line
+  // Delete empty strings in the list
+  children = children.replace('\n\n', '\n'); // eslint-disable-line
   return `${listLevel > 1 ? `\n` : ``}${children}`;
 }
 
@@ -431,7 +421,7 @@ class Markdown {
    */
 
   serialize(state) {
-    const {document} = state;
+    const { document } = state;
     const elements = [];
     for (let node of document.nodes) {
       elements.push(this.serializeNode(node));
@@ -444,7 +434,7 @@ class Markdown {
    * Serialize a `node`.
    *
    * @param {Node} node
-   * @return {String}
+   * @return {String|undefined}
    */
 
   serializeNode(node) {
@@ -464,14 +454,14 @@ class Markdown {
     let ret = null;
 
     for (const rule of this.rules) {
-      if (!rule.serialize) continue;
+      if (!rule.serialize) {
+        continue;
+      }
       ret = rule.serialize(node, children);
 
       if (node.kind === 'block') {
         ret = rule.serialize(node, children, this.previousNodeType);
-      }
-
-      else {
+      } else {
         ret = rule.serialize(node, children);
       }
 
@@ -481,7 +471,7 @@ class Markdown {
     }
 
     if (node.kind === 'block') {
-     this.previousNodeType = node.type;
+      this.previousNodeType = node.type;
     }
 
     if (ret) {
@@ -491,26 +481,34 @@ class Markdown {
 
       return ret;
     }
+
+    return undefined;
   }
 
   /**
    * Serialize a `range`.
    *
    * @param {Range} range
-   * @return {String}
+   * @return {String|undefined}
    */
 
   serializeRange(range) {
-    const string = new String({text: range.text});
+    const string = new String({ text: range.text }); // eslint-disable-line
     const text = this.serializeString(string);
 
     return range.marks.reduce((children, mark) => {
       for (const rule of this.rules) {
-        if (!rule.serialize) continue;
+        if (!rule.serialize) {
+          continue;
+        }
         const ret = rule.serialize(mark, children);
 
-        if (ret) return ret
+        if (ret) {
+          return ret
+        }
       }
+
+      return undefined;
     }, text);
   }
 
@@ -518,7 +516,7 @@ class Markdown {
    * Serialize a `string`.
    *
    * @param {String} string
-   * @return {String}
+   * @return {String|undefined}
    */
 
   serializeString(string) {
@@ -542,10 +540,16 @@ class Markdown {
     }
 
     for (const rule of this.rules) {
-      if (!rule.serialize) continue;
+      if (!rule.serialize) {
+        continue;
+      }
       const ret = rule.serialize(string, strVal);
-      if (ret) return ret;
+      if (ret) {
+        return ret;
+      }
     }
+
+    return undefined;
   }
 }
 

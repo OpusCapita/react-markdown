@@ -126,16 +126,14 @@ class TextBlock {
       this.marks = [
         {
           type: 'emoji',
-          data: {markup: token.markup}
+          data: { markup: token.markup }
         }
       ];
-    }
-
-    else if (token.markup && markups[token.markup]) {
+    } else if (token.markup && markups[token.markup]) {
       this.marks = [
         {
           type: markups[token.markup],
-          data: {markup: token.markup}
+          data: { markup: token.markup }
         }
       ];
     }
@@ -152,7 +150,7 @@ class TextBlock {
       if (mark !== '') {
         this.marks.push({
           type: markups[mark],
-          data: {markup: mark}
+          data: { markup: mark }
         });
       }
     }
@@ -207,6 +205,8 @@ class ChildrenParser {
           title = attr[1];
           break;
 
+        default:
+          //
       }
     }
 
@@ -236,9 +236,7 @@ class ChildrenParser {
     for (let attr of token.attrs) {
       if (attr[0] === 'src') {
         src = attr[1];
-      }
-
-      else if (attr[0] === 'title') {
+      } else if (attr[0] === 'title') {
         alt = attr[1];
       }
     }
@@ -309,30 +307,18 @@ class ChildrenParser {
 
       if (token.type === 'abbr_open') {
         this.createAbbr(token);
-      }
-
-      else if (token.type === 'image') {
+      } else if (token.type === 'image') {
         this.createImage(token);
-      }
-
-      else if (token.type === 'autocomplete') {
+      } else if (token.type === 'autocomplete') {
         this.createAutocomplete(token);
-      }
-
-      else if (token.type === 'softbreak') {
+      } else if (token.type === 'softbreak') {
         this.createSoftbreak();
-      }
-
-      else if (token.type === 'text' && this.currNode
-        &&  (this.currNode.type === 'link' || this.currNode.type === 'abbr')) {
+      } else if (token.type === 'text' && this.currNode &&
+        (this.currNode.type === 'link' || this.currNode.type === 'abbr')) {
         this.currNode.addText(token.content);
-      }
-
-      else if (token.type === 'link_close' || token.type === 'abbr_close') {
+      } else if (token.type === 'link_close' || token.type === 'abbr_close') {
         this.addCurrNode();
-      }
-
-      else {
+      } else {
         this.addTextToNode(token);
       }
     }

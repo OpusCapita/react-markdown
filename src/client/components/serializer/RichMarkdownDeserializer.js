@@ -1,5 +1,5 @@
 import MarkdownIt from '../../markdown-it';
-import {Raw} from 'slate'
+import { Raw } from 'slate'
 
 import utils from './utils';
 import { ChildrenParser, TextNode, TextBlock } from './ChildrenParser';
@@ -44,8 +44,7 @@ class BlockNode {
     this.tag = token.tag;
     this.data = {};
 
-    if ((token.type === 'list_item_open' || token.type === 'hr' || token.type === 'fence')
-      &&  token.markup) {
+    if ((token.type === 'list_item_open' || token.type === 'hr' || token.type === 'fence') && token.markup) {
       this.data.markup = token.markup;
     }
 
@@ -113,62 +112,33 @@ const RichMarkdownDeserializer = {
 
       if (token.type === 'empty' && token.level > 0) {
         tokens.splice(i, 1);
-      }
-
-      else if ((blockquoteLevel > 0 || bulletListLevel > 0
-          || orderedListLevel > 0 || ddLevel > 0 || anchorLevel > 0)
-        && (token.type === 'paragraph_open' || token.type === 'paragraph_close')) {
+      } else if ((blockquoteLevel > 0 || bulletListLevel > 0 ||
+          orderedListLevel > 0 || ddLevel > 0 || anchorLevel > 0) &&
+        (token.type === 'paragraph_open' || token.type === 'paragraph_close')) {
         tokens.splice(i, 1);
-      }
-
-      else if (bulletListLevel > 1
-        && token.type === 'bullet_list_close' && tokens[i + 1].type === 'bullet_list_open') {
+      } else if (bulletListLevel > 1 &&
+        token.type === 'bullet_list_close' && tokens[i + 1].type === 'bullet_list_open') {
         tokens.splice(i, 2);
-      }
+      } else {
+        switch (token.type) {
+          case 'blockquote_open': blockquoteLevel++; break;
+          case 'blockquote_close': blockquoteLevel--; break;
+          case 'bullet_list_open': bulletListLevel++; break;
+          case 'bullet_list_close': bulletListLevel--; break;
+          case 'ordered_list_open': orderedListLevel++; break;
+          case 'ordered_list_close': orderedListLevel--; break;
+          case 'dd_open': ddLevel++; break;
+          case 'dd_close': ddLevel--; break;
+          case 'anchor_open': anchorLevel++; break;
+          case 'anchor_close': anchorLevel--; break;
 
-      else {
-        if (token.type === 'blockquote_open') {
-          blockquoteLevel++;
-        }
+          case 'code_block':
+          case 'fence':
+            token.content = token.content.replace(/\n$/, '');
+            break;
 
-        else if (token.type === 'blockquote_close') {
-          blockquoteLevel--;
-        }
-
-        else if (token.type === 'bullet_list_open') {
-          bulletListLevel++;
-        }
-
-        else if (token.type === 'bullet_list_close') {
-          bulletListLevel--;
-        }
-
-        else if (token.type === 'ordered_list_open') {
-          orderedListLevel++;
-        }
-
-        else if (token.type === 'ordered_list_close') {
-          orderedListLevel--;
-        }
-
-        else if (token.type === 'dd_open') {
-          ddLevel++;
-        }
-
-        else if (token.type === 'dd_close') {
-          ddLevel--;
-        }
-
-        else if (token.type === 'anchor_open') {
-          anchorLevel++;
-        }
-
-        else if (token.type === 'anchor_close') {
-          anchorLevel--;
-        }
-
-        else if (token.type === 'code_block' || token.type === 'fence') {
-          token.content = token.content.replace(/\n$/, '');
+          default:
+            //
         }
 
         i++;
@@ -187,9 +157,7 @@ const RichMarkdownDeserializer = {
 
       if (LISTS_BLOCKQUOTES.has(parent)) {
         item.data.parent = parent;
-      }
-
-      else if (parentType === 'blockquote') {
+      } else if (parentType === 'blockquote') {
         item.data.parent = parentType;
       }
 
@@ -216,9 +184,7 @@ const RichMarkdownDeserializer = {
       if (item.nodes) {
         if (TABLES.has(item.type)) {
           this.setRecursiveParent(item.nodes, item.type);
-        }
-
-        else {
+        } else {
           this.setRecursiveParent(item.nodes, parent);
         }
       }
@@ -258,10 +224,7 @@ const RichMarkdownDeserializer = {
           // li
           if (item.nodes.length === 1) {
             item.data.map[1] = item.data.map[0] + 1;
-          }
-
-          // li with sublist
-          else if (item.nodes.length > 1) {
+          } else if (item.nodes.length > 1) { // li with sublist
             this.recalcListItemMap(item.nodes);
 
             item.data.map[1] = item.nodes[item.nodes.length - 1].data.map[1];
@@ -345,7 +308,7 @@ const RichMarkdownDeserializer = {
           let isSimple = true;
 
           for (let item of token.nodes) {
-            if(item.type === 'dd' && item.nodes.length > 1) {
+            if (item.type === 'dd' && item.nodes.length > 1) {
               isSimple = false;
               break;
             }
@@ -362,12 +325,16 @@ const RichMarkdownDeserializer = {
                 case 'dd':
                   item.type = 'dd-simple';
                   item.nodes = item.nodes[0].nodes; // remove p-wrapper
-
                   break;
+                default:
+                  //
               }
             }
           }
           break;
+
+        default:
+          //
       }
     }
   },
@@ -377,9 +344,7 @@ const RichMarkdownDeserializer = {
     if (this.currentBlock) {
       if (this.parentBlock) {
         this.parentBlock.nodes.push(this.currentBlock);
-      }
-
-      else {
+      } else {
         this.blocks.push(this.currentBlock);
       }
 
@@ -444,9 +409,7 @@ const RichMarkdownDeserializer = {
     if (this.level === 0) {
       this.currentBlock = blockNode;
       this.saveCurrentBlock();
-    }
-
-    else {
+    } else {
       this.currentBlock.nodes.push(blockNode);
     }
   },
@@ -485,28 +448,18 @@ const RichMarkdownDeserializer = {
 
         if (lastElem === 'open') {
           this.createBlock(token);
-        }
-
-        else if (token.type === 'inline' && previousType !== 'empty') {
+        } else if (token.type === 'inline' && previousType !== 'empty') {
           if (this.currentBlock.type === 'dd' || this.currentBlock.type === 'blockquote') {
             token.tag = 'p';
             this.addInlineToBlock(token);
-          }
-
-          else {
+          } else {
             this.addInlineText(token);
           }
-        }
-
-        else if (lastElem === 'close') {
+        } else if (lastElem === 'close') {
           this.closeBlock();
-        }
-
-        else if (token.tag === 'code') {
+        } else if (token.tag === 'code') {
           this.addCodeBlock(token);
-        }
-
-        else if (token.type === 'hr' || token.type === 'empty' || token.type === 'abbr-def') {
+        } else if (token.type === 'hr' || token.type === 'empty' || token.type === 'abbr-def') {
           this.addHRBlock(token);
         }
       }
@@ -540,21 +493,17 @@ const RichMarkdownDeserializer = {
 
     if (markdownData === '') {
       fragment = this.getDefaultFragment();
-    }
-
-    else {
+    } else {
       try {
         let eventTokens = MarkdownIt.parse(markdownData || '', {});
         fragment = this.eventParse(eventTokens);
         // fragment = this.render(markdownData, options);
-      }
-
-      catch (e) {
+      } catch (e) {
         fragment = this.getDefaultFragment();
       }
     }
 
-    return {nodes: fragment};
+    return { nodes: fragment };
   },
 
   /**
@@ -577,9 +526,9 @@ const RichMarkdownDeserializer = {
    * @return {State} state
    *
    */
-  deserialize(markdown, options=[]) {
+  deserialize(markdown, options = []) {
     const nodes = this.parse(markdown, options);
-    return Raw.deserialize(nodes, {terse: true});
+    return Raw.deserialize(nodes, { terse: true });
   }
 };
 
