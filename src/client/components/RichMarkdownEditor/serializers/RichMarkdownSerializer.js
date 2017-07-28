@@ -15,7 +15,7 @@ function createArrayJoined(length, value, sep = '') {
  * String.
  */
 
-const String = new Record({
+const StringRecord = new Record({
   kind: 'string',
   text: ''
 });
@@ -384,129 +384,7 @@ const InlineSerialize = {
 };
 
 
-/**
- * Markdown serializer.
- *
- * @type {RichMarkdownSerializer}
- */
-
-class RichMarkdownSerializer {
-
-  /**
-   * Create a new serializer with `rules`.
-   *
-   * @param {Object} options
-   *   @property {Array} rules
-   * @return {RichMarkdownSerializer} serializer
-   */
-
-  constructor() {
-    this.previousNodeType = '';
-
-    this.serializeRange = this.serializeRange.bind(this);
-    this.serializeString = this.serializeString.bind(this);
-  }
-
-
-  /**
-   * Serialize a `state` object into an HTML string.
-   *
-   * @param {State} state
-   * @return {String} markdown
-   */
-
-  serialize(state) {
-    const { document } = state;
-    const elements = [];
-    for (let node of document.nodes) {
-      elements.push(this.serializeNode(node));
-    }
-
-    return elements.join('\n').trim();
-  }
-
-  /**
-   * Serialize a `node`.
-   *
-   * @param {Node} node
-   * @return {String|undefined}
-   */
-
-  serializeNode(node) {
-    if (node.kind === 'text') {
-      const ranges = node.getRanges();
-      return ranges.map(this.serializeRange);
-    }
-
-    let children = [];
-    for (let childNode of node.nodes) {
-      children.push(this.serializeNode(childNode));
-    }
-
-    let childrenFlatten = Utils.flatten(children);
-    children = childrenFlatten.length === 0 ? '' : childrenFlatten.join('');
-
-    let ret = null;
-
-    for (const rule of RULES) {
-      if (!rule.serialize) {
-        continue;
-      }
-      ret = rule.serialize(node, children);
-
-      if (node.kind === 'block') {
-        ret = rule.serialize(node, children, this.previousNodeType);
-      } else {
-        ret = rule.serialize(node, children);
-      }
-
-      if (ret) {
-        break;
-      }
-    }
-
-    if (node.kind === 'block') {
-      this.previousNodeType = node.type;
-    }
-
-    if (ret) {
-      ret = ret.replace(/_\*\*_/g, '**');
-      ret = ret.replace(/\*\*__/g, '**');
-      ret = ret.replace(/__\*\*/g, '**');
-
-      return ret;
-    }
-
-    return undefined;
-  }
-
-  /**
-   * Serialize a `range`.
-   *
-   * @param {Range} range
-   * @return {String|undefined}
-   */
-
-  serializeRange(range) {
-    const string = new String({ text: range.text }); // eslint-disable-line
-    const text = this.serializeString(string);
-
-    return range.marks.reduce((children, mark) => {
-      for (const rule of RULES) {
-        if (!rule.serialize) {
-          continue;
-        }
-        const ret = rule.serialize(mark, children);
-
-        if (ret) {
-          return ret
-        }
-      }
-
-      return undefined;
-    }, text);
-  }
-
+const RichMarkdownSerializer = {
   /**
    * Serialize a `string`.
    *
@@ -545,8 +423,121 @@ class RichMarkdownSerializer {
     }
 
     return undefined;
-  }
-}
+  },
+
+  /**
+   * Serialize a `range`.
+   *
+   * @param {Range} range
+   * @return {String|undefined}
+   */
+
+  serializeRange(range) {
+    const string = new StringRecord({ text: range.text });
+    const text = this.serializeString(string);
+
+    return range.marks.reduce((children, mark) => {
+      for (const rule of RULES) {
+        if (!rule.serialize) {
+          continue;
+        }
+        const ret = rule.serialize(mark, children);
+
+        if (ret) {
+          return ret
+        }
+      }
+
+      return undefined;
+    }, text);
+  },
+
+  /**
+   * Serialize a `node`.
+   *
+   * @param {Node} node
+   * @param {String} parentPreviousNodeType
+   * @return {String|Array|undefined}
+   */
+
+  serializeNode(node, parentPreviousNodeType = '') {
+    let previousNodeType = parentPreviousNodeType;
+    if (node.kind === 'text') {
+      const ranges = [];
+      for (let range of node.getRanges()) {
+        ranges.push(this.serializeRange(range));
+      }
+      return [ranges, previousNodeType];
+    }
+
+    // Serialize and join child nodes
+    let children = [];
+    for (let childNode of node.nodes) {
+      let child;
+      [child, previousNodeType] = this.serializeNode(childNode, previousNodeType);
+      children.push(child);
+
+      if (node.kind === 'block' && node.type) {
+        previousNodeType = node.type;
+      }
+    }
+
+    let childrenFlatten = Utils.flatten(children);
+    children = childrenFlatten.length === 0 ? '' : childrenFlatten.join('');
+
+    // processing of the current node
+    let ret = null;
+    for (const rule of RULES) {
+      if (!rule.serialize) {
+        continue;
+      }
+      ret = rule.serialize(node, children);
+
+      if (node.kind === 'block') {
+        ret = rule.serialize(node, children, previousNodeType);
+      } else {
+        ret = rule.serialize(node, children);
+      }
+
+      if (ret) {
+        break;
+      }
+    }
+
+    previousNodeType = node.type;
+
+    if (ret) {
+      // Remove empty textNode with marker _ (italic)
+      ret = ret.replace(/_\*\*_/g, '**');
+      ret = ret.replace(/\*\*__/g, '**');
+      ret = ret.replace(/__\*\*/g, '**');
+
+      return [ret, previousNodeType];
+    }
+
+    return [undefined, previousNodeType];
+  },
+
+  /**
+   * Serialize a `state` object into an HTML string.
+   *
+   * @param {State} state
+   * @return {String} markdown
+   */
+
+  serialize(state) {
+    const { document } = state;
+    const elements = [];
+    let previousNodeType = '';
+    for (let node of document.nodes) {
+      let child;
+      [child, previousNodeType] = this.serializeNode(node, previousNodeType);
+      elements.push(child);
+    }
+
+    return elements.join('\n').trim();
+  },
+};
 
 /**
  * Export.

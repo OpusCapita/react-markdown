@@ -1,4 +1,4 @@
-import MarkdownIt from '../markdown-it/index';
+import MarkdownIt from '../../../markdown-it/index';
 import { Raw } from 'slate'
 
 import utils from './utils';

@@ -4,9 +4,9 @@ import MarkdownItSup from 'markdown-it-sup';
 import MarkdownItIns from 'markdown-it-ins';
 import MarkdownItMark from 'markdown-it-mark';
 import MarkdownItDeflist from 'markdown-it-deflist';
-import MarkdownItAbbr from './markdown-it-abbr';
-import MarkdownItAnchor from './markdown-it-anchor';
-import MarkdownItLineCounter from './markdown-it-line-counter';
+import MarkdownItAbbr from './plugins/abbr';
+import MarkdownItAnchor from './plugins/anchor';
+import MarkdownItLineCounter from './plugins/line-counter';
 // import MarkdownAutocomplete from './plugins/markdown-it-autocomplete';
 
 
