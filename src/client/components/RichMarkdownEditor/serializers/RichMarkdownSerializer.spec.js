@@ -404,12 +404,6 @@ Paragraph 3`;
       expect(str).to.equal(repars);
     });
 
-    it.skip('_**Various**_ text', () => {
-      let str = '_**Blockquotes1**_ **_can_** also be _ne**ste**d..._';
-      let repars = reparser(str);
-      expect(str).to.equal(repars);
-    });
-
     it('_ne**ste**d..._', () => {
       let str = '_ne**ste**d..._';
       let repars = reparser(str);
@@ -494,23 +488,6 @@ End tables`;
   });
 
 
-  describe.skip('Typographic replacements', () => {
-    it('Typographic replacements', () => {
-      let str = `## Typographic replacements
-
-Enable typographer option to see result.
-
-(C) (C) (R) (R) (TM) (TM) (P) (P) +-
-
-test... test... test... test?.. test!..
-
-!!! ??? , -- ---`;
-      let repars = reparser(str);
-      expect(trimStr(str)).to.equal(trimStr(repars));
-    });
-  });
-
-
   describe('Various Block Elements', () => {
     it('Horizontal Rules', () => {
       let str = `## Horizontal Rules
@@ -525,7 +502,7 @@ End Horizontal Rules`;
       expect(trimStr(str)).to.equal(trimStr(repars));
     });
 
-    it.skip('Definition lists. Compact style', () => {
+    it('Definition lists. Compact style', () => {
       let str = `### Definition lists
 
 _Compact style:_

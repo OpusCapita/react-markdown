@@ -196,7 +196,8 @@ const NodeSerialize = {
   'dl-simple': (obj, children) => children,
   dl: (obj, children) => children,
   'dt-simple': (obj, children, previousNodeType) => `${previousNodeType === 'dd-simple' ? `\n` : ``}${children}\n`,
-  dt: (obj, children) => `${children}\n`,
+  'dt': (obj, children, previousNodeType) => `${previousNodeType === 'dd' ? `\n` : ``}${children}\n`,
+  // dt: (obj, children) => `${children}\n`,
   'dd-simple': (obj, children) => `  ~ ${children}\n`,
   dd: (obj, children) => {
     let arrChildren = children.split('\n');
@@ -476,10 +477,6 @@ const RichMarkdownSerializer = {
       let child;
       [child, previousNodeType] = this.serializeNode(childNode, previousNodeType);
       children.push(child);
-
-      if (node.kind === 'block' && node.type) {
-        previousNodeType = node.type;
-      }
     }
 
     let childrenFlatten = Utils.flatten(children);
@@ -504,7 +501,9 @@ const RichMarkdownSerializer = {
       }
     }
 
-    previousNodeType = node.type;
+    if (node.kind === 'block' && node.type) {
+      previousNodeType = node.type;
+    }
 
     if (ret) {
       // Remove empty textNode with marker _ (italic)
