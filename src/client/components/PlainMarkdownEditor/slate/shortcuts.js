@@ -59,7 +59,6 @@ export default (event, data, state) => {
   if (result) {
     return result;
   }
-  
   // is ctrl
   if (data.isMod) {
     if (data.key === 'b') {

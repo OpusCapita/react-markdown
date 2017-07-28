@@ -5,7 +5,12 @@ import classnames from 'classnames';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
 
-import { wrapItalicMarkdown, unwrapItalicMarkdown, hasItalicMarkdown, hasMultiLineSelection } from '../slate/transforms';
+import {
+  wrapItalicMarkdown,
+  unwrapItalicMarkdown,
+  hasItalicMarkdown,
+  hasMultiLineSelection
+} from '../slate/transforms';
 
 const MarkdownItalicButton = ({ state, onChange, disabled }) => {
   const active = hasItalicMarkdown(state);
