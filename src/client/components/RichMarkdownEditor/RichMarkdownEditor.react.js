@@ -1,7 +1,7 @@
 import React from 'react';
 import Types from 'prop-types';
-import MarkdownRenderer from '../serializer/RichMarkdownSerializer';
-import RichMarkdownDeserializer from '../serializer/RichMarkdownDeserializer';
+import RichMarkdownSerializer from '../../serializer/RichMarkdownSerializer';
+import RichMarkdownDeserializer from '../../serializer/RichMarkdownDeserializer';
 
 import {
   // AutocompletePlugin,
@@ -31,7 +31,7 @@ import {
 } from '../SlateEditor/plugins';
 import { SlateContent, SlateEditor, SlateToolbar, SlateToolbarGroup } from '../SlateEditor';
 
-const markdownRenderer = new MarkdownRenderer();
+const richMarkdownSerializer = new RichMarkdownSerializer();
 
 /**
  * The rich text example.
@@ -75,7 +75,7 @@ class RichMarkdownEditor extends React.Component {
    * @param {State} editorState
    */
   handleChange = (editorState) => {
-    this.props.onChange(markdownRenderer.serialize(editorState));
+    this.props.onChange(richMarkdownSerializer.serialize(editorState));
 
     this.setState({ editorState });
   };

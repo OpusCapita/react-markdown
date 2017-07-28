@@ -1,4 +1,4 @@
-import MarkdownIt from '../../markdown-it';
+import MarkdownIt from '../markdown-it/index';
 import { Raw } from 'slate'
 
 import utils from './utils';
@@ -32,7 +32,6 @@ const types = {
   'abbr-def': 'abbr-def',
 };
 
-const LISTS_BLOCKQUOTES = new Set(['ordered-list', 'unordered-list', 'blockquote']);
 const TABLES = new Set(['table', 'thead', 'tbody']);
 
 
@@ -144,33 +143,6 @@ const RichMarkdownDeserializer = {
         i++;
       }
     }
-  },
-
-  childrenHandler(token, parentType) {
-    let parent = token.type;
-    let num = token.type === 'ordered-list' && token.attrs && token.attrs.start ? token.attrs.start : 1;
-
-    for (let item of token.nodes) {
-      if (!item.data) {
-        item.data = {};
-      }
-
-      if (LISTS_BLOCKQUOTES.has(parent)) {
-        item.data.parent = parent;
-      } else if (parentType === 'blockquote') {
-        item.data.parent = parentType;
-      }
-
-      if (token.type === 'ordered-list') {
-        item.data.itemNum = num++;
-      }
-
-      if (item.nodes) {
-        this.addParents(item.nodes, item.data.parent);
-      }
-    }
-
-    return parent;
   },
 
   setRecursiveParent(nodes, parent) {

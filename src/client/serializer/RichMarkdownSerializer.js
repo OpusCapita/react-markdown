@@ -311,16 +311,16 @@ const NodeSerialize = {
   },
 
   // Void blocks
-  'horizontal-rule': (obj, children) => {
+  'horizontal-rule': obj => {
     const markup = obj.getIn(['data', 'markup']);
     return markup ? markup : `---`;
   },
-  'abbr-def': (obj, children) => {
+  'abbr-def': obj => {
     const label = obj.getIn(['data', 'label']);
     const title = obj.getIn(['data', 'title']);
     return `*[${label}]: ${title}`;
   },
-  empty: (obj, children) => {
+  empty: () => {
     return ``;
   },
 };
@@ -387,25 +387,20 @@ const InlineSerialize = {
 /**
  * Markdown serializer.
  *
- * @type {Markdown}
+ * @type {RichMarkdownSerializer}
  */
 
-class Markdown {
+class RichMarkdownSerializer {
 
   /**
    * Create a new serializer with `rules`.
    *
    * @param {Object} options
    *   @property {Array} rules
-   * @return {Markdown} serializer
+   * @return {RichMarkdownSerializer} serializer
    */
 
-  constructor(options = {}) {
-    this.rules = [
-      ...(options.rules || []),
-      ...RULES
-    ];
-
+  constructor() {
     this.previousNodeType = '';
 
     this.serializeRange = this.serializeRange.bind(this);
@@ -453,7 +448,7 @@ class Markdown {
 
     let ret = null;
 
-    for (const rule of this.rules) {
+    for (const rule of RULES) {
       if (!rule.serialize) {
         continue;
       }
@@ -497,7 +492,7 @@ class Markdown {
     const text = this.serializeString(string);
 
     return range.marks.reduce((children, mark) => {
-      for (const rule of this.rules) {
+      for (const rule of RULES) {
         if (!rule.serialize) {
           continue;
         }
@@ -539,7 +534,7 @@ class Markdown {
       strVal = strVal.replace(/…/g, '...');
     }
 
-    for (const rule of this.rules) {
+    for (const rule of RULES) {
       if (!rule.serialize) {
         continue;
       }
@@ -557,4 +552,4 @@ class Markdown {
  * Export.
  */
 
-export default Markdown
+export default RichMarkdownSerializer

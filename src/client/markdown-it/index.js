@@ -14,15 +14,15 @@ const markdown = new MarkdownIt({
   breaks: true
 });
 
-markdown
-  .use(MarkdownItSub)
-  .use(MarkdownItSup)
-  .use(MarkdownItIns)
-  .use(MarkdownItMark)
-  .use(MarkdownItAbbr)
-  .use(MarkdownItLineCounter)
-  .use(MarkdownItDeflist)
-  .use(MarkdownItAnchor);
+markdown.
+  use(MarkdownItSub).
+  use(MarkdownItSup).
+  use(MarkdownItIns).
+  use(MarkdownItMark).
+  use(MarkdownItAbbr).
+  use(MarkdownItLineCounter).
+  use(MarkdownItDeflist).
+  use(MarkdownItAnchor);
 
 // let options = [{ regex: '\\$(\\w+)', id: 'term'}, { regex: '\\#(\\w+)', id: 'product'}];
 // const markdownAutocomplete = new MarkdownAutocomplete(options);

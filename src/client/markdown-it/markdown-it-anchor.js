@@ -168,12 +168,12 @@ module.exports = function footnote_plugin(md) {
     state.sCount[startLine] = oldSCount;
     state.bMarks[startLine] = oldBMark;
 
-    token       = new state.Token('anchor_close', 'anchor', -1);
+    token = new state.Token('anchor_close', 'anchor', -1);
     token.level = --state.level;
-    state.tokens.push(token);
+    state.tokens.push(token); // eslint-disable-line
 
     return true;
   }
 
-  md.block.ruler.before('reference', 'anchor_def', anchor_def, { alt: [ 'paragraph', 'reference' ] });
+  md.block.ruler.before('reference', 'anchor_def', anchor_def, { alt: ['paragraph', 'reference'] });
 };

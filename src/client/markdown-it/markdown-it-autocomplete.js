@@ -34,9 +34,9 @@ class MarkdownAutocomplete {
         if (match) {
           token = state.push('autocomplete', 'autocomplete', 0);
           token.text = token.content = match[0];
-          token.meta  = { id: rule.id };
+          token.meta = { id: rule.id };
 
-          state.pos = start + token.text.length;
+          state.pos = start + token.text.length; // eslint-disable-line
 
           return true;
         }
