@@ -7,7 +7,7 @@ import { assert } from 'chai';
 let getHtml = (str) => Prism.highlight(str, grammar);
 let escapeRegExp = (str) => str.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
 
-describe('highlighter', () => {
+describe('plain editor schema', () => {
   it('should highlight blockquote', () => {
     let html;
 
