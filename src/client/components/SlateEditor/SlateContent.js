@@ -7,6 +7,7 @@ import './SlateContent.less';
 const SlateContent = ({
   state,
   plugins,
+  schema,
   onChange,
   children,
   isPlainMode,
@@ -23,6 +24,7 @@ const SlateContent = ({
         spellCheck={false}
         plugins={plugins}
         state={state}
+        schema={schema}
         onChange={onChange}
         {...rest}
       />
@@ -33,6 +35,7 @@ const SlateContent = ({
 
 SlateContent.propTypes = {
   plugins: Types.any,
+  schema: Types.object,
   state: Types.any,
   onChange: Types.func,
   isPlainMode: Types.bool
