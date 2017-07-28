@@ -60,6 +60,19 @@ class LinkNode extends InlineNode {
   addText(text) {
     this.nodes[0].ranges[0].text = text;
   }
+
+  setMarks(marks) {
+    this.nodes[0].ranges[0].marks = [];
+
+    for (let mark in marks) {
+      if (mark !== '') {
+        this.nodes[0].ranges[0].marks.push({
+          type: markups[mark],
+          data: { markup: mark }
+        });
+      }
+    }
+  }
 }
 
 class AbbrNode extends InlineNode {
@@ -316,6 +329,9 @@ class ChildrenParser {
       } else if (token.type === 'text' && this.currNode &&
         (this.currNode.type === 'link' || this.currNode.type === 'abbr')) {
         this.currNode.addText(token.content);
+        if (this.currNode.type === 'link') {
+          this.currNode.setMarks(this.marks);
+        }
       } else if (token.type === 'link_close' || token.type === 'abbr_close') {
         this.addCurrNode();
       } else {

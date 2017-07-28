@@ -583,6 +583,18 @@ End Links`;
       expect(trimStr(str)).to.equal(trimStr(repars));
     });
 
+    it('Link with Emphasis', () => {
+      let str = `## Links
+
+_[link text](http://dev.nodeca.com)_
+
+**[link text](http://dev.nodeca.com)**
+
+End Links`;
+      let repars = reparser(str);
+      expect(trimStr(str)).to.equal(trimStr(repars));
+    });
+
     it('Links with title', () => {
       let str = `## Links
 

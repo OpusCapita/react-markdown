@@ -366,10 +366,22 @@ function listNodeRule(obj, children) {
  */
 
 const InlineSerialize = {
+  // ~~_**[link text](http://dev.nodeca.com)**_~~
+  // _**[link text](http://dev.nodeca.com)**_
+  // _[link text](http://dev.nodeca.com)_
+  // **[link text](http://dev.nodeca.com)**
+  // [link text](http://dev.nodeca.com)
   link: (obj, children) => {
     const href = obj.getIn(['data', 'href']);
     const title = obj.getIn(['data', 'title']);
-    return `[${children}](${href}${title ? ` "${title}"` : ``})`;
+    let string = `[${children}](${href}${title ? ` "${title}"` : ``})`;
+    // This RegExp moved markups from brackets to link begin and link end
+    // [~~_**link text**_~~](http://dev.nodeca.com)  changed to  ~~_**[link text](http://dev.nodeca.com)**_~~
+    string = string.replace(
+      /\[(\+\+|\+|\*\*|\*|__|_|~~|~|\^)?(\+\+|\+|\*\*|\*|__|_|~~|~|\^)?(\+\+|\+|\*\*|\*|__|_|~~|~|\^)?(.+)\3\2\1](.+)/,
+      '$1$2$3[$4]$5$3$2$1'
+    );
+    return string;
   },
   abbr: (obj, children) => `${children}`,
   autocomplete: (obj, children) => `${children}`,
@@ -389,7 +401,7 @@ const RichMarkdownSerializer = {
   /**
    * Serialize a `string`.
    *
-   * @param {String} string
+   * @param {StringRecord} string
    * @return {String|undefined}
    */
 
@@ -423,6 +435,29 @@ const RichMarkdownSerializer = {
       }
     }
 
+    return '';
+  },
+
+  /**
+   * Serialize a `mark`.
+   *
+   * @param children
+   * @param mark
+   * @returns {String|undefined}
+   */
+
+  serializeMark(children, mark) {
+    for (const rule of RULES) {
+      if (!rule.serialize) {
+        continue;
+      }
+      const ret = rule.serialize(mark, children);
+
+      if (ret) {
+        return ret
+      }
+    }
+
     return undefined;
   },
 
@@ -436,21 +471,7 @@ const RichMarkdownSerializer = {
   serializeRange(range) {
     const string = new StringRecord({ text: range.text });
     const text = this.serializeString(string);
-
-    return range.marks.reduce((children, mark) => {
-      for (const rule of RULES) {
-        if (!rule.serialize) {
-          continue;
-        }
-        const ret = rule.serialize(mark, children);
-
-        if (ret) {
-          return ret
-        }
-      }
-
-      return undefined;
-    }, text);
+    return range.marks.reduce(this.serializeMark, text);
   },
 
   /**
@@ -534,7 +555,15 @@ const RichMarkdownSerializer = {
       elements.push(child);
     }
 
-    return elements.join('\n').trim();
+    const markdown = elements.join('\n').trim();
+
+    // This console.log is necessary for debugging
+    // console.log('markdown:');
+    // console.log(markdown);
+    // console.log(' ');
+    // console.log(' ');
+
+    return markdown;
   },
 };
 

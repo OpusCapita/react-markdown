@@ -31,8 +31,6 @@ import {
 } from '../SlateEditor/plugins';
 import { SlateContent, SlateEditor, SlateToolbar, SlateToolbarGroup } from '../SlateEditor';
 
-// const richMarkdownSerializer = new RichMarkdownSerializer();
-
 /**
  * The rich text example.
  *
