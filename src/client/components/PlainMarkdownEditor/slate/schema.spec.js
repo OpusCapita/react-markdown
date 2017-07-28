@@ -208,7 +208,7 @@ describe('plain editor schema', () => {
     let candidate;
 
     html = '-';
-    candidate = `<span class="token list">-</span>`;
+    candidate = `-`;
     assert.equal(getHtml(html), candidate);
 
     html = '-item';
