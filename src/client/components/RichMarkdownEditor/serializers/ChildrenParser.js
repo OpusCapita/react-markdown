@@ -312,33 +312,33 @@ class ChildrenParser {
     }
   }
 
-  createNodes(tokens) {
-    for (let token of tokens) {
-      if (token.type === 'link_open') {
-        this.createLink(token);
-      }
-
-      if (token.type === 'abbr_open') {
-        this.createAbbr(token);
-      } else if (token.type === 'image') {
-        this.createImage(token);
-      } else if (token.type === 'autocomplete') {
-        this.createAutocomplete(token);
-      } else if (token.type === 'softbreak') {
-        this.createSoftbreak();
-      } else if (token.type === 'text' && this.currNode &&
-        (this.currNode.type === 'link' || this.currNode.type === 'abbr')) {
-        this.currNode.addText(token.content);
-        if (this.currNode.type === 'link') {
-          this.currNode.setMarks(this.marks);
-        }
-      } else if (token.type === 'link_close' || token.type === 'abbr_close') {
-        this.addCurrNode();
-      } else {
-        this.addTextToNode(token);
-      }
+  processToken(token) {
+    if (token.type === 'link_open') {
+      this.createLink(token);
     }
 
+    if (token.type === 'abbr_open') {
+      this.createAbbr(token);
+    } else if (token.type === 'image') {
+      this.createImage(token);
+    } else if (token.type === 'autocomplete') {
+      this.createAutocomplete(token);
+    } else if (token.type === 'softbreak') {
+      this.createSoftbreak();
+    } else if (token.type === 'text' && this.currNode &&
+      (this.currNode.type === 'link' || this.currNode.type === 'abbr')) {
+      this.currNode.addText(token.content);
+      if (this.currNode.type === 'link') {
+        this.currNode.setMarks(this.marks);
+      }
+    } else if (token.type === 'link_close' || token.type === 'abbr_close') {
+      this.addCurrNode();
+    } else {
+      this.addTextToNode(token);
+    }
+  }
+
+  closeCurrNode() {
     if (this.currNode) {
       if (this.currTextBlock) {
         this.addTextBlock();
@@ -346,6 +346,14 @@ class ChildrenParser {
 
       this.addCurrNode();
     }
+  }
+
+  createNodes(tokens) {
+    for (let token of tokens) {
+      this.processToken(token);
+    }
+
+    this.closeCurrNode();
 
     return this._nodes;
   }

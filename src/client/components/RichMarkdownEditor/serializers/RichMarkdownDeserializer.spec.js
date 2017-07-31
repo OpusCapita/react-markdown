@@ -46,7 +46,7 @@ function printData(str, repars) {
 }
 
 
-describe('RichMarkdownSerializer', () => {
+describe('RichMarkdownDeserializer', () => {
   describe('Lists', () => {
     it('Unordered list (5 levels)', () => {
       let str = `## Lists

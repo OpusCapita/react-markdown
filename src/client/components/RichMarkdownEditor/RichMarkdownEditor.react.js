@@ -1,7 +1,6 @@
 import React from 'react';
 import Types from 'prop-types';
-import RichMarkdownSerializer from './serializers/RichMarkdownSerializer';
-import RichMarkdownDeserializer from './serializers/RichMarkdownDeserializer';
+import { deserialize, serialize } from './serializers';
 
 import {
   // AutocompletePlugin,
@@ -48,7 +47,7 @@ class RichMarkdownEditor extends React.Component {
    */
 
   state = {
-    editorState: RichMarkdownDeserializer.deserialize(this.props.value || ''),
+    editorState: deserialize(this.props.value || ''),
     fullScreen: false
   };
 
@@ -75,7 +74,7 @@ class RichMarkdownEditor extends React.Component {
    * @param {State} editorState
    */
   handleChange = (editorState) => {
-    this.props.onChange(RichMarkdownSerializer.serialize(editorState));
+    this.props.onChange(serialize(editorState));
 
     this.setState({ editorState });
   };

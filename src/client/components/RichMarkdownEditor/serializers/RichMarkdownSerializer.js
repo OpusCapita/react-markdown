@@ -487,17 +487,19 @@ const RichMarkdownSerializer = {
     if (node.kind === 'text') {
       const ranges = [];
       for (let range of node.getRanges()) {
-        ranges.push(this.serializeRange(range));
+        let str = this.serializeRange(range);
+        ranges.push(str);
       }
-      return [ranges, previousNodeType];
+      return ranges;
     }
 
     // Serialize and join child nodes
     let children = [];
     for (let childNode of node.nodes) {
-      let child;
-      [child, previousNodeType] = this.serializeNode(childNode, previousNodeType);
-      children.push(child);
+      children.push(this.serializeNode(childNode, previousNodeType));
+      if (node.kind === 'block' && node.type) {
+        previousNodeType = node.type;
+      }
     }
 
     let childrenFlatten = Utils.flatten(children);
@@ -509,7 +511,6 @@ const RichMarkdownSerializer = {
       if (!rule.serialize) {
         continue;
       }
-      ret = rule.serialize(node, children);
 
       if (node.kind === 'block') {
         ret = rule.serialize(node, children, previousNodeType);
@@ -518,24 +519,16 @@ const RichMarkdownSerializer = {
       }
 
       if (ret) {
-        break;
+        // Remove empty textNode with marker _ (italic)
+        ret = ret.replace(/_\*\*_/g, '**');
+        ret = ret.replace(/\*\*__/g, '**');
+        ret = ret.replace(/__\*\*/g, '**');
+
+        return ret;
       }
     }
 
-    if (node.kind === 'block' && node.type) {
-      previousNodeType = node.type;
-    }
-
-    if (ret) {
-      // Remove empty textNode with marker _ (italic)
-      ret = ret.replace(/_\*\*_/g, '**');
-      ret = ret.replace(/\*\*__/g, '**');
-      ret = ret.replace(/__\*\*/g, '**');
-
-      return [ret, previousNodeType];
-    }
-
-    return [undefined, previousNodeType];
+    return undefined;
   },
 
   /**
@@ -548,13 +541,9 @@ const RichMarkdownSerializer = {
   serialize(state) {
     const { document } = state;
     const elements = [];
-    let previousNodeType = '';
     for (let node of document.nodes) {
-      let child;
-      [child, previousNodeType] = this.serializeNode(node, previousNodeType);
-      elements.push(child);
+      elements.push(this.serializeNode(node));
     }
-
     const markdown = elements.join('\n').trim();
 
     // This console.log is necessary for debugging
