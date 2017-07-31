@@ -9,7 +9,6 @@ import {
   BoldPlugin,
   CodePlugin,
   FormatPlugin,
-  FullScreenButton,
   HeaderFiveButton,
   HeaderFourButton,
   HeaderOneButton,
@@ -28,6 +27,9 @@ import {
   UnorderedListButton,
   UnderlinePlugin
 } from '../SlateEditor/plugins';
+
+import FullScreenButton from '../SlateEditor/plugins/slate-fullscreen-plugin';
+
 import { SlateContent, SlateEditor, SlateToolbar, SlateToolbarGroup } from '../SlateEditor';
 
 const markdown = new Markdown();

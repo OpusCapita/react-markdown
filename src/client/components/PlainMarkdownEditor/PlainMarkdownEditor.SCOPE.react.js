@@ -18,7 +18,7 @@ class TestEditorScope extends Component {
 * List item 1
 * List item 2
 * List item 3
-`,
+`
       /* autocompletes: [{
        termRegex: /\$(\w*)$/,
        fetch: (term) => {
