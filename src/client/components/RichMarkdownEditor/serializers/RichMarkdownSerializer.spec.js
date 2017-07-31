@@ -87,6 +87,35 @@ End list`;
       expect(trimStr(str)).to.equal(trimStr(repars));
     });
 
+    it('Two unordered lists', () => {
+      let str = `## Lists
+Unordered
+
++ Create a list by starting a line with
++ Sub-lists are made by indenting 2 spaces:
+    - Marker character change forces new list start:
+        * Ac tristique libero volutpat at
+        * Facilisis in pretium nisl aliquet
+            + Create a list by starting a line with
+                + Sub-lists are made by indenting 2 spaces:
+        * Facilisis in pretium nisl aliquet
+            + Create a list by starting a line with
+                + Sub-lists are made by indenting 2 spaces:
+
+
++ Create a list by starting a line with
++ Sub-lists are made by indenting 2 spaces:
+    + Marker character change forces new list start:
++ Very easy!
+
+
+
+End line`;
+
+      let repars = reparser(str);
+      expect(trimStr(str)).to.equal(trimStr(repars));
+    });
+
     it('Ordered list (2 levels)', () => {
       let str = `## Lists    
 Ordered

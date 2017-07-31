@@ -163,6 +163,20 @@ const RichMarkdownDeserializer = {
     }
   },
 
+  getUnorderedList(items, level, parent) {
+    return {
+      "kind": "block",
+      "type": "unordered-list",
+      "nodes": items,
+      "tag": "ul",
+      "data": {
+        "level": level,
+        "map": [items[0].data.map[0], items[items.length - 1].data.map[1]],
+        "parent": parent
+      }
+    };
+  },
+
   getOneEmptyParagraph(begin) {
     return {
       kind: "block",
@@ -187,6 +201,62 @@ const RichMarkdownDeserializer = {
     for (let i = begin; i <= end; i++) {
       tokens.push(this.getOneEmptyParagraph(i));
     }
+  },
+
+  /**
+   * Divide into several lists the list in which there are empty lines
+   *
+   * @param {BlockNode} token
+   * @returns {*}
+   */
+
+  divideList(token) {
+    // 0 or 1 item
+    if (token.nodes.length <= 1) {
+      return [token];
+    }
+
+    let tokensLists = [];
+    let currTokenList = [];
+    tokensLists.push(currTokenList);
+    currTokenList.push(token.nodes[0]);
+
+    for (let i = 1; i < token.nodes.length; i++) {
+      if (token.nodes[i - 1].data.map[1] < token.nodes[i].data.map[0]) {
+        currTokenList = [];
+        tokensLists.push(currTokenList);
+      }
+
+      currTokenList.push(token.nodes[i]);
+    }
+
+    // Items without empty lines between them
+    if (tokensLists.length === 1) {
+      return [token];
+    }
+
+    // Create the list of the unordered lists
+    const newTokens = [];
+    for (let list of tokensLists) {
+      let tokenObj = this.getUnorderedList(list, token.data.level, token.data.parent);
+      newTokens.push(tokenObj);
+    }
+
+    return newTokens;
+  },
+
+  divideLists(tokens) {
+    let newTokens = [];
+
+    for (let token of tokens) {
+      if (token.type === 'unordered-list') {
+        newTokens = newTokens.concat(this.divideList(token));
+      } else {
+        newTokens.push(token);
+      }
+    }
+
+    return newTokens;
   },
 
   recalcListItemMap(tokens) {
@@ -444,6 +514,7 @@ const RichMarkdownDeserializer = {
     this.preprocessing(eventTokens);
     this.processing(eventTokens);
     this.recalcListItemMap(this.blocks);
+    this.blocks = this.divideLists(this.blocks);
     this.blocks = this.addEmptyParagraphs(this.blocks);
     this.addParents(this.blocks);
 
