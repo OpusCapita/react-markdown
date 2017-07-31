@@ -27,6 +27,28 @@ ___bold italic text_bold__
 ~~[**opuscapita**](https://www.opuscapita.com/)~~
 **~~[**opuscapita**](https://www.opuscapita.com/)~~
 
+# header `code`
+# header [url](uefasdfs)
+## header [url](uefasdfs)
+### header [url](uefasdfs)
+#### header [url](uefasdfs)
+##### header [url](uefasdfs)
+###### header [url](uefasdfs)
+
+# header *italic*
+## header *italic*
+### header *italic*
+#### header *italic*
+##### header *italic*
+###### header *italic*
+
+# header ~~strikethrough~~
+## header ~~strikethrough~~
+### header ~~strikethrough~~
+#### header ~~strikethrough~~
+##### header ~~strikethrough~~
+###### header ~~strikethrough~~
+
 # h1
 ## h2
 ### h3
