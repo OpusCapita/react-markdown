@@ -124,13 +124,6 @@ class ImageNode extends InlineNode {
   }
 }
 
-// class SoftBreakNode extends InlineNode {
-//   constructor() {
-//     super();
-//     this.type = "softbreak";
-//   }
-// }
-
 class TextBlock {
   constructor(token) {
     this.text = '';
@@ -265,12 +258,6 @@ class ChildrenInlineParser {
     this.addCurrNode();
   }
 
-  // createSoftbreak() {
-  //   this.addCurrNode();
-  //   this.currNode = new SoftBreakNode();
-  //   this.addCurrNode();
-  // }
-
   addTextToNode(token) {
     const lastElem = Utils.getLastElemTokenType(token);
 
@@ -323,8 +310,6 @@ class ChildrenInlineParser {
       this.createImage(token);
     } else if (token.type === 'autocomplete') {
       this.createAutocomplete(token);
-    // } else if (token.type === 'softbreak') {
-    //   this.createSoftbreak();
     } else if (token.type === 'text' && this.currNode &&
       (this.currNode.type === 'link' || this.currNode.type === 'abbr')) {
       this.currNode.addText(token.content);
