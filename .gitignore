@@ -18,5 +18,3 @@ yarn-debug.log
 yarn-error.log
 test-results.xml
 markdown-test.js
-/.nyc_output/
-/coverage/
