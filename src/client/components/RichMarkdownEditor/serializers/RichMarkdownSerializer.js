@@ -243,9 +243,6 @@ const NodeSerialize = {
     const title = obj.getIn(['data', 'title']);
     return `*[${label}]: ${title}`;
   },
-  empty: () => {
-    return ``;
-  },
 };
 
 /**

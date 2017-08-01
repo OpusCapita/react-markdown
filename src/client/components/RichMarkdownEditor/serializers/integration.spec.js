@@ -586,6 +586,14 @@ It converts PHP, but keep intact partial entries like xxxPHPyyy and so on.
 
 *[PHP]: Personal Home Page
 
+*[[
+
+*[\\
+
+*[\php1]: Personal Home Page1
+
+*[php1] Personal Home Page1
+
 
 End Abbreviations`;
       let repars = reparser(str);

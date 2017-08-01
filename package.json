@@ -103,5 +103,27 @@
     "react-bootstrap": "0.31.0",
     "slate": "0.20.6",
     "slate-markdown-serializer": "0.1.5"
+  },
+  "nyc": {
+    "sourceMap": false,
+    "instrument": false,
+    "reporter": [
+      "lcov",
+      "text"
+    ],
+    "include": [
+      "src/client/**/*.js"
+    ],
+    "exclude": [
+      "**/*.spec.js",
+      "**/*.SCOPE*.js",
+      "**/demo/**/*.js"
+    ],
+    "check-coverage": true,
+    "all": true,
+    "lines": 80,
+    "statements": 80,
+    "functions": 80,
+    "branches": 80
   }
 }

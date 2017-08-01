@@ -92,22 +92,24 @@ class AbbrNode extends InlineNode {
   }
 }
 
-class AutocompleteNode extends InlineNode {
-  constructor(id) {
-    super();
-
-    this.type = "autocomplete";
-    this.isVoid = false;
-    this.nodes = getSimpleNodes();
-    this.data = {
-      id: id
-    };
-  }
-
-  addText(text) {
-    this.nodes[0].ranges[0].text = text;
-  }
-}
+// This code will use in future
+//
+// class AutocompleteNode extends InlineNode {
+//   constructor(id) {
+//     super();
+//
+//     this.type = "autocomplete";
+//     this.isVoid = false;
+//     this.nodes = getSimpleNodes();
+//     this.data = {
+//       id: id
+//     };
+//   }
+//
+//   addText(text) {
+//     this.nodes[0].ranges[0].text = text;
+//   }
+// }
 
 class ImageNode extends InlineNode {
   constructor(title, src, alt) {
@@ -128,14 +130,7 @@ class TextBlock {
   constructor(token) {
     this.text = '';
 
-    if (token.type === 'emoji') {
-      this.marks = [
-        {
-          type: 'emoji',
-          data: { markup: token.markup }
-        }
-      ];
-    } else if (token.markup && markups[token.markup]) {
+    if (token.markup && markups[token.markup]) {
       this.marks = [
         {
           type: markups[token.markup],
@@ -251,12 +246,14 @@ class ChildrenInlineParser {
     this.addCurrNode();
   }
 
-  createAutocomplete(token) {
-    this.addCurrNode();
-    this.currNode = new AutocompleteNode(token.meta.id);
-    this.currNode.addText(token.content);
-    this.addCurrNode();
-  }
+  // This code will use in future
+  //
+  // createAutocomplete(token) {
+  //   this.addCurrNode();
+  //   this.currNode = new AutocompleteNode(token.meta.id);
+  //   this.currNode.addText(token.content);
+  //   this.addCurrNode();
+  // }
 
   addTextToNode(token) {
     const lastElem = Utils.getLastElemTokenType(token);
@@ -308,8 +305,10 @@ class ChildrenInlineParser {
       this.createAbbr(token);
     } else if (token.type === 'image') {
       this.createImage(token);
-    } else if (token.type === 'autocomplete') {
-      this.createAutocomplete(token);
+    // This code will use in future
+    //
+    // } else if (token.type === 'autocomplete') {
+    //   this.createAutocomplete(token);
     } else if (token.type === 'text' && this.currNode &&
       (this.currNode.type === 'link' || this.currNode.type === 'abbr')) {
       this.currNode.addText(token.content);

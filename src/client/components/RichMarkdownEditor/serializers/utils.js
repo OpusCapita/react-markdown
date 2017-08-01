@@ -7,6 +7,7 @@ function parseAttrs(attrs) {
 
   return objAttrs;
 }
+
 const hasOwnProperty = Object.prototype.hasOwnProperty;
 
 const assign = Object.assign || function(obj) {

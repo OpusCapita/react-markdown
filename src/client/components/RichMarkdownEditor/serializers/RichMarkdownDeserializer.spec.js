@@ -1,60 +1,18 @@
 import { expect } from 'chai';
-import { deserialize, serialize } from './index';
-
-
-function reparser(str, isPrint = false) {
-  const options = [
-    { regex: '\\$(\\w+)', id: 'term' },
-    { regex: '\\#(\\w+)', id: 'product' }
-  ];
-
-  let repars = serialize(deserialize(str, options));
-
-  if (isPrint) {
-    printData(str, repars);
-  }
-
-  return repars;
-}
-
-function trimStr(str) {
-  const arrStr = str.split('\n');
-  for (let i = 0; i < arrStr.length; i++) {
-    arrStr[i] = arrStr[i].trimRight();
-  }
-
-  return arrStr.join('\n');
-}
-
-/**
- * Function printData is used for tests' debugging
- *
- * @param {String} str
- * @param {String} repars
- */
-
-function printData(str, repars) {
-  console.log('str:');
-  console.log(str);
-  console.log('----------------');
-  console.log(' ');
-  console.log('repars:');
-  console.log(repars);
-  console.log('----------------');
-  console.log(' ');
-}
+import { deserialize } from './index';
 
 
 describe('RichMarkdownDeserializer', () => {
-  describe('Lists', () => {
-    it('Unordered list (5 levels)', () => {
-      let str = `## Lists
-Unordered
+  it("deserialize('')", () => {
+    let res = deserialize('');
 
-End list`;
+    const document = res.document;
+    const node = document.get('nodes').get(0);
 
-      let repars = reparser(str);
-      expect(trimStr(str)).to.equal(trimStr(repars));
-    });
+    expect(document.get('nodes').size).to.equal(1);
+    expect(document.get('data').size).to.equal(0);
+    expect(node.get('data').size).to.equal(0);
+    expect(node.get('isVoid')).to.equal(false);
+    expect(node.get('type')).to.equal('paragraph');
   });
 });

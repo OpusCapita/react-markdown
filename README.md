@@ -1,5 +1,5 @@
 [![CircleCI Status](https://circleci.com/gh/OpusCapita/react-markdown/tree/master.svg?style=shield&circle-token=:circle-token)](https://circleci.com/gh/OpusCapita/react-markdown)
-[![Coverage Status](https://coveralls.io/repos/github/OpusCapita/react-markdown/badge.svg?branch=enhancement/10)](https://coveralls.io/github/OpusCapita/react-markdown?branch=enhancement/10)
+[![Coverage Status](https://coveralls.io/repos/github/OpusCapita/react-markdown/badge.svg?branch=master)](https://coveralls.io/github/OpusCapita/react-markdown?branch=master)
 ![badge-npm-version](https://img.shields.io/npm/v/@opuscapita/react-markdown.svg) 
 ![badge-license](https://img.shields.io/github/license/OpusCapita/react-markdown.svg)
 

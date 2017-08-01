@@ -2,92 +2,9 @@
 //
 'use strict';
 
-////////////////////////////////////////////////////////////////////////////////
-// Renderer partials
-
-function render_footnote_anchor_name(tokens, idx, options, env/*, slf*/) {
-  let n = Number(tokens[idx].meta.id + 1).toString();
-  let prefix = '';
-
-  if (typeof env.docId === 'string') {
-    prefix = '-' + env.docId + '-';
-  }
-
-  return prefix + n;
-}
-
-function render_footnote_caption(tokens, idx/*, options, env, slf*/) {
-  let n = Number(tokens[idx].meta.id + 1).toString();
-
-  if (tokens[idx].meta.subId > 0) {
-    n += ':' + tokens[idx].meta.subId;
-  }
-
-  return '[' + n + ']';
-}
-
-function render_footnote_ref(tokens, idx, options, env, slf) {
-  let id      = slf.rules.footnote_anchor_name(tokens, idx, options, env, slf);
-  let caption = slf.rules.footnote_caption(tokens, idx, options, env, slf);
-  let refid   = id;
-
-  if (tokens[idx].meta.subId > 0) {
-    refid += ':' + tokens[idx].meta.subId;
-  }
-
-  return '<sup class="footnote-ref"><a href="#fn' + id + '" id="fnref' + refid + '">' + caption + '</a></sup>';
-}
-
-function render_footnote_block_open(tokens, idx, options) {
-  return (options.xhtmlOut ? '<hr class="footnotes-sep" />\n' : '<hr class="footnotes-sep">\n') +
-    '<section class="footnotes">\n' +
-    '<ol class="footnotes-list">\n';
-}
-
-function render_footnote_block_close() {
-  return '</ol>\n</section>\n';
-}
-
-function render_footnote_open(tokens, idx, options, env, slf) {
-  let id = slf.rules.footnote_anchor_name(tokens, idx, options, env, slf);
-
-  if (tokens[idx].meta.subId > 0) {
-    id += ':' + tokens[idx].meta.subId;
-  }
-
-  return '<li id="fn' + id + '" class="footnote-item">';
-}
-
-function render_footnote_close() {
-  return '</li>\n';
-}
-
-function render_footnote_anchor(tokens, idx, options, env, slf) {
-  let id = slf.rules.footnote_anchor_name(tokens, idx, options, env, slf);
-
-  if (tokens[idx].meta.subId > 0) {
-    id += ':' + tokens[idx].meta.subId;
-  }
-
-  /* ↩ with escape code to prevent display as Apple Emoji on iOS */
-  return ' <a href="#fnref' + id + '" class="footnote-backref">\u21a9\uFE0E</a>';
-}
-
-
 module.exports = function footnote_plugin(md) {
   let parseLinkLabel = md.helpers.parseLinkLabel,
     isSpace = md.utils.isSpace;
-
-  md.renderer.rules.footnote_ref          = render_footnote_ref;
-  md.renderer.rules.footnote_block_open   = render_footnote_block_open;
-  md.renderer.rules.footnote_block_close  = render_footnote_block_close;
-  md.renderer.rules.footnote_open         = render_footnote_open;
-  md.renderer.rules.footnote_close        = render_footnote_close;
-  md.renderer.rules.footnote_anchor       = render_footnote_anchor;
-
-  // helpers (only used in other rules, no tokens are attached to those)
-  md.renderer.rules.footnote_caption      = render_footnote_caption;
-  md.renderer.rules.footnote_anchor_name  = render_footnote_anchor_name;
 
   // Process footnote block definition
   function anchor_def(state, startLine, endLine, silent) {
