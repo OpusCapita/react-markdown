@@ -781,7 +781,7 @@ describe('plain editor schema', () => {
     assert.equal(getHtml(html), candidate);
   });
 
-    it('should highlight italic inside list', () => {
+  it('should highlight italic inside list', () => {
     let html;
     let candidate;
 
