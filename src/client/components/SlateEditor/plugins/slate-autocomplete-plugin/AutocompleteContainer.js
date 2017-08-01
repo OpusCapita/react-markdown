@@ -28,7 +28,8 @@ class AutocompleteContainer extends React.Component {
     show: false,
     selectedIndex: 0,
     isLoading: false,
-    isMouseIndexSelected: false
+    isMouseIndexSelected: false,
+    items: []
   };
 
   componentDidMount = () => {
@@ -37,22 +38,20 @@ class AutocompleteContainer extends React.Component {
 
   componentWillReceiveProps = (nextProps) => {
     this.searchItems(nextProps);
-    if (this.state.items &&
+    if (this.state.selectedIndex &&
       (this.props.state.startOffset === nextProps.state.startOffset) &&
       (this.props.state.startText.text === nextProps.state.startText.text) &&
       nextProps.state.startText.text) {
       this.handleSelectItem(this.state.selectedIndex);
-    } else {
-      this.setState({ show: false })
     }
   };
 
-  matchRule = (rules, token) => {
-    for (let i = 0, count = rules.length; i < count; i++) {
-      const rule = rules[i];
+  matchExtension = (extensions, token) => {
+    for (let i = 0, count = extensions.length; i < count; i++) {
+      const extension = extensions[i];
 
-      if (token.match(rule.termRegex)) {
-        return rule;
+      if (token.match(extension.termRegex)) {
+        return extension;
       }
     }
     return undefined;
@@ -118,19 +117,18 @@ class AutocompleteContainer extends React.Component {
   handleSelectItem = (index) => {
     const { items } = this.state;
     const { state, editor, options } = this.props;
-
     const { term } = this.getSearchToken(state);
 
     if (term) {
       const item = items[index];
 
-      const { rules } = options;
-      const rule = this.matchRule(rules, term);
+      const { extensions } = options;
+      const extension = this.matchExtension(extensions, term);
 
-      if (rule) {
+      if (extension) {
         let t = state.transform();
         t.deleteBackward(term.length);
-        t.insertText(rule.selectItem(item) + ' ');
+        t.insertText(extension.plainMarkdownText(item) + ' ');
 
         editor.onChange(
           t.focus().
@@ -146,32 +144,34 @@ class AutocompleteContainer extends React.Component {
     let { term } = this.getSearchToken(state);
 
     if (term) {
-      const { rules } = options;
-      const rule = this.matchRule(rules, term);
-
+      const { extensions } = options;
+      const extension = this.matchExtension(extensions, term);
       const { show } = this.state;
-      if (rule) {
+      if (extension) {
         this.setState({ show: true, isLoading: true });
-        rule.fetch(term).then((items) => this.setState({ items, selectedIndex: 0, isLoading: false }));
+        extension.searchItems(term).then((items) => this.setState({ items, selectedIndex: 0, isLoading: false }));
       } else if (show) {
         this.setState({ show: false })
       }
+    } else {
+      this.setState({ show: false })
     }
   };
 
   render() {
-    const { show, selectedIndex, items, isLoading } = this.state;
+    const { show, selectedIndex, items, isLoading, isMouseIndexSelected } = this.state;
     const { children, state } = this.props;
 
     return (
       <div onKeyDown={this.handleKeyDown}>
         {show && state.isFocused ? (
-          <AutocompleteWidget items={items}
+          <AutocompleteWidget
+            items={items}
             isLoading={isLoading}
             selectedIndex={selectedIndex}
             onSelectItem={this.handleSelectItem}
             onSelectedIndexChange={this.handleSelectedIndexChange}
-            isMouseIndexSelected={this.state.isMouseIndexSelected}
+            isMouseIndexSelected={isMouseIndexSelected}
           />
         ) : null}
         {children}

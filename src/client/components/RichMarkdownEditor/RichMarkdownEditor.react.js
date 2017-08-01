@@ -1,9 +1,10 @@
 import React from 'react';
 import Types from 'prop-types';
 import Markdown from '../serializer/MarkdownRenderer';
+import { Raw } from 'slate'
 
 import {
-  // AutocompletePlugin,
+  AutocompletePlugin,
   BlockquotePlugin,
   BoldButton,
   BoldPlugin,
@@ -21,6 +22,8 @@ import {
   LinkButton,
   LinkPlugin,
   ListPlugin,
+  ObjectReferenceButton,
+  ObjectReferencePlugin,
   OrderedListButton,
   StrikethroughButton,
   StrikethroughPlugin,
@@ -28,6 +31,8 @@ import {
   UnderlinePlugin
 } from '../SlateEditor/plugins';
 import { SlateContent, SlateEditor, SlateToolbar, SlateToolbarGroup } from '../SlateEditor';
+import initialState from './state.json'
+
 
 const markdown = new Markdown();
 
@@ -44,10 +49,8 @@ class RichMarkdownEditor extends React.Component {
    *
    * @type {Object}
    */
-
   state = {
-    editorState: markdown.deserialize(this.props.value || ''),
-    fullScreen: false
+    editorState: Raw.deserialize(initialState, { terse: true })
   };
 
   componentWillMount = () => {
@@ -60,9 +63,11 @@ class RichMarkdownEditor extends React.Component {
       UnderlinePlugin(),
       BlockquotePlugin(),
       HeaderPlugin(),
-      FormatPlugin()
-      // ,
-      // AutocompletePlugin()
+      FormatPlugin(),
+      ObjectReferencePlugin({ extensions: this.props.extensions })
+      // AutocompletePlugin({
+      //   extensions: this.props.extensions
+      // })
     ];
   };
 
@@ -77,10 +82,6 @@ class RichMarkdownEditor extends React.Component {
     this.setState({ editorState });
   };
 
-  handleFullScreen = (fullScreen) => {
-    this.setState({ fullScreen });
-  };
-
   /**
    * Render.
    *
@@ -88,10 +89,14 @@ class RichMarkdownEditor extends React.Component {
    */
   render() {
     const { editorState } = this.state;
-    const { children } = this.props;
-
-    const onFullScreen = this.props.onFullScreen || this.handleFullScreen;
-    const fullScreen = this.props.onFullScreen ? this.props.fullScreen : this.state.fullScreen;
+    const { children, onFullScreen, fullScreen } = this.props;
+    
+    let objectReferenceButtons = this.props.extensions.map((extension, index) => {
+      return <ObjectReferenceButton key={index}
+                                    extension={extension}
+                                    mode="rich"
+                                    disabled={false}/>
+    });
 
     return (
       <SlateEditor
@@ -124,12 +129,20 @@ class RichMarkdownEditor extends React.Component {
           </SlateToolbarGroup>
 
           <SlateToolbarGroup>
-            <FullScreenButton onFullScreen={onFullScreen} fullScreen={fullScreen}/>
+            {objectReferenceButtons}
           </SlateToolbarGroup>
+
+          {onFullScreen ? (
+            <SlateToolbarGroup>
+              <FullScreenButton onFullScreen={onFullScreen} fullScreen={fullScreen}/>
+            </SlateToolbarGroup>
+          ) : null}
 
           {children}
         </SlateToolbar>
+
         <SlateContent/>
+
       </SlateEditor>
     )
   }

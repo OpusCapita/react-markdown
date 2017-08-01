@@ -36,5 +36,5 @@ export {
   MarkdownHeaderThreeButton,
   MarkdownHeaderFourButton,
   MarkdownHeaderFiveButton,
-  MarkdownHeaderSixButton,
+  MarkdownHeaderSixButton
 }

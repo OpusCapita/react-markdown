@@ -1,7 +1,7 @@
 import React from 'react';
 import Types from 'prop-types';
 import {
-  // AutocompletePlugin,
+  AutocompletePlugin,
   FullScreenButton,
   MarkdownBoldButton,
   MarkdownHeaderFiveButton,
@@ -15,7 +15,8 @@ import {
   MarkdownOrderedListButton,
   MarkdownPreviewPlugin,
   MarkdownStrikethroughButton,
-  MarkdownUnorderedListButton
+  MarkdownUnorderedListButton,
+  ObjectReferenceButton
 } from '../SlateEditor/plugins';
 
 import { SlateContent, SlateEditor, SlateToolbar, SlateToolbarGroup } from '../SlateEditor';
@@ -30,7 +31,9 @@ class PlainMarkdownEditor extends React.Component {
 
   componentWillMount = () => {
     this.plugins = [
-      // AutocompletePlugin(),
+      AutocompletePlugin({
+        extensions: this.props.extensions
+      }),
       MarkdownPreviewPlugin()
     ];
   };
@@ -51,6 +54,10 @@ class PlainMarkdownEditor extends React.Component {
 
     const onFullScreen = this.props.onFullScreen || this.handleFullScreen;
     const fullScreen = this.props.onFullScreen ? this.props.fullScreen : this.state.fullScreen;
+
+    let objectReferenceButtons = this.props.extensions.map((extension, index) => {
+      return <ObjectReferenceButton key={index} extension={extension} mode="plain" disabled={false}/>
+    });
 
     return (
       <SlateEditor
@@ -85,6 +92,16 @@ class PlainMarkdownEditor extends React.Component {
           <SlateToolbarGroup>
             <FullScreenButton onFullScreen={onFullScreen} fullScreen={fullScreen}/>
           </SlateToolbarGroup>
+
+          <SlateToolbarGroup>
+            {objectReferenceButtons}
+          </SlateToolbarGroup>
+
+          {onFullScreen ? (
+            <SlateToolbarGroup>
+              <FullScreenButton onFullScreen={onFullScreen} fullScreen={fullScreen}/>
+            </SlateToolbarGroup>
+          ) : null}
 
           {children}
         </SlateToolbar>

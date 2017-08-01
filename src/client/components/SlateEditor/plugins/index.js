@@ -11,3 +11,4 @@ export * from './slate-format-plugin';
 export * from './slate-autocomplete-plugin';
 export * from './slate-markdown-plugin';
 export * from './slate-fullscreen-plugin';
+export * from './slate-extension-plugin';

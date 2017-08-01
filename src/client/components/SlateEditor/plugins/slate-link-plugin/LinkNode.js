@@ -92,8 +92,8 @@ export default function(options) {
           ) : null}
 
           <OverlayTrigger ref="overlay" trigger="click" rootClose={true} placement="bottom" overlay={popover}>
-          <a {...attributes} href={href}>{children}</a>
-        </OverlayTrigger>
+            <a {...attributes} href={href}>{children}</a>
+          </OverlayTrigger>
       </span>
       );
     }
