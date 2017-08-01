@@ -1,6 +1,5 @@
 import { expect } from 'chai';
-import RichMarkdownDeserializer from './RichMarkdownDeserializer'
-import RichMarkdownSerializer from './RichMarkdownSerializer'
+import { deserialize, serialize } from './index';
 
 
 function reparser(str, isPrint = false) {
@@ -9,7 +8,7 @@ function reparser(str, isPrint = false) {
     { regex: '\\#(\\w+)', id: 'product' }
   ];
 
-  let repars = RichMarkdownSerializer.serialize(RichMarkdownDeserializer.deserialize(str, options));
+  let repars = serialize(deserialize(str, options));
 
   if (isPrint) {
     printData(str, repars);

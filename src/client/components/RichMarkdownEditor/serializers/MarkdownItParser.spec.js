@@ -1,6 +1,10 @@
 import { expect } from 'chai';
 import { deserialize, serialize } from './index';
 
+// function compareJSONValues(value1, value2) {
+//   expect(JSON.parse(JSON.stringify(value1))).to.deep.equal(value2);
+// }
+
 
 function reparser(str, isPrint = false) {
   const options = [
@@ -45,7 +49,7 @@ function printData(str, repars) {
 }
 
 
-describe('RichMarkdownSerializer', () => {
+describe('MarkdownItParser', () => {
   describe('Lists', () => {
     it('Unordered list (5 levels)', () => {
       let str = `## Lists

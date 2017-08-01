@@ -86,7 +86,7 @@ End list`;
       expect(trimStr(str)).to.equal(trimStr(repars));
     });
 
-    it.skip('Two unordered lists', () => {
+    it('Two unordered lists', () => {
       let str = `## Lists
 Unordered
 
@@ -530,7 +530,7 @@ End Horizontal Rules`;
       expect(trimStr(str)).to.equal(trimStr(repars));
     });
 
-    it.skip('Definition lists. Compact style', () => {
+    it('Definition lists. Compact style', () => {
       let str = `### Definition lists
 
 _Compact style:_

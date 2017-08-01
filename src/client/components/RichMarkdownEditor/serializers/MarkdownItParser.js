@@ -1,5 +1,5 @@
 import utils from './utils';
-import { ChildrenParser, TextNode, TextBlock } from './ChildrenParser';
+import { ChildrenInlineParser, TextNode, TextBlock } from './ChildrenInlineParser';
 
 const types = {
   'h1': 'heading1',
@@ -70,19 +70,7 @@ class BlockNode {
   }
 }
 
-// const MarkdownItParser = {
 class MarkdownItParser {
-  // stack: [],
-  // level: 0,
-  // currentBlock: null,
-  // blocks: [],
-  // parentBlock: null,
-  // lineCount: 0,
-
-  // constructor() {
-  //
-  // }
-
   init() {
     this.stack = [];
     this.level = 0;
@@ -92,116 +80,67 @@ class MarkdownItParser {
     this.lineCount = 0;
   }
 
-  /**
-   * Method preprocessing get tokens list from markdown-it parser
-   * and remove from this list tokens with types 'paragraph_open' and 'paragraph_close'
-   * if they are between opening and closing tokens of one type
-   *
-   * @param tokens
-   */
-
-  preprocessing(tokens) {
-    let i = 0;
-    let blockquoteLevel = 0;
-    let bulletListLevel = 0;
-    let orderedListLevel = 0;
-    let ddLevel = 0;
-    let anchorLevel = 0;
-
-    while (i + 1 < tokens.length) {
-      let token = tokens[i];
-
-      if (token.type === 'empty' && token.level > 0) {
-        tokens.splice(i, 1);
-      } else if ((blockquoteLevel > 0 || bulletListLevel > 0 ||
-          orderedListLevel > 0 || ddLevel > 0 || anchorLevel > 0) &&
-        (token.type === 'paragraph_open' || token.type === 'paragraph_close')) {
-        tokens.splice(i, 1);
-      } else if (bulletListLevel > 1 &&
-        token.type === 'bullet_list_close' && tokens[i + 1].type === 'bullet_list_open') {
-        tokens.splice(i, 2);
-      } else {
-        switch (token.type) {
-          case 'blockquote_open': blockquoteLevel++; break;
-          case 'blockquote_close': blockquoteLevel--; break;
-          case 'bullet_list_open': bulletListLevel++; break;
-          case 'bullet_list_close': bulletListLevel--; break;
-          case 'ordered_list_open': orderedListLevel++; break;
-          case 'ordered_list_close': orderedListLevel--; break;
-          case 'dd_open': ddLevel++; break;
-          case 'dd_close': ddLevel--; break;
-          case 'anchor_open': anchorLevel++; break;
-          case 'anchor_close': anchorLevel--; break;
-
-          case 'code_block':
-          case 'fence':
-            token.content = token.content.replace(/\n$/, '');
-            break;
-
-          default:
-            //
+  static getDefaultNodes() {
+    return [{
+      kind: "block",
+      type: "paragraph",
+      nodes: [
+        {
+          kind: "text",
+          ranges: [
+            {
+              text: ""
+            }
+          ]
         }
-
-        i++;
-      }
-    }
+      ]
+    }];
   }
 
-  setRecursiveParent(nodes, parent) {
-    for (let item of nodes) {
-      if (!item.data) {
-        item.data = {};
+  static getUnorderedList(items, level, parent) {
+    return {
+      "kind": "block",
+      "type": "unordered-list",
+      "nodes": items,
+      "tag": "ul",
+      "data": {
+        "level": level,
+        "map": [items[0].data.map[0], items[items.length - 1].data.map[1]],
+        "parent": parent
       }
-
-      item.data.parent = parent;
-
-      if (item.nodes) {
-        this.setRecursiveParent(item.nodes, TABLES.has(item.type) ? item.type : parent);
-      }
-    }
+    };
   }
 
-  // getUnorderedList(items, level, parent) {
-  //   return {
-  //     "kind": "block",
-  //     "type": "unordered-list",
-  //     "nodes": items,
-  //     "tag": "ul",
-  //     "data": {
-  //       "level": level,
-  //       "map": [items[0].data.map[0], items[items.length - 1].data.map[1]],
-  //       "parent": parent
-  //     }
-  //   };
-  // }
+  static getOneEmptyParagraph(begin) {
+    return {
+      kind: "block",
+      type: "paragraph",
+      data: {
+        map: [begin, begin + 1]
+      },
+      nodes: [
+        {
+          kind: "text",
+          ranges: [
+            {
+              text: ""
+            }
+          ]
+        }
+      ]
+    };
+  }
 
-  // getOneEmptyParagraph(begin) {
-  //   return {
-  //     kind: "block",
-  //     type: "paragraph",
-  //     data: {
-  //       map: [begin, begin + 1]
-  //     },
-  //     nodes: [
-  //       {
-  //         kind: "text",
-  //         ranges: [
-  //           {
-  //             text: ""
-  //           }
-  //         ]
-  //       }
-  //     ]
-  //   };
-  // }
+  static getEmptyParagraphs(begin, end) {
+    const tokens = [];
+    for (let i = begin; i <= end; i++) {
+      tokens.push(MarkdownItParser.getOneEmptyParagraph(i));
+    }
 
-  // getEmptyParagraphs(tokens, begin, end) {
-  //   for (let i = begin; i <= end; i++) {
-  //     tokens.push(this.getOneEmptyParagraph(i));
-  //   }
-  // }
+    return tokens;
+  }
 
-  recalcListItemMap(tokens) {
+  recalcListItemMap(tokens = this.blocks) {
     for (let token of tokens) {
       if (token.type === 'unordered-list' || token.type === 'ordered-list') {
         for (let item of token.nodes) {
@@ -227,7 +166,7 @@ class MarkdownItParser {
    * @returns {*}
    */
 
-  divideList(token) {
+  static divideList(token) {
     // 0 or 1 item
     if (token.nodes.length <= 1) {
       return [token];
@@ -255,37 +194,37 @@ class MarkdownItParser {
     // Create the list of the unordered lists
     const newTokens = [];
     for (let list of tokensLists) {
-      let tokenObj = this.getUnorderedList(list, token.data.level, token.data.parent);
+      let tokenObj = MarkdownItParser.getUnorderedList(list, token.data.level, token.data.parent);
       newTokens.push(tokenObj);
     }
 
     return newTokens;
   }
 
-  divideLists(tokens) {
+  divideLists() {
     let newTokens = [];
 
-    for (let token of tokens) {
+    for (let token of this.blocks) {
       if (token.type === 'unordered-list') {
-        newTokens = newTokens.concat(this.divideList(token));
+        newTokens = newTokens.concat(MarkdownItParser.divideList(token));
       } else {
         newTokens.push(token);
       }
     }
 
-    return newTokens;
+    this.blocks = newTokens;
   }
 
   /**
    * addParagraphToEmptyLines
    *
-   * @param {Array} tokens
    * @returns {*}
    */
 
-  addParagraphToEmptyLines(tokens) {
+  addParagraphToEmptyLines() {
+    const tokens = this.blocks;
     if (tokens.length === 0) {
-      return tokens;
+      return;
     }
 
     let newTokens = [];
@@ -312,10 +251,24 @@ class MarkdownItParser {
       newTokens.push.apply(newTokens, MarkdownItParser.getEmptyParagraphs(lastToken.data.map[1], this.lineCount - 1));
     }
 
-    return newTokens;
+    this.blocks = newTokens;
   }
 
-  addParents(tokens) {
+  setRecursiveParent(nodes, parent) {
+    for (let item of nodes) {
+      if (!item.data) {
+        item.data = {};
+      }
+
+      item.data.parent = parent;
+
+      if (item.nodes) {
+        this.setRecursiveParent(item.nodes, TABLES.has(item.type) ? item.type : parent);
+      }
+    }
+  }
+
+  addParentType(tokens = this.blocks) {
     for (let token of tokens) {
       let parent = '';
 
@@ -345,7 +298,7 @@ class MarkdownItParser {
             }
 
             if (item.nodes) {
-              this.addParents(item.nodes);
+              this.addParentType(item.nodes);
             }
           }
 
@@ -426,7 +379,7 @@ class MarkdownItParser {
     let node = new BlockNode(token);
 
     if (token.children) {
-      node.nodes = new ChildrenParser(token.children).nodes;
+      node.nodes = new ChildrenInlineParser(token.children).nodes;
     }
 
     this.currentBlock.nodes.push(node);
@@ -434,7 +387,7 @@ class MarkdownItParser {
 
   setChildrenNodes(token) {
     if (token.children) {
-      this.currentBlock.nodes = new ChildrenParser(token.children).nodes;
+      this.currentBlock.nodes = new ChildrenInlineParser(token.children).nodes;
     }
   }
 
@@ -463,6 +416,64 @@ class MarkdownItParser {
   addVoidBlock(token) {
     this.currentBlock = new BlockNode(token);
     this.saveCurrentBlock();
+  }
+
+  /**
+   * Method preprocessing get tokens list from markdown-it parser
+   * and remove from this list tokens with types 'paragraph_open' and 'paragraph_close'
+   * if they are between opening and closing tokens of one type
+   *
+   * @param markdownItTokens
+   */
+
+  static preprocessing(markdownItTokens) {
+    let tokens = markdownItTokens;
+    let i = 0;
+    let blockquoteLevel = 0;
+    let bulletListLevel = 0;
+    let orderedListLevel = 0;
+    let ddLevel = 0;
+    let anchorLevel = 0;
+
+    while (i + 1 < tokens.length) {
+      let token = tokens[i];
+
+      if (token.type === 'empty' && token.level > 0) {
+        tokens.splice(i, 1);
+      } else if ((blockquoteLevel > 0 || bulletListLevel > 0 ||
+          orderedListLevel > 0 || ddLevel > 0 || anchorLevel > 0) &&
+        (token.type === 'paragraph_open' || token.type === 'paragraph_close')) {
+        tokens.splice(i, 1);
+      } else if (bulletListLevel > 1 &&
+        token.type === 'bullet_list_close' && tokens[i + 1].type === 'bullet_list_open') {
+        tokens.splice(i, 2);
+      } else {
+        switch (token.type) {
+          case 'blockquote_open': blockquoteLevel++; break;
+          case 'blockquote_close': blockquoteLevel--; break;
+          case 'bullet_list_open': bulletListLevel++; break;
+          case 'bullet_list_close': bulletListLevel--; break;
+          case 'ordered_list_open': orderedListLevel++; break;
+          case 'ordered_list_close': orderedListLevel--; break;
+          case 'dd_open': ddLevel++; break;
+          case 'dd_close': ddLevel--; break;
+          case 'anchor_open': anchorLevel++; break;
+          case 'anchor_close': anchorLevel--; break;
+
+          case 'code_block':
+          case 'fence':
+            token.content = token.content.replace(/\n$/, '');
+            break;
+
+          default:
+          //
+        }
+
+        i++;
+      }
+    }
+
+    return tokens;
   }
 
   processing(tokens) {
@@ -497,18 +508,22 @@ class MarkdownItParser {
     }
   }
 
-  parse(eventTokens) {
+  postprocessing() {
+    this.recalcListItemMap();
+    this.divideLists();
+    this.addParagraphToEmptyLines();
+    this.addParentType();
+  }
+
+  parse(markdownItTokens) {
     this.init();
 
-    this.preprocessing(eventTokens);
-    this.processing(eventTokens);
-    this.recalcListItemMap(this.blocks);
-    this.blocks = this.divideLists(this.blocks);
-    this.blocks = this.addParagraphToEmptyLines(this.blocks);
-    this.addParents(this.blocks);
+    const tokens = MarkdownItParser.preprocessing(markdownItTokens);
+    this.processing(tokens);
+    this.postprocessing();
 
     // This console.log is necessary for debugging
-    // console.log('markdown it:\n', JSON.stringify(eventTokens));
+    // console.log('markdown it:\n', JSON.stringify(tokens));
     // console.log(' ');
     // console.log(' ');
     // console.log('StateRender:');
@@ -519,66 +534,6 @@ class MarkdownItParser {
     return this.blocks;
   }
 }
-
-MarkdownItParser.getDefaultNodes = () => {
-  return [{
-    kind: "block",
-    type: "paragraph",
-    nodes: [
-      {
-        kind: "text",
-        ranges: [
-          {
-            text: ""
-          }
-        ]
-      }
-    ]
-  }];
-};
-
-MarkdownItParser.getUnorderedList = (items, level, parent) => {
-  return {
-    "kind": "block",
-    "type": "unordered-list",
-    "nodes": items,
-    "tag": "ul",
-    "data": {
-      "level": level,
-      "map": [items[0].data.map[0], items[items.length - 1].data.map[1]],
-      "parent": parent
-    }
-  };
-};
-
-MarkdownItParser.getOneEmptyParagraph = (begin) => {
-  return {
-    kind: "block",
-    type: "paragraph",
-    data: {
-      map: [begin, begin + 1]
-    },
-    nodes: [
-      {
-        kind: "text",
-        ranges: [
-          {
-            text: ""
-          }
-        ]
-      }
-    ]
-  };
-};
-
-MarkdownItParser.getEmptyParagraphs = (begin, end) => {
-  const tokens = [];
-  for (let i = begin; i <= end; i++) {
-    tokens.push(MarkdownItParser.getOneEmptyParagraph(i));
-  }
-
-  return tokens;
-};
 
 
 export default MarkdownItParser;

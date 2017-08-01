@@ -31,19 +31,12 @@ const RichMarkdownDeserializer = {
     if (markdownData === '') {
       nodes = MarkdownItParser.getDefaultNodes();
     } else {
-      try {
-        let eventTokens = MarkdownIt.parse(markdownData || '', {});
-        const markdownItParser = new MarkdownItParser();
-        nodes = markdownItParser.parse(eventTokens);
-        // nodes = MarkdownItParser.parse(eventTokens);
-      } catch (e) {
-        nodes = MarkdownItParser.getDefaultNodes();
-      }
+      let eventTokens = MarkdownIt.parse(markdownData || '', {});
+      const markdownItParser = new MarkdownItParser();
+      nodes = markdownItParser.parse(eventTokens);
     }
 
-    const state = { nodes: nodes };
-
-    return Raw.deserialize(state, { terse: true });
+    return Raw.deserialize({ nodes: nodes }, { terse: true });
   }
 };
 

@@ -195,9 +195,11 @@ const NodeSerialize = {
   // Definition lists
   'dl-simple': (obj, children) => children,
   dl: (obj, children) => children,
-  'dt-simple': (obj, children, previousNodeType) => `${previousNodeType === 'dd-simple' ? `\n` : ``}${children}\n`,
+
+  'dt-simple': (obj, children, previousNodeType) => {
+    return `${previousNodeType === 'dd-simple' ? `\n` : ``}${children}\n`;
+  },
   'dt': (obj, children, previousNodeType) => `${previousNodeType === 'dd' ? `\n` : ``}${children}\n`,
-  // dt: (obj, children) => `${children}\n`,
   'dd-simple': (obj, children) => `  ~ ${children}\n`,
   dd: (obj, children) => {
     let arrChildren = children.split('\n');
@@ -219,89 +221,9 @@ const NodeSerialize = {
 
     let level = obj.getIn(['data', 'level']); // Level this blockquote
 
-    /**
-     // This block shorten a line's prefix of the root blockquote on the next line
-     //
-     // Example:
-     // > > >
-     // > information
-     //
-     // change to
-     //
-     // >
-     // > information
-     */
     if (level === 1) {
-      let prefLength = []; // Level this line (prefix length)
-      let isEmpty = []; // This line is empty or not
-      let nextLevel = []; // Levels next not empty line
-      let nextFullNum = []; // Numbers next not empty line
-      for (let i = 0; i < arrChildren.length; i++) {
-        prefLength[i] = arrChildren[i].match(/>/g).length;
-        isEmpty[i] = !arrChildren[i].match(/[^> ]/g);
-
-        if (!isEmpty[i]) {
-          for (let j = i - 1; j >= 0 && isEmpty[j]; j--) {
-            nextLevel[j] = prefLength[i];
-            nextFullNum[j] = i;
-          }
-        }
-      }
-
-      let newArrChildren = [];
-      let i = 0;
-      while (i < arrChildren.length) {
-        if (!isEmpty[i]) {
-          newArrChildren.push(arrChildren[i]);
-          i++;
-
-          if (i < arrChildren.length && !isEmpty[i] && prefLength[i - 1] >= prefLength[i]) {
-            let pref = createArrayJoined(prefLength[i], '> ');
-            newArrChildren.push(pref);
-          }
-        } else {
-          if (!nextFullNum[i]) {
-            break;
-          }
-
-          if (i === 0) {
-            i = nextFullNum[i];
-          } else {
-            if (prefLength[i] >= nextLevel[i]) {
-              let pref = createArrayJoined(nextLevel[i], '> ');
-              newArrChildren.push(pref);
-
-              i = nextFullNum[i];
-            } else {
-              i++;
-            }
-          }
-        }
-      }
-
-      arrChildren = newArrChildren;
-
-      prefLength = [];
-      isEmpty = [];
-      for (let i = 0; i < arrChildren.length; i++) {
-        prefLength[i] = arrChildren[i].match(/>/g).length;
-        isEmpty[i] = !arrChildren[i].match(/[^> ]/g);
-      }
-
-      i = 0;
-      newArrChildren = [];
-      while (i < arrChildren.length) {
-        if (isEmpty[i] && prefLength[i + 1] &&
-          i > 0 && prefLength[i - 1] < prefLength[i + 1]) {
-          //
-        } else {
-          newArrChildren.push(arrChildren[i]);
-        }
-
-        i++;
-      }
-
-      arrChildren = newArrChildren;
+      arrChildren = addEmptyLinesToBlockquote(arrChildren);
+      arrChildren = removeEmptyLinesFromBlockquote(arrChildren);
     }
 
     return `${level === 1 ? `` : `\n`}${arrChildren.join('\n')}${level === 1 ? `` : `\n`}`;
@@ -325,6 +247,106 @@ const NodeSerialize = {
     return ``;
   },
 };
+
+/**
+ * createPrefixLine
+ *
+ * @param {Number} num
+ * @returns {String} prefix line, example `> > > `
+ */
+
+function createPrefixLine(num) {
+  return createArrayJoined(num, '> ');
+}
+
+/**
+ * addEmptyLinesToBlockquote
+ *
+ * @param {Array} arrChildren
+ * @returns {Array}
+ */
+
+function addEmptyLinesToBlockquote(arrChildren) {
+  const prefLength = []; // Level this line (prefix length)
+  const isEmpty = []; // This line is empty or not
+  const nextLevel = []; // Levels next not empty line
+  const nextFullNum = []; // Numbers next not empty line
+  for (let i = 0; i < arrChildren.length; i++) {
+    prefLength[i] = arrChildren[i].match(/>/g).length;
+    isEmpty[i] = !arrChildren[i].match(/[^> ]/g);
+
+    if (!isEmpty[i]) {
+      for (let j = i - 1; j >= 0 && isEmpty[j]; j--) {
+        nextLevel[j] = prefLength[i];
+        nextFullNum[j] = i;
+      }
+    }
+  }
+
+  let newArrChildren = [];
+  let i = 0;
+  while (i < arrChildren.length) {
+    if (!isEmpty[i]) {
+      newArrChildren.push(arrChildren[i]);
+      i++;
+
+      if (i < arrChildren.length && !isEmpty[i] && prefLength[i - 1] >= prefLength[i]) {
+        let prefixLine = createPrefixLine(prefLength[i]);
+        newArrChildren.push(prefixLine);
+      }
+    } else {
+      if (!nextFullNum[i]) {
+        break;
+      }
+
+      if (i === 0) {
+        i = nextFullNum[i];
+      } else {
+        if (prefLength[i] >= nextLevel[i]) {
+          let prefixLine = createPrefixLine(nextLevel[i]);
+          newArrChildren.push(prefixLine);
+
+          i = nextFullNum[i];
+        } else {
+          i++;
+        }
+      }
+    }
+  }
+
+  return newArrChildren;
+}
+
+/**
+ * removeEmptyLinesFromBlockquote
+ *
+ * @param {Array} arrChildren
+ * @returns {Array}
+ */
+
+function removeEmptyLinesFromBlockquote(arrChildren) {
+  const prefLength = [];
+  const isEmpty = [];
+  for (let i = 0; i < arrChildren.length; i++) {
+    prefLength[i] = arrChildren[i].match(/>/g).length;
+    isEmpty[i] = !arrChildren[i].match(/[^> ]/g);
+  }
+
+  let i = 0;
+  let newArrChildren = [];
+  while (i < arrChildren.length) {
+    if (isEmpty[i] && prefLength[i + 1] &&
+      i > 0 && prefLength[i - 1] < prefLength[i + 1]) {
+      //
+    } else {
+      newArrChildren.push(arrChildren[i]);
+    }
+
+    i++;
+  }
+
+  return newArrChildren;
+}
 
 /**
  * Rule for lists
@@ -497,8 +519,8 @@ const RichMarkdownSerializer = {
     let children = [];
     for (let childNode of node.nodes) {
       children.push(this.serializeNode(childNode, previousNodeType));
-      if (node.kind === 'block' && node.type) {
-        previousNodeType = node.type;
+      if (node.kind === 'block' && childNode.type) {
+        previousNodeType = childNode.type;
       }
     }
 
@@ -556,8 +578,12 @@ const RichMarkdownSerializer = {
   },
 };
 
+function serialize(state) {
+  return RichMarkdownSerializer.serialize(state);
+}
+
 /**
  * Export.
  */
 
-export default RichMarkdownSerializer
+export default serialize
