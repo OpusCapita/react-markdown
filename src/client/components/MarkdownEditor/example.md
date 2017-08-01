@@ -56,6 +56,8 @@ ___bold italic text_bold__
 ##### h5
 ###### h6
 
+- list *text* **text** ~~text~~ `text`
+
 text `inline code` text
 
 text ```inline code``` text
