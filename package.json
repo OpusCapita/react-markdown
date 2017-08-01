@@ -103,5 +103,15 @@
     "react-bootstrap": "0.31.0",
     "slate": "0.20.6",
     "slate-markdown-serializer": "0.1.5"
+  },
+  "nyc": {
+    "include": [
+      "src/client/**/*.js"
+    ],
+    "exclude": [
+      "**/*.spec.js",
+      "**/*.SCOPE*.js",
+      "**/demo/**/*.js"
+    ]
   }
 }
