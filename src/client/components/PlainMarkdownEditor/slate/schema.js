@@ -56,12 +56,10 @@ Prism.languages.insertBefore('markdown', 'prolog', {
   code: [{
     pattern: /(^|[^`])```[^`\n\r]*[^`\n\r]```(?!`)/,
     lookbehind: true,
-    greedy: true,
     inside: {}
   }, {
     pattern: /(^|[^`])`[^`\n\r]*[^`\n\r]`(?!`)/,
     lookbehind: true,
-    greedy: true
   }],
   bold: [{
     pattern: /(^|[^*])\*\*([^\*\r\n]*(\*[^\*\r\n]+\*[^\*\r\n]*)+|[^*\r\n]+)\*\*/,
@@ -208,23 +206,51 @@ Prism.languages.markdown.list[0].inside.code = Prism.util.clone(Prism.languages.
 Prism.languages.markdown.list[0].inside.bold = Prism.util.clone(Prism.languages.markdown.bold);
 Prism.languages.markdown.list[0].inside.italic = Prism.util.clone(Prism.languages.markdown.italic);
 Prism.languages.markdown.list[0].inside.strikethrough = Prism.util.clone(Prism.languages.markdown.strikethrough);
+Prism.languages.markdown.list[0].inside.url = Prism.util.clone(Prism.languages.markdown.url);
 
 Prism.languages.markdown.list[1].inside.code = Prism.util.clone(Prism.languages.markdown.code);
 Prism.languages.markdown.list[1].inside.bold = Prism.util.clone(Prism.languages.markdown.bold);
 Prism.languages.markdown.list[1].inside.italic = Prism.util.clone(Prism.languages.markdown.italic);
 Prism.languages.markdown.list[1].inside.strikethrough = Prism.util.clone(Prism.languages.markdown.strikethrough);
+Prism.languages.markdown.list[1].inside.url = Prism.util.clone(Prism.languages.markdown.url);
 
 Prism.languages.markdown.blockquote.inside.code = Prism.util.clone(Prism.languages.markdown.code);
 Prism.languages.markdown.blockquote.inside.bold = Prism.util.clone(Prism.languages.markdown.bold);
 Prism.languages.markdown.blockquote.inside.italic = Prism.util.clone(Prism.languages.markdown.italic);
 Prism.languages.markdown.blockquote.inside.strikethrough = Prism.util.clone(Prism.languages.markdown.strikethrough);
+Prism.languages.markdown.blockquote.inside.url = Prism.util.clone(Prism.languages.markdown.url);
 
+const rendererComponent = props => {
+  let isLine = props.node.type === 'line';
+  let hasMarks = props.mark;
+  // console.log(props.mark && props.mark.toJS());
+
+  if(isLine) {
+    return (<div>{props.children}</div>);
+  }
+
+  if(hasMarks && props.mark.type === 'code') {
+    const className = props.mark ? 'oc-md-hl-' + props.mark.type : '';
+    return (
+      <span className={className}>
+        {props.children}
+        <span className="oc-md-hl-code-background"></span>
+      </span>
+    );
+  }
+
+  if(hasMarks) {
+    const className = props.mark ? 'oc-md-hl-' + props.mark.type : '';
+    return (
+      <span className={className}>
+        {props.children}
+      </span>
+    );
+  }
+};
 
 /**
  * Define a decorator for markdown styles.
- *
- * @param {Text} text
- * @param {Block} block
  */
 
 function addMarks(characters, tokens, offset) {
@@ -232,7 +258,7 @@ function addMarks(characters, tokens, offset) {
   for (const token of tokens) {
     if (typeof token === 'string') {
       updatedOffset += token.length;
-      continue
+      continue;
     }
 
     const { content, length, type } = token;
@@ -241,6 +267,7 @@ function addMarks(characters, tokens, offset) {
     for (let i = updatedOffset; i < updatedOffset + length; i++) {
       let char = characters.get(i);
       let { marks } = char;
+
       marks = marks.add(mark);
       char = char.set('marks', marks);
       characters.set(i, char);
@@ -265,57 +292,12 @@ function markdownDecorator(text, block) {
   return characters.asImmutable();
 }
 
-const headerStyle = {
-  fontWeight: 'bold',
-  display: 'inline-flex'
-};
 const schema = {
-  marks: {
-    'header1': { ...headerStyle, marginLeft: '-2ch', paddingRight: '2ch' },
-    'header2': { ...headerStyle, marginLeft: '-3ch', paddingRight: '3ch' },
-    'header3': { ...headerStyle, marginLeft: '-4ch', paddingRight: '4ch' },
-    'header4': { ...headerStyle, marginLeft: '-5ch', paddingRight: '5ch' },
-    'header5': { ...headerStyle, marginLeft: '-6ch', paddingRight: '6ch' },
-    'header6': { ...headerStyle, marginLeft: '-7ch', paddingRight: '7ch' },
-    'bold': {
-      fontWeight: 'bold'
-    },
-    'italic': {
-      fontStyle: 'italic'
-    },
-    'punctuation': {
-      color: '#777'
-    },
-    'blockquote': {
-      display: 'inline-block'
-    },
-    'code': {
-      display: 'inline-block',
-      backgroundColor: '#eee'
-    },
-    'codeBlock': {
-      display: 'block',
-      backgroundColor: '#eee'
-    },
-    'list': {
-      marginLeft: '-2ch',
-      paddingRight: '2ch'
-    },
-    'hr': {
-      display: 'block'
-    },
-    'strikethrough': {
-      textDecoration: 'line-through'
-    },
-    'variable': {
-      color: 'blue'
-    }
-  },
   rules: [{
     match: () => true,
-    decorate: markdownDecorator
+    decorate: markdownDecorator,
+    render: rendererComponent
   }]
 };
-
 export default schema;
 export const grammar = Prism.languages.markdown;

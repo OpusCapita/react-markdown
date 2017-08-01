@@ -1,0 +1,69 @@
+.oc-md-hl-header(@offset) {
+  font-weight: bold;
+  display: inline-flex;
+  margin-left: -(@offset + 1ch);
+  padding-right: (@offset + 1ch);
+}
+
+.generate-headers(@n, @i: 1) when (@i =< @n) {
+  .oc-md-hl-header@{i} {
+    .oc-md-hl-header(@i);
+  }
+  .oc-md-hl-code .oc-md-hl-header@{i} + .oc-md-hl-code-background {
+    left: -(@i + 1ch);
+  }
+  .generate-headers(@n, (@i + 1));
+
+}
+
+.generate-headers(6);
+
+.oc-md-hl-code {
+  position: relative;
+  display: inline-block;
+}
+
+.oc-md-hl-code-background {
+  position: relative;
+  display: inline-flex;
+  height: 100%;
+  width: 100%;
+  background-color: #eee;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+}
+
+.oc-md-hl-list + .oc-md-hl-code-background {
+  left: -2ch;
+}
+
+.oc-md-hl-bold {
+  font-weight: bold;
+}
+
+.oc-md-hl-italic {
+  font-style: italic;
+}
+
+.oc-md-hl-punctuation {
+  color: #777;
+}
+
+.oc-md-hl-blockquote {
+  display: inline-block;
+}
+
+.oc-md-hl-list {
+  margin-left: -2ch;
+  padding-right: 2ch;
+}
+
+.oc-md-hl-hr {
+  display: block;
+}
+
+.oc-md-hl-strikethrough {
+  text-decoration: line-through;
+}
