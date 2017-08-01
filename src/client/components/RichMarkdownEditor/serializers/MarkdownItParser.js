@@ -25,7 +25,6 @@ const types = {
   'dt': 'dt',
   'dl': 'dl',
   'anchor': 'anchor',
-  // 'empty': 'empty',
   'abbr-def': 'abbr-def',
 };
 
@@ -438,9 +437,7 @@ class MarkdownItParser {
     while (i + 1 < tokens.length) {
       let token = tokens[i];
 
-      /*if (token.type === 'empty' && token.level > 0) {
-        tokens.splice(i, 1);
-      } else */if ((blockquoteLevel > 0 || bulletListLevel > 0 ||
+      if ((blockquoteLevel > 0 || bulletListLevel > 0 ||
           orderedListLevel > 0 || ddLevel > 0 || anchorLevel > 0) &&
         (token.type === 'paragraph_open' || token.type === 'paragraph_close')) {
         tokens.splice(i, 1);
@@ -477,7 +474,6 @@ class MarkdownItParser {
   }
 
   processing(tokens) {
-    let previousType = '';
     for (let token of tokens) {
       if (token.type) {
         const lastElem = utils.getLastElemTokenType(token);
@@ -488,7 +484,7 @@ class MarkdownItParser {
 
         if (lastElem === 'open') {
           this.createBlock(token);
-        } else if (token.type === 'inline'/* && previousType !== 'empty'*/) {
+        } else if (token.type === 'inline') {
           if (this.currentBlock.type === 'dd' || this.currentBlock.type === 'blockquote') {
             token.tag = 'p';
             this.addBlockWithChildrenNodes(token);
@@ -499,12 +495,10 @@ class MarkdownItParser {
           this.closeBlock();
         } else if (token.tag === 'code') {
           this.addCodeBlock(token);
-        } else if (token.type === 'hr'/* || token.type === 'empty'*/ || token.type === 'abbr-def') {
+        } else if (token.type === 'hr' || token.type === 'abbr-def') {
           this.addVoidBlock(token);
         }
       }
-
-      previousType = token.type;
     }
   }
 
