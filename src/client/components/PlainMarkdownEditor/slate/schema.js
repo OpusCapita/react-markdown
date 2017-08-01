@@ -1,3 +1,5 @@
+import React from 'react';
+import Types from 'prop-types';
 import Prism from 'prismjs';
 import { Mark } from 'slate';
 
@@ -220,16 +222,15 @@ Prism.languages.markdown.blockquote.inside.italic = Prism.util.clone(Prism.langu
 Prism.languages.markdown.blockquote.inside.strikethrough = Prism.util.clone(Prism.languages.markdown.strikethrough);
 Prism.languages.markdown.blockquote.inside.url = Prism.util.clone(Prism.languages.markdown.url);
 
-const rendererComponent = props => {
+let rendererComponent = props => {
   let isLine = props.node.type === 'line';
   let hasMarks = props.mark;
-  // console.log(props.mark && props.mark.toJS());
 
-  if(isLine) {
+  if (isLine) {
     return (<div>{props.children}</div>);
   }
 
-  if(hasMarks && props.mark.type === 'code') {
+  if (hasMarks && props.mark.type === 'code') {
     const className = props.mark ? 'oc-md-hl-' + props.mark.type : '';
     return (
       <span className={className}>
@@ -239,7 +240,7 @@ const rendererComponent = props => {
     );
   }
 
-  if(hasMarks) {
+  if (hasMarks) {
     const className = props.mark ? 'oc-md-hl-' + props.mark.type : '';
     return (
       <span className={className}>
@@ -247,6 +248,13 @@ const rendererComponent = props => {
       </span>
     );
   }
+
+  return null;
+};
+
+rendererComponent.propTypes = {
+  node: Types.object,
+  mark: Types.object
 };
 
 /**
