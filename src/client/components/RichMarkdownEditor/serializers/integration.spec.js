@@ -115,6 +115,26 @@ End line`;
       expect(trimStr(str)).to.equal(trimStr(repars));
     });
 
+    it('Two unordered lists #2', () => {
+      let str = `## Lists
+Unordered
+
++ Create a list by starting a line with
++ Sub-lists are made by indenting 2 spaces:
+    + Marker character change forces new list start:
+
+
++ Sub-lists are made by indenting 2 spaces:
+    + Marker character change forces new list start:
+
+
+
+End line`;
+
+      let repars = reparser(str);
+      expect(trimStr(str)).to.equal(trimStr(repars));
+    });
+
     it('Ordered list (2 levels)', () => {
       let str = `## Lists    
 Ordered

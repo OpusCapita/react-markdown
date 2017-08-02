@@ -83,6 +83,219 @@ const listBlock = {
   "tag": "ul",
   "data": { "level": 3, "map": [2, 3], "parent": "unordered-list" }
 };
+const orderedListTokens = [{
+  "type": "line_count",
+  "tag": "lc",
+  "attrs": null,
+  "map": null,
+  "nesting": 1,
+  "level": 0,
+  "children": null,
+  "content": "",
+  "markup": "",
+  "info": "",
+  "meta": null,
+  "block": true,
+  "hidden": false,
+  "startLine": 1,
+  "endLine": 6
+}, {
+  "type": "ordered_list_open",
+  "tag": "ol",
+  "attrs": [["start", 5]],
+  "map": [1, 4],
+  "nesting": 1,
+  "level": 1,
+  "children": null,
+  "content": "",
+  "markup": ".",
+  "info": "",
+  "meta": null,
+  "block": true,
+  "hidden": false
+}, {
+  "type": "list_item_open",
+  "tag": "li",
+  "attrs": null,
+  "map": [1, 2],
+  "nesting": 1,
+  "level": 2,
+  "children": null,
+  "content": "",
+  "markup": ".",
+  "info": "",
+  "meta": null,
+  "block": true,
+  "hidden": false
+}, {
+  "type": "inline",
+  "tag": "",
+  "attrs": null,
+  "map": [1, 2],
+  "nesting": 0,
+  "level": 4,
+  "children": [{
+    "type": "text",
+    "tag": "",
+    "attrs": null,
+    "map": null,
+    "nesting": 0,
+    "level": 0,
+    "children": null,
+    "content": "Create a list by starting a line with",
+    "markup": "",
+    "info": "",
+    "meta": null,
+    "block": false,
+    "hidden": false
+  }],
+  "content": "Create a list by starting a line with",
+  "markup": "",
+  "info": "",
+  "meta": null,
+  "block": true,
+  "hidden": false
+}, {
+  "type": "list_item_close",
+  "tag": "li",
+  "attrs": null,
+  "map": null,
+  "nesting": -1,
+  "level": 2,
+  "children": null,
+  "content": "",
+  "markup": ".",
+  "info": "",
+  "meta": null,
+  "block": true,
+  "hidden": false
+}, {
+  "type": "list_item_open",
+  "tag": "li",
+  "attrs": null,
+  "map": [2, 3],
+  "nesting": 1,
+  "level": 2,
+  "children": null,
+  "content": "",
+  "markup": ".",
+  "info": "",
+  "meta": null,
+  "block": true,
+  "hidden": false
+}, {
+  "type": "inline",
+  "tag": "",
+  "attrs": null,
+  "map": [2, 3],
+  "nesting": 0,
+  "level": 4,
+  "children": [{
+    "type": "text",
+    "tag": "",
+    "attrs": null,
+    "map": null,
+    "nesting": 0,
+    "level": 0,
+    "children": null,
+    "content": "Sub-lists are made by indenting 2 spaces:",
+    "markup": "",
+    "info": "",
+    "meta": null,
+    "block": false,
+    "hidden": false
+  }],
+  "content": "Sub-lists are made by indenting 2 spaces:",
+  "markup": "",
+  "info": "",
+  "meta": null,
+  "block": true,
+  "hidden": false
+}, {
+  "type": "list_item_close",
+  "tag": "li",
+  "attrs": null,
+  "map": null,
+  "nesting": -1,
+  "level": 2,
+  "children": null,
+  "content": "",
+  "markup": ".",
+  "info": "",
+  "meta": null,
+  "block": true,
+  "hidden": false
+}, {
+  "type": "list_item_open",
+  "tag": "li",
+  "attrs": null,
+  "map": [3, 4],
+  "nesting": 1,
+  "level": 2,
+  "children": null,
+  "content": "",
+  "markup": ".",
+  "info": "",
+  "meta": null,
+  "block": true,
+  "hidden": false
+}, {
+  "type": "inline",
+  "tag": "",
+  "attrs": null,
+  "map": [3, 4],
+  "nesting": 0,
+  "level": 4,
+  "children": [{
+    "type": "text",
+    "tag": "",
+    "attrs": null,
+    "map": null,
+    "nesting": 0,
+    "level": 0,
+    "children": null,
+    "content": "Very easy!",
+    "markup": "",
+    "info": "",
+    "meta": null,
+    "block": false,
+    "hidden": false
+  }],
+  "content": "Very easy!",
+  "markup": "",
+  "info": "",
+  "meta": null,
+  "block": true,
+  "hidden": false
+}, {
+  "type": "list_item_close",
+  "tag": "li",
+  "attrs": null,
+  "map": null,
+  "nesting": -1,
+  "level": 2,
+  "children": null,
+  "content": "",
+  "markup": ".",
+  "info": "",
+  "meta": null,
+  "block": true,
+  "hidden": false
+}, {
+  "type": "ordered_list_close",
+  "tag": "ol",
+  "attrs": null,
+  "map": null,
+  "nesting": -1,
+  "level": 1,
+  "children": null,
+  "content": "",
+  "markup": ".",
+  "info": "",
+  "meta": null,
+  "block": true,
+  "hidden": false
+}];
 
 
 describe('MarkdownItParser', () => {
@@ -1132,6 +1345,133 @@ describe('MarkdownItParser', () => {
       compareJSONValues(markdownItParser.parentBlock, itemBlock2);
       compareJSONValues(markdownItParser.currentBlock, headingBlock);
       expect(markdownItParser.level).to.equal(4);
+    });
+
+    it('createBlock(token) - default', () => {
+      const token = {
+        "type": "list-list",
+        "tag": "ll",
+        "attrs": null,
+        "map": [3, 4],
+        "nesting": 1,
+        "level": 2,
+        "children": null,
+        "content": "",
+        "markup": ".",
+        "info": "",
+        "meta": null,
+        "block": true,
+        "hidden": false
+      };
+      let res = {
+        "kind": "block",
+        "type": "default",
+        "nodes": [],
+        "tag": "ll",
+        "data": { "level": 2, "map": [3, 4] }
+      };
+      markdownItParser.createBlock(token);
+
+      compareJSONValues(markdownItParser.blocks, []);
+      compareJSONValues(markdownItParser.currentBlock, res);
+      expect(markdownItParser.level).to.equal(1);
+    });
+  });
+
+  describe('Processing', () => {
+    it('processing(tokens)', () => {
+      const res = [{
+        "kind": "block",
+        "type": "ordered-list",
+        "nodes": [{
+          "kind": "block",
+          "type": "list-item",
+          "nodes": [{ "kind": "text", "ranges": [{ "text": "Create a list by starting a line with", "marks": [] }] }],
+          "tag": "li",
+          "data": { "markup": ".", "level": 2, "map": [1, 2] }
+        }, {
+          "kind": "block",
+          "type": "list-item",
+          "nodes": [{
+            "kind": "text",
+            "ranges": [{ "text": "Sub-lists are made by indenting 2 spaces:", "marks": [] }]
+          }],
+          "tag": "li",
+          "data": { "markup": ".", "level": 2, "map": [2, 3] }
+        }, {
+          "kind": "block",
+          "type": "list-item",
+          "nodes": [{ "kind": "text", "ranges": [{ "text": "Very easy!", "marks": [] }] }],
+          "tag": "li",
+          "data": { "markup": ".", "level": 2, "map": [3, 4] }
+        }],
+        "tag": "ol",
+        "data": { "level": 1, "map": [1, 4] },
+        "attrs": { "start": 5 }
+      }];
+      const res1 = [{
+        "kind": "block",
+        "type": "paragraph",
+        "data": { "map": [0, 1] },
+        "nodes": [{ "kind": "text", "ranges": [{ "text": "" }] }]
+      }, {
+        "kind": "block",
+        "type": "ordered-list",
+        "nodes": [{
+          "kind": "block",
+          "type": "list-item",
+          "nodes": [{
+            "kind": "text",
+            "ranges": [{ "text": "Create a list by starting a line with", "marks": [] }],
+            "data": { "parent": "ordered-list" }
+          }],
+          "tag": "li",
+          "data": { "markup": ".", "level": 2, "map": [1, 2], "parent": "ordered-list", "itemNum": 5 }
+        }, {
+          "kind": "block",
+          "type": "list-item",
+          "nodes": [{
+            "kind": "text",
+            "ranges": [{ "text": "Sub-lists are made by indenting 2 spaces:", "marks": [] }],
+            "data": { "parent": "ordered-list" }
+          }],
+          "tag": "li",
+          "data": { "markup": ".", "level": 2, "map": [2, 3], "parent": "ordered-list", "itemNum": 6 }
+        }, {
+          "kind": "block",
+          "type": "list-item",
+          "nodes": [{
+            "kind": "text",
+            "ranges": [{ "text": "Very easy!", "marks": [] }],
+            "data": { "parent": "ordered-list" }
+          }],
+          "tag": "li",
+          "data": { "markup": ".", "level": 2, "map": [3, 4], "parent": "ordered-list", "itemNum": 7 }
+        }],
+        "tag": "ol",
+        "data": { "level": 1, "map": [1, 4] },
+        "attrs": { "start": 5 }
+      }, {
+        "kind": "block",
+        "type": "paragraph",
+        "data": { "map": [4, 5] },
+        "nodes": [{ "kind": "text", "ranges": [{ "text": "" }] }]
+      }, {
+        "kind": "block",
+        "type": "paragraph",
+        "data": { "map": [5, 6] },
+        "nodes": [{ "kind": "text", "ranges": [{ "text": "" }] }]
+      }, {
+        "kind": "block",
+        "type": "paragraph",
+        "data": { "map": [6, 7] },
+        "nodes": [{ "kind": "text", "ranges": [{ "text": "" }] }]
+      }];
+
+      markdownItParser.processing(orderedListTokens);
+      compareJSONValues(markdownItParser.blocks, res);
+      markdownItParser.postprocessing(orderedListTokens);
+      compareJSONValues(markdownItParser.blocks, res1);
 
       // console.log(JSON.stringify(markdownItParser.blocks));
       // console.log(JSON.stringify(markdownItParser.currentBlock));

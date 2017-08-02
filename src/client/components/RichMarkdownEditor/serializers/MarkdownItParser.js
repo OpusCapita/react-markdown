@@ -47,12 +47,14 @@ class BlockNode {
       this.isVoid = true;
     }
 
-    if (token.level === 0 || token.level) {
-      this.data.level = token.level;
-    }
+    this.data.level = token.level;
 
     if (token.map) {
       this.data.map = token.map;
+    }
+
+    if (token.attrs) {
+      this.attrs = utils.parseAttrs(token.attrs);
     }
 
     if (token.meta) {
@@ -138,7 +140,7 @@ class MarkdownItParser {
           // li
           if (item.nodes.length === 1) {
             item.data.map[1] = item.data.map[0] + 1;
-          } else if (item.nodes.length > 1) { // li with sublist
+          } else { // li with sublist
             this.recalcListItemMap(item.nodes);
 
             item.data.map[1] = item.nodes[item.nodes.length - 1].data.map[1];
@@ -284,17 +286,15 @@ class MarkdownItParser {
               item.data.itemNum = num++;
             }
 
-            if (item.nodes) {
-              this.addParentType(item.nodes);
-            }
+            this.addParentType(item.nodes);
           }
 
           break;
 
         case 'dl':
-          let isSimple = true;
-
           // This code will use in future
+          // let isSimple = true;
+          //
           // for (let item of token.nodes) {
           //   if (item.type === 'dd' && item.nodes.length > 1) {
           //     isSimple = false;
@@ -302,23 +302,21 @@ class MarkdownItParser {
           //   }
           // }
 
-          if (isSimple) {
-            token.type = 'dl-simple';
+          // if (isSimple) {
+          token.type = 'dl-simple';
 
-            for (let item of token.nodes) {
-              switch (item.type) {
-                case 'dt':
-                  item.type = 'dt-simple';
-                  break;
-                case 'dd':
-                  item.type = 'dd-simple';
-                  item.nodes = item.nodes[0].nodes; // remove p-wrapper
-                  break;
-                default:
-                  //
-              }
+          for (let item of token.nodes) {
+            switch (item.type) { // eslint-disable-line
+              case 'dt':
+                item.type = 'dt-simple';
+                break;
+              case 'dd':
+                item.type = 'dd-simple';
+                item.nodes = item.nodes[0].nodes; // remove p-wrapper
+                break;
             }
           }
+          // }
           break;
 
         default:
@@ -329,18 +327,12 @@ class MarkdownItParser {
 
   addBlockWithChildrenNodes(token) {
     let node = new BlockNode(token);
-
-    if (token.children) {
-      node.nodes = new ChildrenInlineParser(token.children).nodes;
-    }
-
+    node.nodes = new ChildrenInlineParser(token.children).nodes;
     this.currentBlock.nodes.push(node);
   }
 
   setChildrenNodes(token) {
-    if (token.children) {
-      this.currentBlock.nodes = new ChildrenInlineParser(token.children).nodes;
-    }
+    this.currentBlock.nodes = new ChildrenInlineParser(token.children).nodes;
   }
 
   createBlock(token) {
@@ -464,29 +456,27 @@ class MarkdownItParser {
 
   processing(tokens) {
     for (let token of tokens) {
-      if (token.type) {
-        const lastElem = utils.getLastElemTokenType(token);
+      const lastElem = utils.getLastElemTokenType(token);
 
-        if (token.type === 'line_count') {
-          this.lineCount = token.endLine + 1;
-        }
+      if (token.type === 'line_count') {
+        this.lineCount = token.endLine + 1;
+      }
 
-        if (lastElem === 'open') {
-          this.createBlock(token);
-        } else if (token.type === 'inline') {
-          if (this.currentBlock.type === 'dd' || this.currentBlock.type === 'blockquote') {
-            token.tag = 'p';
-            this.addBlockWithChildrenNodes(token);
-          } else {
-            this.setChildrenNodes(token);
-          }
-        } else if (lastElem === 'close') {
-          this.closeBlock();
-        } else if (token.tag === 'code') {
-          this.addCodeBlock(token);
-        } else if (token.type === 'hr' || token.type === 'abbr-def') {
-          this.addVoidBlock(token);
+      if (lastElem === 'open') {
+        this.createBlock(token);
+      } else if (token.type === 'inline') {
+        if (this.currentBlock.type === 'dd' || this.currentBlock.type === 'blockquote') {
+          token.tag = 'p';
+          this.addBlockWithChildrenNodes(token);
+        } else {
+          this.setChildrenNodes(token);
         }
+      } else if (lastElem === 'close') {
+        this.closeBlock();
+      } else if (token.tag === 'code') {
+        this.addCodeBlock(token);
+      } else if (token.type === 'hr' || token.type === 'abbr-def') {
+        this.addVoidBlock(token);
       }
     }
   }
@@ -494,17 +484,7 @@ class MarkdownItParser {
   postprocessing() {
     this.recalcListItemMap();
     this.divideLists();
-
-    // console.log('divideLists:', JSON.stringify(this.blocks));
-    // console.log(' ');
-    // console.log(' ');
-
     this.addParagraphToEmptyLines();
-
-    // console.log('addParagraphToEmptyLines:', JSON.stringify(this.blocks));
-    // console.log(' ');
-    // console.log(' ');
-
     this.addParentType();
   }
 
