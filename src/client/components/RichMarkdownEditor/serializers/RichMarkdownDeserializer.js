@@ -31,7 +31,7 @@ const RichMarkdownDeserializer = {
     if (markdownData === '') {
       nodes = MarkdownItParser.getDefaultNodes();
     } else {
-      let eventTokens = MarkdownIt.parse(markdownData || '', {});
+      let eventTokens = MarkdownIt.parse(markdownData, {});
       const markdownItParser = new MarkdownItParser();
       nodes = markdownItParser.parse(eventTokens);
     }

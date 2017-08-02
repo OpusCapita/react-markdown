@@ -55,14 +55,6 @@ class BlockNode {
       this.data.map = token.map;
     }
 
-    if (token.attrs) {
-      this.attrs = utils.parseAttrs(token.attrs);
-
-      if (this.attrs.style) {
-        this.style = this.attrs.style;
-      }
-    }
-
     if (token.meta) {
       this.data = utils.assign(this.data, token.meta);
     }
@@ -288,10 +280,6 @@ class MarkdownItParser {
           this.setRecursiveParent(token.nodes, parent);
 
           for (let item of token.nodes) {
-            if (!item.data) {
-              item.data = {};
-            }
-
             if (token.type === 'ordered-list') {
               item.data.itemNum = num++;
             }
@@ -306,12 +294,13 @@ class MarkdownItParser {
         case 'dl':
           let isSimple = true;
 
-          for (let item of token.nodes) {
-            if (item.type === 'dd' && item.nodes.length > 1) {
-              isSimple = false;
-              break;
-            }
-          }
+          // This code will use in future
+          // for (let item of token.nodes) {
+          //   if (item.type === 'dd' && item.nodes.length > 1) {
+          //     isSimple = false;
+          //     break;
+          //   }
+          // }
 
           if (isSimple) {
             token.type = 'dl-simple';
@@ -338,6 +327,35 @@ class MarkdownItParser {
     }
   }
 
+  addBlockWithChildrenNodes(token) {
+    let node = new BlockNode(token);
+
+    if (token.children) {
+      node.nodes = new ChildrenInlineParser(token.children).nodes;
+    }
+
+    this.currentBlock.nodes.push(node);
+  }
+
+  setChildrenNodes(token) {
+    if (token.children) {
+      this.currentBlock.nodes = new ChildrenInlineParser(token.children).nodes;
+    }
+  }
+
+  createBlock(token) {
+    if (this.currentBlock) {
+      if (this.parentBlock) {
+        this.stack.push(this.parentBlock);
+      }
+
+      this.parentBlock = this.currentBlock;
+    }
+
+    this.currentBlock = new BlockNode(token);
+    this.level++;
+  }
+
   saveCurrentBlock() {
     if (this.currentBlock) {
       if (this.parentBlock) {
@@ -358,35 +376,6 @@ class MarkdownItParser {
 
     if (this.stack.length > 0) {
       this.parentBlock = this.stack.pop();
-    }
-  }
-
-  createBlock(token) {
-    if (this.currentBlock) {
-      if (this.parentBlock) {
-        this.stack.push(this.parentBlock);
-      }
-
-      this.parentBlock = this.currentBlock;
-    }
-
-    this.currentBlock = new BlockNode(token);
-    this.level++;
-  }
-
-  addBlockWithChildrenNodes(token) {
-    let node = new BlockNode(token);
-
-    if (token.children) {
-      node.nodes = new ChildrenInlineParser(token.children).nodes;
-    }
-
-    this.currentBlock.nodes.push(node);
-  }
-
-  setChildrenNodes(token) {
-    if (token.children) {
-      this.currentBlock.nodes = new ChildrenInlineParser(token.children).nodes;
     }
   }
 
@@ -505,7 +494,17 @@ class MarkdownItParser {
   postprocessing() {
     this.recalcListItemMap();
     this.divideLists();
+
+    // console.log('divideLists:', JSON.stringify(this.blocks));
+    // console.log(' ');
+    // console.log(' ');
+
     this.addParagraphToEmptyLines();
+
+    // console.log('addParagraphToEmptyLines:', JSON.stringify(this.blocks));
+    // console.log(' ');
+    // console.log(' ');
+
     this.addParentType();
   }
 
@@ -520,8 +519,7 @@ class MarkdownItParser {
     // console.log('markdown it:\n', JSON.stringify(tokens));
     // console.log(' ');
     // console.log(' ');
-    // console.log('StateRender:');
-    // console.log(JSON.stringify(this.blocks));
+    // console.log('StateRender:', JSON.stringify(this.blocks));
     // console.log(' ');
     // console.log(' ');
 

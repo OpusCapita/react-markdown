@@ -120,6 +120,22 @@ describe('ChildrenInlineParser', () => {
 
       compareJSONValues(nodes, res);
     });
+
+    it('closeCurrNode()', () => {
+      nodes.processToken(LINK_TOKENS[0]);
+      nodes.processToken(LINK_TOKENS[1]);
+      nodes.closeCurrNode();
+      let res = {
+        "_nodes": [{
+          "kind": "inline",
+          "isVoid": false,
+          "nodes": [{ "kind": "text", "ranges": [{ "text": "link text", "marks": [] }] }],
+          "type": "link",
+          "data": { "href": "http://dev.nodeca.com" }
+        }], "currNode": null, "currTextBlock": null, "marks": {}
+      };
+      compareJSONValues(nodes, res);
+    });
   });
 
   describe('Links', () => {
