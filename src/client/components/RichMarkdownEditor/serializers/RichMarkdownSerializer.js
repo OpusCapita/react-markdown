@@ -1,15 +1,7 @@
 import { Record } from 'immutable'
 import Utils from './utils'
+import { flattenDeep } from 'lodash'
 
-
-function createArrayJoined(length, value, sep = '') {
-  const arrFill = [];
-  for (let i = 0; i < length; i++) {
-    arrFill.push(value);
-  }
-
-  return arrFill.join(sep);
-}
 
 /**
  * String.
@@ -19,46 +11,6 @@ const StringRecord = new Record({
   kind: 'string',
   text: ''
 });
-
-const MARKUPS = {
-  code: '`',
-  underline: '++',
-  sup: '^',
-  sub: '~',
-  strikethrough: '~~',
-  mark: '==',
-  bold: '**',
-  italic: '_',
-};
-
-const EMOJI = {
-  angry: ['>:(', '>:-('],
-  blush: [':")', ':-")'],
-  broken_heart: ['</3', '<\\3'],
-  // :\ and :-\ not used because of conflict with markdown escaping
-  confused: [':/', ':-/'], // twemoji shows question
-  cry: [':,-(', ":'-(", ":'(", ':,('],
-  frowning: [':(', ':-('],
-  heart: ['<3'],
-  imp: [']:(', ']:-('],
-  innocent: ['o:)', 'O:)', 'o:-)', 'O:-)', '0:)', '0:-)'],
-  joy: [":')", ":'-)", ':,)', ':,-)', ":'D", ":'-D", ':,D', ':,-D'],
-  kissing: [':*', ':-*'],
-  laughing: ['x-)', 'X-)'],
-  neutral_face: [':|', ':-|'],
-  open_mouth: [':o', ':-o', ':O', ':-O'],
-  rage: [':@', ':-@'],
-  smile: [':D', ':-D'],
-  smiley: [':)', ':-)'],
-  smiling_imp: [']:)', ']:-)'],
-  sob: [":,'(", ":,'-(", ';(', ';-('],
-  stuck_out_tongue: [':P', ':-P'],
-  sunglasses: ['8-)', 'B-)'],
-  sweat: [',:(', ',:-('],
-  sweat_smile: [',:)', ',:-)'],
-  unamused: [':s', ':-S', ':z', ':-Z', ':$', ':-$'],
-  wink: [';)', ';-)']
-};
 
 /**
  * Rules to (de)serialize nodes.
@@ -98,22 +50,8 @@ const RULES = [
   {
     serialize(obj, children) {
       if (obj.kind === 'mark') {
-        if (MARKUPS[obj.type]) {
-          let markup = obj.getIn(['data', 'markup']);
-          markup = markup ? markup : MARKUPS[obj.type];
-          return `${markup}${children}${markup}`;
-        } else if (obj.type === 'emoji') {
-          let markup = obj.getIn(['data', 'markup']);
-          if (markup) {
-            if (EMOJI[markup]) {
-              return EMOJI[markup][0];
-            }
-
-            return `:${markup}:`;
-          }
-
-          return children;
-        }
+        let markup = obj.getIn(['data', 'markup']);
+        return `${markup}${children}${markup}`;
       }
 
       return undefined;
@@ -159,7 +97,7 @@ const NodeSerialize = {
   thead: (obj, children) => {
     // th tags count ( thead -> tr -> th )
     const columnsCount = obj.nodes.get(0).nodes.size;
-    return `${children}|${createArrayJoined(columnsCount, ' --------- |')}`;
+    return `${children}|${Utils.createArrayJoined(columnsCount, ' --------- |')}`;
   },
   tbody: (obj, children) => `${children}`,
   tr: (obj, children) => {
@@ -177,15 +115,7 @@ const NodeSerialize = {
     let parent = obj.getIn(['data', 'parent']);
 
     if (parent === 'unordered-list') {
-      let pref;
-
-      if (obj.getIn(['data', 'markup'])) {
-        pref = obj.getIn(['data', 'markup']);
-      } else {
-        let mod = obj.getIn(['data', 'level']) % 10;
-        pref = ['+', '+', '-', '-', '*', '*', '-', '+', '-', '*'][mod];
-      }
-
+      let pref = obj.getIn(['data', 'markup']);
       return `${pref} ${children}\n`;
     } else {
       return `${obj.getIn(['data', 'itemNum'])}. ${children}\n`;
@@ -194,23 +124,24 @@ const NodeSerialize = {
 
   // Definition lists
   'dl-simple': (obj, children) => children,
-  dl: (obj, children) => children,
-
   'dt-simple': (obj, children, previousNodeType) => {
     return `${previousNodeType === 'dd-simple' ? `\n` : ``}${children}\n`;
   },
-  'dt': (obj, children, previousNodeType) => `${previousNodeType === 'dd' ? `\n` : ``}${children}\n`,
   'dd-simple': (obj, children) => `  ~ ${children}\n`,
-  dd: (obj, children) => {
-    let arrChildren = children.split('\n');
-    for (let i = 0; i < arrChildren.length; i++) {
-      if (arrChildren[i] !== '') {
-        arrChildren[i] = i === 0 ? `:    ${arrChildren[i]}` : `     ${arrChildren[i]}`;
-      }
-    }
-    children = arrChildren.join('\n'); // eslint-disable-line
-    return `${children}\n`;
-  },
+
+  // This code will use un future
+  // dl: (obj, children) => children,
+  // 'dt': (obj, children, previousNodeType) => `${previousNodeType === 'dd' ? `\n` : ``}${children}\n`,
+  // dd: (obj, children) => {
+  //   let arrChildren = children.split('\n');
+  //   for (let i = 0; i < arrChildren.length; i++) {
+  //     if (arrChildren[i] !== '') {
+  //       arrChildren[i] = i === 0 ? `:    ${arrChildren[i]}` : `     ${arrChildren[i]}`;
+  //     }
+  //   }
+  //   children = arrChildren.join('\n'); // eslint-disable-line
+  //   return `${children}\n`;
+  // },
 
   // Various blocks
   blockquote: (obj, children) => {
@@ -235,8 +166,8 @@ const NodeSerialize = {
 
   // Void blocks
   'horizontal-rule': obj => {
-    const markup = obj.getIn(['data', 'markup']);
-    return markup ? markup : `---`;
+    // const markup = obj.getIn(['data', 'markup']);
+    return obj.getIn(['data', 'markup']);
   },
   'abbr-def': obj => {
     const label = obj.getIn(['data', 'label']);
@@ -253,7 +184,7 @@ const NodeSerialize = {
  */
 
 function createPrefixLine(num) {
-  return createArrayJoined(num, '> ');
+  return Utils.createArrayJoined(num, '> ');
 }
 
 /**
@@ -296,18 +227,10 @@ function addEmptyLinesToBlockquote(arrChildren) {
         break;
       }
 
-      if (i === 0) {
-        i = nextFullNum[i];
-      } else {
-        if (prefLength[i] >= nextLevel[i]) {
-          let prefixLine = createPrefixLine(nextLevel[i]);
-          newArrChildren.push(prefixLine);
+      let prefixLine = createPrefixLine(nextLevel[i]);
+      newArrChildren.push(prefixLine);
 
-          i = nextFullNum[i];
-        } else {
-          i++;
-        }
-      }
+      i = nextFullNum[i];
     }
   }
 
@@ -369,9 +292,7 @@ function listNodeRule(obj, children) {
     }
   }
 
-  if (arrChildren[arrChildren.length - 1].trim() === '') {
-    arrChildren.length--;
-  }
+  arrChildren.length--;
 
   children = arrChildren.join('\n'); // eslint-disable-line
   // Delete empty strings in the list
@@ -403,7 +324,7 @@ const InlineSerialize = {
     return string;
   },
   abbr: (obj, children) => `${children}`,
-  autocomplete: (obj, children) => `${children}`,
+  // autocomplete: (obj, children) => `${children}`, // This code will use in future
 
   image: obj => {
     let title = obj.getIn(['data', 'title']);
@@ -411,8 +332,6 @@ const InlineSerialize = {
     let alt = obj.getIn(['data', 'alt']);
     return `![${title}](${src}${alt ? ` "${alt}"` : ``})`;
   },
-
-  softbreak: () => `\n`,
 };
 
 
@@ -427,27 +346,13 @@ const RichMarkdownSerializer = {
   serializeString(string) {
     let strVal = string.text;
 
-    if (strVal.replace) {
-      strVal = strVal.replace(
-        /^((#+|(> *)+| +\+| +-| +\*| +[0-9]\.| +[0-9]\)| +[a-z]\.| +[a-z]\)| +[A-Z]\.| +[A-Z]\))( |$))/,
-        '\\$1'
-      );
-      strVal = strVal.replace(/(\+\+|\+|--|-|\*\*|\*|`|~~|~|\^)(.+)\1/g, '\\$1$2\\$1');
-
-      strVal = strVal.replace(/©/g, '(C)');
-      strVal = strVal.replace(/®/g, '(R)');
-      strVal = strVal.replace(/™/g, '(TM)');
-      strVal = strVal.replace(/§/g, '(P)');
-      strVal = strVal.replace(/±/g, '+-');
-      strVal = strVal.replace(/–/g, '--');
-      strVal = strVal.replace(/—/g, '---');
-      strVal = strVal.replace(/…/g, '...');
-    }
+    strVal = strVal.replace(
+      /^((#+|(> *)+| +\+| +-| +\*| +[0-9]\.| +[0-9]\)| +[a-z]\.| +[a-z]\)| +[A-Z]\.| +[A-Z]\))( |$))/,
+      '\\$1'
+    );
+    strVal = strVal.replace(/(\+\+|\+|--|-|\*\*|\*|`|~~|~|\^)(.+)\1/g, '\\$1$2\\$1');
 
     for (const rule of RULES) {
-      if (!rule.serialize) {
-        continue;
-      }
       const ret = rule.serialize(string, strVal);
       if (ret) {
         return ret;
@@ -465,19 +370,14 @@ const RichMarkdownSerializer = {
    * @returns {String|undefined}
    */
 
-  serializeMark(children, mark) {
+  serializeMark(children, mark) { // eslint-disable-line
     for (const rule of RULES) {
-      if (!rule.serialize) {
-        continue;
-      }
       const ret = rule.serialize(mark, children);
 
       if (ret) {
         return ret
       }
     }
-
-    return undefined;
   },
 
   /**
@@ -521,16 +421,13 @@ const RichMarkdownSerializer = {
       }
     }
 
-    let childrenFlatten = Utils.flatten(children);
-    children = childrenFlatten.length === 0 ? '' : childrenFlatten.join('');
+    let childrenFlatten = flattenDeep(children);
+    children = childrenFlatten.join('');
+    // children = childrenFlatten.length === 0 ? '' : childrenFlatten.join('');
 
     // processing of the current node
     let ret = null;
     for (const rule of RULES) {
-      if (!rule.serialize) {
-        continue;
-      }
-
       if (node.kind === 'block') {
         ret = rule.serialize(node, children, previousNodeType);
       } else {

@@ -58,7 +58,7 @@ class BlockNode {
     }
 
     if (token.meta) {
-      this.data = utils.assign(this.data, token.meta);
+      this.data = { ...this.data, ...token.meta };
     }
   }
 }

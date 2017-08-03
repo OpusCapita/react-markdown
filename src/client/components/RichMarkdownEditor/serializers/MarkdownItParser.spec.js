@@ -1472,9 +1472,6 @@ describe('MarkdownItParser', () => {
       compareJSONValues(markdownItParser.blocks, res);
       markdownItParser.postprocessing(orderedListTokens);
       compareJSONValues(markdownItParser.blocks, res1);
-
-      // console.log(JSON.stringify(markdownItParser.blocks));
-      // console.log(JSON.stringify(markdownItParser.currentBlock));
     });
   });
 });

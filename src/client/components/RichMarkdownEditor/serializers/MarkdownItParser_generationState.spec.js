@@ -1,13 +1,19 @@
 import { expect } from 'chai';
-import serialize from './RichMarkdownSerializer';
-import { Raw } from 'slate'
+import MarkdownItParser from './MarkdownItParser';
+import MarkdownIt from '../../../markdown-it/index';
 
+function parse(markdown) {
+  const markdownItParser = new MarkdownItParser([]);
+  markdownItParser.init();
 
-function reparser(state) {
-  return serialize(Raw.deserialize({ nodes: state }, { terse: true }));
+  return markdownItParser.parse(MarkdownIt.parse(markdown, {}));
 }
 
-describe('RichMarkdownSerializer', () => {
+function compareJSONValues(value1, value2) {
+  expect(JSON.parse(JSON.stringify(value1))).to.deep.equal(value2);
+}
+
+describe('MarkdownItParser_generationState', () => {
   describe('Heading', () => {
     it('Heading1', () => {
       const state = [{
@@ -15,11 +21,11 @@ describe('RichMarkdownSerializer', () => {
         "type": "heading1",
         "nodes": [{ "kind": "text", "ranges": [{ "text": "h1 Heading", "marks": [] }] }],
         "tag": "h1",
-        "data": { "level": 1, "map": [2, 3] }
+        "data": { "level": 1, "map": [0, 1] }
       }];
       const markdown = '# h1 Heading';
-      const repars = reparser(state);
-      expect(repars).to.equal(markdown);
+      const repars = parse(markdown);
+      compareJSONValues(repars, state);
     });
 
     it('Heading2', () => {
@@ -28,11 +34,11 @@ describe('RichMarkdownSerializer', () => {
         "type": "heading2",
         "nodes": [{ "kind": "text", "ranges": [{ "text": "h2 Heading", "marks": [] }] }],
         "tag": "h2",
-        "data": { "level": 1, "map": [2, 3] }
+        "data": { "level": 1, "map": [0, 1] }
       }];
       const markdown = '## h2 Heading';
-      const repars = reparser(state);
-      expect(repars).to.equal(markdown);
+      const repars = parse(markdown);
+      compareJSONValues(repars, state);
     });
 
     it('Heading3', () => {
@@ -41,11 +47,11 @@ describe('RichMarkdownSerializer', () => {
         "type": "heading3",
         "nodes": [{ "kind": "text", "ranges": [{ "text": "h3 Heading", "marks": [] }] }],
         "tag": "h3",
-        "data": { "level": 1, "map": [2, 3] }
+        "data": { "level": 1, "map": [0, 1] }
       }];
       const markdown = '### h3 Heading';
-      const repars = reparser(state);
-      expect(repars).to.equal(markdown);
+      const repars = parse(markdown);
+      compareJSONValues(repars, state);
     });
 
     it('Heading4', () => {
@@ -54,11 +60,11 @@ describe('RichMarkdownSerializer', () => {
         "type": "heading4",
         "nodes": [{ "kind": "text", "ranges": [{ "text": "h4 Heading", "marks": [] }] }],
         "tag": "h4",
-        "data": { "level": 1, "map": [2, 3] }
+        "data": { "level": 1, "map": [0, 1] }
       }];
       const markdown = '#### h4 Heading';
-      const repars = reparser(state);
-      expect(repars).to.equal(markdown);
+      const repars = parse(markdown);
+      compareJSONValues(repars, state);
     });
 
     it('Heading5', () => {
@@ -67,11 +73,11 @@ describe('RichMarkdownSerializer', () => {
         "type": "heading5",
         "nodes": [{ "kind": "text", "ranges": [{ "text": "h5 Heading", "marks": [] }] }],
         "tag": "h5",
-        "data": { "level": 1, "map": [2, 3] }
+        "data": { "level": 1, "map": [0, 1] }
       }];
       const markdown = '##### h5 Heading';
-      const repars = reparser(state);
-      expect(repars).to.equal(markdown);
+      const repars = parse(markdown);
+      compareJSONValues(repars, state);
     });
 
     it('Heading6', () => {
@@ -80,16 +86,17 @@ describe('RichMarkdownSerializer', () => {
         "type": "heading6",
         "nodes": [{ "kind": "text", "ranges": [{ "text": "h6 Heading", "marks": [] }] }],
         "tag": "h6",
-        "data": { "level": 1, "map": [2, 3] }
+        "data": { "level": 1, "map": [0, 1] }
       }];
       const markdown = '###### h6 Heading';
-      const repars = reparser(state);
-      expect(repars).to.equal(markdown);
+      const repars = parse(markdown);
+      compareJSONValues(repars, state);
     });
   });
 
   describe('Code', () => {
     it('Inline code', () => {
+      const markdown = 'Inline `code`';
       const state = [
         {
           "kind": "block",
@@ -102,27 +109,32 @@ describe('RichMarkdownSerializer', () => {
             }]
           }],
           "tag": "p",
-          "data": { "level": 1, "map": [3, 4] }
+          "data": { "level": 1, "map": [0, 1] }
         }
       ];
-      const markdown = 'Inline `code`';
-      const repars = reparser(state);
-      expect(repars).to.equal(markdown);
+      const repars = parse(markdown);
+      compareJSONValues(repars, state);
     });
 
     it('Indented code', () => {
+      const markdown = `### Indented code
+
+    // Some comments
+    line 1 of code
+    line 2 of code
+    line 3 of code`;
       const state = [
         {
           "kind": "block",
           "type": "heading3",
           "nodes": [{ "kind": "text", "ranges": [{ "text": "Indented code", "marks": [] }] }],
           "tag": "h3",
-          "data": { "level": 1, "map": [6, 7] }
+          "data": { "level": 1, "map": [0, 1] }
         },
         {
           "kind": "block",
           "type": "paragraph",
-          "data": { "map": [7, 8] },
+          "data": { "map": [1, 2] },
           "nodes": [{ "kind": "text", "ranges": [{ "text": "" }] }]
         },
         {
@@ -133,38 +145,37 @@ describe('RichMarkdownSerializer', () => {
             "ranges": [{ "text": "// Some comments\nline 1 of code\nline 2 of code\nline 3 of code" }]
           }],
           "tag": "code",
-          "data": { "level": 1, "map": [8, 12] }
+          "data": { "level": 1, "map": [2, 6] }
         }
       ];
-      const markdown = `### Indented code
-
-    // Some comments
-    line 1 of code
-    line 2 of code
-    line 3 of code`;
-      const repars = reparser(state);
-      expect(repars).to.equal(markdown);
+      const repars = parse(markdown);
+      compareJSONValues(repars, state);
     });
 
     it('Block code fences', () => {
-      const state = [{
-        "kind": "block",
-        "type": "code",
-        "nodes": [{ "kind": "text", "ranges": [{ "text": "Sample text here..." }] }],
-        "tag": "code",
-        "data": { "markup": "```", "level": 1, "map": [16, 19] }
-      }];
       const quotes = '```';
       const markdown = `${quotes}
 Sample text here...
 ${quotes}`;
-      const repars = reparser(state);
-      expect(repars).to.equal(markdown);
+      const state = [{
+        "kind": "block",
+        "type": "code",
+        "nodes": [{ "kind": "text", "ranges": [{ "text": "Sample text here...\n" }] }],
+        "tag": "code",
+        "data": { "markup": "```", "level": 1, "map": [0, 3] }
+      }];
+      const repars = parse(markdown);
+      compareJSONValues(repars, state);
     })
   });
 
   describe('Paragraph', () => {
     it('Paragraph', () => {
+      const markdown = `Paragraph one.
+
+Paragraph two.
+
+Paragraph three.`;
       const state = [{
         "kind": "block",
         "type": "paragraph",
@@ -194,18 +205,17 @@ ${quotes}`;
         "tag": "p",
         "data": { "level": 1, "map": [4, 5] }
       }];
-      const markdown = `Paragraph one.
-
-Paragraph two.
-
-Paragraph three.`;
-      const repars = reparser(state);
-      expect(repars).to.equal(markdown);
+      const repars = parse(markdown);
+      compareJSONValues(repars, state);
     });
   });
 
   describe('Table', () => {
     it('Table', () => {
+      const markdown = `| First Header | Second Header |
+| --------- | --------- |
+| Content Cell | Content Cell |
+| Content Cell | Content Cell |`;
       const state = [{
         "kind": "block",
         "type": "table",
@@ -303,17 +313,19 @@ Paragraph three.`;
         "tag": "table",
         "data": { "level": 1, "map": [0, 4] }
       }];
-      const markdown = `| First Header | Second Header |
-| --------- | --------- |
-| Content Cell | Content Cell |
-| Content Cell | Content Cell |`;
-      const repars = reparser(state);
-      expect(repars).to.equal(markdown);
+      const repars = parse(markdown);
+      compareJSONValues(repars, state);
     });
   });
 
   describe('Definition lists', () => {
     it('Compact style', () => {
+      const markdown = `Term 1
+  ~ Definition 1
+
+Term 2
+  ~ Definition 2a
+  ~ Definition 2b`;
       const state = [{
         "kind": "block",
         "type": "dl-simple",
@@ -322,47 +334,44 @@ Paragraph three.`;
           "type": "dt-simple",
           "nodes": [{ "kind": "text", "ranges": [{ "text": "Term 1", "marks": [] }] }],
           "tag": "dt",
-          "data": { "level": 2, "map": [4, 4] }
+          "data": { "level": 2, "map": [0, 0] }
         }, {
           "kind": "block",
           "type": "dd-simple",
           "nodes": [{ "kind": "text", "ranges": [{ "text": "Definition 1", "marks": [] }] }],
           "tag": "dd",
-          "data": { "level": 2, "map": [5, 7] }
+          "data": { "level": 2, "map": [1, 3] }
         }, {
           "kind": "block",
           "type": "dt-simple",
           "nodes": [{ "kind": "text", "ranges": [{ "text": "Term 2", "marks": [] }] }],
           "tag": "dt",
-          "data": { "level": 2, "map": [7, 7] }
+          "data": { "level": 2, "map": [3, 3] }
         }, {
           "kind": "block",
           "type": "dd-simple",
           "nodes": [{ "kind": "text", "ranges": [{ "text": "Definition 2a", "marks": [] }] }],
           "tag": "dd",
-          "data": { "level": 2, "map": [7, 9] }
+          "data": { "level": 2, "map": [3, 5] }
         }, {
           "kind": "block",
           "type": "dd-simple",
           "nodes": [{ "kind": "text", "ranges": [{ "text": "Definition 2b", "marks": [] }] }],
           "tag": "dd",
-          "data": { "level": 2, "map": [9, 11] }
+          "data": { "level": 2, "map": [5, 6] }
         }],
         "tag": "dl",
-        "data": { "level": 1, "map": [4, 11] }
+        "data": { "level": 1, "map": [0, 6] }
       }];
-      const markdown = `Term 1
-  ~ Definition 1
-
-Term 2
-  ~ Definition 2a
-  ~ Definition 2b`;
-      const repars = reparser(state);
-      expect(repars).to.equal(markdown);
+      const repars = parse(markdown);
+      compareJSONValues(repars, state);
     });
   });
 
   describe('Blockquote', () => {
+    const markdown = `> Blockquote 1
+> > Blockquote 2
+> > > Blockquote 3`;
     it('Blockquote', () => {
       const state = [{
         "kind": "block",
@@ -376,7 +385,7 @@ Term 2
             "data": { "parent": "blockquote" }
           }],
           "tag": "p",
-          "data": { "level": 3, "map": [2, 3], "parent": "blockquote" }
+          "data": { "level": 3, "map": [0, 1], "parent": "blockquote" }
         }, {
           "kind": "block",
           "type": "blockquote",
@@ -389,7 +398,7 @@ Term 2
               "data": { "parent": "blockquote" }
             }],
             "tag": "p",
-            "data": { "level": 4, "map": [3, 4], "parent": "blockquote" }
+            "data": { "level": 4, "map": [1, 2], "parent": "blockquote" }
           }, {
             "kind": "block",
             "type": "blockquote",
@@ -402,40 +411,38 @@ Term 2
                 "data": { "parent": "blockquote" }
               }],
               "tag": "p",
-              "data": { "level": 5, "map": [4, 5], "parent": "blockquote" }
+              "data": { "level": 5, "map": [2, 3], "parent": "blockquote" }
             }],
             "tag": "blockquote",
-            "data": { "level": 3, "map": [4, 5], "parent": "blockquote" }
+            "data": { "level": 3, "map": [2, 3], "parent": "blockquote" }
           }],
           "tag": "blockquote",
-          "data": { "level": 2, "map": [3, 5], "parent": "blockquote" }
+          "data": { "level": 2, "map": [1, 3], "parent": "blockquote" }
         }],
         "tag": "blockquote",
-        "data": { "level": 1, "map": [2, 5] }
+        "data": { "level": 1, "map": [0, 3] }
       }];
-      const markdown = `> Blockquote 1
-> > Blockquote 2
-> > > Blockquote 3`;
-      const repars = reparser(state);
-      expect(repars).to.equal(markdown);
+      const repars = parse(markdown);
+      compareJSONValues(repars, state);
     });
   });
 
   describe('Links', () => {
     it('anchor', () => {
+      const markdown = '[^label]: Text text text';
       const state = [{
         "kind": "block",
         "type": "anchor",
         "nodes": [{ "kind": "text", "ranges": [{ "text": "Text text text", "marks": [] }] }],
         "tag": "anchor",
-        "data": { "level": 1, "map": [2, 3], "label": "label" }
+        "data": { "level": 1, "map": [0, 1], "label": "label" }
       }];
-      const markdown = '[^label]: Text text text';
-      const repars = reparser(state);
-      expect(repars).to.equal(markdown);
+      const repars = parse(markdown);
+      compareJSONValues(repars, state);
     });
 
     it('link', () => {
+      const markdown = '[link text](http://dev.nodeca.com)';
       const state = [{
         "kind": "block",
         "type": "paragraph",
@@ -447,14 +454,14 @@ Term 2
           "data": { "href": "http://dev.nodeca.com" }
         }],
         "tag": "p",
-        "data": { "level": 1, "map": [2, 3] }
+        "data": { "level": 1, "map": [0, 1] }
       }];
-      const markdown = '[link text](http://dev.nodeca.com)';
-      const repars = reparser(state);
-      expect(repars).to.equal(markdown);
+      const repars = parse(markdown);
+      compareJSONValues(repars, state);
     });
 
     it('link with title', () => {
+      const markdown = '[link with title](http://nodeca.github.io/pica/demo/ "title text!")';
       const state = [{
         "kind": "block",
         "type": "paragraph",
@@ -466,18 +473,27 @@ Term 2
           "data": { "href": "http://nodeca.github.io/pica/demo/", "title": "title text!" }
         }],
         "tag": "p",
-        "data": { "level": 1, "map": [4, 5] }
+        "data": { "level": 1, "map": [0, 1] }
       }];
-      const markdown = '[link with title](http://nodeca.github.io/pica/demo/ "title text!")';
-      const repars = reparser(state);
-      expect(repars).to.equal(markdown);
+      const repars = parse(markdown);
+      compareJSONValues(repars, state);
     });
 
     it('link with emphasis', () => {
+      let markdown = '~~_**[link text](http://dev.nodeca.com "title text!")**_~~';
       let state = [{
         "kind": "block",
         "type": "paragraph",
         "nodes": [{
+          "kind": "text",
+          "ranges": [{
+            "text": "",
+            "marks": [{ "type": "strikethrough", "data": { "markup": "~~" } }, {
+              "type": "italic",
+              "data": { "markup": "_" }
+            }, { "type": "bold", "data": { "markup": "**" } }]
+          }]
+        }, {
           "kind": "inline",
           "isVoid": false,
           "nodes": [{
@@ -492,18 +508,33 @@ Term 2
           }],
           "type": "link",
           "data": { "href": "http://dev.nodeca.com", "title": "title text!" }
+        }, {
+          "kind": "text",
+          "ranges": [{
+            "text": "",
+            "marks": [{ "type": "strikethrough", "data": { "markup": "~~" } }, {
+              "type": "italic",
+              "data": { "markup": "_" }
+            }, { "type": "bold", "data": { "markup": "**" } }]
+          }]
         }],
         "tag": "p",
-        "data": { "level": 1, "map": [6, 7] }
+        "data": { "level": 1, "map": [0, 1] }
       }];
-      let markdown = '**_~~[link text](http://dev.nodeca.com "title text!")~~_**';
-      let repars = reparser(state);
-      expect(repars).to.equal(markdown);
+      let repars = parse(markdown);
+      compareJSONValues(repars, state);
 
+      markdown = '_**[link text](http://dev.nodeca.com)**_';
       state = [{
         "kind": "block",
         "type": "paragraph",
         "nodes": [{
+          "kind": "text",
+          "ranges": [{
+            "text": "",
+            "marks": [{ "type": "italic", "data": { "markup": "_" } }, { "type": "bold", "data": { "markup": "**" } }]
+          }]
+        }, {
           "kind": "inline",
           "isVoid": false,
           "nodes": [{
@@ -515,18 +546,24 @@ Term 2
           }],
           "type": "link",
           "data": { "href": "http://dev.nodeca.com" }
+        }, {
+          "kind": "text",
+          "ranges": [{
+            "text": "",
+            "marks": [{ "type": "italic", "data": { "markup": "_" } }, { "type": "bold", "data": { "markup": "**" } }]
+          }]
         }],
         "tag": "p",
-        "data": { "level": 1, "map": [8, 9] }
+        "data": { "level": 1, "map": [0, 1] }
       }];
-      markdown = '**_[link text](http://dev.nodeca.com)_**';
-      repars = reparser(state);
-      expect(repars).to.equal(markdown);
+      repars = parse(markdown);
+      compareJSONValues(repars, state);
 
+      markdown = '_[link text](http://dev.nodeca.com)_';
       state = [{
         "kind": "block",
         "type": "paragraph",
-        "nodes": [{
+        "nodes": [{ "kind": "text", "ranges": [] }, {
           "kind": "inline",
           "isVoid": false,
           "nodes": [{
@@ -535,18 +572,21 @@ Term 2
           }],
           "type": "link",
           "data": { "href": "http://dev.nodeca.com" }
-        }],
+        }, { "kind": "text", "ranges": [] }],
         "tag": "p",
-        "data": { "level": 1, "map": [10, 11] }
+        "data": { "level": 1, "map": [0, 1] }
       }];
-      markdown = '_[link text](http://dev.nodeca.com)_';
-      repars = reparser(state);
-      expect(repars).to.equal(markdown);
+      repars = parse(markdown);
+      compareJSONValues(repars, state);
 
+      markdown = '**[link text](http://dev.nodeca.com)**';
       state = [{
         "kind": "block",
         "type": "paragraph",
         "nodes": [{
+          "kind": "text",
+          "ranges": [{ "text": "", "marks": [{ "type": "bold", "data": { "markup": "**" } }] }]
+        }, {
           "kind": "inline",
           "isVoid": false,
           "nodes": [{
@@ -555,18 +595,21 @@ Term 2
           }],
           "type": "link",
           "data": { "href": "http://dev.nodeca.com" }
-        }],
+        }, { "kind": "text", "ranges": [{ "text": "", "marks": [{ "type": "bold", "data": { "markup": "**" } }] }] }],
         "tag": "p",
-        "data": { "level": 1, "map": [12, 13] }
+        "data": { "level": 1, "map": [0, 1] }
       }];
-      markdown = '**[link text](http://dev.nodeca.com)**';
-      repars = reparser(state);
-      expect(repars).to.equal(markdown);
+      repars = parse(markdown);
+      compareJSONValues(repars, state);
     });
   });
 
   describe('Lists', () => {
     it('Unordered', () => {
+      const markdown = `+ Item a
++ Item b
+    - Item b1
++ Item c`;
       const state = [{
         "kind": "block",
         "type": "unordered-list",
@@ -579,7 +622,7 @@ Term 2
             "data": { "parent": "unordered-list" }
           }],
           "tag": "li",
-          "data": { "markup": "+", "level": 2, "map": [2, 3], "parent": "unordered-list" }
+          "data": { "markup": "+", "level": 2, "map": [0, 1], "parent": "unordered-list" }
         }, {
           "kind": "block",
           "type": "list-item",
@@ -599,13 +642,13 @@ Term 2
                 "data": { "parent": "unordered-list" }
               }],
               "tag": "li",
-              "data": { "markup": "-", "level": 4, "map": [4, 5], "parent": "unordered-list" }
+              "data": { "markup": "-", "level": 4, "map": [2, 3], "parent": "unordered-list" }
             }],
             "tag": "ul",
-            "data": { "level": 3, "map": [4, 5], "parent": "unordered-list" }
+            "data": { "level": 3, "map": [2, 3], "parent": "unordered-list" }
           }],
           "tag": "li",
-          "data": { "markup": "+", "level": 2, "map": [3, 5], "parent": "unordered-list" }
+          "data": { "markup": "+", "level": 2, "map": [1, 3], "parent": "unordered-list" }
         }, {
           "kind": "block",
           "type": "list-item",
@@ -615,20 +658,20 @@ Term 2
             "data": { "parent": "unordered-list" }
           }],
           "tag": "li",
-          "data": { "markup": "+", "level": 2, "map": [5, 6], "parent": "unordered-list" }
+          "data": { "markup": "+", "level": 2, "map": [3, 4], "parent": "unordered-list" }
         }],
         "tag": "ul",
-        "data": { "level": 1, "map": [2, 6] }
+        "data": { "level": 1, "map": [0, 4] }
       }];
-      const markdown = `+ Item a
-+ Item b
-    - Item b1
-+ Item c`;
-      const repars = reparser(state);
-      expect(repars).to.equal(markdown);
+      const repars = parse(markdown);
+      compareJSONValues(repars, state);
     });
 
     it('Ordered', () => {
+      const markdown = `1. Create a list by starting a line with
+2. Sub-lists are made by indenting 2 spaces
+3. Very easy!
+    1. Marker character change forces new list start`;
       const state = [{
         "kind": "block",
         "type": "ordered-list",
@@ -641,7 +684,7 @@ Term 2
             "data": { "parent": "ordered-list" }
           }],
           "tag": "li",
-          "data": { "markup": ".", "level": 2, "map": [2, 3], "parent": "ordered-list", "itemNum": 1 }
+          "data": { "markup": ".", "level": 2, "map": [0, 1], "parent": "ordered-list", "itemNum": 1 }
         }, {
           "kind": "block",
           "type": "list-item",
@@ -651,7 +694,7 @@ Term 2
             "data": { "parent": "ordered-list" }
           }],
           "tag": "li",
-          "data": { "markup": ".", "level": 2, "map": [3, 4], "parent": "ordered-list", "itemNum": 2 }
+          "data": { "markup": ".", "level": 2, "map": [1, 2], "parent": "ordered-list", "itemNum": 2 }
         }, {
           "kind": "block",
           "type": "list-item",
@@ -671,28 +714,27 @@ Term 2
                 "data": { "parent": "ordered-list" }
               }],
               "tag": "li",
-              "data": { "markup": ".", "level": 4, "map": [5, 6], "parent": "ordered-list", "itemNum": 1 }
+              "data": { "markup": ".", "level": 4, "map": [3, 4], "parent": "ordered-list", "itemNum": 1 }
             }],
             "tag": "ol",
-            "data": { "level": 3, "map": [5, 6], "parent": "ordered-list" }
+            "data": { "level": 3, "map": [3, 4], "parent": "ordered-list" }
           }],
           "tag": "li",
-          "data": { "markup": ".", "level": 2, "map": [4, 6], "parent": "ordered-list", "itemNum": 3 }
+          "data": { "markup": ".", "level": 2, "map": [2, 4], "parent": "ordered-list", "itemNum": 3 }
         }],
         "tag": "ol",
-        "data": { "level": 1, "map": [2, 6] }
+        "data": { "level": 1, "map": [0, 4] }
       }];
-      const markdown = `1. Create a list by starting a line with
-2. Sub-lists are made by indenting 2 spaces
-3. Very easy!
-    1. Marker character change forces new list start`;
-      const repars = reparser(state);
-      expect(repars).to.equal(markdown);
+      const repars = parse(markdown);
+      compareJSONValues(repars, state);
     });
   });
 
   describe('Various blocks', () => {
     it('Abbreviations', () => {
+      const markdown = `This is PHP abbreviation example.
+
+*[PHP]: Personal Home Page`;
       const state = [{
         "kind": "block",
         "type": "paragraph",
@@ -703,6 +745,195 @@ Term 2
           "type": "abbr",
           "data": { "title": "Personal Home Page" }
         }, { "kind": "text", "ranges": [{ "text": " abbreviation example.", "marks": [] }] }],
+        "tag": "p",
+        "data": { "level": 1, "map": [0, 1] }
+      }, {
+        "kind": "block",
+        "type": "paragraph",
+        "data": { "map": [1, 2] },
+        "nodes": [{ "kind": "text", "ranges": [{ "text": "" }] }]
+      }, {
+        "kind": "block",
+        "type": "abbr-def",
+        "nodes": [],
+        "tag": "abbr-def",
+        "data": { "level": 1, "map": [2, 3], "label": "PHP", "title": "Personal Home Page" },
+        "isVoid": true
+      }];
+      const repars = parse(markdown);
+      compareJSONValues(repars, state);
+    });
+
+    it('Abbreviations 2', () => {
+      const markdown = `This is PHP abbreviation example.
+
+It converts PHP, but keep intact partial entries like xxxPHPyyy and so on.
+
+*[PHP]: Personal Home Page
+
+*[PHP]: Personal Home Page1`;
+      const state = [{
+        "kind": "block",
+        "type": "paragraph",
+        "nodes": [{ "kind": "text", "ranges": [{ "text": "This is ", "marks": [] }] }, {
+          "kind": "inline",
+          "isVoid": false,
+          "nodes": [{ "kind": "text", "ranges": [{ "text": "PHP" }] }],
+          "type": "abbr",
+          "data": { "title": "Personal Home Page" }
+        }, { "kind": "text", "ranges": [{ "text": " abbreviation example.", "marks": [] }] }],
+        "tag": "p",
+        "data": { "level": 1, "map": [0, 1] }
+      }, {
+        "kind": "block",
+        "type": "paragraph",
+        "data": { "map": [1, 2] },
+        "nodes": [{ "kind": "text", "ranges": [{ "text": "" }] }]
+      }, {
+        "kind": "block",
+        "type": "paragraph",
+        "nodes": [{ "kind": "text", "ranges": [{ "text": "It converts ", "marks": [] }] }, {
+          "kind": "inline",
+          "isVoid": false,
+          "nodes": [{ "kind": "text", "ranges": [{ "text": "PHP" }] }],
+          "type": "abbr",
+          "data": { "title": "Personal Home Page" }
+        }, {
+          "kind": "text",
+          "ranges": [{ "text": ", but keep intact partial entries like xxxPHPyyy and so on.", "marks": [] }]
+        }],
+        "tag": "p",
+        "data": { "level": 1, "map": [2, 3] }
+      }, {
+        "kind": "block",
+        "type": "paragraph",
+        "data": { "map": [3, 4] },
+        "nodes": [{ "kind": "text", "ranges": [{ "text": "" }] }]
+      }, {
+        "kind": "block",
+        "type": "abbr-def",
+        "nodes": [],
+        "tag": "abbr-def",
+        "data": { "level": 1, "map": [4, 5], "label": "PHP", "title": "Personal Home Page" },
+        "isVoid": true
+      }, {
+        "kind": "block",
+        "type": "paragraph",
+        "data": { "map": [5, 6] },
+        "nodes": [{ "kind": "text", "ranges": [{ "text": "" }] }]
+      }, {
+        "kind": "block",
+        "type": "paragraph",
+        "data": { "map": [6, 7] },
+        "nodes": [{ "kind": "text", "ranges": [{ "text": "" }] }]
+      }, {
+        "kind": "block",
+        "type": "paragraph",
+        "data": { "map": [7, 8] },
+        "nodes": [{ "kind": "text", "ranges": [{ "text": "" }] }]
+      }];
+      const repars = parse(markdown);
+      compareJSONValues(repars, state);
+    });
+
+    it('Abbreviations. Empty title or empty label', () => {
+      const markdown = `This is PHP abbreviation example.
+
+*[PHP]:
+
+*[]:`;
+      const state = [{
+        "kind": "block",
+        "type": "paragraph",
+        "nodes": [{ "kind": "text", "ranges": [{ "text": "This is PHP abbreviation example.", "marks": [] }] }],
+        "tag": "p",
+        "data": { "level": 1, "map": [0, 1] }
+      }, {
+        "kind": "block",
+        "type": "paragraph",
+        "data": { "map": [1, 2] },
+        "nodes": [{ "kind": "text", "ranges": [{ "text": "" }] }]
+      }, {
+        "kind": "block",
+        "type": "paragraph",
+        "nodes": [{ "kind": "text", "ranges": [{ "text": "*[PHP]:", "marks": [] }] }],
+        "tag": "p",
+        "data": { "level": 1, "map": [2, 3] }
+      }, {
+        "kind": "block",
+        "type": "paragraph",
+        "data": { "map": [3, 4] },
+        "nodes": [{ "kind": "text", "ranges": [{ "text": "" }] }]
+      }, {
+        "kind": "block",
+        "type": "paragraph",
+        "nodes": [{ "kind": "text", "ranges": [{ "text": "*[]:", "marks": [] }] }],
+        "tag": "p",
+        "data": { "level": 1, "map": [4, 5] }
+      }];
+      const repars = parse(markdown);
+      compareJSONValues(repars, state);
+    });
+
+    it('Abbreviations 4', () => {
+      const markdown = `This is PHP abbreviation example.
+
+*[`;
+      const state = [{
+        "kind": "block",
+        "type": "paragraph",
+        "nodes": [{ "kind": "text", "ranges": [{ "text": "This is PHP abbreviation example.", "marks": [] }] }],
+        "tag": "p",
+        "data": { "level": 1, "map": [0, 1] }
+      }, {
+        "kind": "block",
+        "type": "paragraph",
+        "data": { "map": [1, 2] },
+        "nodes": [{ "kind": "text", "ranges": [{ "text": "" }] }]
+      }, {
+        "kind": "block",
+        "type": "paragraph",
+        "nodes": [{ "kind": "text", "ranges": [{ "text": "*[", "marks": [] }] }],
+        "tag": "p",
+        "data": { "level": 1, "map": [2, 3] }
+      }];
+      const repars = parse(markdown);
+      compareJSONValues(repars, state);
+    });
+
+    it('Abbreviations 5', () => {
+      const markdown = `PHP have classes
+
+Today I don't use PHP
+
+*[PHP]: Personal Home Page`;
+      const state = [{
+        "kind": "block",
+        "type": "paragraph",
+        "nodes": [{
+          "kind": "inline",
+          "isVoid": false,
+          "nodes": [{ "kind": "text", "ranges": [{ "text": "PHP" }] }],
+          "type": "abbr",
+          "data": { "title": "Personal Home Page" }
+        }, { "kind": "text", "ranges": [{ "text": " have classes", "marks": [] }] }],
+        "tag": "p",
+        "data": { "level": 1, "map": [0, 1] }
+      }, {
+        "kind": "block",
+        "type": "paragraph",
+        "data": { "map": [1, 2] },
+        "nodes": [{ "kind": "text", "ranges": [{ "text": "" }] }]
+      }, {
+        "kind": "block",
+        "type": "paragraph",
+        "nodes": [{ "kind": "text", "ranges": [{ "text": "Today I don't use ", "marks": [] }] }, {
+          "kind": "inline",
+          "isVoid": false,
+          "nodes": [{ "kind": "text", "ranges": [{ "text": "PHP" }] }],
+          "type": "abbr",
+          "data": { "title": "Personal Home Page" }
+        }],
         "tag": "p",
         "data": { "level": 1, "map": [2, 3] }
       }, {
@@ -718,54 +949,99 @@ Term 2
         "data": { "level": 1, "map": [4, 5], "label": "PHP", "title": "Personal Home Page" },
         "isVoid": true
       }];
-      const markdown = `This is PHP abbreviation example.
+      const repars = parse(markdown);
+      compareJSONValues(repars, state);
+    });
 
-*[PHP]: Personal Home Page`;
-      const repars = reparser(state);
-      expect(repars).to.equal(markdown);
+    it('Abbreviations 6', () => {
+      const markdown = `PHP have classes
+
+*[PHP]: Personal Home Page
+
+*[PHP1]: Personal Home Page`;
+      const state = [{
+        "kind": "block",
+        "type": "paragraph",
+        "nodes": [{
+          "kind": "inline",
+          "isVoid": false,
+          "nodes": [{ "kind": "text", "ranges": [{ "text": "PHP" }] }],
+          "type": "abbr",
+          "data": { "title": "Personal Home Page" }
+        }, { "kind": "text", "ranges": [{ "text": " have classes", "marks": [] }] }],
+        "tag": "p",
+        "data": { "level": 1, "map": [0, 1] }
+      }, {
+        "kind": "block",
+        "type": "paragraph",
+        "data": { "map": [1, 2] },
+        "nodes": [{ "kind": "text", "ranges": [{ "text": "" }] }]
+      }, {
+        "kind": "block",
+        "type": "abbr-def",
+        "nodes": [],
+        "tag": "abbr-def",
+        "data": { "level": 1, "map": [2, 3], "label": "PHP", "title": "Personal Home Page" },
+        "isVoid": true
+      }, {
+        "kind": "block",
+        "type": "paragraph",
+        "data": { "map": [3, 4] },
+        "nodes": [{ "kind": "text", "ranges": [{ "text": "" }] }]
+      }, {
+        "kind": "block",
+        "type": "abbr-def",
+        "nodes": [],
+        "tag": "abbr-def",
+        "data": { "level": 1, "map": [4, 5], "label": "PHP1", "title": "Personal Home Page" },
+        "isVoid": true
+      }];
+      const repars = parse(markdown);
+      compareJSONValues(repars, state);
     });
 
     it('Horizontal Rules', () => {
+      let markdown = '___';
       let state = [{
         "kind": "block",
         "type": "horizontal-rule",
         "nodes": [],
         "tag": "hr",
-        "data": { "markup": "___", "level": 1, "map": [9, 10] },
+        "data": { "markup": "___", "level": 1, "map": [0, 1] },
         "isVoid": true
       }];
-      let markdown = '___';
-      let repars = reparser(state);
-      expect(repars).to.equal(markdown);
+      let repars = parse(markdown);
+      compareJSONValues(repars, state);
 
-      state = [{
-        "kind": "block",
-        "type": "horizontal-rule",
-        "nodes": [],
-        "tag": "hr",
-        "data": { "markup": "---", "level": 1, "map": [11, 12] },
-        "isVoid": true
-      }];
       markdown = '---';
-      repars = reparser(state);
-      expect(repars).to.equal(markdown);
-
       state = [{
         "kind": "block",
         "type": "horizontal-rule",
         "nodes": [],
         "tag": "hr",
-        "data": { "markup": "***", "level": 1, "map": [13, 14] },
+        "data": { "markup": "---", "level": 1, "map": [0, 1] },
         "isVoid": true
       }];
+      repars = parse(markdown);
+      compareJSONValues(repars, state);
+
       markdown = '***';
-      repars = reparser(state);
-      expect(repars).to.equal(markdown);
+      state = [{
+        "kind": "block",
+        "type": "horizontal-rule",
+        "nodes": [],
+        "tag": "hr",
+        "data": { "markup": "***", "level": 1, "map": [0, 1] },
+        "isVoid": true
+      }];
+      repars = parse(markdown);
+      compareJSONValues(repars, state);
     });
   });
 
   describe('Markups', () => {
     it('bold1', () => {
+      const markdown = '**This is bold text**';
       const state = [{
         "kind": "block",
         "type": "paragraph",
@@ -774,14 +1050,14 @@ Term 2
           "ranges": [{ "text": "This is bold text", "marks": [{ "type": "bold", "data": { "markup": "**" } }] }]
         }],
         "tag": "p",
-        "data": { "level": 1, "map": [2, 3] }
+        "data": { "level": 1, "map": [0, 1] }
       }];
-      const markdown = '**This is bold text**';
-      const repars = reparser(state);
-      expect(repars).to.equal(markdown);
+      const repars = parse(markdown);
+      compareJSONValues(repars, state);
     });
 
     it('bold2', () => {
+      const markdown = '__This is bold text__';
       const state = [{
         "kind": "block",
         "type": "paragraph",
@@ -790,14 +1066,14 @@ Term 2
           "ranges": [{ "text": "This is bold text", "marks": [{ "type": "bold", "data": { "markup": "__" } }] }]
         }],
         "tag": "p",
-        "data": { "level": 1, "map": [4, 5] }
+        "data": { "level": 1, "map": [0, 1] }
       }];
-      const markdown = '__This is bold text__';
-      const repars = reparser(state);
-      expect(repars).to.equal(markdown);
+      const repars = parse(markdown);
+      compareJSONValues(repars, state);
     });
 
     it('italic1', () => {
+      const markdown = '*This is italic text*';
       const state = [{
         "kind": "block",
         "type": "paragraph",
@@ -806,14 +1082,14 @@ Term 2
           "ranges": [{ "text": "This is italic text", "marks": [{ "type": "italic", "data": { "markup": "*" } }] }]
         }],
         "tag": "p",
-        "data": { "level": 1, "map": [6, 7] }
+        "data": { "level": 1, "map": [0, 1] }
       }];
-      const markdown = '*This is italic text*';
-      const repars = reparser(state);
-      expect(repars).to.equal(markdown);
+      const repars = parse(markdown);
+      compareJSONValues(repars, state);
     });
 
     it('italic2', () => {
+      const markdown = '_This is italic text_';
       const state = [{
         "kind": "block",
         "type": "paragraph",
@@ -822,14 +1098,14 @@ Term 2
           "ranges": [{ "text": "This is italic text", "marks": [{ "type": "italic", "data": { "markup": "_" } }] }]
         }],
         "tag": "p",
-        "data": { "level": 1, "map": [8, 9] }
+        "data": { "level": 1, "map": [0, 1] }
       }];
-      const markdown = '_This is italic text_';
-      const repars = reparser(state);
-      expect(repars).to.equal(markdown);
+      const repars = parse(markdown);
+      compareJSONValues(repars, state);
     });
 
     it('Strikethrough', () => {
+      const markdown = '~~Strikethrough~~';
       const state = [{
         "kind": "block",
         "type": "paragraph",
@@ -838,14 +1114,14 @@ Term 2
           "ranges": [{ "text": "Strikethrough", "marks": [{ "type": "strikethrough", "data": { "markup": "~~" } }] }]
         }],
         "tag": "p",
-        "data": { "level": 1, "map": [10, 11] }
+        "data": { "level": 1, "map": [0, 1] }
       }];
-      const markdown = '~~Strikethrough~~';
-      const repars = reparser(state);
-      expect(repars).to.equal(markdown);
+      const repars = parse(markdown);
+      compareJSONValues(repars, state);
     });
 
     it('Superscript', () => {
+      const markdown = '19^th^';
       const state = [{
         "kind": "block",
         "type": "paragraph",
@@ -857,14 +1133,14 @@ Term 2
           }]
         }],
         "tag": "p",
-        "data": { "level": 1, "map": [15, 16] }
+        "data": { "level": 1, "map": [0, 1] }
       }];
-      const markdown = '19^th^';
-      const repars = reparser(state);
-      expect(repars).to.equal(markdown);
+      const repars = parse(markdown);
+      compareJSONValues(repars, state);
     });
 
     it('Subscript', () => {
+      const markdown = 'H~2~O';
       const state = [{
         "kind": "block",
         "type": "paragraph",
@@ -876,14 +1152,14 @@ Term 2
           }, { "text": "O", "marks": [] }]
         }],
         "tag": "p",
-        "data": { "level": 1, "map": [17, 18] }
+        "data": { "level": 1, "map": [0, 1] }
       }];
-      const markdown = 'H~2~O';
-      const repars = reparser(state);
-      expect(repars).to.equal(markdown);
+      const repars = parse(markdown);
+      compareJSONValues(repars, state);
     });
 
     it('Inserted text', () => {
+      const markdown = '++Inserted text++';
       const state = [{
         "kind": "block",
         "type": "paragraph",
@@ -892,14 +1168,14 @@ Term 2
           "ranges": [{ "text": "Inserted text", "marks": [{ "type": "underline", "data": { "markup": "++" } }] }]
         }],
         "tag": "p",
-        "data": { "level": 1, "map": [21, 22] }
+        "data": { "level": 1, "map": [0, 1] }
       }];
-      const markdown = '++Inserted text++';
-      const repars = reparser(state);
-      expect(repars).to.equal(markdown);
+      const repars = parse(markdown);
+      compareJSONValues(repars, state);
     });
 
     it('Marked text', () => {
+      const markdown = '==Marked text==';
       const state = [{
         "kind": "block",
         "type": "paragraph",
@@ -908,11 +1184,10 @@ Term 2
           "ranges": [{ "text": "Marked text", "marks": [{ "type": "mark", "data": { "markup": "==" } }] }]
         }],
         "tag": "p",
-        "data": { "level": 1, "map": [26, 27] }
+        "data": { "level": 1, "map": [0, 1] }
       }];
-      const markdown = '==Marked text==';
-      const repars = reparser(state);
-      expect(repars).to.equal(markdown);
+      const repars = parse(markdown);
+      compareJSONValues(repars, state);
     });
   });
 });

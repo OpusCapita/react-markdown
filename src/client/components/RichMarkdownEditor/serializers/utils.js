@@ -8,45 +8,19 @@ function parseAttrs(attrs) {
   return objAttrs;
 }
 
-const hasOwnProperty = Object.prototype.hasOwnProperty;
-
-const assign = Object.assign || function(obj) {
-  for (let i = 1; i < arguments.length; i++) {
-    let target = arguments[i];
-    for (let key in target) {
-      if (hasOwnProperty.call(target, key)) {
-        obj[key] = target[key]; // eslint-disable-line
-      }
-    }
-  }
-  return obj;
-};
-
 function getLastElemTokenType(token) {
   const tokenData = token.type.split('_');
   return tokenData[tokenData.length - 1];
 }
 
-/**
- * Flattens nested Collections from arrays or list
- * @param {List|Array} arr
- * @returns {Array}
- */
-
-function flatten(arr) {
-  let newArr = [];
-
-  for (let el of arr) {
-    if (typeof el === 'string') {
-      newArr.push(el);
-    } else if (el && (el.size || el.length)) {
-      newArr = newArr.concat(flatten(el));
-    } else {
-      newArr.push('');
-    }
+function createArrayJoined(length, value, sep = '') {
+  const arrFill = [];
+  for (let i = 0; i < length; i++) {
+    arrFill.push(value);
   }
 
-  return newArr;
+  return arrFill.join(sep);
 }
 
-export default { parseAttrs, assign, getLastElemTokenType, flatten, };
+
+export default { parseAttrs, getLastElemTokenType, createArrayJoined, };

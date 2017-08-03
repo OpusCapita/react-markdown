@@ -44,8 +44,6 @@ module.exports = function subPlugin(md) {
       return false;
     }
 
-    if (silent) { return true; }
-
     label = state.src.slice(labelStart, labelEnd).replace(/\\(.)/g, '$1');
     title = state.src.slice(labelEnd + 2, max).trim();
     if (label.length === 0) { return false; }
@@ -58,7 +56,7 @@ module.exports = function subPlugin(md) {
 
       const token = new state.Token('abbr-def', 'abbr-def', 0);
       token.level = state.level;
-      token.meta  = { label: label, title: title };
+      token.meta = { label: label, title: title };
       token.map = [ startLine, startLine + 1 ];
 
       state.tokens.push(token);
@@ -116,30 +114,28 @@ module.exports = function subPlugin(md) {
 
         while ((m = reg.exec(text))) {
           if (m.index > 0 || m[1].length > 0) {
-            token         = new state.Token('text', '', 0);
+            token = new state.Token('text', '', 0);
             token.content = text.slice(pos, m.index + m[1].length);
             nodes.push(token);
           }
 
-          token         = new state.Token('abbr_open', 'abbr', 1);
-          token.attrs   = [ [ 'title', state.env.abbreviations[':' + m[2]] ] ];
+          token = new state.Token('abbr_open', 'abbr', 1);
+          token.attrs = [ [ 'title', state.env.abbreviations[':' + m[2]] ] ];
           nodes.push(token);
 
-          token         = new state.Token('text', '', 0);
+          token = new state.Token('text', '', 0);
           token.content = m[2];
           nodes.push(token);
 
-          token         = new state.Token('abbr_close', 'abbr', -1);
+          token = new state.Token('abbr_close', 'abbr', -1);
           nodes.push(token);
 
           reg.lastIndex -= m[3].length;
           pos = reg.lastIndex;
         }
 
-        if (!nodes.length) { continue; }
-
         if (pos < text.length) {
-          token         = new state.Token('text', '', 0);
+          token = new state.Token('text', '', 0);
           token.content = text.slice(pos);
           nodes.push(token);
         }
