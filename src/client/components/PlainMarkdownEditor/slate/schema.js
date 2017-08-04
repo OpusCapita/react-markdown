@@ -43,7 +43,8 @@ Prism.languages.insertBefore('markdown', 'prolog', {
   list: [{
     pattern: /^\s*[\+\-\*](\s).*/,
     inside: {}
-  }, {
+  }],
+  'ordered-list': [{
     pattern: /^\s*\d\.(\s).*/,
     inside: {}
   }],
@@ -210,11 +211,11 @@ Prism.languages.markdown.list[0].inside.italic = Prism.util.clone(Prism.language
 Prism.languages.markdown.list[0].inside.strikethrough = Prism.util.clone(Prism.languages.markdown.strikethrough);
 Prism.languages.markdown.list[0].inside.url = Prism.util.clone(Prism.languages.markdown.url);
 
-Prism.languages.markdown.list[1].inside.code = Prism.util.clone(Prism.languages.markdown.code);
-Prism.languages.markdown.list[1].inside.bold = Prism.util.clone(Prism.languages.markdown.bold);
-Prism.languages.markdown.list[1].inside.italic = Prism.util.clone(Prism.languages.markdown.italic);
-Prism.languages.markdown.list[1].inside.strikethrough = Prism.util.clone(Prism.languages.markdown.strikethrough);
-Prism.languages.markdown.list[1].inside.url = Prism.util.clone(Prism.languages.markdown.url);
+Prism.languages.markdown['ordered-list'][0].inside.code = Prism.util.clone(Prism.languages.markdown.code);
+Prism.languages.markdown['ordered-list'][0].inside.bold = Prism.util.clone(Prism.languages.markdown.bold);
+Prism.languages.markdown['ordered-list'][0].inside.italic = Prism.util.clone(Prism.languages.markdown.italic);
+Prism.languages.markdown['ordered-list'][0].inside.strikethrough = Prism.util.clone(Prism.languages.markdown.strikethrough);
+Prism.languages.markdown['ordered-list'][0].inside.url = Prism.util.clone(Prism.languages.markdown.url);
 
 Prism.languages.markdown.blockquote.inside.code = Prism.util.clone(Prism.languages.markdown.code);
 Prism.languages.markdown.blockquote.inside.bold = Prism.util.clone(Prism.languages.markdown.bold);
