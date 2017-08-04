@@ -343,7 +343,7 @@ const RichMarkdownSerializer = {
    * @return {String|undefined}
    */
 
-  serializeString(string) {
+  serializeString(string) { // eslint-disable-line
     let strVal = string.text;
 
     strVal = strVal.replace(
@@ -352,14 +352,13 @@ const RichMarkdownSerializer = {
     );
     strVal = strVal.replace(/(\+\+|\+|--|-|\*\*|\*|`|~~|~|\^)(.+)\1/g, '\\$1$2\\$1');
 
-    for (const rule of RULES) {
+    for (let i = 0; i < RULES.length; i++) {
+      const rule = RULES[i];
       const ret = rule.serialize(string, strVal);
       if (ret) {
         return ret;
       }
     }
-
-    return '';
   },
 
   /**
@@ -371,7 +370,8 @@ const RichMarkdownSerializer = {
    */
 
   serializeMark(children, mark) { // eslint-disable-line
-    for (const rule of RULES) {
+    for (let i = 0; i < RULES.length; i++) {
+      const rule = RULES[i];
       const ret = rule.serialize(mark, children);
 
       if (ret) {
@@ -405,21 +405,21 @@ const RichMarkdownSerializer = {
     let previousNodeType = parentPreviousNodeType;
     if (node.kind === 'text') {
       const ranges = [];
-      for (let range of node.getRanges()) {
+      node.getRanges().forEach(range => {
         let str = this.serializeRange(range);
         ranges.push(str);
-      }
+      });
       return ranges;
     }
 
     // Serialize and join child nodes
     let children = [];
-    for (let childNode of node.nodes) {
+    node.nodes.forEach(childNode => {
       children.push(this.serializeNode(childNode, previousNodeType));
       if (node.kind === 'block' && childNode.type) {
         previousNodeType = childNode.type;
       }
-    }
+    });
 
     let childrenFlatten = flattenDeep(children);
     children = childrenFlatten.join('');
@@ -427,7 +427,8 @@ const RichMarkdownSerializer = {
 
     // processing of the current node
     let ret = null;
-    for (const rule of RULES) {
+    for (let i = 0; i < RULES.length; i++) {
+      const rule = RULES[i];
       if (node.kind === 'block') {
         ret = rule.serialize(node, children, previousNodeType);
       } else {
@@ -457,9 +458,9 @@ const RichMarkdownSerializer = {
   serialize(state) {
     const { document } = state;
     const elements = [];
-    for (let node of document.nodes) {
+    document.nodes.forEach(node => {
       elements.push(this.serializeNode(node));
-    }
+    });
     const markdown = elements.join('\n').trim();
 
     // This console.log is necessary for debugging

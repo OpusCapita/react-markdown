@@ -134,22 +134,22 @@ class MarkdownItParser {
   }
 
   recalcListItemMap(tokens = this.blocks) {
-    for (let token of tokens) {
+    tokens.forEach(token => {
       if (token.type === 'unordered-list' || token.type === 'ordered-list') {
-        for (let item of token.nodes) {
+        token.nodes.forEach(item => {
           // li
           if (item.nodes.length === 1) {
-            item.data.map[1] = item.data.map[0] + 1;
+            item.data.map[1] = item.data.map[0] + 1; // eslint-disable-line
           } else { // li with sublist
             this.recalcListItemMap(item.nodes);
 
-            item.data.map[1] = item.nodes[item.nodes.length - 1].data.map[1];
+            item.data.map[1] = item.nodes[item.nodes.length - 1].data.map[1]; // eslint-disable-line
           }
-        }
+        });
 
-        token.data.map[1] = token.nodes[token.nodes.length - 1].data.map[1];
+        token.data.map[1] = token.nodes[token.nodes.length - 1].data.map[1]; // eslint-disable-line
       }
-    }
+    });
   }
 
   /**
@@ -167,17 +167,18 @@ class MarkdownItParser {
 
     let tokensLists = [];
     let currTokenList = [];
-    tokensLists.push(currTokenList);
-    currTokenList.push(token.nodes[0]);
+    for (let i = 0; i < token.nodes.length - 1; i++) {
+      currTokenList.push(token.nodes[i]); // Add current item to current list
 
-    for (let i = 1; i < token.nodes.length; i++) {
-      if (token.nodes[i - 1].data.map[1] < token.nodes[i].data.map[0]) {
-        currTokenList = [];
-        tokensLists.push(currTokenList);
+      // Next item is not in current list
+      if (token.nodes[i].data.map[1] < token.nodes[i + 1].data.map[0]) {
+        tokensLists.push(currTokenList); // Add current list to lists' list
+        currTokenList = []; // Create new current list
       }
-
-      currTokenList.push(token.nodes[i]);
     }
+    // Process last item
+    currTokenList.push(token.nodes[token.nodes.length - 1]);
+    tokensLists.push(currTokenList);
 
     // Items without empty lines between them
     if (tokensLists.length === 1) {
@@ -186,7 +187,8 @@ class MarkdownItParser {
 
     // Create the list of the unordered lists
     const newTokens = [];
-    for (let list of tokensLists) {
+    for (let i = 0; i < tokensLists.length; i++) {
+      let list = tokensLists[i];
       let tokenObj = MarkdownItParser.getUnorderedList(list, token.data.level, token.data.parent);
       newTokens.push(tokenObj);
     }
@@ -197,7 +199,8 @@ class MarkdownItParser {
   divideLists() {
     let newTokens = [];
 
-    for (let token of this.blocks) {
+    for (let i = 0; i < this.blocks.length; i++) {
+      let token = this.blocks[i];
       if (token.type === 'unordered-list') {
         newTokens = newTokens.concat(MarkdownItParser.divideList(token));
       } else {
@@ -211,7 +214,7 @@ class MarkdownItParser {
   /**
    * addParagraphToEmptyLines
    *
-   * @returns {*}
+   *  Method add empty paragraphs (for each empty line)
    */
 
   addParagraphToEmptyLines() {
@@ -222,7 +225,9 @@ class MarkdownItParser {
 
     let newTokens = [];
 
+    // the first there are one or several empty lines
     if (tokens[0].data.map[0] > 0) {
+      // add initial empty paragraphs (for each empty line)
       newTokens.push.apply(newTokens, MarkdownItParser.getEmptyParagraphs(0, tokens[0].data.map[0] - 1));
     }
 
@@ -240,7 +245,9 @@ class MarkdownItParser {
     const lastToken = tokens[tokens.length - 1];
     newTokens.push(lastToken);
 
+    // the last there are one or several empty lines
     if (this.lineCount - 1 > lastToken.data.map[1]) {
+      // add final empty paragraphs
       newTokens.push.apply(newTokens, MarkdownItParser.getEmptyParagraphs(lastToken.data.map[1], this.lineCount - 1));
     }
 
@@ -248,7 +255,8 @@ class MarkdownItParser {
   }
 
   setRecursiveParent(nodes, parent) {
-    for (let item of nodes) {
+    for (let i = 0; i < nodes.length; i++) {
+      let item = nodes[i];
       if (!item.data) {
         item.data = {};
       }
@@ -262,7 +270,8 @@ class MarkdownItParser {
   }
 
   addParentType(tokens = this.blocks) {
-    for (let token of tokens) {
+    for (let i = 0; i < tokens.length; i++) {
+      let token = tokens[i];
       let parent = '';
 
       switch (token.type) {
@@ -281,7 +290,8 @@ class MarkdownItParser {
 
           this.setRecursiveParent(token.nodes, parent);
 
-          for (let item of token.nodes) {
+          for (let i = 0; i < token.nodes.length; i++) {
+            let item = token.nodes[i];
             if (token.type === 'ordered-list') {
               item.data.itemNum = num++;
             }
@@ -305,7 +315,8 @@ class MarkdownItParser {
           // if (isSimple) {
           token.type = 'dl-simple';
 
-          for (let item of token.nodes) {
+          for (let i = 0; i < token.nodes.length; i++) {
+            let item = token.nodes[i];
             switch (item.type) { // eslint-disable-line
               case 'dt':
                 item.type = 'dt-simple';
@@ -455,7 +466,8 @@ class MarkdownItParser {
   }
 
   processing(tokens) {
-    for (let token of tokens) {
+    for (let i = 0; i < tokens.length; i++) {
+      let token = tokens[i];
       const lastElem = utils.getLastElemTokenType(token);
 
       if (token.type === 'line_count') {

@@ -64,13 +64,11 @@ class LinkNode extends InlineNode {
   setMarks(marks) {
     this.nodes[0].ranges[0].marks = [];
 
-    for (let mark in marks) {
-      if (mark !== '') {
-        this.nodes[0].ranges[0].marks.push({
-          type: markups[mark],
-          data: { markup: mark }
-        });
-      }
+    for (let mark in marks) { // eslint-disable-line
+      this.nodes[0].ranges[0].marks.push({
+        type: markups[mark],
+        data: { markup: mark }
+      });
     }
   }
 }
@@ -147,13 +145,11 @@ class TextBlock {
   setMarks(marks) {
     this.marks = [];
 
-    for (let mark in marks) {
-      if (mark !== '') {
-        this.marks.push({
-          type: markups[mark],
-          data: { markup: mark }
-        });
-      }
+    for (let mark in marks) { // eslint-disable-line
+      this.marks.push({
+        type: markups[mark],
+        data: { markup: mark }
+      });
     }
   }
 }
@@ -192,56 +188,24 @@ class ChildrenInlineParser {
 
   createLink(token) {
     this.addCurrNode();
-
-    let link = '';
-    let title = '';
-
-    for (let attr of token.attrs) {
-      switch (attr[0]) {
-        case 'href':
-          link = attr[1];
-          break;
-
-        case 'title':
-          title = attr[1];
-          break;
-
-        default:
-          //
-      }
-    }
-
+    const attrs = Utils.parseAttrs(token.attrs);
+    let link = attrs.href;
+    let title = attrs.title ? attrs.title : '';
     this.currNode = new LinkNode(link, title);
   }
 
   createAbbr(token) {
     this.addCurrNode();
-
-    let title = '';
-
-    for (let attr of token.attrs) {
-      if (attr[0] === 'title') {
-        title = attr[1];
-        break;
-      }
-    }
-
+    const attrs = Utils.parseAttrs(token.attrs);
+    let title = attrs.title;
     this.currNode = new AbbrNode(title);
   }
 
   createImage(token) {
-    let src = '';
-    let alt = '';
+    const attrs = Utils.parseAttrs(token.attrs);
+    let src = attrs.src;
+    let alt = attrs.title ? attrs.title : '';
     let title = token.content;
-
-    for (let attr of token.attrs) {
-      if (attr[0] === 'src') {
-        src = attr[1];
-      } else if (attr[0] === 'title') {
-        alt = attr[1];
-      }
-    }
-
     this.currNode = new ImageNode(title, src, alt);
     this.addCurrNode();
   }
@@ -262,7 +226,7 @@ class ChildrenInlineParser {
       this.currNode = new TextNode();
     }
 
-    if (token.type === 'code_inline' || token.type === 'emoji') {
+    if (token.type === 'code_inline') {
       this.addTextBlock();
       this.currTextBlock = new TextBlock(token);
       this.currTextBlock.setText(token.content);
@@ -280,19 +244,13 @@ class ChildrenInlineParser {
     if (token.type === 'text') {
       this.currTextBlock = new TextBlock(token);
       this.currTextBlock.setText(token.content);
-
-      if (this.marks !== {}) {
-        this.currTextBlock.setMarks(this.marks);
-      }
-
+      this.currTextBlock.setMarks(this.marks);
       this.addTextBlock();
     }
 
     // Remove token's mark from this marks
     if (lastElem === 'close') {
-      if (token.markup !== '') {
-        delete this.marks[token.markup];
-      }
+      delete this.marks[token.markup];
     }
   }
 
@@ -324,17 +282,13 @@ class ChildrenInlineParser {
 
   closeCurrNode() {
     if (this.currNode) {
-      if (this.currTextBlock) {
-        this.addTextBlock();
-      }
-
       this.addCurrNode();
     }
   }
 
   createNodes(tokens) {
-    for (let token of tokens) {
-      this.processToken(token);
+    for (let i = 0; i < tokens.length; i++) {
+      this.processToken(tokens[i]);
     }
 
     this.closeCurrNode();

@@ -441,6 +441,97 @@ Term 2
       compareJSONValues(repars, state);
     });
 
+    it('anchor #2. Space after ^', () => {
+      const markdown = `[^label]: Text text text
+
+[^ label1]: Text text text`;
+      const state = [{
+        "kind": "block",
+        "type": "anchor",
+        "nodes": [{ "kind": "text", "ranges": [{ "text": "Text text text", "marks": [] }] }],
+        "tag": "anchor",
+        "data": { "level": 1, "map": [0, 1], "label": "label" }
+      }, {
+        "kind": "block",
+        "type": "paragraph",
+        "data": { "map": [1, 2] },
+        "nodes": [{ "kind": "text", "ranges": [{ "text": "" }] }]
+      }, {
+        "kind": "block",
+        "type": "paragraph",
+        "nodes": [{ "kind": "text", "ranges": [{ "text": "[^ label1]: Text text text", "marks": [] }] }],
+        "tag": "p",
+        "data": { "level": 1, "map": [2, 3] }
+      }];
+      const repars = parse(markdown);
+      compareJSONValues(repars, state);
+    });
+
+    it('anchor #3. Empty label', () => {
+      const markdown = `[^]: Text text text`;
+      const state = [{
+        "kind": "block",
+        "type": "paragraph",
+        "nodes": [{ "kind": "text", "ranges": [{ "text": "[^]: Text text text", "marks": [] }] }],
+        "tag": "p",
+        "data": { "level": 1, "map": [0, 1] }
+      }];
+      const repars = parse(markdown);
+      compareJSONValues(repars, state);
+    });
+
+    it('anchor #4. First symbols are not [^', () => {
+      const markdown = `[_]: Text text text`;
+      const state = [{
+        "kind": "block",
+        "type": "paragraph",
+        "nodes": [{ "kind": "text", "ranges": [{ "text": "[_]: Text text text", "marks": [] }] }],
+        "tag": "p",
+        "data": { "level": 1, "map": [0, 1] }
+      }];
+      const repars = parse(markdown);
+      compareJSONValues(repars, state);
+    });
+
+    it('anchor #5. There is no symbol : after ]', () => {
+      const markdown = `[^label] Text text text`;
+      const state = [{
+        "kind": "block",
+        "type": "paragraph",
+        "nodes": [{ "kind": "text", "ranges": [{ "text": "[^label] Text text text", "marks": [] }] }],
+        "tag": "p",
+        "data": { "level": 1, "map": [0, 1] }
+      }];
+      const repars = parse(markdown);
+      compareJSONValues(repars, state);
+    });
+
+    it('anchor #6. There is no symbol : after ]', () => {
+      const markdown = `[^label]: Text text text
+
+[^label1]: Text text text`;
+      const state = [{
+        "kind": "block",
+        "type": "anchor",
+        "nodes": [{ "kind": "text", "ranges": [{ "text": "Text text text", "marks": [] }] }],
+        "tag": "anchor",
+        "data": { "level": 1, "map": [0, 1], "label": "label" }
+      }, {
+        "kind": "block",
+        "type": "paragraph",
+        "data": { "map": [1, 2] },
+        "nodes": [{ "kind": "text", "ranges": [{ "text": "" }] }]
+      }, {
+        "kind": "block",
+        "type": "anchor",
+        "nodes": [{ "kind": "text", "ranges": [{ "text": "Text text text", "marks": [] }] }],
+        "tag": "anchor",
+        "data": { "level": 1, "map": [2, 3], "label": "label1" }
+      }];
+      const repars = parse(markdown);
+      compareJSONValues(repars, state);
+    });
+
     it('link', () => {
       const markdown = '[link text](http://dev.nodeca.com)';
       const state = [{

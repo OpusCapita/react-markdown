@@ -2,7 +2,7 @@
 //
 'use strict';
 
-module.exports = function footnote_plugin(md) {
+module.exports = function(md) {
   let parseLinkLabel = md.helpers.parseLinkLabel,
     isSpace = md.utils.isSpace;
 
@@ -28,7 +28,6 @@ module.exports = function footnote_plugin(md) {
 
     if (pos === start + 2) { return false; } // no empty footnote labels
     if (pos + 1 >= max || state.src.charCodeAt(++pos) !== 0x3A /* : */) { return false; }
-    if (silent) { return true; }
     pos++;
 
     if (!state.env.footnotes) { state.env.footnotes = {}; }
@@ -54,11 +53,7 @@ module.exports = function footnote_plugin(md) {
       ch = state.src.charCodeAt(pos);
 
       if (isSpace(ch)) {
-        if (ch === 0x09) {
-          offset += 4 - offset % 4;
-        } else {
-          offset++;
-        }
+        offset++;
       } else {
         break;
       }
@@ -71,11 +66,7 @@ module.exports = function footnote_plugin(md) {
 
     state.bMarks[startLine] = posAfterColon;
     state.blkIndent += 4;
-    state.parentType = 'footnote';
-
-    if (state.sCount[startLine] < state.blkIndent) {
-      state.sCount[startLine] += state.blkIndent;
-    }
+    state.sCount[startLine] += state.blkIndent;
 
     state.md.block.tokenize(state, startLine, endLine, true);
 

@@ -111,7 +111,10 @@
     "exclude": [
       "**/*.spec.js",
       "**/*.SCOPE*.js",
-      "**/demo/**/*.js"
-    ]
+      "**/demo/**/*.js",
+      "src/client/markdown-it/plugins/autocomplete.js"
+    ],
+    "check-coverage": true,
+    "all": true
   }
 }

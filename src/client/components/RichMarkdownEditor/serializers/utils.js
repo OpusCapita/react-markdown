@@ -1,9 +1,9 @@
 function parseAttrs(attrs) {
   let objAttrs = {};
 
-  for (let attr of attrs) {
+  attrs.forEach(attr => {
     objAttrs[attr[0]] = attr[1];
-  }
+  });
 
   return objAttrs;
 }
