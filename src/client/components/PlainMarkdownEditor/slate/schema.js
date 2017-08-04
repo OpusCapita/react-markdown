@@ -214,7 +214,8 @@ Prism.languages.markdown.list[0].inside.url = Prism.util.clone(Prism.languages.m
 Prism.languages.markdown['ordered-list'][0].inside.code = Prism.util.clone(Prism.languages.markdown.code);
 Prism.languages.markdown['ordered-list'][0].inside.bold = Prism.util.clone(Prism.languages.markdown.bold);
 Prism.languages.markdown['ordered-list'][0].inside.italic = Prism.util.clone(Prism.languages.markdown.italic);
-Prism.languages.markdown['ordered-list'][0].inside.strikethrough = Prism.util.clone(Prism.languages.markdown.strikethrough);
+Prism.languages.markdown['ordered-list'][0].inside.strikethrough =
+  Prism.util.clone(Prism.languages.markdown.strikethrough);
 Prism.languages.markdown['ordered-list'][0].inside.url = Prism.util.clone(Prism.languages.markdown.url);
 
 Prism.languages.markdown.blockquote.inside.code = Prism.util.clone(Prism.languages.markdown.code);
