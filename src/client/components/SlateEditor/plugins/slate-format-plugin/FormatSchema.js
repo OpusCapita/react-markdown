@@ -47,7 +47,7 @@ const FormatSchema = {
     anchor: AnchorNode,
     paragraph: ParagraphNode,
     'horizontal-rule': HorizontalLineNode,
-    'empty': EmptyNode,
+    empty: EmptyNode,
     code: CodeNode,
     image: ImgNode,
     abbr: AbbrNode,

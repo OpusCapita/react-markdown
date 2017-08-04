@@ -1,93 +1,6 @@
-just a text
-**bold text**
-*italic text*
-***bold italic text***
-***bold italic text**italic*
-***bold italic text*bold**
-**_bold italic text_bold**
-__*bold italic text*bold__
+## Headings
 
-__bold text__
-_italic text_
-___bold italic text___
-
-___bold italic text__italic_
-___bold italic text_bold__
-
-~~strike-through text~~
-*~~strike-through text inside italic~~*
-~~*italic inside strike-through text*~~
-**~~strike-through text inside bold~~**
-~~**bold inside strike-through text**~~
-
-[opuscapita](https://www.opuscapita.com/)
-**[opuscapita](https://www.opuscapita.com/)**
-[**opuscapita**](https://www.opuscapita.com/)
-*[**opuscapita**](https://www.opuscapita.com/)*
-~~[**opuscapita**](https://www.opuscapita.com/)~~
-**~~[**opuscapita**](https://www.opuscapita.com/)~~
-
-# h1
-## h2
-### h3
-#### h4
-##### h5
-###### h6
-
-text `inline code` text
-
-text ```inline code``` text
-
-`inline code`
-```inline code```
-
-
-```
-code block
-  code block
-    code block
-```
-
-## Lists
-
-Unordered
-
-+ Create a list by starting a line with `+`, `-`, or `*`
-+ Sub-lists are made by indenting 2 spaces:
-  - Marker character change forces new list start:
-    * Ac tristique libero volutpat at
-    + Facilisis in pretium nisl aliquet
-    - Nulla volutpat aliquam velit
-+ Very easy!
-
-code block
-
-<strong></strong>
-```
-
-| c1 | c2 | c3 | c4 |
-|--|--|--|--|
-| a | b | c | d |
-| 1 | 2 | 3 | 4 |
-
-Footnote [^first].
-
-> blockquotes
->> nested blockquotes 
-
----
-__Advertisement :)__
-
-- [pica](#second) - high quality and fast image
-  resize in browser.
-- __[babelfish](https://github.com/nodeca/babelfish/)__ - developer friendly
-  i18n with plurals support and easy syntax.
-
-You will like those projects!
-
----
-
-# h1 Heading 8-)
+# h1 Heading
 ## h2 Heading
 ### h3 Heading
 #### h4 Heading
@@ -108,13 +21,11 @@ ___
 
 Enable typographer option to see result.
 
-(c) (C) (r) (R) (tm) (TM) (p) (P) +-
+(C) (C) (R) (R) (TM) (TM) (P) (P) +-
 
-test.. test... test..... test?..... test!....
+test... test... test... test?.. test!..
 
-!!!!!! ???? ,,  -- ---
-
-"Smartypants, double quotes" and 'single quotes'
+!!! ??? , -- ---
 
 
 ## Emphasis
@@ -130,85 +41,106 @@ _This is italic text_
 ~~Strikethrough~~
 
 
+## Subscript & Superscript
+
+19^th^
+
+H~2~O
+
+
+### [Inserted text](https://github.com/markdown-it/markdown-it-ins)
+
+++Inserted text++
+
+
+### [Marked text](https://github.com/markdown-it/markdown-it-mark)
+
+==Marked text==
+
+
+## Tables
+
+| First Header | Second Header | Third Header | 4th Header |
+| --------- | --------- | --------- | --------- |
+| Content Cell | Content Cell | Content Cell | Content Cell |
+| Content Cell | Content Cell | Content Cell | Content Cell |
+
+
+## Autocomplete
+
+This is text with $product. 
+
+It is #simple text.
+
+It #is simple $text.
+
+It is simple text.
+
+It is simple text.
+
+
 ## Blockquotes
 
 
-> Blockquotes can also be nested...
->> ...by using additional greater-than signs right next to each other...
-> > > ...or with spaces between arrows.
 
 
-## Lists
-
-Unordered
-
-+ Create a list by starting a line with `+`, `-`, or `*`
-+ Sub-lists are made by indenting 2 spaces:
-  - Marker character change forces new list start:
-    * Ac tristique libero volutpat at
-    + Facilisis in pretium nisl aliquet
-    - Nulla volutpat aliquam velit
-+ Very easy!
-
-Ordered
-
-1. Lorem ipsum dolor sit amet
-2. Consectetur adipiscing elit
-3. Integer molestie lorem at massa
+> Blockquote 1-1
+>
+> Blockquote 1-2
+>
+> Blockquote 1-3
+> > Blockquote 2-1
+> >
+> > Blockquote 2-2
+> > > Blockquote 3-1
 
 
-1. You can use sequential numbers...
-1. ...or keep all the numbers as `1.`
+## Blockquotes
 
-Start numbering with offset:
-
-57. foo
-1. bar
-
+> Blockquote 1-1
+>
+> Blockquote 1-2
+>
+> Blockquote 1-3
+> > Blockquote 2-1
+> >
+> > Blockquote 2-2
+> > > Blockquote 3-1
+>
+> Blockquote 1-4
+> > Blockquote 2-3
+> > > Blockquote 3-2
+>
+> Blockquote 1-5
+> > Blockquote 2-4
+> > > Blockquote 3-3
+> > > > Blockquote 4-1
+> > > >
+> > > > Blockquote 4-2
+> > >
+> > > Blockquote 3-4
+> > >
+> > > Blockquote 3-5
 
 ## Code
+### Inline code
 
 Inline `code`
 
-Indented code
+
+### Indented code
 
     // Some comments
     line 1 of code
     line 2 of code
     line 3 of code
-
-
-Block code "fences"
+    
+    
+### Block code fences
 
 ```
 Sample text here...
 ```
-
-Syntax highlighting
-
-``` js
-var foo = function (bar) {
-  return bar++;
-};
-
-console.log(foo(5));
-```
-
-## Tables
-
-| Option | Description |
-| ------ | ----------- |
-| data   | path to data files to supply the data that will be passed into templates. |
-| engine | engine to be used for processing templates. Handlebars is the default. |
-| ext    | extension to be used for dest files. |
-
-Right aligned columns
-
-| Option | Description |
-| ------:| -----------:|
-| data   | path to data files to supply the data that will be passed into templates. |
-| engine | engine to be used for processing templates. Handlebars is the default. |
-| ext    | extension to be used for dest files. |
 
 
 ## Links
@@ -217,83 +149,71 @@ Right aligned columns
 
 [link with title](http://nodeca.github.io/pica/demo/ "title text!")
 
-Autoconverted link https://github.com/nodeca/pica (enable linkify to see)
-
 
 ## Images
 
 ![Minion](https://octodex.github.com/images/minion.png)
+
 ![Stormtroopocat](https://octodex.github.com/images/stormtroopocat.jpg "The Stormtroopocat")
+
+![Minion](https://octodex.github.com/images/minion.png)![Stormtroopocat](https://octodex.github.com/images/stormtroopocat.jpg "The Stormtroopocat")
+
 
 Like links, Images also have a footnote style syntax
 
-![Alt text][id]
+## Lists
+### Unordered
 
-With a reference later in the document defining the URL location:
-
-[id]: https://octodex.github.com/images/dojocat.jpg  "The Dojocat"
-
-
-## Plugins
-
-The killer feature of `markdown-it` is very effective support of
-[syntax plugins](https://www.npmjs.org/browse/keyword/markdown-it-plugin).
-
-
-### [Emojies](https://github.com/markdown-it/markdown-it-emoji)
-
-> Classic markup: :wink: :crush: :cry: :tear: :laughing: :yum:
->
-> Shortcuts (emoticons): :-) :-( 8-) ;)
-
-see [how to change output](https://github.com/markdown-it/markdown-it-emoji#change-output) with twemoji.
-
-
-### [Subscript](https://github.com/markdown-it/markdown-it-sub) / [Superscript](https://github.com/markdown-it/markdown-it-sup)
-
-- 19^th^
-- H~2~O
++ Create a list by starting a line with
++ Sub-lists are made by indenting 2 spaces:
+    - Marker character change forces new list start:
+        * Ac tristique libero volutpat at
+        * Facilisis in pretium nisl aliquet
+            + Create a list by starting a line with
+                + Sub-lists are made by indenting 2 spaces:
+                - Marker character change forces new list start:
+    + Marker character change forces new list start:
+        * Ac tristique libero volutpat at
+        + Facilisis in pretium nisl aliquet
+        - Nulla volutpat aliquam velit
+    + Marker character change forces new list start:
+        + Nulla volutpat aliquam velit
+        + Nulla volutpat aliquam velit
+        + Nulla volutpat aliquam velit
+        + Nulla volutpat aliquam velit
++ Very easy!
 
 
-### [\<ins>](https://github.com/markdown-it/markdown-it-ins)
+### Ordered
 
-++Inserted text++
-
-
-### [\<mark>](https://github.com/markdown-it/markdown-it-mark)
-
-==Marked text==
-
-
-### [Footnotes](https://github.com/markdown-it/markdown-it-footnote)
-
-Footnote 1 link[^first].
-
-Footnote 2 link[^second].
-
-Inline footnote^[Text of inline footnote] definition.
-
-Duplicated footnote reference[^second].
-
-[^first]: Footnote **can have markup**
-
-[^second]: Footnote text.
+1. Create a list by starting a line with
+2. Sub-lists are made by indenting 2 spaces:
+    1. Marker character change forces new list start:
+    2. Marker character change forces new list start:
+    3. Marker character change forces new list start:
+3. Very easy!
+    1. Marker character change forces new list start:
+    2. Marker character change forces new list start:
+    3. Marker character change forces new list start:
 
 
-### [Definition lists](https://github.com/markdown-it/markdown-it-deflist)
+### [Abbreviations](https://github.com/markdown-it/markdown-it-abbr)
 
-Term 1
+This is PHP abbreviation example.
 
-:   Definition 1
-with lazy continuation.
+It converts PHP, but keep intact partial entries like xxxPHPyyy and so on.
 
-Term 2 with *inline markup*
+*[PHP]: Personal Home Page
 
-:   Definition 2
 
-        { some code, part of Definition 2 }
+## Anchor
 
-    Third paragraph of definition 2.
+[^label]: Text text text
+
+it is text.
+
+
+### Definition lists
 
 _Compact style:_
 
@@ -304,17 +224,7 @@ Term 2
   ~ Definition 2a
   ~ Definition 2b
 
+End Definition lists
 
-### [Abbreviations](https://github.com/markdown-it/markdown-it-abbr)
 
-This is HTML abbreviation example.
-
-It converts "HTML", but keep intact partial entries like "xxxHTMLyyy" and so on.
-
-*[HTML]: Hyper Text Markup Language
-
-### [Custom containers](https://github.com/markdown-it/markdown-it-container)
-
-::: warning
-*here be dragons*
-:::
+End text

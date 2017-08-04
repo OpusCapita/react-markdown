@@ -37,6 +37,10 @@ jobs:
           environment:
             MOCHA_FILE: junit/test-results.xml
 
+      - run:
+          name: upload-coverage
+          command: npm run upload-coverage
+
       - store_test_results:
           path: junit
 

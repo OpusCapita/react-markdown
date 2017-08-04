@@ -1,12 +1,13 @@
 import React from 'react';
 import Types from 'prop-types';
-import Markdown from '../serializer/MarkdownRenderer';
+import { deserialize, serialize } from './serializers';
 
 import {
   // AutocompletePlugin,
   BlockquotePlugin,
   BoldButton,
   BoldPlugin,
+  CodePlugin,
   FormatPlugin,
   HeaderFiveButton,
   HeaderFourButton,
@@ -31,8 +32,6 @@ import FullScreenButton from '../SlateEditor/plugins/slate-fullscreen-plugin';
 
 import { SlateContent, SlateEditor, SlateToolbar, SlateToolbarGroup } from '../SlateEditor';
 
-const markdown = new Markdown();
-
 /**
  * The rich text example.
  *
@@ -48,7 +47,7 @@ class RichMarkdownEditor extends React.Component {
    */
 
   state = {
-    editorState: markdown.deserialize(this.props.value || ''),
+    editorState: deserialize(this.props.value || ''),
     fullScreen: false
   };
 
@@ -59,6 +58,7 @@ class RichMarkdownEditor extends React.Component {
       StrikethroughPlugin(),
       BoldPlugin(),
       ItalicPlugin(),
+      CodePlugin(),
       UnderlinePlugin(),
       BlockquotePlugin(),
       HeaderPlugin(),
@@ -74,7 +74,7 @@ class RichMarkdownEditor extends React.Component {
    * @param {State} editorState
    */
   handleChange = (editorState) => {
-    this.props.onChange(markdown.serialize(editorState));
+    this.props.onChange(serialize(editorState));
 
     this.setState({ editorState });
   };
