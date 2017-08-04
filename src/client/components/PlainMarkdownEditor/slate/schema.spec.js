@@ -131,6 +131,34 @@ describe('plain editor schema', () => {
     assert.equal(getHtml(html), '######Header');
   });
 
+  it('should highlight header with no offset', () => {
+    let html;
+
+    html = ' # Header';
+    assert.equal(getHtml(html), '<span class="token header-no-offset"> # Header</span>');
+
+    html = ' ## Header';
+    assert.equal(getHtml(html), '<span class="token header-no-offset"> ## Header</span>');
+
+    html = ' ### Header';
+    assert.equal(getHtml(html), '<span class="token header-no-offset"> ### Header</span>');
+
+    html = ' #### Header';
+    assert.equal(getHtml(html), '<span class="token header-no-offset"> #### Header</span>');
+
+    html = ' ##### Header';
+    assert.equal(getHtml(html), '<span class="token header-no-offset"> ##### Header</span>');
+
+    html = ' ###### Header';
+    assert.equal(getHtml(html), '<span class="token header-no-offset"> ###### Header</span>');
+
+    html = '    #Header';
+    assert.equal(getHtml(html), '    #Header');
+
+    html = ' #Header';
+    assert.equal(getHtml(html), ' #Header');
+  });
+
   it('should highlight hr', () => {
     let html;
 

@@ -16,28 +16,31 @@ Prism.languages.insertBefore('markdown', 'prolog', {
     inside: {}
   },
   header1: {
-    pattern: /(^\s*)#{1}[\s]+.*$/,
-    inside: {},
-    greedy: true
+    pattern: /^#{1}[\s]+.*$/,
+    inside: {}
   },
   header2: {
-    pattern: /(^\s*)#{2}[\s]+.*/,
+    pattern: /^#{2}[\s]+.*/,
     inside: {}
   },
   header3: {
-    pattern: /(^\s*)#{3}[\s]+.*/,
+    pattern: /^#{3}[\s]+.*/,
     inside: {}
   },
   header4: {
-    pattern: /(^\s*)#{4}[\s]+.*/,
+    pattern: /^#{4}[\s]+.*/,
     inside: {}
   },
   header5: {
-    pattern: /(^\s*)#{5}[\s]+.*/,
+    pattern: /^#{5}[\s]+.*/,
     inside: {}
   },
   header6: {
-    pattern: /(^\s*)#{6}[\s]+.*/,
+    pattern: /^#{6}[\s]+.*/,
+    inside: {}
+  },
+  'header-no-offset': {
+    pattern: /(^\s{1,3})#{1,6}[\s]+.*$/,
     inside: {}
   },
   list: [{
@@ -176,6 +179,7 @@ Prism.languages.markdown.header3.inside.url = Prism.util.clone(Prism.languages.m
 Prism.languages.markdown.header4.inside.url = Prism.util.clone(Prism.languages.markdown.url);
 Prism.languages.markdown.header5.inside.url = Prism.util.clone(Prism.languages.markdown.url);
 Prism.languages.markdown.header6.inside.url = Prism.util.clone(Prism.languages.markdown.url);
+Prism.languages.markdown['header-no-offset'].inside.url = Prism.util.clone(Prism.languages.markdown.url);
 
 Prism.languages.markdown.header1.inside.bold = Prism.util.clone(Prism.languages.markdown.bold);
 Prism.languages.markdown.header2.inside.bold = Prism.util.clone(Prism.languages.markdown.bold);
@@ -183,6 +187,7 @@ Prism.languages.markdown.header3.inside.bold = Prism.util.clone(Prism.languages.
 Prism.languages.markdown.header4.inside.bold = Prism.util.clone(Prism.languages.markdown.bold);
 Prism.languages.markdown.header5.inside.bold = Prism.util.clone(Prism.languages.markdown.bold);
 Prism.languages.markdown.header6.inside.bold = Prism.util.clone(Prism.languages.markdown.bold);
+Prism.languages.markdown['header-no-offset'].inside.bold = Prism.util.clone(Prism.languages.markdown.bold);
 
 Prism.languages.markdown.header1.inside.italic = Prism.util.clone(Prism.languages.markdown.italic);
 Prism.languages.markdown.header2.inside.italic = Prism.util.clone(Prism.languages.markdown.italic);
@@ -190,6 +195,7 @@ Prism.languages.markdown.header3.inside.italic = Prism.util.clone(Prism.language
 Prism.languages.markdown.header4.inside.italic = Prism.util.clone(Prism.languages.markdown.italic);
 Prism.languages.markdown.header5.inside.italic = Prism.util.clone(Prism.languages.markdown.italic);
 Prism.languages.markdown.header6.inside.italic = Prism.util.clone(Prism.languages.markdown.italic);
+Prism.languages.markdown['header-no-offset'].inside.italic = Prism.util.clone(Prism.languages.markdown.italic);
 
 Prism.languages.markdown.header1.inside.strikethrough = Prism.util.clone(Prism.languages.markdown.strikethrough);
 Prism.languages.markdown.header2.inside.strikethrough = Prism.util.clone(Prism.languages.markdown.strikethrough);
@@ -197,6 +203,8 @@ Prism.languages.markdown.header3.inside.strikethrough = Prism.util.clone(Prism.l
 Prism.languages.markdown.header4.inside.strikethrough = Prism.util.clone(Prism.languages.markdown.strikethrough);
 Prism.languages.markdown.header5.inside.strikethrough = Prism.util.clone(Prism.languages.markdown.strikethrough);
 Prism.languages.markdown.header6.inside.strikethrough = Prism.util.clone(Prism.languages.markdown.strikethrough);
+Prism.languages.markdown['header-no-offset'].inside.strikethrough =
+  Prism.util.clone(Prism.languages.markdown.strikethrough);
 
 Prism.languages.markdown.header1.inside.code = Prism.util.clone(Prism.languages.markdown.code);
 Prism.languages.markdown.header2.inside.code = Prism.util.clone(Prism.languages.markdown.code);
@@ -204,6 +212,7 @@ Prism.languages.markdown.header3.inside.code = Prism.util.clone(Prism.languages.
 Prism.languages.markdown.header4.inside.code = Prism.util.clone(Prism.languages.markdown.code);
 Prism.languages.markdown.header5.inside.code = Prism.util.clone(Prism.languages.markdown.code);
 Prism.languages.markdown.header6.inside.code = Prism.util.clone(Prism.languages.markdown.code);
+Prism.languages.markdown['header-no-offset'].inside.code = Prism.util.clone(Prism.languages.markdown.code);
 
 Prism.languages.markdown.list[0].inside.code = Prism.util.clone(Prism.languages.markdown.code);
 Prism.languages.markdown.list[0].inside.bold = Prism.util.clone(Prism.languages.markdown.bold);

@@ -5,18 +5,23 @@
   padding-right: (@offset + 1ch);
 }
 
-.generate-headers(@n, @i: 1) when (@i =< @n) {
+.generate-headers-with-offset(@n, @i: 1) when (@i =< @n) {
   .oc-md-hl-header@{i} {
     .oc-md-hl-header(@i);
   }
   .oc-md-hl-code .oc-md-hl-header@{i} + .oc-md-hl-code-background {
     left: -(@i + 1ch);
   }
-  .generate-headers(@n, (@i + 1));
+  .generate-headers-with-offset(@n, (@i + 1));
 
 }
 
-.generate-headers(6);
+.generate-headers-with-offset(6);
+
+.oc-md-hl-header-no-offset {
+  font-weight: bold;
+  display: inline-flex;
+}
 
 .oc-md-hl-code {
   position: relative;
