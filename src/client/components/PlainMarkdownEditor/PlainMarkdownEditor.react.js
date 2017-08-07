@@ -34,15 +34,6 @@ class PlainMarkdownEditor extends React.Component {
     fullScreen: false
   };
 
-  componentWillMount = () => {
-    this.plugins = [
-      AutocompletePlugin({
-        extensions: this.props.extensions
-      }),
-      MarkdownPreviewPlugin()
-    ];
-  };
-
   handleChange = (editorState) => {
     this.props.onChange(Plain.serialize(editorState));
 
@@ -59,13 +50,20 @@ class PlainMarkdownEditor extends React.Component {
 
   render() {
     const { editorState } = this.state;
-    const { children } = this.props;
+    const { children, extensions } = this.props;
 
     const onFullScreen = this.props.onFullScreen || this.handleFullScreen;
     const fullScreen = this.props.onFullScreen ? this.props.fullScreen : this.state.fullScreen;
 
     let objectReferenceButtons = this.props.extensions.map((extension, index) => {
-      return <ObjectReferenceButton key={index} extension={extension} mode="plain" disabled={false}/>
+      return (
+        <ObjectReferenceButton
+          key={index}
+          extension={extension}
+          mode="plain"
+          disabled={false}
+        />
+      );
     });
 
     return (
@@ -74,6 +72,9 @@ class PlainMarkdownEditor extends React.Component {
         fullScreen={fullScreen}
         schema={schema}
         onChange={this.handleChange}
+        plugins={[
+          AutocompletePlugin({ extensions: extensions })
+        ]}
       >
         <SlateToolbar>
           <SlateToolbarGroup>

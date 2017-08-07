@@ -79,7 +79,7 @@ class AutocompleteWidget extends React.Component {
 
     if (items !== undefined && items !== null) {
       return (
-        <ul className="dropdown-menu textcomplete-dropdown"
+        <ul className="react-markdown--autocomplete-widget dropdown-menu textcomplete-dropdown"
           ref="items-list"
           style={styles}
         >
