@@ -16,7 +16,7 @@ class MarkdownEditor extends React.Component {
   };
 
   static defaultProps = {
-    mode: 'rich',
+    mode: 'plain',
     value: '',
     onChange: () => {},
     extensions: []
@@ -70,21 +70,33 @@ class MarkdownEditor extends React.Component {
 
     if (mode === 'plain') {
       return (
-        <PlainMarkdownEditor value={value} onChange={this.handleChangeValue}
-          onFullScreen={this.handleFullScreen} fullScreen={fullScreen} extensions={extensions}
+        <PlainMarkdownEditor
+          value={value}
+          onChange={this.handleChangeValue}
+          onFullScreen={this.handleFullScreen}
+          fullScreen={fullScreen}
+          extensions={extensions}
         >
-          {this.renderSwitchModeButton()}
+          {/* Temporary disabled switch to "rich editor mode"
+              this.renderSwitchModeButton()
+          */}
         </PlainMarkdownEditor>
       );
     } else {
       // mode is 'rich'
       return (
-        <RichMarkdownEditor value={value} onChange={this.handleChangeValue}
-          onFullScreen={this.handleFullScreen} fullScreen={fullScreen} extensions={extensions}
+        <RichMarkdownEditor
+          value={value}
+          onChange={this.handleChangeValue}
+          onFullScreen={this.handleFullScreen}
+          fullScreen={fullScreen}
+          extensions={extensions}
         >
-          {this.renderSwitchModeButton()}
+          {/* Temporary disabled switch to "rich editor mode"
+              this.renderSwitchModeButton()
+          */}
         </RichMarkdownEditor>
-      )
+      );
     }
   }
 }

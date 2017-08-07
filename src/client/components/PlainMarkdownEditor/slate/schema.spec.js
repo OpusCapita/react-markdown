@@ -131,6 +131,34 @@ describe('plain editor schema', () => {
     assert.equal(getHtml(html), '######Header');
   });
 
+  it('should highlight header with no offset', () => {
+    let html;
+
+    html = ' # Header';
+    assert.equal(getHtml(html), '<span class="token header-no-offset"> # Header</span>');
+
+    html = ' ## Header';
+    assert.equal(getHtml(html), '<span class="token header-no-offset"> ## Header</span>');
+
+    html = ' ### Header';
+    assert.equal(getHtml(html), '<span class="token header-no-offset"> ### Header</span>');
+
+    html = ' #### Header';
+    assert.equal(getHtml(html), '<span class="token header-no-offset"> #### Header</span>');
+
+    html = ' ##### Header';
+    assert.equal(getHtml(html), '<span class="token header-no-offset"> ##### Header</span>');
+
+    html = ' ###### Header';
+    assert.equal(getHtml(html), '<span class="token header-no-offset"> ###### Header</span>');
+
+    html = '    #Header';
+    assert.equal(getHtml(html), '    #Header');
+
+    html = ' #Header';
+    assert.equal(getHtml(html), ' #Header');
+  });
+
   it('should highlight hr', () => {
     let html;
 
@@ -678,7 +706,7 @@ describe('plain editor schema', () => {
     assert.equal(getHtml(html), candidate);
   });
 
-  it('shouldn highlight italic inside strikethrough', () => {
+  it('should highlight italic inside strikethrough', () => {
     let html;
     let candidate;
 
@@ -691,7 +719,7 @@ describe('plain editor schema', () => {
     assert.equal(getHtml(html), candidate);
   });
 
-  it('shouldn highlight bold inside strikethrough', () => {
+  it('should highlight bold inside strikethrough', () => {
     let html;
     let candidate;
 
@@ -704,7 +732,7 @@ describe('plain editor schema', () => {
     assert.equal(getHtml(html), candidate);
   });
 
-  it('shouldn highlight bold-italic inside strikethrough', () => {
+  it('should highlight bold-italic inside strikethrough', () => {
     let html;
     let candidate;
 
@@ -730,6 +758,150 @@ describe('plain editor schema', () => {
 
     html = '~~***bold***~~';
     candidate = `<span class="token strikethrough">~~<span class="token bold">**<span class="token italic">*bold*</span>**</span>~~</span>`;
+    assert.equal(getHtml(html), candidate);
+  });
+
+  it('should highlight italic inside header', () => {
+    let html;
+    let candidate;
+
+    html = '# _text_';
+    candidate = `<span class="token header1"># <span class="token italic">_text_</span></span>`;
+    assert.equal(getHtml(html), candidate);
+
+    html = '# *text*';
+    candidate = `<span class="token header1"># <span class="token italic">*text*</span></span>`;
+    assert.equal(getHtml(html), candidate);
+  });
+
+  it('should highlight bold inside header', () => {
+    let html;
+    let candidate;
+
+    html = '# __text__';
+    candidate = `<span class="token header1"># <span class="token bold">__text__</span></span>`;
+    assert.equal(getHtml(html), candidate);
+
+    html = '# **text**';
+    candidate = `<span class="token header1"># <span class="token bold">**text**</span></span>`;
+    assert.equal(getHtml(html), candidate);
+  });
+
+  it('should highlight strikethrough inside header', () => {
+    let html;
+    let candidate;
+
+    html = '# ~~text~~';
+    candidate = `<span class="token header1"># <span class="token strikethrough">~~text~~</span></span>`;
+    assert.equal(getHtml(html), candidate);
+  });
+
+  it('should highlight code inside header', () => {
+    let html;
+    let candidate;
+
+    html = '# `text`';
+    candidate = '<span class="token header1"># <span class="token code">`text`</span></span>';
+    assert.equal(getHtml(html), candidate);
+
+    html = '# ```text```';
+    candidate = '<span class="token header1"># <span class="token code">```text```</span></span>';
+    assert.equal(getHtml(html), candidate);
+  });
+
+  it('should highlight italic inside list', () => {
+    let html;
+    let candidate;
+
+    html = '- _text_';
+    candidate = `<span class="token list">- <span class="token italic">_text_</span></span>`;
+    assert.equal(getHtml(html), candidate);
+
+    html = '- *text*';
+    candidate = `<span class="token list">- <span class="token italic">*text*</span></span>`;
+    assert.equal(getHtml(html), candidate);
+  });
+
+  it('should highlight bold inside list', () => {
+    let html;
+    let candidate;
+
+    html = '- __text__';
+    candidate = `<span class="token list">- <span class="token bold">__text__</span></span>`;
+    assert.equal(getHtml(html), candidate);
+
+    html = '- **text**';
+    candidate = `<span class="token list">- <span class="token bold">**text**</span></span>`;
+    assert.equal(getHtml(html), candidate);
+  });
+
+  it('should highlight strikethrough inside list', () => {
+    let html;
+    let candidate;
+
+    html = '- ~~text~~';
+    candidate = `<span class="token list">- <span class="token strikethrough">~~text~~</span></span>`;
+    assert.equal(getHtml(html), candidate);
+  });
+
+  it('should highlight code inside list', () => {
+    let html;
+    let candidate;
+
+    html = '- `text`';
+    candidate = '<span class="token list">- <span class="token code">`text`</span></span>';
+    assert.equal(getHtml(html), candidate);
+
+    html = '- ```text```';
+    candidate = '<span class="token list">- <span class="token code">```text```</span></span>';
+    assert.equal(getHtml(html), candidate);
+  });
+
+  it('should highlight italic inside blockquote', () => {
+    let html;
+    let candidate;
+
+    html = '> _text_';
+    candidate = `<span class="token blockquote">> <span class="token italic">_text_</span></span>`;
+    assert.equal(getHtml(html), candidate);
+
+    html = '> *text*';
+    candidate = `<span class="token blockquote">> <span class="token italic">*text*</span></span>`;
+    assert.equal(getHtml(html), candidate);
+  });
+
+  it('should highlight bold inside blockquote', () => {
+    let html;
+    let candidate;
+
+    html = '> __text__';
+    candidate = `<span class="token blockquote">> <span class="token bold">__text__</span></span>`;
+    assert.equal(getHtml(html), candidate);
+
+    html = '> **text**';
+    candidate = `<span class="token blockquote">> <span class="token bold">**text**</span></span>`;
+    assert.equal(getHtml(html), candidate);
+  });
+
+  it('should highlight strikethrough inside blockquote', () => {
+    let html;
+    let candidate;
+
+    html = '> ~~text~~';
+    candidate = `<span class="token blockquote">> <span class="token strikethrough">~~text~~</span></span>`;
+    assert.equal(getHtml(html), candidate);
+  });
+
+  it('should highlight code inside blockquote', () => {
+    let html;
+    let candidate;
+
+    html = '> `text`';
+    candidate = '<span class="token blockquote">> <span class="token code">`text`</span></span>';
+    assert.equal(getHtml(html), candidate);
+
+    html = '> ```text```';
+    candidate = '<span class="token blockquote">> <span class="token code">```text```</span></span>';
     assert.equal(getHtml(html), candidate);
   });
 });

@@ -1,3 +1,5 @@
+import React from 'react';
+import Types from 'prop-types';
 import Prism from 'prismjs';
 import { Mark } from 'slate';
 
@@ -10,37 +12,44 @@ Prism.languages.markdown = Prism.languages.extend("markup", {});
 
 Prism.languages.insertBefore('markdown', 'prolog', {
   blockquote: {
-    pattern: /^>(?:[\t ]*>)*.*/m
+    pattern: /^>(?:[\t ]*>)*.*/m,
+    inside: {}
   },
-  code: [{
-    pattern: /(^|[^`])```[^`\n\r]*[^`\n\r]```(?!`)/,
-    lookbehind: true
-  }, {
-    pattern: /(^|[^`])`[^`\n\r]*[^`\n\r]`(?!`)/,
-    lookbehind: true
-  }],
   header1: {
-    pattern: /(^\s*)#{1}[\s]+.*/m
+    pattern: /^#{1}[\s]+.*$/,
+    inside: {}
   },
   header2: {
-    pattern: /(^\s*)#{2}[\s]+.*/m
+    pattern: /^#{2}[\s]+.*/,
+    inside: {}
   },
   header3: {
-    pattern: /(^\s*)#{3}[\s]+.*/m
+    pattern: /^#{3}[\s]+.*/,
+    inside: {}
   },
   header4: {
-    pattern: /(^\s*)#{4}[\s]+.*/m
+    pattern: /^#{4}[\s]+.*/,
+    inside: {}
   },
   header5: {
-    pattern: /(^\s*)#{5}[\s]+.*/m
+    pattern: /^#{5}[\s]+.*/,
+    inside: {}
   },
   header6: {
-    pattern: /(^\s*)#{6}[\s]+.*/m
+    pattern: /^#{6}[\s]+.*/,
+    inside: {}
+  },
+  'header-no-offset': {
+    pattern: /(^\s{1,3})#{1,6}[\s]+.*$/,
+    inside: {}
   },
   list: [{
-    pattern: /^\s*[\+\-\*](\s).*/
-  }, {
-    pattern: /^\s*\d\.(\s).*/
+    pattern: /^\s*[\+\-\*](\s).*/,
+    inside: {}
+  }],
+  'ordered-list': [{
+    pattern: /^\s*\d\.(\s).*/,
+    inside: {}
   }],
   url: {
     pattern: /!?\[[^\]]*\](?:\([^)]*(?:[\t ]+"(?:\\.|[^"\\])*")?\)| ?\[[^\]\n]*\])/,
@@ -50,6 +59,14 @@ Prism.languages.insertBefore('markdown', 'prolog', {
       }
     }
   },
+  code: [{
+    pattern: /(^|[^`])```[^`\n\r]*[^`\n\r]```(?!`)/,
+    lookbehind: true,
+    inside: {}
+  }, {
+    pattern: /(^|[^`])`[^`\n\r]*[^`\n\r]`(?!`)/,
+    lookbehind: true,
+  }],
   bold: [{
     pattern: /(^|[^*])\*\*([^\*\r\n]*(\*[^\*\r\n]+\*[^\*\r\n]*)+|[^*\r\n]+)\*\*/,
     lookbehind: true,
@@ -156,12 +173,114 @@ Prism.languages.markdown.bold[1].inside.url = Prism.util.clone(Prism.languages.m
 Prism.languages.markdown.italic[0].inside.url = Prism.util.clone(Prism.languages.markdown.url);
 Prism.languages.markdown.italic[1].inside.url = Prism.util.clone(Prism.languages.markdown.url);
 
+Prism.languages.markdown.header1.inside.url = Prism.util.clone(Prism.languages.markdown.url);
+Prism.languages.markdown.header2.inside.url = Prism.util.clone(Prism.languages.markdown.url);
+Prism.languages.markdown.header3.inside.url = Prism.util.clone(Prism.languages.markdown.url);
+Prism.languages.markdown.header4.inside.url = Prism.util.clone(Prism.languages.markdown.url);
+Prism.languages.markdown.header5.inside.url = Prism.util.clone(Prism.languages.markdown.url);
+Prism.languages.markdown.header6.inside.url = Prism.util.clone(Prism.languages.markdown.url);
+Prism.languages.markdown['header-no-offset'].inside.url = Prism.util.clone(Prism.languages.markdown.url);
+
+Prism.languages.markdown.header1.inside.bold = Prism.util.clone(Prism.languages.markdown.bold);
+Prism.languages.markdown.header2.inside.bold = Prism.util.clone(Prism.languages.markdown.bold);
+Prism.languages.markdown.header3.inside.bold = Prism.util.clone(Prism.languages.markdown.bold);
+Prism.languages.markdown.header4.inside.bold = Prism.util.clone(Prism.languages.markdown.bold);
+Prism.languages.markdown.header5.inside.bold = Prism.util.clone(Prism.languages.markdown.bold);
+Prism.languages.markdown.header6.inside.bold = Prism.util.clone(Prism.languages.markdown.bold);
+Prism.languages.markdown['header-no-offset'].inside.bold = Prism.util.clone(Prism.languages.markdown.bold);
+
+Prism.languages.markdown.header1.inside.italic = Prism.util.clone(Prism.languages.markdown.italic);
+Prism.languages.markdown.header2.inside.italic = Prism.util.clone(Prism.languages.markdown.italic);
+Prism.languages.markdown.header3.inside.italic = Prism.util.clone(Prism.languages.markdown.italic);
+Prism.languages.markdown.header4.inside.italic = Prism.util.clone(Prism.languages.markdown.italic);
+Prism.languages.markdown.header5.inside.italic = Prism.util.clone(Prism.languages.markdown.italic);
+Prism.languages.markdown.header6.inside.italic = Prism.util.clone(Prism.languages.markdown.italic);
+Prism.languages.markdown['header-no-offset'].inside.italic = Prism.util.clone(Prism.languages.markdown.italic);
+
+Prism.languages.markdown.header1.inside.strikethrough = Prism.util.clone(Prism.languages.markdown.strikethrough);
+Prism.languages.markdown.header2.inside.strikethrough = Prism.util.clone(Prism.languages.markdown.strikethrough);
+Prism.languages.markdown.header3.inside.strikethrough = Prism.util.clone(Prism.languages.markdown.strikethrough);
+Prism.languages.markdown.header4.inside.strikethrough = Prism.util.clone(Prism.languages.markdown.strikethrough);
+Prism.languages.markdown.header5.inside.strikethrough = Prism.util.clone(Prism.languages.markdown.strikethrough);
+Prism.languages.markdown.header6.inside.strikethrough = Prism.util.clone(Prism.languages.markdown.strikethrough);
+Prism.languages.markdown['header-no-offset'].inside.strikethrough =
+  Prism.util.clone(Prism.languages.markdown.strikethrough);
+
+Prism.languages.markdown.header1.inside.code = Prism.util.clone(Prism.languages.markdown.code);
+Prism.languages.markdown.header2.inside.code = Prism.util.clone(Prism.languages.markdown.code);
+Prism.languages.markdown.header3.inside.code = Prism.util.clone(Prism.languages.markdown.code);
+Prism.languages.markdown.header4.inside.code = Prism.util.clone(Prism.languages.markdown.code);
+Prism.languages.markdown.header5.inside.code = Prism.util.clone(Prism.languages.markdown.code);
+Prism.languages.markdown.header6.inside.code = Prism.util.clone(Prism.languages.markdown.code);
+Prism.languages.markdown['header-no-offset'].inside.code = Prism.util.clone(Prism.languages.markdown.code);
+
+Prism.languages.markdown.list[0].inside.code = Prism.util.clone(Prism.languages.markdown.code);
+Prism.languages.markdown.list[0].inside.bold = Prism.util.clone(Prism.languages.markdown.bold);
+Prism.languages.markdown.list[0].inside.italic = Prism.util.clone(Prism.languages.markdown.italic);
+Prism.languages.markdown.list[0].inside.strikethrough = Prism.util.clone(Prism.languages.markdown.strikethrough);
+Prism.languages.markdown.list[0].inside.url = Prism.util.clone(Prism.languages.markdown.url);
+
+Prism.languages.markdown['ordered-list'][0].inside.code = Prism.util.clone(Prism.languages.markdown.code);
+Prism.languages.markdown['ordered-list'][0].inside.bold = Prism.util.clone(Prism.languages.markdown.bold);
+Prism.languages.markdown['ordered-list'][0].inside.italic = Prism.util.clone(Prism.languages.markdown.italic);
+Prism.languages.markdown['ordered-list'][0].inside.strikethrough =
+  Prism.util.clone(Prism.languages.markdown.strikethrough);
+Prism.languages.markdown['ordered-list'][0].inside.url = Prism.util.clone(Prism.languages.markdown.url);
+
+Prism.languages.markdown.blockquote.inside.code = Prism.util.clone(Prism.languages.markdown.code);
+Prism.languages.markdown.blockquote.inside.bold = Prism.util.clone(Prism.languages.markdown.bold);
+Prism.languages.markdown.blockquote.inside.italic = Prism.util.clone(Prism.languages.markdown.italic);
+Prism.languages.markdown.blockquote.inside.strikethrough = Prism.util.clone(Prism.languages.markdown.strikethrough);
+Prism.languages.markdown.blockquote.inside.url = Prism.util.clone(Prism.languages.markdown.url);
+
+let rendererComponent = props => {
+  let isLine = props.node.type === 'line';
+  let hasMarks = props.mark;
+
+  if (isLine) {
+    return (<div className="oc-md-hl-block">{props.children}</div>);
+  }
+
+  if (hasMarks && props.mark.type === 'code') {
+    const className = props.mark ? 'oc-md-hl-' + props.mark.type : '';
+
+    if (typeof props.children === 'string') {
+      /* Wrap <span>children</span> - set cursor properly on mouse click inside "code" node */
+      return (
+        <span className={className}>
+          <span>{props.children}</span>
+          <span className="oc-md-hl-code-background"></span>
+        </span>
+      );
+    }
+
+    return (
+      <span className={className}>
+        {props.children}
+        <span className="oc-md-hl-code-background"></span>
+      </span>
+    );
+  }
+
+  if (hasMarks) {
+    const className = props.mark ? 'oc-md-hl-' + props.mark.type : '';
+    return (
+      <span className={className}>
+        {props.children}
+      </span>
+    );
+  }
+
+  return null;
+};
+
+rendererComponent.propTypes = {
+  node: Types.object,
+  mark: Types.object
+};
 
 /**
  * Define a decorator for markdown styles.
- *
- * @param {Text} text
- * @param {Block} block
  */
 
 function addMarks(characters, tokens, offset) {
@@ -169,7 +288,7 @@ function addMarks(characters, tokens, offset) {
   for (const token of tokens) {
     if (typeof token === 'string') {
       updatedOffset += token.length;
-      continue
+      continue;
     }
 
     const { content, length, type } = token;
@@ -178,6 +297,7 @@ function addMarks(characters, tokens, offset) {
     for (let i = updatedOffset; i < updatedOffset + length; i++) {
       let char = characters.get(i);
       let { marks } = char;
+
       marks = marks.add(mark);
       char = char.set('marks', marks);
       characters.set(i, char);
@@ -202,56 +322,12 @@ function markdownDecorator(text, block) {
   return characters.asImmutable();
 }
 
-const headerStyle = {
-  fontWeight: 'bold',
-  display: 'inline-block'
-};
 const schema = {
-  marks: {
-    'header1': { ...headerStyle, marginLeft: '-2ch' },
-    'header2': { ...headerStyle, marginLeft: '-3ch' },
-    'header3': { ...headerStyle, marginLeft: '-4ch' },
-    'header4': { ...headerStyle, marginLeft: '-5ch' },
-    'header5': { ...headerStyle, marginLeft: '-6ch' },
-    'header6': { ...headerStyle, marginLeft: '-7ch' },
-    'bold': {
-      fontWeight: 'bold'
-    },
-    'italic': {
-      fontStyle: 'italic'
-    },
-    'punctuation': {
-      color: '#777'
-    },
-    'blockquote': {
-      display: 'inline-block'
-    },
-    'code': {
-      display: 'inline-block',
-      backgroundColor: '#eee'
-    },
-    'codeBlock': {
-      display: 'block',
-      backgroundColor: '#eee'
-    },
-    'list': {
-      marginLeft: '-2ch'
-    },
-    'hr': {
-      display: 'block'
-    },
-    'strikethrough': {
-      textDecoration: 'line-through'
-    },
-    'variable': {
-      color: 'blue'
-    }
-  },
   rules: [{
     match: () => true,
-    decorate: markdownDecorator
+    decorate: markdownDecorator,
+    render: rendererComponent
   }]
 };
-
 export default schema;
 export const grammar = Prism.languages.markdown;

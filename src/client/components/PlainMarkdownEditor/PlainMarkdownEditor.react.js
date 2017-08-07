@@ -3,6 +3,7 @@ import Types from 'prop-types';
 import FullScreenButton from '../SlateEditor/plugins/slate-fullscreen-plugin/FullScreenButton';
 import schema from './slate/schema';
 import shortcuts from './slate/shortcuts';
+import './PlainMarkdownEditor.less';
 
 import {
   AutocompletePlugin,

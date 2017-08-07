@@ -3,7 +3,7 @@ import Utils from './Utils';
 import './SlateToolbar.less';
 
 export default ({ children, ...rest }) => (
-  <div className="btn-toolbar react-markdown--toolbar">
+  <div className="react-markdown--toolbar">
     {Utils.cloneElement(children, rest)}
   </div>
 );
