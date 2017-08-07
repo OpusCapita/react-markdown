@@ -1,11 +1,24 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Raw, Block, State, Document } from 'slate';
+import { State, Document } from 'slate';
 import ObjectReferenceEditor from './ObjectReferenceEditor';
 import { removeObjectReference, updateObjectReferenceText } from './ObjectReferenceUtils';
 
 export default function(options) {
   class ObjectReferenceNode extends React.Component {
+    static propTypes = {
+      extension: PropTypes.object,
+      onRemoveObjectReference: PropTypes.func,
+      onChange: PropTypes.func,
+      node: PropTypes.object,
+      editor: PropTypes.object
+    };
+
+    static defaultProps = {
+      extension: null,
+      onRemoveObjectReference: () => {},
+      onChange: () => {}
+    };
 
     constructor(props) {
       super(props);
@@ -15,18 +28,6 @@ export default function(options) {
         show: false
       };
     }
-
-    static propTypes = {
-      extension: PropTypes.object,
-      onRemoveObjectReference: PropTypes.func,
-      onChange: PropTypes.func
-    };
-
-    static defaultProps = {
-      extension: null,
-      onRemoveObjectReference: () => {},
-      onChange: () => {}
-    };
 
     componentWillReceiveProps = (nextProps) => {
       let { editor, node } = this.props;
@@ -56,7 +57,7 @@ export default function(options) {
 
         let newBlock = blocks.get(blockIndex).set('nodes', blockNodes);
         let newDocumentBlocks = blocks.set(blockIndex, newBlock);
-        let document = Document.create(Object.assign({}, state.document, {nodes: newDocumentBlocks}));
+        let document = Document.create(Object.assign({}, state.document, { nodes: newDocumentBlocks }));
 
         editor.onChange(
           State.create({ document, selection: state.selection })
@@ -84,7 +85,7 @@ export default function(options) {
     };
 
     render() {
-      const { node, children, attributes } = this.props;
+      const { node, children } = this.props;
       const { data } = node;
       const extension = data.get('extension');
       const { isCloseButtonHover, show } = this.state;
@@ -107,21 +108,23 @@ export default function(options) {
         fontWeight: 700
       };
       return (
-        <span style={inlineBlockStyle} contentEditable="false" onClick={() => { this.setState({show: true}) }}>
+        <span style={inlineBlockStyle} contentEditable="false" onClick={() => { this.setState({ show: true }) }}>
           {children}
           <button type="button"
-                  style={closeButtonStyle}
-                  onClick={this.handleRemoveObjectReference}
-                  onMouseOver={() => { this.setState({isCloseButtonHover: true}) }}
-                  onMouseOut={() => { this.setState({isCloseButtonHover: false}) }}>
+            style={closeButtonStyle}
+            onClick={this.handleRemoveObjectReference}
+            onMouseOver={() => { this.setState({ isCloseButtonHover: true }) }}
+            onMouseOut={() => { this.setState({ isCloseButtonHover: false }) }}
+          >
             <span>&times;</span>
           </button>
           &nbsp;
           {show ? (
             <ObjectReferenceEditor extension={extension}
-                                   onChange={this.handleChange}
-                                   onCancel={() => { this.setState({show: false}) }}
-                                   text={node.text}/>
+              onChange={this.handleChange}
+              onCancel={() => { this.setState({ show: false }) }}
+              text={node.text}
+            />
           ) : null }
         </span>
       )

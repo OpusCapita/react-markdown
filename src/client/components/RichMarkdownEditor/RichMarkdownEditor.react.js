@@ -67,10 +67,10 @@ class RichMarkdownEditor extends React.Component {
       BlockquotePlugin(),
       HeaderPlugin(),
       FormatPlugin(),
-      ObjectReferencePlugin({ extensions: this.props.extensions })
-      // AutocompletePlugin({
-      //   extensions: this.props.extensions
-      // })
+      ObjectReferencePlugin({ extensions: this.props.extensions }),
+      AutocompletePlugin({
+        extensions: this.props.extensions
+      })
     ];
   };
 
@@ -95,10 +95,11 @@ class RichMarkdownEditor extends React.Component {
     const { children, onFullScreen, fullScreen } = this.props;
 
     let objectReferenceButtons = this.props.extensions.map((extension, index) => {
-      return <ObjectReferenceButton key={index}
-                                    extension={extension}
-                                    mode="rich"
-                                    disabled={false}/>
+      return (<ObjectReferenceButton key={index}
+        extension={extension}
+        mode="rich"
+        disabled={false}
+      />)
     });
 
     return (

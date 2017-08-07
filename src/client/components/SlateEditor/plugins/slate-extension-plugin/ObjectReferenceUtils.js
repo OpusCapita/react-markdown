@@ -1,5 +1,3 @@
-import { Raw } from 'slate';
-
 export const addSpecialCharacter = (specialCharacter, state) => {
   let text = state.startBlock.text;
   let newOffset = 0;
@@ -11,7 +9,13 @@ export const addSpecialCharacter = (specialCharacter, state) => {
     insertedText = specialCharacter;
     newOffset = text.substring(0, state.startOffset).lastIndexOf(' ') + 1;
   }
-  return state.transform().moveOffsetsTo(newOffset).wrapText(insertedText, '').moveOffsetsTo(state.endOffset + insertedText.length).focus().apply();
+  return state.
+    transform().
+      moveOffsetsTo(newOffset).
+      wrapText(insertedText, '').
+      moveOffsetsTo(state.endOffset + insertedText.length).
+      focus().
+      apply();
 };
 
 
@@ -29,7 +33,7 @@ export const removeObjectReference = (node, state) => {
 };
 export const updateObjectReferenceText = (text, extension, node, state) => {
   if (text === '') {
-    return removeObjectReference(node, state)
+    return removeObjectReference(node, state);
   }
   return state.transform().removeNodeByKey(node.key).insertText(text).extend(0 - text.length).wrapInline({
     type: 'objectReference',

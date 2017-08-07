@@ -49,7 +49,7 @@ class AutocompleteWidget extends React.Component {
     if (selection.rangeCount) {
       rangePos = window.getSelection().getRangeAt(0).getBoundingClientRect();
 
-      if(!rangePos.top && !rangePos.bottom) {
+      if (!rangePos.top && !rangePos.bottom) {
         // XXX preserve autocomplete blinking on first render
         return ({ left: null, top: null });
       }

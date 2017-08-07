@@ -35,6 +35,10 @@ class ObjectReferenceEditor extends React.Component {
     };
   }
 
+  handleFocus = () => {
+    this.updateAutocomplete();
+  }
+
   handleItemSelect = (index) => {
     this.setState({ text: this.state.items[index]._objectLabel });
   };
@@ -45,7 +49,7 @@ class ObjectReferenceEditor extends React.Component {
     let caretPosition = this.getCaretPosition();
     searchItems(`${specialCharacter}${text.substr(0, caretPosition)}`).then((items) => {
       // if (this.state.items.length !== items.length) {
-        this.setState({ items, show: true });
+      this.setState({ items, show: true });
       // }
     });
   };
@@ -119,32 +123,33 @@ class ObjectReferenceEditor extends React.Component {
               <ClickAwayListener onClickAway={() => { this.setState({ show: false }) }}>
                 <div className="col-sm-8">
                   <input id="link-editor-text" type="text"
-                         ref="link-editor-text"
-                         className="form-control"
-                         value={text}
-                         onChange={({ target: { value } }) => {
-                           this.setState({
-                             text: value,
-                             selectedIndex: 0
-                           }, this.updateAutocomplete)}
+                    ref="link-editor-text"
+                    className="form-control"
+                    value={text}
+                    onChange={({ target: { value } }) => {
+                      this.setState({
+                        text: value,
+                        selectedIndex: 0
+                      }, this.updateAutocomplete)
+                    }
                          }
-                         onFocus={this.updateAutocomplete}
-                         onKeyUp={this.handleKeyUp}
-                         onKeyDown={this.handleAutocompleteListManagementKeys}
-                         onClick={this.handleInputClick}
+                    onFocus={this.handleFocus}
+                    onKeyUp={this.handleKeyUp}
+                    onKeyDown={this.handleAutocompleteListManagementKeys}
+                    onClick={this.handleInputClick}
                   />
                   {
                     (this.state.show && document.activeElement === this.refs['link-editor-text']) ? (
                       <AutocompleteWidget items={items}
-                                          selectedIndex={selectedIndex}
-                                          onSelectItem={this.handleItemSelect}
-                                          onSelectedIndexChange={this.handleSelectedIndexChange}
-                                          isMouseIndexSelected={isMouseIndexSelected}
-                                          styles={{
-                                            width: this.refs['link-editor-text'].clientWidth,
-                                            left: 15,
-                                            top: 31
-                                          }}
+                        selectedIndex={selectedIndex}
+                        onSelectItem={this.handleItemSelect}
+                        onSelectedIndexChange={this.handleSelectedIndexChange}
+                        isMouseIndexSelected={isMouseIndexSelected}
+                        styles={{
+                          width: this.refs['link-editor-text'].clientWidth,
+                          left: 15,
+                          top: 31
+                        }}
                       />
                     ) : null
                   }

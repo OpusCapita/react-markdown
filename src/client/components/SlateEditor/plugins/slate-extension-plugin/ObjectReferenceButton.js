@@ -8,7 +8,8 @@ class ObjectReferenceButton extends React.Component {
     state: PropTypes.object,
     onChange: PropTypes.func,
     mode: PropTypes.string,
-    disabled: PropTypes.bool
+    disabled: PropTypes.bool,
+    extension: PropTypes.object
   };
 
   static defaultProps = {
@@ -39,7 +40,7 @@ class ObjectReferenceButton extends React.Component {
     if (mode === 'plain') {
       return (
         <button className="btn btn-default" disabled={disabled}
-                onClick={e => onChange(addSpecialCharacter(extension.specialCharacter, state))}
+          onClick={e => onChange(addSpecialCharacter(extension.specialCharacter, state))}
         >
           {extension.objectClassName}
         </button>
@@ -47,13 +48,14 @@ class ObjectReferenceButton extends React.Component {
     } else { // 'rich' mode
       return (
         <button className="btn btn-default" disabled={disabled}
-                onClick={this.handleObjectReferenceEditorOpen}
+          onClick={this.handleObjectReferenceEditorOpen}
         >
           {show ? (
             <ObjectReferenceEditor extension={this.props.extension}
-                                   onChange={this.handleRichEditorChange}
-                                   onCancel={() => { this.setState({show: false}) }}
-                                   mode="insert" />
+              onChange={this.handleRichEditorChange}
+              onCancel={() => { this.setState({ show: false }) }}
+              mode="insert"
+            />
           ) : null }
           {extension.objectClassName}
         </button>
