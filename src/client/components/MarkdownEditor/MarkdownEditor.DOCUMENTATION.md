@@ -52,7 +52,7 @@ MarkdownEditor
         objectClassName: 'Term',
         specialCharacter: '#',
         color: '#9ed69e',
-        termRegex: /^\#(\w*)/,
+        termRegex: /^\#(\w*)$/,
         searchItems(term) {
           const items = [
             {_objectLabel: 'a1'},

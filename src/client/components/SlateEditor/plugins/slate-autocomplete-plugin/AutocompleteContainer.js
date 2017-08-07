@@ -151,10 +151,10 @@ class AutocompleteContainer extends React.Component {
         this.setState({ show: true, isLoading: true });
         extension.searchItems(term).then((items) => this.setState({ items, selectedIndex: 0, isLoading: false }));
       } else if (show) {
-        this.setState({ show: false })
+        this.setState({ show: false });
       }
     } else {
-      this.setState({ show: false })
+      this.setState({ show: false });
     }
   };
 
