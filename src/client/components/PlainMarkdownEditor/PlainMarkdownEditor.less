@@ -1,3 +1,7 @@
+.oc-md-hl-block > *:first-child {
+  margin-left: 8ch;
+}
+
 .oc-md-hl-header(@offset) {
   font-weight: bold;
   display: inline;
@@ -25,7 +29,11 @@
 
 .oc-md-hl-code {
   position: relative;
-  display: inline-block;
+  display: inline-flex;
+}
+
+.oc-md-hl-url {
+  display: inline;
 }
 
 .oc-md-hl-code-background {
@@ -62,6 +70,7 @@
 }
 
 .oc-md-hl-punctuation {
+  display: inline;
   color: #777;
 }
 

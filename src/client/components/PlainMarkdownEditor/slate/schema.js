@@ -238,7 +238,7 @@ let rendererComponent = props => {
   let hasMarks = props.mark;
 
   if (isLine) {
-    return (<div>{props.children}</div>);
+    return (<div className="oc-md-hl-block">{props.children}</div>);
   }
 
   if (hasMarks && props.mark.type === 'code') {
