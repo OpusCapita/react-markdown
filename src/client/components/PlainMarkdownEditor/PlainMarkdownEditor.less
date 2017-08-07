@@ -39,6 +39,12 @@
   z-index: -1;
 }
 
+.oc-md-hl-list-with-offset(@offset) {
+  display: inline-flex;
+  margin-left: -(@offset);
+  padding-right: (@offset);
+}
+
 .oc-md-hl-list + .oc-md-hl-code-background {
   left: -2ch;
 }
@@ -64,13 +70,11 @@
 }
 
 .oc-md-hl-list {
-  margin-left: -2ch;
-  padding-right: 2ch;
+  .oc-md-hl-list-with-offset(2ch);
 }
 
 .oc-md-hl-ordered-list {
-  margin-left: -3ch;
-  padding-right: 3ch;
+  .oc-md-hl-list-with-offset(3ch);
 }
 
 .oc-md-hl-hr {
