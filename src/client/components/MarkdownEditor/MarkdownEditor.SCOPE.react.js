@@ -20,10 +20,6 @@ class MarkdownEditorScope extends React.Component {
   }
 
   render() {
-    return (
-      <div style={{ height: '70vh', display: 'flex', flexDirection: 'row' }}>
-        {this._renderChildren()}
-      </div>
-    );
+    return this._renderChildren();
   }
 }

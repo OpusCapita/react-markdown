@@ -13,10 +13,12 @@ MarkdownEditor
 ### Code Example
 
 ```
-<MarkdownEditor
-  onChange={_scope.handleValueChange}
-  value={_scope.state.value}
-/>
+<div style={{ height: '70vh' }}>
+  <MarkdownEditor
+    onChange={_scope.handleValueChange}
+    value={_scope.state.value}
+  />
+</div>
 ```
 
 ### Component Name
