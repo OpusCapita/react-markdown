@@ -13,8 +13,8 @@ class AutocompleteWidget extends React.Component {
   };
 
   state = {
-    left: null,
-    top: null
+    left: 0,
+    top: 0
   };
 
   componentDidMount = () => {
@@ -22,10 +22,7 @@ class AutocompleteWidget extends React.Component {
   };
 
   componentWillReceiveProps = (nextProps) => {
-    // get selection bounding client rect on next cycle
-    setTimeout(() => {
-      this.setState(this.getSelectionTopLeft());
-    });
+    this.setState(this.getSelectionTopLeft());
   };
 
   componentWillUpdate = (nextProps, nextState) => {
@@ -48,11 +45,6 @@ class AutocompleteWidget extends React.Component {
     let rangePos, left = 0, top = 0;
     if (selection.rangeCount) {
       rangePos = window.getSelection().getRangeAt(0).getBoundingClientRect();
-
-      if (!rangePos.top && !rangePos.bottom) {
-        // XXX preserve autocomplete blinking on first render
-        return ({ left: null, top: null });
-      }
 
       // you can get also right and bottom here if you like
       left = parseInt(rangePos.left, 10) + 5;
