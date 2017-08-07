@@ -2,6 +2,8 @@ import React from 'react';
 import './Autocomplete.less';
 import PropTypes from 'prop-types';
 
+const autocompleteOffsetH = 5;
+
 class AutocompleteWidget extends React.Component {
   static propTypes = {
     isMouseIndexSelected: PropTypes.bool,
@@ -13,7 +15,7 @@ class AutocompleteWidget extends React.Component {
   };
 
   state = {
-    left: 0,
+    left: autocompleteOffsetH,
     top: 0
   };
 
@@ -42,12 +44,12 @@ class AutocompleteWidget extends React.Component {
 
   getSelectionTopLeft = () => {
     const selection = window.getSelection();
-    let rangePos, left = 0, top = 0;
+    let rangePos, left = autocompleteOffsetH, top = 0;
     if (selection.rangeCount) {
       rangePos = window.getSelection().getRangeAt(0).getBoundingClientRect();
 
       // you can get also right and bottom here if you like
-      left = parseInt(rangePos.left, 10) + 5;
+      left = parseInt(rangePos.left, 10) + autocompleteOffsetH;
       top = parseInt(rangePos.top, 10) + window.scrollY;
     }
     let list = this.refs['items-list'];
