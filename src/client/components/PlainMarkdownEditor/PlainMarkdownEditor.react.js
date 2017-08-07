@@ -103,18 +103,12 @@ class PlainMarkdownEditor extends React.Component {
           </SlateToolbarGroup>
 
           <SlateToolbarGroup>
-            <FullScreenButton onFullScreen={onFullScreen} fullScreen={fullScreen}/>
-          </SlateToolbarGroup>
-
-          <SlateToolbarGroup>
             {objectReferenceButtons}
           </SlateToolbarGroup>
 
-          {onFullScreen ? (
-            <SlateToolbarGroup>
-              <FullScreenButton onFullScreen={onFullScreen} fullScreen={fullScreen}/>
-            </SlateToolbarGroup>
-          ) : null}
+          <SlateToolbarGroup className="react-markdown--plain-markdown-editor__fullscreen-button">
+            <FullScreenButton onFullScreen={onFullScreen} fullScreen={fullScreen}/>
+          </SlateToolbarGroup>
 
           {children}
         </SlateToolbar>
@@ -125,11 +119,19 @@ class PlainMarkdownEditor extends React.Component {
 }
 
 PlainMarkdownEditor.propTypes = {
-  autocompletes: Types.array,
+  extensions: Types.array,
   value: Types.string,
   onChange: Types.func,
   onFullScreen: Types.func,
   fullScreen: Types.bool
+};
+
+PlainMarkdownEditor.defaultProps = {
+  extensions: [],
+  value: '',
+  fullScreen: false,
+  onFullScreen: () => {},
+  onChange: () => {}
 };
 
 export default PlainMarkdownEditor;

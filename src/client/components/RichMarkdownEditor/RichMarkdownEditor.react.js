@@ -1,7 +1,8 @@
 import React from 'react';
 import Types from 'prop-types';
 import Markdown from '../serializer/MarkdownRenderer';
-import { Raw } from 'slate'
+import { Raw } from 'slate';
+import './RichMarkdownEditor.less';
 
 import {
   AutocompletePlugin,
@@ -92,7 +93,7 @@ class RichMarkdownEditor extends React.Component {
   render() {
     const { editorState } = this.state;
     const { children, onFullScreen, fullScreen } = this.props;
-    
+
     let objectReferenceButtons = this.props.extensions.map((extension, index) => {
       return <ObjectReferenceButton key={index}
                                     extension={extension}
@@ -134,11 +135,9 @@ class RichMarkdownEditor extends React.Component {
             {objectReferenceButtons}
           </SlateToolbarGroup>
 
-          {onFullScreen ? (
-            <SlateToolbarGroup>
-              <FullScreenButton onFullScreen={onFullScreen} fullScreen={fullScreen}/>
-            </SlateToolbarGroup>
-          ) : null}
+          <SlateToolbarGroup className="react-markdown--rich-markdown-editor__fullscreen-button">
+            <FullScreenButton onFullScreen={onFullScreen} fullScreen={fullScreen}/>
+          </SlateToolbarGroup>
 
           {children}
         </SlateToolbar>
@@ -155,7 +154,15 @@ RichMarkdownEditor.propTypes = {
   onChange: Types.func,
   onFullScreen: Types.func,
   fullScreen: Types.bool,
+  extensions: Types.array
 };
 
+RichMarkdownEditor.defaultProps = {
+  extensions: [],
+  value: '',
+  fullScreen: false,
+  onFullScreen: () => {},
+  onChange: () => {}
+};
 
 export default RichMarkdownEditor;
