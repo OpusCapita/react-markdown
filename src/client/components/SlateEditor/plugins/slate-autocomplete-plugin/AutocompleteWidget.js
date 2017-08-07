@@ -13,8 +13,8 @@ class AutocompleteWidget extends React.Component {
   };
 
   state = {
-    left: 0,
-    top: 0
+    left: null,
+    top: null
   };
 
   componentDidMount = () => {
@@ -48,6 +48,12 @@ class AutocompleteWidget extends React.Component {
     let rangePos, left = 0, top = 0;
     if (selection.rangeCount) {
       rangePos = window.getSelection().getRangeAt(0).getBoundingClientRect();
+
+      if(!rangePos.top && !rangePos.bottom) {
+        // XXX preserve autocomplete blinking on first render
+        return ({ left: null, top: null });
+      }
+
       // you can get also right and bottom here if you like
       left = parseInt(rangePos.left, 10) + 5;
       top = parseInt(rangePos.top, 10) + window.scrollY;
@@ -55,7 +61,7 @@ class AutocompleteWidget extends React.Component {
     let list = this.refs['items-list'];
     // recalculating items-list left offset if sidebar present
     if (list && (list.getBoundingClientRect().left - list.offsetLeft < left)) {
-      left = left - (list.getBoundingClientRect().left - list.offsetLeft)
+      left = left - (list.getBoundingClientRect().left - list.offsetLeft);
     }
     return { left, top };
   };
@@ -71,7 +77,7 @@ class AutocompleteWidget extends React.Component {
 
     const styles = {
       zIndex: 99999,
-      display: 'block',
+      display: (top === null || left === null) ? 'none' : 'block',
       left,
       top,
       ...this.props.styles
