@@ -1,5 +1,3 @@
 import FullScreenButton from './FullScreenButton';
 
-export {
-  FullScreenButton
-}
+export default FullScreenButton;

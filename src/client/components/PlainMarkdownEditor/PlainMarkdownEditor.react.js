@@ -1,23 +1,28 @@
 import React from 'react';
 import Types from 'prop-types';
+import FullScreenButton from '../SlateEditor/plugins/slate-fullscreen-plugin/FullScreenButton';
+import schema from './slate/schema';
+import shortcuts from './slate/shortcuts';
+
 import {
   AutocompletePlugin,
-  FullScreenButton,
-  MarkdownBoldButton,
-  MarkdownHeaderFiveButton,
-  MarkdownHeaderFourButton,
-  MarkdownHeaderOneButton,
-  MarkdownHeaderSixButton,
-  MarkdownHeaderThreeButton,
-  MarkdownHeaderTwoButton,
-  MarkdownItalicButton,
-  MarkdownLinkButton,
-  MarkdownOrderedListButton,
-  MarkdownPreviewPlugin,
-  MarkdownStrikethroughButton,
-  MarkdownUnorderedListButton,
   ObjectReferenceButton
 } from '../SlateEditor/plugins';
+
+import {
+  BoldButton,
+  HeaderFiveButton,
+  HeaderFourButton,
+  HeaderOneButton,
+  HeaderSixButton,
+  HeaderThreeButton,
+  HeaderTwoButton,
+  ItalicButton,
+  LinkButton,
+  OrderedListButton,
+  StrikethroughButton,
+  UnorderedListButton
+} from './buttons';
 
 import { SlateContent, SlateEditor, SlateToolbar, SlateToolbarGroup } from '../SlateEditor';
 
@@ -48,6 +53,10 @@ class PlainMarkdownEditor extends React.Component {
     this.setState({ fullScreen });
   };
 
+  onKeyDown(event, data, state) {
+    return shortcuts(event, data, state);
+  }
+
   render() {
     const { editorState } = this.state;
     const { children } = this.props;
@@ -63,30 +72,32 @@ class PlainMarkdownEditor extends React.Component {
       <SlateEditor
         state={editorState}
         fullScreen={fullScreen}
-        plugins={this.plugins}
+        schema={schema}
         onChange={this.handleChange}
       >
-
         <SlateToolbar>
           <SlateToolbarGroup>
-            <MarkdownBoldButton disabled={true}/>
-            <MarkdownItalicButton disabled={true}/>
-            <MarkdownStrikethroughButton disabled={true}/>
-            <MarkdownLinkButton disabled={true}/>
+            <BoldButton/>
+            <ItalicButton/>
+            <StrikethroughButton/>
           </SlateToolbarGroup>
 
           <SlateToolbarGroup>
-            <MarkdownHeaderOneButton disabled={true}/>
-            <MarkdownHeaderTwoButton disabled={true}/>
-            <MarkdownHeaderThreeButton disabled={true}/>
-            <MarkdownHeaderFourButton disabled={true}/>
-            <MarkdownHeaderFiveButton disabled={true}/>
-            <MarkdownHeaderSixButton disabled={true}/>
+            <LinkButton/>
           </SlateToolbarGroup>
 
           <SlateToolbarGroup>
-            <MarkdownOrderedListButton disabled={true}/>
-            <MarkdownUnorderedListButton disabled={true}/>
+            <HeaderOneButton/>
+            <HeaderTwoButton/>
+            <HeaderThreeButton/>
+            <HeaderFourButton/>
+            <HeaderFiveButton/>
+            <HeaderSixButton/>
+          </SlateToolbarGroup>
+
+          <SlateToolbarGroup>
+            <OrderedListButton/>
+            <UnorderedListButton/>
           </SlateToolbarGroup>
 
           <SlateToolbarGroup>
@@ -105,7 +116,7 @@ class PlainMarkdownEditor extends React.Component {
 
           {children}
         </SlateToolbar>
-        <SlateContent/>
+        <SlateContent isPlainMode={true} />
       </SlateEditor>
     );
   }
@@ -116,7 +127,7 @@ PlainMarkdownEditor.propTypes = {
   value: Types.string,
   onChange: Types.func,
   onFullScreen: Types.func,
-  fullScreen: Types.bool,
+  fullScreen: Types.bool
 };
 
 export default PlainMarkdownEditor;
