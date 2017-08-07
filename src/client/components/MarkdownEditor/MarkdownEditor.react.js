@@ -70,7 +70,9 @@ class MarkdownEditor extends React.Component {
         <PlainMarkdownEditor value={value} onChange={this.handleChangeValue}
           onFullScreen={this.handleFullScreen} fullScreen={fullScreen}
         >
-          {this.renderSwitchModeButton()}
+          {/* Temporary disabled switch to "rich editor mode"
+              this.renderSwitchModeButton()
+          */}
         </PlainMarkdownEditor>
       );
     } else {
