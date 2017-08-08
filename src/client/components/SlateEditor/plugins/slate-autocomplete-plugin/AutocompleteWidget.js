@@ -63,6 +63,11 @@ class AutocompleteWidget extends React.Component {
 
   adjustPosition = () => {
     let selection = window.getSelection();
+
+    if(!selection.anchorNode) {
+      return;
+    }
+
     let selectionRect = selection.getRangeAt(0).getBoundingClientRect();
     let restrictorRect = this.props.restrictorRef.getBoundingClientRect();
     let lineHeight = selectionRect.bottom - selectionRect.top;
