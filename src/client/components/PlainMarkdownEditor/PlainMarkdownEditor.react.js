@@ -35,14 +35,23 @@ class PlainMarkdownEditor extends React.Component {
     fullScreen: false
   };
 
+  componentWillMount() {
+    this.initialBodyOverflowStyle = document.body.overflow;
+  }
+
   handleChange = (editorState) => {
     this.props.onChange(Plain.serialize(editorState));
 
     this.setState({ editorState });
   };
 
-  handleFullScreen = (fullScreen) => {
+  handleFullScreen = () => {
+    let fullScreen = !this.state.fullScreen;
+
+    document.body.style.overflow = fullScreen ? 'hidden' : this.initialBodyOverflowStyle;
+
     this.setState({ fullScreen });
+    this.props.onFullScreen(fullScreen);
   };
 
   onKeyDown(event, data, state) {
@@ -53,8 +62,7 @@ class PlainMarkdownEditor extends React.Component {
     const { editorState } = this.state;
     const { children, extensions } = this.props;
 
-    const onFullScreen = this.props.onFullScreen || this.handleFullScreen;
-    const fullScreen = this.props.onFullScreen ? this.props.fullScreen : this.state.fullScreen;
+    const fullScreen = this.props.fullScreen;
 
     let objectReferenceButtons = this.props.extensions.map((extension, index) => {
       return (
@@ -107,7 +115,7 @@ class PlainMarkdownEditor extends React.Component {
           </SlateToolbarGroup>
 
           <SlateToolbarGroup className="react-markdown--plain-markdown-editor__fullscreen-button">
-            <FullScreenButton onFullScreen={onFullScreen} fullScreen={fullScreen}/>
+            <FullScreenButton onClick={this.handleFullScreen} fullScreen={fullScreen} />
           </SlateToolbarGroup>
 
           {children}
