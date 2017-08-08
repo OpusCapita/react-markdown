@@ -64,7 +64,7 @@ class AutocompleteWidget extends React.Component {
   adjustPosition = () => {
     let selection = window.getSelection();
 
-    if(!selection.anchorNode) {
+    if (!selection.anchorNode) {
       return;
     }
 
@@ -98,7 +98,6 @@ class AutocompleteWidget extends React.Component {
   }
 
   handleSelectItem = (index, e) => {
-    console.log('click!', index);
     this.props.onSelectItem(index);
   };
 
@@ -124,7 +123,7 @@ class AutocompleteWidget extends React.Component {
               <div
                 key={index}
                 ref={ref => (this[`item-ref-${index}`] = ref)}
-                onClick={() => console.log('click!') || this.handleSelectItem(index)}
+                onClick={() => this.handleSelectItem(index)}
                 onMouseMove={() => onSelectedIndexChange(index)}
                 className={`
                   react-markdown--autocomplete-widget__item
