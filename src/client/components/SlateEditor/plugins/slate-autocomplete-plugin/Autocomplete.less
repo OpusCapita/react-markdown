@@ -1,12 +1,16 @@
 .react-markdown--autocomplete-widget {
   position: absolute;
-  background: #fff;
+  background-color: #fff;
   overflow-y: auto;
-  max-height: 240px;
+  min-width: 160px;
+  max-width: 320px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
+  z-index: 10;
 }
 
 .react-markdown--autocomplete-widget__item {
-
+  flex: 1 0 auto;
+  padding: 4px 12px;
 }
 
 .react-markdown--autocomplete-widget__item--active {

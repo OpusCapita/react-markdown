@@ -12,12 +12,15 @@ const propTypes = {
   restrictorRef: Types.object
 };
 
+const maxHeight = 240;
+
 class AutocompleteWidget extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       left: 0,
-      top: 0
+      top: 0,
+      transform: ''
     };
   }
 
@@ -39,12 +42,15 @@ class AutocompleteWidget extends React.Component {
     let selectionRect = selection.getRangeAt(0).getBoundingClientRect();
     let restrictorRect = this.props.restrictorRef.getBoundingClientRect();
     let lineHeight = selectionRect.bottom - selectionRect.top;
-    let left = 0;
-    let top = 0;
+    let left = selectionRect.left - restrictorRect.left;
+    let top = selectionRect.top - restrictorRect.top + lineHeight + 4;
+
+    let showToTop = (top + maxHeight) > restrictorRect.bottom;
 
     let position = {
-      left: `${selectionRect.left - restrictorRect.left}px`,
-      top: `${selectionRect.top - restrictorRect.top + lineHeight + 4}px`
+      left: `${left}px`,
+      top: `${showToTop ? top - lineHeight : top}px`,
+      transform: `${showToTop ? 'translateY(-100%)' : ''}`
     };
 
     let positionChanged = (this.state.left !== position.left ) || (this.state.top !== position.top);
@@ -63,11 +69,12 @@ class AutocompleteWidget extends React.Component {
   }
 
   handleSelectItem = (index, e) => {
+    console.log('click!', index);
     this.props.onSelectItem(index);
   };
 
   render() {
-    const { left, top } = this.state;
+    const { left, top, transform } = this.state;
     const { items, selectedIndex, onSelectedIndexChange, restrictorRef } = this.props;
 
     if (items) {
@@ -77,6 +84,8 @@ class AutocompleteWidget extends React.Component {
           style={{
             left,
             top,
+            transform,
+            maxHeight: `${maxHeight}px`,
             ...this.props.style
           }}
         >
@@ -84,20 +93,20 @@ class AutocompleteWidget extends React.Component {
             return (
               <div
                 key={index}
-                onClick={this.handleSelectItem.bind(this, index)}
-                onMouseMove={onSelectedIndexChange.bind(this, index)}
+                onClick={() => console.log('click!') || this.handleSelectItem(index)}
+                onMouseMove={() => onSelectedIndexChange(index)}
                 className={`
                   react-markdown--autocomplete-widget__item
                   ${selectedIndex === index ? 'react-markdown--autocomplete-widget__item--active' : ''}
                 `}
               >
-                <div href={void(0)}>{item._objectLabel}</div>
+                {item._objectLabel}
               </div>
             );
           })}
 
-          {items.length ? (
-            <li className="textcomplete-no-results-message">No matches found</li>
+          {!items.length ? (
+            <div className="react-markdown--autocomplete-widget__item">No matches found</div>
           ) : null}
         </div>
       );
