@@ -2,9 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import AutocompleteWidget from './AutocompleteWidget';
-// what is that???? why???
-// polyfile Promise for IE
-import 'bluebird';
 
 const escapeCode = 27;
 const arrowUpCode = 38;
@@ -39,7 +36,7 @@ class AutocompleteContainer extends React.Component {
 
   componentWillReceiveProps = (nextProps) => {
     this.searchItems(nextProps);
-    if (this.state.selectedIndex &&
+    if (typeof this.state.selectedIndex !== 'undefined' &&
       (this.props.state.startOffset === nextProps.state.startOffset) &&
       (this.props.state.startText.text === nextProps.state.startText.text) &&
       nextProps.state.startText.text) {
