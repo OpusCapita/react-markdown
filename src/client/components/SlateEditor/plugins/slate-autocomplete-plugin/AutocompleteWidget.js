@@ -37,6 +37,21 @@ class AutocompleteWidget extends React.Component {
     this.cancelAdjustPosition();
   }
 
+  componentWillUpdate = (nextProps, nextState) => {
+    let { isMouseIndexSelected } = this.props;
+    let itemsRef = this['items-ref'];
+    let itemRef = this[`item-ref-${nextProps.selectedIndex}`];
+
+    if (itemsRef && itemRef && !isMouseIndexSelected) {  // calculating scrolling with keyboard up and down arrows
+      if ((this.props.selectedIndex < nextProps.selectedIndex) && (itemRef.offsetTop - itemsRef.scrollTop > 156)) {
+        itemsRef.scrollTop = (itemRef.offsetTop - 156);
+      }
+      if ((this.props.selectedIndex > nextProps.selectedIndex) && (itemRef.offsetTop - itemsRef.scrollTop < 26)) {
+        itemsRef.scrollTop = (itemRef.offsetTop - 26);
+      }
+    }
+  };
+
   adjustPosition = () => {
     let selection = window.getSelection();
     let selectionRect = selection.getRangeAt(0).getBoundingClientRect();
@@ -81,6 +96,7 @@ class AutocompleteWidget extends React.Component {
       return (
         <div
           className="react-markdown--autocomplete-widget"
+          ref={ref => (this['items-ref'] = ref)}
           style={{
             left,
             top,
@@ -93,6 +109,7 @@ class AutocompleteWidget extends React.Component {
             return (
               <div
                 key={index}
+                ref={ref => (this[`item-ref-${index}`] = ref)}
                 onClick={() => console.log('click!') || this.handleSelectItem(index)}
                 onMouseMove={() => onSelectedIndexChange(index)}
                 className={`
