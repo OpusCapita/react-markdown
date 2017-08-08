@@ -15,8 +15,13 @@ const FullScreenButton = function({ onClick, fullScreen }) {
 };
 
 FullScreenButton.propTypes = {
-  onFullScreen: PropTypes.func,
+  onClick: PropTypes.func,
   fullScreen: PropTypes.bool
+};
+
+FullScreenButton.defaultProps = {
+  onClick: () => {},
+  fullScreen: false
 };
 
 

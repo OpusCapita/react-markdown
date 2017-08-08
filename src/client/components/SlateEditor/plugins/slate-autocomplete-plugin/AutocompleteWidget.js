@@ -8,8 +8,17 @@ const propTypes = {
   items: Types.array,
   onSelectItem: Types.func,
   selectedIndex: Types.number,
-  styles: Types.object,
+  style: Types.object,
   restrictorRef: Types.object
+};
+
+const defaultProps = {
+  isMouseIndexSelected: false,
+  onSelectedIndexChange: () => {},
+  items: [],
+  onSelectItem: () => {},
+  style: {},
+  restrictorRef: null
 };
 
 const maxHeight = 240;
@@ -33,10 +42,6 @@ class AutocompleteWidget extends React.Component {
     this.adjustPosition();
   };
 
-  componentWillUnmount = () => {
-    this.cancelAdjustPosition();
-  }
-
   componentWillUpdate = (nextProps, nextState) => {
     let { isMouseIndexSelected } = this.props;
     let itemsRef = this['items-ref'];
@@ -51,6 +56,10 @@ class AutocompleteWidget extends React.Component {
       }
     }
   };
+
+  componentWillUnmount = () => {
+    this.cancelAdjustPosition();
+  }
 
   adjustPosition = () => {
     let selection = window.getSelection();
@@ -68,9 +77,9 @@ class AutocompleteWidget extends React.Component {
       transform: `${showToTop ? 'translateY(-100%)' : ''}`
     };
 
-    let positionChanged = (this.state.left !== position.left ) || (this.state.top !== position.top);
+    let positionChanged = (this.state.left !== position.left) || (this.state.top !== position.top);
 
-    if(positionChanged) {
+    if (positionChanged) {
       this.setState(position);
     }
 
@@ -90,7 +99,7 @@ class AutocompleteWidget extends React.Component {
 
   render() {
     const { left, top, transform } = this.state;
-    const { items, selectedIndex, onSelectedIndexChange, restrictorRef } = this.props;
+    const { items, selectedIndex, onSelectedIndexChange } = this.props;
 
     if (items) {
       return (
@@ -132,5 +141,8 @@ class AutocompleteWidget extends React.Component {
     return null;
   }
 }
+
+AutocompleteWidget.propTypes = propTypes;
+AutocompleteWidget.defaultProps = defaultProps;
 
 export default AutocompleteWidget;
