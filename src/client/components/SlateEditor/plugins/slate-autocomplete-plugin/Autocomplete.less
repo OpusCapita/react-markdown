@@ -1,44 +1,14 @@
 .react-markdown--autocomplete-widget {
-  overflow-y: auto;
-  max-height: 210px;
-  padding: 0;
-  margin: 0;
-}
-
-.react-markdown--autocomplete-widget .archived {
-  color: rgb(68, 68, 68);
-  padding: 1px 3px 1px 3px;
-  z-index: 10;
-}
-
-.react-markdown--autocomplete-widget .archived:after {
-  content: '';
   position: absolute;
-  width: 100%;
-  height: 100%;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  right: 0;
-  z-index: -1;
-  background: #eee;
+  background: #fff;
+  overflow-y: auto;
+  max-height: 240px;
 }
 
-.react-markdown--autocomplete-widget .active span {
-  color: #fff !important;
+.react-markdown--autocomplete-widget__item {
+
 }
 
-.react-markdown--autocomplete-widget .textcomplete-no-results-message {
-  padding: 2px 0;
-  margin: 0;
-  text-align: center;
-}
-
-.child-textcomplete-stretch-to-right .react-markdown--autocomplete-widget {
-  min-width: 280px;
-  right: 1em;
-}
-
-.react-markdown--autocomplete-widget .textcomplete-item {
-  cursor: default;
+.react-markdown--autocomplete-widget__item--active {
+  background-color: #eee;
 }

@@ -29,7 +29,8 @@ class AutocompleteContainer extends React.Component {
     selectedIndex: 0,
     isLoading: false,
     isMouseIndexSelected: false,
-    items: []
+    items: [],
+    ref: null
   };
 
   componentDidMount = () => {
@@ -158,12 +159,19 @@ class AutocompleteContainer extends React.Component {
     }
   };
 
+  handleRef = (ref) => {
+    this.setState({ ref });
+  }
+
   render() {
-    const { show, selectedIndex, items, isLoading, isMouseIndexSelected } = this.state;
+    const { show, selectedIndex, items, isLoading, isMouseIndexSelected, ref } = this.state;
     const { children, state } = this.props;
 
     return (
-      <div onKeyDown={this.handleKeyDown}>
+      <div
+        onKeyDown={this.handleKeyDown}
+        ref={this.handleRef}
+      >
         {show && state.isFocused ? (
           <AutocompleteWidget
             items={items}
@@ -172,6 +180,7 @@ class AutocompleteContainer extends React.Component {
             onSelectItem={this.handleSelectItem}
             onSelectedIndexChange={this.handleSelectedIndexChange}
             isMouseIndexSelected={isMouseIndexSelected}
+            restrictorRef={ref}
           />
         ) : null}
         {children}
