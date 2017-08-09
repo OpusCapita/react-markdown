@@ -43,7 +43,6 @@ class MarkdownEditor extends React.Component {
         extensions={extensions}
       />
     );
-
   }
 }
 
