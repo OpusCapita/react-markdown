@@ -68,7 +68,6 @@ class PlainMarkdownEditor extends React.Component {
         <ObjectReferenceButton
           key={index}
           extension={extension}
-          mode="plain"
           disabled={false}
         />
       );
@@ -119,7 +118,7 @@ class PlainMarkdownEditor extends React.Component {
 
           {children}
         </SlateToolbar>
-        <SlateContent isPlainMode={true} />
+        <SlateContent />
       </SlateEditor>
     );
   }

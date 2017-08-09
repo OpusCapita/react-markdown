@@ -1,5 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import Types from 'prop-types';
 import { getLink, getSelectedText, updateLink } from './LinkUtils';
 
 import LinkEditor from './LinkEditor';
@@ -9,8 +9,8 @@ import Tooltip from 'react-bootstrap/lib/Tooltip';
 
 class LinkButton extends React.Component {
   static propTypes = {
-    state: PropTypes.object,
-    onChange: PropTypes.func
+    state: Types.object,
+    onChange: Types.func
   };
 
   static defaultProps = {
