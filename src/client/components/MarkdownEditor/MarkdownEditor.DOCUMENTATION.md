@@ -4,11 +4,22 @@ MarkdownEditor
 
 ### Props Reference
 
-| Name               | Type           | Description                                                 |
-| ------------------ | :--------------| ----------------------------------------------------------- |
-| onChange           | func           | Callback: `(value) => {}`                                   |
-| value              | string         | Raw markdown                                                |
-| mode               | string         | Open editor in mode: 'rich' or 'plain', by default 'rich'   |
+| Name               | Type            | Description                                                                                      |
+| ------------------ | :-------------- | ------------------------------------------------------------------------------------------------ |
+| onChange           | func            | Callback: `(value) => {}`                                                                        |
+| value              | string          | Raw markdown                                                                                     |
+| extensions         | array           | See "Extension definition" section bellow.                                 |
+
+### Extension definition
+
+Configurable extensions with autocomplete for **products**, **terms**, etc.
+
+| objectClassName    | string         | Object class name displayed on buttons ('Product', 'Term', etc.)                                 |
+| specialCharacter   | string         | Is used for inserting it into plain markdown editor on button ('Term', 'Product', etc.) click.   |
+| color              | string         | Color of object reference element in rich markdown editor.                                       |
+| termRegex          | regex          | Is used to check if item can be inserted after caret position in plain markdown editor.          |
+| searchItems        | func           | Is used to search items by input term.                                                           |
+| markdownText       | func           | Is used to get text for markdown editor based on selected item.                            |
 
 ### Code Example
 
@@ -41,11 +52,8 @@ MarkdownEditor
           ];
           return Promise.resolve(items.filter(({_objectLabel}) => _objectLabel.startsWith(term.substring(1))));
         },
-        plainMarkdownText(item) {
+        markdownText(item) {
           return '$' + item._objectLabel;
-        },
-        richMarkdownText(item) {
-          return item._objectLabel;
         }
       },
       {
@@ -71,11 +79,8 @@ MarkdownEditor
           ];
           return Promise.resolve(items.filter(({_objectLabel}) => _objectLabel.startsWith(term.substring(1))));
         },
-        plainMarkdownText(item) {
+        markdownText(item) {
           return '#' + item._objectLabel;
-        },
-        richMarkdownText(item) {
-          return item._objectLabel;
         }
       }
     ]}
