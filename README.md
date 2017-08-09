@@ -8,7 +8,7 @@ Based on [slate-js](https://github.com/ianstormtaylor/slate)
 
 ## Demo and documentation
 
-Demo and API reference available here: https://opuscapita.github.io/react-markdown
+Demo and API reference available here: https://opuscapita.github.io/react-markdown-editor
 
 > Demo powered by [React Showroom](https://github.com/OpusCapita/react-showroom-client)
 
