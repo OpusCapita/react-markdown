@@ -1,5 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import Types from 'prop-types';
 import Modal from 'react-bootstrap/lib/Modal';
 
 /**
@@ -7,11 +7,11 @@ import Modal from 'react-bootstrap/lib/Modal';
  */
 class LinkEditor extends React.Component {
   static propTypes = {
-    href: PropTypes.string,
-    mode: PropTypes.oneOf(['insert', 'update']),
-    onCancel: PropTypes.func,
-    onChange: PropTypes.func,
-    text: PropTypes.string
+    href: Types.string,
+    mode: Types.oneOf(['insert', 'update']),
+    onCancel: Types.func,
+    onChange: Types.func,
+    text: Types.string
   };
 
   static defaultProps = {

@@ -3,7 +3,8 @@
  https://github.com/OpusCapita/react-showroom-client/blob/master/docs/scope-component.md
  */
 
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
+import Types from 'prop-types';
 import { showroomScopeDecorator } from '@opuscapita/react-showroom-client';
 
 @showroomScopeDecorator
@@ -85,8 +86,8 @@ class TestEditorScope extends Component {
 }
 
 TestEditorScope.contextTypes = {
-  i18n: PropTypes.object
+  i18n: Types.object
 };
 TestEditorScope.childContextTypes = {
-  i18n: PropTypes.object
+  i18n: Types.object
 };

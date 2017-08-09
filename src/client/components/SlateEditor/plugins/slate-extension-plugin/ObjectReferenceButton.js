@@ -1,13 +1,13 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import Types from 'prop-types';
 import { addObjectReference, addSpecialCharacter } from './ObjectReferenceUtils';
 
 class ObjectReferenceButton extends React.Component {
   static propTypes = {
-    state: PropTypes.object,
-    onChange: PropTypes.func,
-    disabled: PropTypes.bool,
-    extension: PropTypes.object
+    state: Types.object,
+    onChange: Types.func,
+    disabled: Types.bool,
+    extension: Types.object
   };
 
   static defaultProps = {

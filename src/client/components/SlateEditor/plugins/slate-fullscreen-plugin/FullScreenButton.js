@@ -2,7 +2,7 @@ import React from 'react';
 import classnames from 'classnames';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
-import PropTypes from 'prop-types';
+import Types from 'prop-types';
 
 const FullScreenButton = function({ onClick, fullScreen }) {
   return (
@@ -15,8 +15,8 @@ const FullScreenButton = function({ onClick, fullScreen }) {
 };
 
 FullScreenButton.propTypes = {
-  onClick: PropTypes.func,
-  fullScreen: PropTypes.bool
+  onClick: Types.func,
+  fullScreen: Types.bool
 };
 
 FullScreenButton.defaultProps = {

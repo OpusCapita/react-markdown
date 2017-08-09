@@ -1,5 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import Types from 'prop-types';
 import classnames from 'classnames';
 import PlainMarkdownEditor from '../PlainMarkdownEditor';
 import SlateToolbarGroup from '../SlateEditor/SlateToolbarGroup';
@@ -8,9 +8,9 @@ import Tooltip from 'react-bootstrap/lib/Tooltip';
 
 class MarkdownEditor extends React.Component {
   static propTypes = {
-    value: PropTypes.string,
-    onChange: PropTypes.func,
-    extensions: PropTypes.array
+    value: Types.string,
+    onChange: Types.func,
+    extensions: Types.array
   };
 
   static defaultProps = {
