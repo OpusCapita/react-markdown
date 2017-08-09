@@ -14,6 +14,8 @@ MarkdownEditor
 
 Configurable extensions with autocomplete for **products**, **terms**, etc.
 
+| Name               | Type            | Description                                                                                      |
+| ------------------ | :-------------- | ------------------------------------------------------------------------------------------------ |
 | objectClassName    | string         | Object class name displayed on buttons ('Product', 'Term', etc.)                                 |
 | specialCharacter   | string         | Is used for inserting it into plain markdown editor on button ('Term', 'Product', etc.) click.   |
 | color              | string         | Color of object reference element in rich markdown editor.                                       |
