@@ -24,5 +24,4 @@ FullScreenButton.defaultProps = {
   fullScreen: false
 };
 
-
 export default FullScreenButton;

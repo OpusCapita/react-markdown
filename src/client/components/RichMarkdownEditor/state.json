@@ -1,0 +1,35 @@
+{
+  "document": {
+    "data": {},
+    "kind": "document",
+    "nodes": [
+      {
+        "data": {},
+        "kind": "block",
+        "isVoid": false,
+        "type": "line",
+        "nodes": [
+          {
+            "kind": "inline",
+            "type": "objectReference",
+            "nodes": [
+              {
+                "kind": "text",
+                "text": "$objectReferenceExample"
+              }
+            ],
+            "data": {
+              "extension": {
+                "objectClassName": "Term",
+                "specialCharacter": "#",
+                "color": "#9ed69e",
+                "termRegex": "/^#(w*)/"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "kind": "state"
+}

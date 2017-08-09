@@ -8,7 +8,6 @@ const NODE_ENV = process.env.NODE_ENV;
 
 module.exports = {
   entry: [
-    path.resolve(path.resolve(__dirname, '../src/client/polyfill.js')),
     path.resolve(__dirname, '../../www/index-page.js')
   ],
   context: path.resolve(__dirname),

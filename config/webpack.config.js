@@ -60,7 +60,6 @@ if(WEBPACK_BUNDLE_ANALYZE && IS_PRODUCTION_MODE) {
 
 const entries = [];
 
-entries.push(path.resolve(__dirname, '../src/client/polyfill.js'));
 entries.push(
   (IS_PRODUCTION_MODE || IS_LINK_MODE) ?
     path.resolve(__dirname, '../src/client/index.js') :
