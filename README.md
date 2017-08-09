@@ -10,11 +10,15 @@ Markdwon editor based on [slate-js](https://github.com/ianstormtaylor/slate)
 
 ## Usage
 
+Install npm package:
+
 `npm install -E @opuscapita/react-markdown-editor`
+
+Import it to your application
 
 `import { MarkdownEditor } from '@opuscapita/react-markdown-editor'`
 
-See interactive documentation for component API details: https://opuscapita.github.io/react-markdown-editor
+See interactive example for more details: https://opuscapita.github.io/react-markdown-editor
 
 > Demo powered by [React Showroom](https://github.com/OpusCapita/react-showroom-client)
 
