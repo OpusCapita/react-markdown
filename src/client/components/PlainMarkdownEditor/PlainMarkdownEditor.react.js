@@ -68,7 +68,6 @@ class PlainMarkdownEditor extends React.Component {
         <ObjectReferenceButton
           key={index}
           extension={extension}
-          mode="plain"
           disabled={false}
         />
       );
