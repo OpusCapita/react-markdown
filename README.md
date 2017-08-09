@@ -1,6 +1,6 @@
-[![CircleCI Status](https://circleci.com/gh/OpusCapita/react-markdown/tree/master.svg?style=shield&circle-token=:circle-token)](https://circleci.com/gh/OpusCapita/react-markdown)
-![badge-npm-version](https://img.shields.io/npm/v/@opuscapita/react-markdown.svg) 
-![badge-license](https://img.shields.io/github/license/OpusCapita/react-markdown.svg)
+[![CircleCI Status](https://circleci.com/gh/OpusCapita/react-markdown/tree/master.svg?style=shield&circle-token=:circle-token)](https://circleci.com/gh/OpusCapita/react-markdown-editor)
+![badge-npm-version](https://img.shields.io/npm/v/@opuscapita/react-markdown-editor.svg) 
+![badge-license](https://img.shields.io/github/license/OpusCapita/react-markdown-editor.svg)
 
 # React Markdown Editor 
 
