@@ -3,15 +3,14 @@ import React from 'react';
 import AutocompleteContainer from './AutocompleteContainer';
 
 const AutocompletePlugin = options => ({
-  render(props, state, editor) {
+  render(props, state) {
     const { children } = props;
 
     return (
       <AutocompleteContainer
-        editor={editor}
         state={state}
         options={options}
-        onChange={editor.onChange}
+        onChange={options.onChange}
       >
         {children}
       </AutocompleteContainer>

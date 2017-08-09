@@ -81,7 +81,7 @@ class PlainMarkdownEditor extends React.Component {
         schema={schema}
         onChange={this.handleChange}
         plugins={[
-          AutocompletePlugin({ extensions: extensions })
+          AutocompletePlugin({ extensions: extensions, onChange: this.handleChange })
         ]}
       >
         <SlateToolbar>

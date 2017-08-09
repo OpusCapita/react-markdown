@@ -11,14 +11,12 @@ const enterCode = 13;
 class AutocompleteContainer extends React.Component {
   static propTypes = {
     state: PropTypes.object,
-    editor: PropTypes.object,
     options: PropTypes.object,
     onChange: PropTypes.func
   };
 
   static defaultProps = {
     state: {},
-    editor: {},
     options: {},
     onChange: () => {}
   };
@@ -116,7 +114,7 @@ class AutocompleteContainer extends React.Component {
 
   handleSelectItem = (index) => {
     const { items } = this.state;
-    const { state, editor, options } = this.props;
+    const { state, options } = this.props;
     const { term } = this.getSearchToken(state);
 
     if (term) {
@@ -126,14 +124,11 @@ class AutocompleteContainer extends React.Component {
       const extension = this.matchExtension(extensions, term);
 
       if (extension) {
-        let t = state.transform();
-        t.deleteBackward(term.length);
-        t.insertText(extension.plainMarkdownText(item) + ' ');
+        let transform = state.transform();
+        transform.deleteBackward(term.length);
+        transform.insertText(extension.plainMarkdownText(item) + ' ');
 
-        this.props.onChange(
-          t.focus().
-          apply()
-        );
+        this.props.onChange(transform.focus().apply());
       }
     }
 
