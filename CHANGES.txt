@@ -1,0 +1,209 @@
+
+Release 0.0.1-beta.0 Wed Aug 09 2017 18:16:37 GMT+0300 (+03)
+=======================================================
+
+ - Update README.md (Kirill Volkovich <kvolkovich-sc@users.noreply.github.com>, Wed Aug 9 18:13:44 2017 +0300)
+ - Change package and repo name. react-markdown => react-markdown-editor (Kirill Volkovich <volkovich@scand.com>, Wed Aug 9 18:02:28 2017 +0300)
+ - Remove rich editor/#25 (#29)
+    
+    * Remove all code related to rich editor after mistaken merge (Kirill Volkovich <kvolkovich-sc@users.noreply.github.com>, Wed Aug 9 16:57:08 2017 +0300)
+ - Enhancement/#5 (#28)
+    
+    * Improve MarkdownEditor docs
+    
+    * Reverted babel-polyfill globally back (Kirill Volkovich <kvolkovich-sc@users.noreply.github.com>, Wed Aug 9 16:05:48 2017 +0300)
+ - #25/remove code related to rich editor (#27)
+    
+    * Remove all code related to rich editor
+    
+    * PropTypes => Types
+    
+    * Fix lint errors
+    
+    * Remove "mode" from PlainMarkdownEditor
+    
+    [ci skip]
+    
+    * Adding MarkdownEditor props description. (Kirill Volkovich <kvolkovich-sc@users.noreply.github.com>, Wed Aug 9 13:05:44 2017 +0300)
+ - Enhancement/#5 (#24) Add support for markdown extensions with autocomplete
+    
+    * Fix autocomplete blinking
+    
+    * Improve toolbar styles
+    
+    * Improved autocomplete styles. Fix MarkdownEditor example
+    
+    * Make document.body overflow == 'hidden' when plain editor became fullscreen
+    
+    * Fix autocomplete positioning
+    
+    * Fix autocomplete first item selection
+    
+    * Fix - autocomplete fails when cursor on first text char
+    
+    * Add babel-polyfill to bundle
+    
+    * Add onChange prop to AutocompleteContainer, ObjectReferenceNode (Kirill Volkovich <kvolkovich-sc@users.noreply.github.com>, Wed Aug 9 11:59:24 2017 +0300)
+ - Highlight plain editor 2 (#23)
+    
+    *  # 12 Improved text highlighting in plain markdown editor
+    
+    * Temporary disabled switch to "rich editor mode"
+    
+    * Fix cursor stuck for headers on arrow keys nav in plain editor
+    
+    * Fix cursor stuck for headers on arrow keys nav in plain editor
+    
+    * Fix hightlihting of horizontal rule
+    
+    * Improve SlateToolbar styles
+    
+    * Change background color for "code" highlighting in plain editor
+    
+    * Improve MarkdownEditor example styles
+    
+    * Improve SlateToolbar styles (Kirill Volkovich <kvolkovich-sc@users.noreply.github.com>, Mon Aug 7 15:18:03 2017 +0300)
+ - Fix list items highlighting in PlainMarkdownEditor (#22)
+    
+    * Fix list items highlighting in PlainMarkdownEditor
+    
+    * Switch default MarkdownEditor mode back to 'rich' (Kirill Volkovich <kvolkovich-sc@users.noreply.github.com>, Fri Jul 28 18:30:24 2017 +0300)
+ - #12 Highlight plain editor (#17)
+    
+    resolve # 12 (add text highlighting in plain markdown editor) (Kirill Volkovich <kvolkovich-sc@users.noreply.github.com>, Fri Jul 28 15:31:51 2017 +0300)
+ - Removing unnecessary commands from corcleci build configuration file (Alexey Sergeev <sab@scand.com>, Mon Jul 24 12:38:51 2017 +0300)
+ - Ignoring 'gh-pages' branch changes in CircleCI build (Alexey Sergeev <sab@scand.com>, Mon Jul 24 11:39:59 2017 +0300)
+ - Remove default test reporter configuration as it is used by default without it (Alexey Sergeev <sab@scand.com>, Mon Jul 24 11:36:41 2017 +0300)
+ - Reconfiguring CircleCI: publishing test results (Alexey Sergeev <sab@scand.com>, Mon Jul 24 11:31:37 2017 +0300)
+ - Reconfiguring CircleCI: publishing test results (Alexey Sergeev <sab@scand.com>, Mon Jul 24 11:29:59 2017 +0300)
+ - Reconfiguring CircleCI: publishing test results (Alexey Sergeev <sab@scand.com>, Mon Jul 24 11:27:32 2017 +0300)
+ - Reconfiguring CircleCI: publishing test results (Alexey Sergeev <sab@scand.com>, Mon Jul 24 11:20:37 2017 +0300)
+ - Removing unused files (Alexey Sergeev <sab@scand.com>, Mon Jul 24 10:59:44 2017 +0300)
+ - Reconfiguring test run. Cleanup hg-pages generatio (Alexey Sergeev <sab@scand.com>, Mon Jul 24 10:30:25 2017 +0300)
+ - Enhancement/#11 (#14)
+    
+    Implementing #11 issue. (Dmitry Divin <ddivin-sc@users.noreply.github.com>, Mon Jul 24 10:14:10 2017 +0300)
+ - Adding info about known issues (Alexey Sergeev <sab@scand.com>, Mon Jul 24 09:52:58 2017 +0300)
+ - Fixing scripts (Alexey Sergeev <sab@scand.com>, Mon Jul 24 09:50:04 2017 +0300)
+ - Disabling not working automatic gh-pages deployement (Alexey Sergeev <sab@scand.com>, Mon Jul 24 09:45:19 2017 +0300)
+ - Adding automatic deployment of gh-pages on master branch (Alexey Sergeev <sab@scand.com>, Mon Jul 24 09:40:32 2017 +0300)
+ - Move gh-pages scripts to separate folder (Alexey Sergeev <sab@scand.com>, Mon Jul 24 09:38:45 2017 +0300)
+ - Update gh-pages-create.sh [ci skip] (Kirill Volkovich <volkovich@scand.com>, Fri Jul 14 10:15:17 2017 +0300)
+ - Rename gh-pages-make.sh => gh-pages-create.sh (Kirill Volkovich <volkovich@scand.com>, Fri Jul 14 10:13:24 2017 +0300)
+ - Add create-demo-tarball script (Kirill Volkovich <volkovich@scand.com>, Fri Jul 14 10:12:00 2017 +0300)
+ - Merge branch 'master' of opuscapita.github.com:OpusCapita/react-markdown (5f3bede 9e06af8, Kirill Volkovich <volkovich@scand.com>)
+ - Add creating archive with executable demo [ci skip] (Kirill Volkovich <volkovich@scand.com>, Fri Jul 14 09:19:25 2017 +0300)
+ - Merge branch 'master' into enhancement/10 (2e68a15 5569baf, baliunov <baliunov@scand.com>)
+ - Blockquotes (serialize to markdown) (baliunov <baliunov@scand.com>, Fri Jul 14 09:48:11 2017 +0300)
+ - Update README.md (Alexey Sergeev <asergeev-sc@users.noreply.github.com>, Fri Jul 14 08:13:08 2017 +0300)
+ - Update README.md (Kirill Volkovich <kvolkovich-sc@users.noreply.github.com>, Fri Jul 14 00:13:32 2017 +0300)
+ - Update README.md (Kirill Volkovich <kvolkovich-sc@users.noreply.github.com>, Fri Jul 14 00:12:34 2017 +0300)
+ - Fixed bug of nested a bold text to italic (baliunov <baliunov@scand.com>, Thu Jul 13 17:00:23 2017 +0300)
+ - Merge branch 'master' of github.com:OpusCapita/react-markdown (db35636 a773e43, Dmitry Divin <divin@scand.com>)
+ - Adding fullscreen mode common behavior for all editors by default (Dmitry Divin <divin@scand.com>, Thu Jul 13 14:19:27 2017 +0300)
+ - Fix eslint errors (baliunov <baliunov@scand.com>, Thu Jul 13 10:14:44 2017 +0300)
+ - Merge branch 'master' into enhancement/#10 (cf915b6 5c60b02, baliunov <baliunov@scand.com>)
+ - Empty lines, abbreviations. Refactoring (baliunov <baliunov@scand.com>, Wed Jul 12 17:43:34 2017 +0300)
+ - Fix gh-pages build
+    
+    [ci skip] (Kirill Volkovich <volkovich@scand.com>, Wed Jul 12 14:59:01 2017 +0300)
+ - Fix gh-pages build
+    
+    [ci skip] (Kirill Volkovich <volkovich@scand.com>, Wed Jul 12 14:41:06 2017 +0300)
+ - Fix gh-pages build
+    
+    [ci skip] (Kirill Volkovich <volkovich@scand.com>, Wed Jul 12 13:10:21 2017 +0300)
+ - Fix gh-pages build (Kirill Volkovich <volkovich@scand.com>, Wed Jul 12 12:44:00 2017 +0300)
+ - Fix gh-pages build (Kirill Volkovich <volkovich@scand.com>, Wed Jul 12 12:39:00 2017 +0300)
+ - Fix gh-pages build (Kirill Volkovich <volkovich@scand.com>, Wed Jul 12 12:38:10 2017 +0300)
+ - Fix gh-pages build (Kirill Volkovich <volkovich@scand.com>, Wed Jul 12 12:35:48 2017 +0300)
+ - Fix gh-pages build (Kirill Volkovich <volkovich@scand.com>, Wed Jul 12 12:31:18 2017 +0300)
+ - Move showroom components scan from js file to package.json goals (Kirill Volkovich <volkovich@scand.com>, Wed Jul 12 11:26:45 2017 +0300)
+ - Move showroom components scan from js file to package.json goals (Kirill Volkovich <volkovich@scand.com>, Wed Jul 12 11:21:51 2017 +0300)
+ - Merge branch 'master' into enhancement/#10
+    
+    # Conflicts:
+    #	.gitignore
+    #	package.json (b490d3c af77ea4, baliunov <baliunov@scand.com>)
+ - Merge branch 'master' of opuscapita.github.com:OpusCapita/react-markdown (0f37663 02840a4, Kirill Volkovich <kirill.volkovich@jcatalog.com>)
+ - Update README.md (Kirill Volkovich <kirill.volkovich@jcatalog.com>, Wed Jul 12 09:51:48 2017 +0300)
+ - Removing global babel config. Fixing documentation/site build. (Alexey Sergeev <sab@scand.com>, Wed Jul 12 09:48:28 2017 +0300)
+ - Update README.md (Kirill Volkovich <kvolkovich-sc@users.noreply.github.com>, Wed Jul 12 09:43:43 2017 +0300)
+ - Update README.md (kvolkovich-sc <kirill.volkovich@jcatalog.com>, Wed Jul 12 09:37:05 2017 +0300)
+ - Disabling autocomplete plugin (Alexey Sergeev <sab@scand.com>, Wed Jul 12 09:35:25 2017 +0300)
+ - Marking .sh files as executable (Alexey Sergeev <sab@scand.com>, Wed Jul 12 08:33:50 2017 +0300)
+ - Update README.md (Alexey Sergeev <asergeev-sc@users.noreply.github.com>, Wed Jul 12 08:32:11 2017 +0300)
+ - Updating build process (Alexey Sergeev <sab@scand.com>, Wed Jul 12 08:30:07 2017 +0300)
+ - Merge branch 'master' of https://github.com/OpusCapita/react-markdown (dab0e32 0d74936, Alexey Sergeev <sab@scand.com>)
+ - Adding build config for CircleCI 2.0 (Alexey Sergeev <sab@scand.com>, Wed Jul 12 08:18:50 2017 +0300)
+ - Fix typo (kvolkovich-sc <kirill.volkovich@jcatalog.com>, Wed Jul 12 08:18:20 2017 +0300)
+ - Cleanup autocompletes (Alexey Sergeev <sab@scand.com>, Wed Jul 12 02:29:29 2017 +0300)
+ - Cleaup code. Removing 'autocomplete's declaration from compmpnents as correcsponding ticket is not even not specified yet properly (Alexey Sergeev <sab@scand.com>, Wed Jul 12 02:17:53 2017 +0300)
+ - Move mocha to dev dependencies. Removing react and react-dom from dependencies - peer dependency declaration is enough. Renaming 'build' goal to 'npm-build' (Alexey Sergeev <sab@scand.com>, Wed Jul 12 00:42:36 2017 +0300)
+ - Merge branch 'master' of https://github.com/OpusCapita/react-markdown (51b9abf b3d3b6a, Alexey Sergeev <sab@scand.com>)
+ - Making webpack less verbose (Alexey Sergeev <sab@scand.com>, Wed Jul 12 00:26:37 2017 +0300)
+ - Remove yarn.lock (kvolkovich-sc <kirill.volkovich@jcatalog.com>, Wed Jul 12 00:18:07 2017 +0300)
+ - Add more *.log files to .gitignore (kvolkovich-sc <kirill.volkovich@jcatalog.com>, Wed Jul 12 00:15:53 2017 +0300)
+ - Removing useless code processing using babel (Alexey Sergeev <sab@scand.com>, Wed Jul 12 00:12:26 2017 +0300)
+ - Adding yarn.lock to ignored files (Alexey Sergeev <sab@scand.com>, Wed Jul 12 00:06:47 2017 +0300)
+ - Add markdown-it plugins: emptyline and anchor (baliunov <baliunov@scand.com>, Tue Jul 11 18:44:24 2017 +0300)
+ - Fixing autocomplete item mouse click. (Dmitriy Sanko <dsanko@scand.com>, Tue Jul 11 18:23:46 2017 +0300)
+ - Merge branch 'master' into enhancement/10 (a60faa8 609f336, baliunov <baliunov@scand.com>)
+ - Refactoring. remove old files (baliunov <baliunov@scand.com>, Tue Jul 11 15:39:58 2017 +0300)
+ - Change package.json (baliunov <baliunov@scand.com>, Tue Jul 11 15:13:11 2017 +0300)
+ - Disable edit buttons in plain editor (Dmitry Divin <divin@scand.com>, Tue Jul 11 14:09:54 2017 +0300)
+ - Remove blockquote button from editors (Dmitry Divin <divin@scand.com>, Tue Jul 11 13:49:46 2017 +0300)
+ - Adjustment example (Dmitry Divin <divin@scand.com>, Tue Jul 11 13:40:40 2017 +0300)
+ - Merge branch 'master' of github.com:OpusCapita/react-markdown (87e271e e4784bf, Dmitry Divin <divin@scand.com>)
+ - Adjusment autcomplete positions (Dmitry Divin <divin@scand.com>, Tue Jul 11 12:46:54 2017 +0300)
+ - Removed "prepublish" npm goal (Kirill Volkovich <volkovich@scand.com>, Tue Jul 11 11:24:26 2017 +0300)
+ - Fix @opuscapita/react-showroom-* version (Kirill Volkovich <volkovich@scand.com>, Tue Jul 11 11:21:53 2017 +0300)
+ - Change package.json (baliunov <baliunov@scand.com>, Tue Jul 11 11:00:57 2017 +0300)
+ - Merge remote-tracking branch 'origin/master' into MD_parser
+    
+    # Conflicts:
+    #	package.json (1534522 30638db, baliunov <baliunov@scand.com>)
+ - Fixed bug unordered list (baliunov <baliunov@scand.com>, Mon Jul 10 17:15:14 2017 +0300)
+ - Save markups in node's data. Restore markups to markdown (baliunov <baliunov@scand.com>, Mon Jul 10 17:04:59 2017 +0300)
+ - Fix when webpack bundle analyze shows (Kirill Volkovich <volkovich@scand.com>, Mon Jul 10 15:24:02 2017 +0300)
+ - Improve build-process (Kirill Volkovich <volkovich@scand.com>, Mon Jul 10 15:14:22 2017 +0300)
+ - Abbreviations, Anchors (baliunov <baliunov@scand.com>, Mon Jul 10 14:49:09 2017 +0300)
+ - Merge branch 'master' into MD_parser (a413d17 c4c0f16, baliunov <baliunov@scand.com>)
+ - Serializer (baliunov <baliunov@scand.com>, Mon Jul 10 14:25:45 2017 +0300)
+ - Add license, publishConfig, repository fields (Kirill Volkovich <volkovich@scand.com>, Mon Jul 10 13:58:20 2017 +0300)
+ - Fixing code after refactoring (Dmitry Divin <divin@scand.com>, Mon Jul 10 13:40:37 2017 +0300)
+ - Merge branch 'master' of github.com:OpusCapita/react-markdown (6d3c3cf 2853471, Dmitry Divin <divin@scand.com>)
+ - Fixing lint manually (Dmitry Divin <divin@scand.com>, Mon Jul 10 13:24:47 2017 +0300)
+ - Merge branch 'master' of opuscapita.github.com:OpusCapita/react-markdown (6e565a8 bff56a7, Kirill Volkovich <volkovich@scand.com>)
+ - Lint fix auto (Dmitry Divin <divin@scand.com>, Mon Jul 10 12:34:17 2017 +0300)
+ - Remove external_packages dir. Use @opuscapita/opuscapita-ui instead (Kirill Volkovich <volkovich@scand.com>, Mon Jul 10 12:31:53 2017 +0300)
+ - Reformat code (Dmitry Divin <divin@scand.com>, Mon Jul 10 12:24:37 2017 +0300)
+ - Adding documentation for RichMarkdownEditor (Dmitry Divin <divin@scand.com>, Mon Jul 10 12:23:21 2017 +0300)
+ - Improving L&F (Dmitry Divin <divin@scand.com>, Mon Jul 10 11:44:00 2017 +0300)
+ - Implementing markdown editor based on SlateJS (Dmitry Divin <divin@scand.com>, Mon Jul 10 11:21:10 2017 +0300)
+ - Create branch for draftjs (Dmitry Divin <divin@scand.com>, Mon Jul 10 10:16:21 2017 +0300)
+ - Merge pull request #9 from OpusCapita/feature/#4
+    
+    Fixed using keys combinations after item select. (b0462ca 93e582b, Dmitriy Sanko <dsanko-sc@users.noreply.github.com>)
+ - Fixed using keys combinations after item select. (Dmitriy Sanko <dsanko@scand.com>, Thu Jun 29 17:15:19 2017 +0300)
+ - Merge pull request #8 from OpusCapita/feature/#4
+    
+    Changing PlainMarkdownEditor component interface. (2c6a6cc 0bd22ce, Dmitriy Sanko <dsanko-sc@users.noreply.github.com>)
+ - Changing PlainMarkdownEditor component interface. (Dmitriy Sanko <dsanko@scand.com>, Wed Jun 28 16:48:50 2017 +0300)
+ - Merge pull request #7 from OpusCapita/feature/#4
+    
+    Feature/#4 (47d2d1f 332ce61, Dmitriy Sanko <dsanko-sc@users.noreply.github.com>)
+ - Fixing new line after string with special character. (Dmitriy Sanko <dsanko@scand.com>, Thu Jun 15 13:45:26 2017 +0300)
+ - Fixing items list overlay position. (Dmitriy Sanko <dsanko@scand.com>, Thu Jun 15 13:44:05 2017 +0300)
+ - Merge pull request #6 from OpusCapita/feature/#4
+    
+    Creating PlainMarkdownEditor component. (5048d9b 1fc62d3, Kirill Volkovich <kvolkovich-sc@users.noreply.github.com>)
+ - Creating PlainMarkdownEditor component. (Dmitriy Sanko <dsanko@scand.com>, Thu Jun 15 11:16:05 2017 +0300)
+ - Update (Alexey Sergeev <asergeev-sc@users.noreply.github.com>, Thu Jun 1 22:12:48 2017 +0300)
+ - Update README.md (Alexey Sergeev <asergeev-sc@users.noreply.github.com>, Thu Jun 1 22:12:25 2017 +0300)
+ - Merge branch 'master' of opuscapita.github.com:OpusCapita/react-markdown (9bfaf8d 5159be2, Kirill Volkovich <volkovich@scand.com>)
+ - Merge branch 'master' of opuscapita.github.com:OpusCapita/react-markdown (Kirill Volkovich <volkovich@scand.com>, Thu Jun 1 12:03:42 2017 +0300)
+ - Create component MarkdownEditor #2 (Kirill Volkovich <volkovich@scand.com>, Thu Jun 1 12:02:16 2017 +0300)
+ - Update README.md (Kirill Volkovich <kvolkovich-sc@users.noreply.github.com>, Thu Jun 1 11:39:58 2017 +0300)
+ - Create npm package '@opuscapita/react-markdown' (Kirill Volkovich <volkovich@scand.com>, Thu Jun 1 11:27:34 2017 +0300)
+ - Initial commit (Kirill Volkovich <volkovich@scand.com>, Thu Jun 1 11:04:07 2017 +0300)
