@@ -4,10 +4,18 @@ MarkdownEditor
 
 ### Props Reference
 
-| Name               | Type           | Description                                                 |
-| ------------------ | :--------------| ----------------------------------------------------------- |
-| onChange           | func           | Callback: `(value) => {}`                                   |
-| value              | string         | Raw markdown                                                |
+| Name               | Type           | Description                                                                                      |
+| ------------------ | :--------------| ------------------------------------------------------------------------------------------------ |
+| onChange           | func           | Callback: `(value) => {}`                                                                        |
+| value              | string         | Raw markdown                                                                                     |
+| mode               | string         | Open editor in mode: 'rich' or 'plain', by default 'rich'                                        |
+| objectClassName    | string         | Object class name displayed on buttons ('Product', 'Term', etc.)                                 |
+| specialCharacter   | string         | Is used for inserting it into plain markdown editor on button ('Term', 'Product', etc.) click.   |
+| color              | string         | Color of object reference element in rich markdown editor.                                       |
+| termRegex          | regex          | Is used to check if item can be inserted after caret position in plain markdown editor.          |
+| searchItems        | func           | Is used to search items by input term.                                                           |
+| plainMarkdownText  | func           | Is used to get text for plain markdown editor based on selected item.                            |
+| richMarkdownText   | func           | Is used to get text for rich markdown editor based on selected item.                             |
 
 ### Code Example
 
@@ -40,8 +48,11 @@ MarkdownEditor
           ];
           return Promise.resolve(items.filter(({_objectLabel}) => _objectLabel.startsWith(term.substring(1))));
         },
-        markdownText(item) {
+        plainMarkdownText(item) {
           return '$' + item._objectLabel;
+        },
+        richMarkdownText(item) {
+          return item._objectLabel;
         }
       },
       {
@@ -67,8 +78,11 @@ MarkdownEditor
           ];
           return Promise.resolve(items.filter(({_objectLabel}) => _objectLabel.startsWith(term.substring(1))));
         },
-        markdownText(item) {
+        plainMarkdownText(item) {
           return '#' + item._objectLabel;
+        },
+        richMarkdownText(item) {
+          return item._objectLabel;
         }
       }
     ]}
