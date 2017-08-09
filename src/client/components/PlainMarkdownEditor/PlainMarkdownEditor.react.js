@@ -6,6 +6,11 @@ import shortcuts from './slate/shortcuts';
 import './PlainMarkdownEditor.less';
 
 import {
+  AutocompletePlugin,
+  ObjectReferenceButton
+} from '../SlateEditor/plugins';
+
+import {
   BoldButton,
   HeaderFiveButton,
   HeaderFourButton,
@@ -21,7 +26,6 @@ import {
 } from './buttons';
 
 import { SlateContent, SlateEditor, SlateToolbar, SlateToolbarGroup } from '../SlateEditor';
-
 import { Plain } from 'slate';
 
 class PlainMarkdownEditor extends React.Component {
@@ -30,14 +34,23 @@ class PlainMarkdownEditor extends React.Component {
     fullScreen: false
   };
 
+  componentWillMount() {
+    this.initialBodyOverflowStyle = document.body.overflow;
+  }
+
   handleChange = (editorState) => {
     this.props.onChange(Plain.serialize(editorState));
 
     this.setState({ editorState });
   };
 
-  handleFullScreen = (fullScreen) => {
+  handleFullScreen = () => {
+    let fullScreen = !this.state.fullScreen;
+
+    document.body.style.overflow = fullScreen ? 'hidden' : this.initialBodyOverflowStyle;
+
     this.setState({ fullScreen });
+    this.props.onFullScreen(fullScreen);
   };
 
   onKeyDown(event, data, state) {
@@ -46,10 +59,20 @@ class PlainMarkdownEditor extends React.Component {
 
   render() {
     const { editorState } = this.state;
-    const { children } = this.props;
+    const { children, extensions } = this.props;
 
-    const onFullScreen = this.props.onFullScreen || this.handleFullScreen;
-    const fullScreen = this.props.onFullScreen ? this.props.fullScreen : this.state.fullScreen;
+    const fullScreen = this.props.fullScreen;
+
+    let objectReferenceButtons = this.props.extensions.map((extension, index) => {
+      return (
+        <ObjectReferenceButton
+          key={index}
+          extension={extension}
+          mode="plain"
+          disabled={false}
+        />
+      );
+    });
 
     return (
       <SlateEditor
@@ -57,6 +80,9 @@ class PlainMarkdownEditor extends React.Component {
         fullScreen={fullScreen}
         schema={schema}
         onChange={this.handleChange}
+        plugins={[
+          AutocompletePlugin({ extensions: extensions, onChange: this.handleChange })
+        ]}
       >
         <SlateToolbar>
           <SlateToolbarGroup>
@@ -84,7 +110,11 @@ class PlainMarkdownEditor extends React.Component {
           </SlateToolbarGroup>
 
           <SlateToolbarGroup>
-            <FullScreenButton onFullScreen={onFullScreen} fullScreen={fullScreen}/>
+            {objectReferenceButtons}
+          </SlateToolbarGroup>
+
+          <SlateToolbarGroup className="react-markdown--plain-markdown-editor__fullscreen-button">
+            <FullScreenButton onClick={this.handleFullScreen} fullScreen={fullScreen} />
           </SlateToolbarGroup>
 
           {children}
@@ -96,11 +126,19 @@ class PlainMarkdownEditor extends React.Component {
 }
 
 PlainMarkdownEditor.propTypes = {
-  autocompletes: Types.array,
+  extensions: Types.array,
   value: Types.string,
   onChange: Types.func,
   onFullScreen: Types.func,
   fullScreen: Types.bool
+};
+
+PlainMarkdownEditor.defaultProps = {
+  extensions: [],
+  value: '',
+  fullScreen: false,
+  onFullScreen: () => {},
+  onChange: () => {}
 };
 
 export default PlainMarkdownEditor;

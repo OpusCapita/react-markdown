@@ -2,9 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import AutocompleteWidget from './AutocompleteWidget';
-// what is that???? why???
-// polyfile Promise for IE
-import 'bluebird';
 
 const escapeCode = 27;
 const arrowUpCode = 38;
@@ -14,21 +11,23 @@ const enterCode = 13;
 class AutocompleteContainer extends React.Component {
   static propTypes = {
     state: PropTypes.object,
-    editor: PropTypes.object,
-    options: PropTypes.object
+    options: PropTypes.object,
+    onChange: PropTypes.func
   };
 
   static defaultProps = {
     state: {},
-    editor: {},
-    options: {}
+    options: {},
+    onChange: () => {}
   };
 
   state = {
     show: false,
     selectedIndex: 0,
     isLoading: false,
-    isMouseIndexSelected: false
+    isMouseIndexSelected: false,
+    items: [],
+    ref: null
   };
 
   componentDidMount = () => {
@@ -37,22 +36,20 @@ class AutocompleteContainer extends React.Component {
 
   componentWillReceiveProps = (nextProps) => {
     this.searchItems(nextProps);
-    if (this.state.items &&
+    if (typeof this.state.selectedIndex !== 'undefined' &&
       (this.props.state.startOffset === nextProps.state.startOffset) &&
       (this.props.state.startText.text === nextProps.state.startText.text) &&
       nextProps.state.startText.text) {
       this.handleSelectItem(this.state.selectedIndex);
-    } else {
-      this.setState({ show: false })
     }
   };
 
-  matchRule = (rules, token) => {
-    for (let i = 0, count = rules.length; i < count; i++) {
-      const rule = rules[i];
+  matchExtension = (extensions, token) => {
+    for (let i = 0, count = extensions.length; i < count; i++) {
+      const extension = extensions[i];
 
-      if (token.match(rule.termRegex)) {
-        return rule;
+      if (token.match(extension.termRegex)) {
+        return extension;
       }
     }
     return undefined;
@@ -117,25 +114,21 @@ class AutocompleteContainer extends React.Component {
 
   handleSelectItem = (index) => {
     const { items } = this.state;
-    const { state, editor, options } = this.props;
-
+    const { state, options } = this.props;
     const { term } = this.getSearchToken(state);
 
     if (term) {
       const item = items[index];
 
-      const { rules } = options;
-      const rule = this.matchRule(rules, term);
+      const { extensions } = options;
+      const extension = this.matchExtension(extensions, term);
 
-      if (rule) {
-        let t = state.transform();
-        t.deleteBackward(term.length);
-        t.insertText(rule.selectItem(item) + ' ');
+      if (extension) {
+        let transform = state.transform();
+        transform.deleteBackward(term.length);
+        transform.insertText(extension.plainMarkdownText(item) + ' ');
 
-        editor.onChange(
-          t.focus().
-          apply()
-        );
+        this.props.onChange(transform.focus().apply());
       }
     }
 
@@ -146,32 +139,42 @@ class AutocompleteContainer extends React.Component {
     let { term } = this.getSearchToken(state);
 
     if (term) {
-      const { rules } = options;
-      const rule = this.matchRule(rules, term);
-
+      const { extensions } = options;
+      const extension = this.matchExtension(extensions, term);
       const { show } = this.state;
-      if (rule) {
+      if (extension) {
         this.setState({ show: true, isLoading: true });
-        rule.fetch(term).then((items) => this.setState({ items, selectedIndex: 0, isLoading: false }));
+        extension.searchItems(term).then((items) => this.setState({ items, selectedIndex: 0, isLoading: false }));
       } else if (show) {
-        this.setState({ show: false })
+        this.setState({ show: false });
       }
+    } else {
+      this.setState({ show: false });
     }
   };
 
+  handleRef = (ref) => {
+    this.setState({ ref });
+  }
+
   render() {
-    const { show, selectedIndex, items, isLoading } = this.state;
+    const { show, selectedIndex, items, isLoading, isMouseIndexSelected, ref } = this.state;
     const { children, state } = this.props;
 
     return (
-      <div onKeyDown={this.handleKeyDown}>
+      <div
+        onKeyDown={this.handleKeyDown}
+        ref={this.handleRef}
+      >
         {show && state.isFocused ? (
-          <AutocompleteWidget items={items}
+          <AutocompleteWidget
+            items={items}
             isLoading={isLoading}
             selectedIndex={selectedIndex}
             onSelectItem={this.handleSelectItem}
             onSelectedIndexChange={this.handleSelectedIndexChange}
-            isMouseIndexSelected={this.state.isMouseIndexSelected}
+            isMouseIndexSelected={isMouseIndexSelected}
+            restrictorRef={ref}
           />
         ) : null}
         {children}

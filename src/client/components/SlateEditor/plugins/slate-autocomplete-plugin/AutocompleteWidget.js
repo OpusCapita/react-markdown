@@ -1,103 +1,152 @@
 import React from 'react';
 import './Autocomplete.less';
-import PropTypes from 'prop-types';
+import Types from 'prop-types';
 
-const getSelectionTopLeft = function() {
-  const selection = window.getSelection();
-  let rangePos, left = 0, top = 0;
-  if (selection.rangeCount) {
-    rangePos = window.getSelection().getRangeAt(0).getBoundingClientRect();
-    // you can get also right and bottom here if you like
-    left = parseInt(rangePos.left, 10) + 5;
-    top = parseInt(rangePos.top, 10) + window.scrollY;
-  }
-  return { left, top };
+const propTypes = {
+  isMouseIndexSelected: Types.bool,
+  onSelectedIndexChange: Types.func,
+  items: Types.array,
+  onSelectItem: Types.func,
+  selectedIndex: Types.number,
+  style: Types.object,
+  restrictorRef: Types.object
 };
 
-class AutocompleteWidget extends React.Component {
-  static propTypes = {
-    isMouseIndexSelected: PropTypes.bool,
-    onSelectedIndexChange: PropTypes.func,
-    items: PropTypes.array,
-    onSelectItem: PropTypes.func,
-    selectedIndex: PropTypes.number
-  };
+const defaultProps = {
+  isMouseIndexSelected: false,
+  onSelectedIndexChange: () => {},
+  items: [],
+  onSelectItem: () => {},
+  style: {},
+  restrictorRef: null
+};
 
-  state = {
-    left: 0,
-    top: 0
-  };
+const maxHeight = 240;
+
+class AutocompleteWidget extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      left: 0,
+      top: 0,
+      transform: ''
+    };
+  }
 
   componentDidMount = () => {
-    this.setState(getSelectionTopLeft());
+    this.adjustPosition();
   };
 
   componentWillReceiveProps = (nextProps) => {
-    // get selection bounding client rect on next cycle
-    setTimeout(() => {
-      this.setState(getSelectionTopLeft());
-    });
+    this.cancelAdjustPosition();
+    this.adjustPosition();
   };
 
   componentWillUpdate = (nextProps, nextState) => {
     let { isMouseIndexSelected } = this.props;
-    let list = this.refs.autocompleteList;
-    let targetLi = this.refs[`autocompleteItem${nextProps.selectedIndex}`];
+    let itemsRef = this['items-ref'];
+    let itemRef = this[`item-ref-${nextProps.selectedIndex}`];
 
-    if (list && targetLi && !isMouseIndexSelected) {
-      if ((this.props.selectedIndex < nextProps.selectedIndex) && (targetLi.offsetTop - list.scrollTop > 156)) {
-        list.scrollTop = (targetLi.offsetTop - 156);
+    if (itemsRef && itemRef && !isMouseIndexSelected) {  // calculating scrolling with keyboard up and down arrows
+      if ((this.props.selectedIndex < nextProps.selectedIndex) && (itemRef.offsetTop - itemsRef.scrollTop > 156)) {
+        itemsRef.scrollTop = (itemRef.offsetTop - 156);
       }
-      if ((this.props.selectedIndex > nextProps.selectedIndex) && (targetLi.offsetTop - list.scrollTop < 26)) {
-        list.scrollTop = (targetLi.offsetTop - 26);
+      if ((this.props.selectedIndex > nextProps.selectedIndex) && (itemRef.offsetTop - itemsRef.scrollTop < 26)) {
+        itemsRef.scrollTop = (itemRef.offsetTop - 26);
       }
     }
   };
 
+  componentWillUnmount = () => {
+    this.cancelAdjustPosition();
+  }
+
+  adjustPosition = () => {
+    let selection = window.getSelection();
+
+    if (!selection.anchorNode) {
+      return;
+    }
+
+    let selectionRect = selection.getRangeAt(0).getBoundingClientRect();
+    let restrictorRect = this.props.restrictorRef.getBoundingClientRect();
+    let lineHeight = selectionRect.bottom - selectionRect.top;
+    let left = selectionRect.left - restrictorRect.left;
+    let top = selectionRect.top - restrictorRect.top + lineHeight + 4;
+
+    let showToTop = (top + maxHeight) > restrictorRect.bottom;
+
+    let position = {
+      left: `${left}px`,
+      top: `${showToTop ? top - lineHeight : top}px`,
+      transform: `${showToTop ? 'translateY(-100%)' : ''}`
+    };
+
+    let positionChanged = (this.state.left !== position.left) || (this.state.top !== position.top);
+
+    if (positionChanged) {
+      this.setState(position);
+    }
+
+    this._animationFrame = window.requestAnimationFrame(() => this.adjustPosition());
+  };
+
+  cancelAdjustPosition = () => {
+    if (this._animationFrame) {
+      cancelAnimationFrame(this._animationFrame);
+    }
+  }
+
   handleSelectItem = (index, e) => {
-    e.preventDefault();
     this.props.onSelectItem(index);
   };
 
   render() {
-    const { left, top } = this.state;
+    const { left, top, transform } = this.state;
     const { items, selectedIndex, onSelectedIndexChange } = this.props;
 
-    const styles = {
-      zIndex: 99999,
-      display: 'block',
-      left,
-      top
-    };
-
-    if (items !== undefined && items !== null) {
+    if (items) {
       return (
-        <ul className="dropdown-menu textcomplete-dropdown"
-          ref="autocompleteList"
-          style={styles}
+        <div
+          className="react-markdown--autocomplete-widget"
+          ref={ref => (this['items-ref'] = ref)}
+          style={{
+            left,
+            top,
+            transform,
+            maxHeight: `${maxHeight}px`,
+            ...this.props.style
+          }}
         >
           {items.map((item, index) => {
             return (
-              <li key={index}
-                ref={`autocompleteItem${index}`}
-                onClick={this.handleSelectItem.bind(this, index)}
-                onMouseMove={(index) => {onSelectedIndexChange(index)}}
-                className={'textcomplete-item' + (selectedIndex === index ? ' active' : '')}
+              <div
+                key={index}
+                ref={ref => (this[`item-ref-${index}`] = ref)}
+                onClick={() => this.handleSelectItem(index)}
+                onMouseMove={() => onSelectedIndexChange(index)}
+                className={`
+                  react-markdown--autocomplete-widget__item
+                  ${selectedIndex === index ? 'react-markdown--autocomplete-widget__item--active' : ''}
+                `}
               >
-                <a href={void(0)}>{item._objectLabel}</a>
-              </li>
+                {item._objectLabel}
+              </div>
             );
           })}
 
-          {items.length === 0 ? (
-            <li className="textcomplete-no-results-message">No matches found</li>
+          {!items.length ? (
+            <div className="react-markdown--autocomplete-widget__item">No matches found</div>
           ) : null}
-        </ul>
+        </div>
       );
-    } else {
-      return null;
     }
+
+    return null;
   }
 }
+
+AutocompleteWidget.propTypes = propTypes;
+AutocompleteWidget.defaultProps = defaultProps;
 
 export default AutocompleteWidget;

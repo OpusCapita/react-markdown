@@ -1,48 +1,18 @@
-.textcomplete-dropdown {
-    overflow-y: auto;
-    max-height: 210px;
-    padding: 0 0 0 5px;
+.react-markdown--autocomplete-widget {
+  position: absolute;
+  background-color: #fff;
+  overflow-y: auto;
+  min-width: 160px;
+  max-width: 320px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
+  z-index: 10;
 }
 
-.textcomplete-dropdown .archived {
-    color: rgb(68, 68, 68);
-    padding: 1px 3px 1px 3px;
-    z-index: 10;
+.react-markdown--autocomplete-widget__item {
+  flex: 1 0 auto;
+  padding: 4px 12px;
 }
 
-.textcomplete-item a {
-    position: relative;
-}
-
-.textcomplete-dropdown .archived:after {
-    content: '';
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    right: 0;
-    z-index: -1;
-    background: #eee;
-}
-
-.textcomplete-dropdown .active span {
-    color: #fff !important;
-}
-
-.textcomplete-dropdown .textcomplete-no-results-message {
-    color: #2e6b99;
-    margin: 4px 4px 4px 0;
-    background: #f4f4f4 none repeat scroll 0 0;
-    padding-left: 5px;
-}
-
-.child-textcomplete-stretch-to-right .textcomplete-dropdown {
-    min-width: 280px;
-    right: 1em;
-}
-
-li.textcomplete-item {
-    cursor: default;
+.react-markdown--autocomplete-widget__item--active {
+  background-color: #eee;
 }

@@ -9,3 +9,4 @@ export * from './slate-blockquote-plugin';
 export * from './slate-header-plugin';
 export * from './slate-format-plugin';
 export * from './slate-autocomplete-plugin';
+export * from './slate-extension-plugin';

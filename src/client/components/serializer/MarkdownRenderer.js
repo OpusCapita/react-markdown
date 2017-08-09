@@ -294,6 +294,7 @@ const InlineSerialize = {
     let alt = obj.getIn(['data', 'alt']);
     return `![${title}](${src} "${alt}")`;
   },
+  objectReference: (obj, children) => `++${children}++`
 };
 
 
