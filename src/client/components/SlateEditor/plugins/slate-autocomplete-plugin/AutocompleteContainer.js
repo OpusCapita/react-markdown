@@ -1,5 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import Types from 'prop-types';
 
 import AutocompleteWidget from './AutocompleteWidget';
 
@@ -10,9 +10,9 @@ const enterCode = 13;
 
 class AutocompleteContainer extends React.Component {
   static propTypes = {
-    state: PropTypes.object,
-    options: PropTypes.object,
-    onChange: PropTypes.func
+    state: Types.object,
+    options: Types.object,
+    onChange: Types.func
   };
 
   static defaultProps = {
@@ -126,7 +126,7 @@ class AutocompleteContainer extends React.Component {
       if (extension) {
         let transform = state.transform();
         transform.deleteBackward(term.length);
-        transform.insertText(extension.plainMarkdownText(item) + ' ');
+        transform.insertText(extension.markdownText(item) + ' ');
 
         this.props.onChange(transform.focus().apply());
       }
