@@ -126,7 +126,7 @@ class AutocompleteContainer extends React.Component {
       if (extension) {
         let transform = state.transform();
         transform.deleteBackward(term.length);
-        transform.insertText(extension.plainMarkdownText(item) + ' ');
+        transform.insertText(extension.markdownText(item) + ' ');
 
         this.props.onChange(transform.focus().apply());
       }

@@ -119,7 +119,7 @@ class PlainMarkdownEditor extends React.Component {
 
           {children}
         </SlateToolbar>
-        <SlateContent isPlainMode={true} />
+        <SlateContent />
       </SlateEditor>
     );
   }

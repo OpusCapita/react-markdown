@@ -10,16 +10,10 @@ const SlateContent = ({
   schema,
   onChange,
   children,
-  isPlainMode,
   ...rest
 }) => {
   return (
-    <div
-      className={classnames(
-        'react-markdown--slate-content',
-        { 'react-markdown--slate-content--plain-mode': isPlainMode }
-      )}
-    >
+    <div className={'react-markdown--slate-content'}>
       <Editor
         spellCheck={false}
         plugins={plugins}
@@ -37,13 +31,11 @@ SlateContent.propTypes = {
   plugins: Types.any,
   schema: Types.object,
   state: Types.any,
-  onChange: Types.func,
-  isPlainMode: Types.bool
+  onChange: Types.func
 };
 
 SlateContent.defaultProps = {
-  onChange: () => {},
-  isPlainMode: false
+  onChange: () => {}
 };
 
 export default SlateContent;
