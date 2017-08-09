@@ -1,7 +1,6 @@
 import React from 'react';
 import { Editor } from 'slate';
 import Types from 'prop-types';
-import classnames from 'classnames';
 import './SlateContent.less';
 
 const SlateContent = ({

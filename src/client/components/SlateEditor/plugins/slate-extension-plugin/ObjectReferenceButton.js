@@ -1,6 +1,6 @@
 import React from 'react';
 import Types from 'prop-types';
-import { addObjectReference, addSpecialCharacter } from './ObjectReferenceUtils';
+import { addSpecialCharacter } from './ObjectReferenceUtils';
 
 class ObjectReferenceButton extends React.Component {
   static propTypes = {
@@ -16,12 +16,7 @@ class ObjectReferenceButton extends React.Component {
     disabled: false
   };
 
-  state = {
-    show: false
-  };
-
   render() {
-    const { show } = this.state;
     const { extension, disabled, onChange, state } = this.props;
 
     return (

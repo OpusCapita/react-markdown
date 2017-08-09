@@ -1,10 +1,6 @@
 import React from 'react';
 import Types from 'prop-types';
-import classnames from 'classnames';
 import PlainMarkdownEditor from '../PlainMarkdownEditor';
-import SlateToolbarGroup from '../SlateEditor/SlateToolbarGroup';
-import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
-import Tooltip from 'react-bootstrap/lib/Tooltip';
 
 class MarkdownEditor extends React.Component {
   static propTypes = {
