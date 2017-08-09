@@ -6,6 +6,8 @@
 
 Markdwon editor based on [slate-js](https://github.com/ianstormtaylor/slate)
 
+![demo](https://github.com/OpusCapita/react-markdown-editor/demo.gif)
+
 ## Usage
 
 `npm install -E @opuscapita/react-markdown-editor`
