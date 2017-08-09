@@ -12,13 +12,15 @@ class AutocompleteContainer extends React.Component {
   static propTypes = {
     state: PropTypes.object,
     editor: PropTypes.object,
-    options: PropTypes.object
+    options: PropTypes.object,
+    onChange: PropTypes.func
   };
 
   static defaultProps = {
     state: {},
     editor: {},
-    options: {}
+    options: {},
+    onChange: () => {}
   };
 
   state = {
@@ -128,7 +130,7 @@ class AutocompleteContainer extends React.Component {
         t.deleteBackward(term.length);
         t.insertText(extension.plainMarkdownText(item) + ' ');
 
-        editor.onChange(
+        this.props.onChange(
           t.focus().
           apply()
         );

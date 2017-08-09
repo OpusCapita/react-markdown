@@ -33,7 +33,7 @@ export default function(options) {
       let { editor, node } = this.props;
       if (node.text !== nextProps.node.text) {
         const state = editor.getState();
-        editor.onChange(
+        this.props.onChange(
           removeObjectReference(nextProps.node, state)
         );
       }
@@ -59,7 +59,7 @@ export default function(options) {
         let newDocumentBlocks = blocks.set(blockIndex, newBlock);
         let document = Document.create(Object.assign({}, state.document, { nodes: newDocumentBlocks }));
 
-        editor.onChange(
+        this.props.onChange(
           State.create({ document, selection: state.selection })
         );
       }
@@ -68,7 +68,7 @@ export default function(options) {
     handleRemoveObjectReference = () => {
       let { editor, node } = this.props;
       const state = editor.getState();
-      editor.onChange(
+      this.props.onChange(
         removeObjectReference(node, state)
       );
     };
@@ -78,7 +78,7 @@ export default function(options) {
       const { data } = node;
       const extension = data.get('extension');
       const state = editor.getState();
-      editor.onChange(
+      this.props.onChange(
         updateObjectReferenceText(text, extension, node, state)
       );
       this.setState({ show: false });

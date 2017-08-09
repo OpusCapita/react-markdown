@@ -11,6 +11,7 @@ const AutocompletePlugin = options => ({
         editor={editor}
         state={state}
         options={options}
+        onChange={editor.onChange}
       >
         {children}
       </AutocompleteContainer>
