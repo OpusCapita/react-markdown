@@ -6,7 +6,7 @@
 
 Markdwon editor based on [slate-js](https://github.com/ianstormtaylor/slate)
 
-![demo](https://github.com/OpusCapita/react-markdown-editor/demo.gif)
+![demo](https://raw.githubusercontent.com/OpusCapita/react-markdown-editor/master/demo.gif)
 
 ## Usage
 

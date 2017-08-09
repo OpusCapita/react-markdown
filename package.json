@@ -101,7 +101,7 @@
     "slate": "0.20.6",
     "slate-markdown-serializer": "0.1.5"
   },
-    "keywords": [
+  "keywords": [
     "react",
     "contenteditable",
     "doc",
