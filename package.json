@@ -1,5 +1,5 @@
 {
-  "name": "@opuscapita/react-markdown",
+  "name": "@opuscapita/react-markdown-editor",
   "version": "0.0.1-beta.0",
   "description": "Start write new project with no effort.",
   "scripts": {
@@ -13,7 +13,7 @@
     "gh-pages-deploy": "npm run gh-pages-generate && sh scripts/gh-pages/deploy.sh"
   },
   "license": "Apache-2.0",
-  "repository": "OpusCapita/react-markdown",
+  "repository": "OpusCapita/react-markdown-editor",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
     "access": "public"
