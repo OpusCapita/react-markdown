@@ -35,7 +35,7 @@ class PlainMarkdownEditor extends React.Component {
   };
 
   componentWillMount() {
-    this.initialBodyOverflowStyle = document.body.overflow;
+    this.initialBodyOverflowStyle = document.body.style.overflow;
   }
 
   handleChange = (editorState) => {
