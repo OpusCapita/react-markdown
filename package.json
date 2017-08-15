@@ -10,7 +10,12 @@
     "publish-release": "update-changelog -- --all && npm run npm-build && npm-publish --release",
     "start": "showroom-scan src && babel-node --presets es2015,stage-0 www/index",
     "gh-pages-generate": "showroom-scan src && sh scripts/gh-pages/generate.sh",
-    "gh-pages-deploy": "npm run gh-pages-generate && sh scripts/gh-pages/deploy.sh"
+    "gh-pages-deploy": "npm run gh-pages-generate && sh scripts/gh-pages/deploy.sh",
+    "grails-plugin-build": "rimraf build && npm run npm-build",
+    "grails-plugin-package": "npm run grails-plugin-build && grails-plugin-package",
+    "grails-plugin-install": "npm run grails-plugin-package && grails-plugin-install",
+    "grails-plugin-deploy": "npm run grails-plugin-package && grails-plugin-deploy",
+    "grails-plugin-deploy-release": "npm run grails-plugin-package -- --release && grails-plugin-deploy --release"
   },
   "license": "Apache-2.0",
   "repository": "OpusCapita/react-markdown-editor",
@@ -100,6 +105,13 @@
     "query-string": "4.3.4",
     "react-bootstrap": "0.31.2",
     "slate-markdown-serializer": "0.1.5"
+  },
+  "grails": {
+    "groupId": "com.jcatalog.grailsplugins",
+    "buildDir": "lib",
+    "standaloneFiles": {
+      "index.js": "web-app/MarkdownBundle.js"
+    }
   },
   "keywords": [
     "react",
