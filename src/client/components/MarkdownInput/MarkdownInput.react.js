@@ -1,8 +1,8 @@
 import React from 'react';
 import Types from 'prop-types';
-import PlainMarkdownEditor from '../PlainMarkdownEditor';
+import PlainMarkdownInput from '../PlainMarkdownInput';
 
-class MarkdownEditor extends React.Component {
+class MarkdownInput extends React.Component {
   static propTypes = {
     value: Types.string,
     onChange: Types.func,
@@ -35,7 +35,7 @@ class MarkdownEditor extends React.Component {
     const { extensions } = this.props;
 
     return (
-      <PlainMarkdownEditor
+      <PlainMarkdownInput
         value={value}
         onChange={this.handleChangeValue}
         onFullScreen={this.handleFullScreen}
@@ -46,4 +46,4 @@ class MarkdownEditor extends React.Component {
   }
 }
 
-export default MarkdownEditor;
+export default MarkdownInput;

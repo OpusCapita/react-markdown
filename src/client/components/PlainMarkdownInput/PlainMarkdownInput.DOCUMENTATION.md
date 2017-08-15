@@ -1,6 +1,6 @@
 ### Synopsis
 
-PlainMarkdownEditor
+PlainMarkdownInput
 
 ### Props Reference
 
@@ -12,7 +12,7 @@ PlainMarkdownEditor
 ### Code Example
 
 ```
-<PlainMarkdownEditor
+<PlainMarkdownInput
   onChange={_scope.handleValueChange}
   value={_scope.state.value}
 />
@@ -20,7 +20,7 @@ PlainMarkdownEditor
 
 ### Component Name
 
-PlainMarkdownEditor
+PlainMarkdownInput
 
 ### License
 

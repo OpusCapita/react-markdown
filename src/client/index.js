@@ -1,5 +1,5 @@
 // Here should be CommonJS component exports.
 
 module.exports = {
-  MarkdownEditor: require('./components/MarkdownEditor').default
+  MarkdownInput: require('./components/MarkdownInput').default
 };

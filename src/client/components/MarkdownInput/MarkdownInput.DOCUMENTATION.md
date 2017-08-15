@@ -1,6 +1,6 @@
 ### Synopsis
 
-MarkdownEditor
+MarkdownInput
 
 ### Props Reference
 
@@ -27,7 +27,7 @@ Configurable extensions with autocomplete for **products**, **terms**, etc.
 
 ```
 <div style={{ height: '70vh' }}>
-  <MarkdownEditor
+  <MarkdownInput
     onChange={_scope.handleValueChange}
     value={_scope.state.value}
     extensions={[
@@ -93,7 +93,7 @@ Configurable extensions with autocomplete for **products**, **terms**, etc.
 
 ### Component Name
 
-MarkdownEditor
+MarkdownInput
 
 ### License
 

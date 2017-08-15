@@ -16,21 +16,11 @@ Install npm package:
 
 Import it to your application
 
-`import { MarkdownEditor } from '@opuscapita/react-markdown-editor'`
+`import { MarkdownInput } from '@opuscapita/react-markdown-editor'`
 
 See interactive example for more details: https://opuscapita.github.io/react-markdown-editor
 
 > Demo powered by [React Showroom](https://github.com/OpusCapita/react-showroom-client)
-
-## Internet Explorer 11 support
-
-[slate-js](https://github.com/ianstormtaylor/slate) uses ES6 `Symbol` data type.
-
-It isn't supported in IE11.
-
-Add a `babel-polyfill` to your html file:
-
-`<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/6.23.0/polyfill.min.js"></script>`
 
 ## Known issues
 
