@@ -286,7 +286,7 @@ rendererComponent.propTypes = {
 function addMarks(characters, tokens, offset) {
   let updatedOffset = offset;
 
-  for(var i = 0; i < tokens.length; i++) {
+  for (let i = 0; i < tokens.length; i++) {
     const token = tokens[i];
     if (typeof token === 'string') {
       updatedOffset += token.length;
