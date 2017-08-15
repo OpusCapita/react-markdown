@@ -4,7 +4,7 @@
 
 # React Markdown
 
-Markdwon editor based on [slate-js](https://github.com/ianstormtaylor/slate)
+Built using [slate-js](https://github.com/ianstormtaylor/slate)
 
 ![demo](https://raw.githubusercontent.com/OpusCapita/react-markdown/master/demo.gif)
 
