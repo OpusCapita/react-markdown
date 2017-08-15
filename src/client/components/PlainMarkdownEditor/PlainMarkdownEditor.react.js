@@ -26,7 +26,7 @@ import {
 } from './buttons';
 
 import { SlateContent, SlateEditor, SlateToolbar, SlateToolbarGroup } from '../SlateEditor';
-import { Plain } from 'slate';
+import { Plain } from '@opuscapita/slate';
 
 class PlainMarkdownEditor extends React.Component {
   state = {

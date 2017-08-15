@@ -1,7 +1,7 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 import { expect } from 'chai';
-import { Plain } from 'slate';
+import { Plain } from '@opuscapita/slate';
 import UnorderedListButton from '../UnorderedListButton';
 
 describe('<UnorderedListButton/>', () => {

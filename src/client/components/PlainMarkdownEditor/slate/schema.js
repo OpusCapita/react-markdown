@@ -1,7 +1,7 @@
 import React from 'react';
 import Types from 'prop-types';
 import Prism from 'prismjs';
-import { Mark } from 'slate';
+import { Mark } from '@opuscapita/slate';
 
 /**
  * Add the markdown syntax to Prism.
@@ -285,7 +285,9 @@ rendererComponent.propTypes = {
 
 function addMarks(characters, tokens, offset) {
   let updatedOffset = offset;
-  for (const token of tokens) {
+
+  for(var i = 0; i < tokens.length; i++) {
+    const token = tokens[i];
     if (typeof token === 'string') {
       updatedOffset += token.length;
       continue;

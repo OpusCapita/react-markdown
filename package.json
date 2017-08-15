@@ -81,9 +81,10 @@
     "write-file-webpack-plugin": "3.4.2"
   },
   "dependencies": {
-    "babel-polyfill": "6.23.0",
+    "@opuscapita/slate": "0.21.2-08-15-2017-1",
     "bluebird": "3.5.0",
     "classnames": "2.2.5",
+    "core-js": "^2.5.0",
     "immutable": "3.8.1",
     "js-slate-markdown-serializer": "1.0.3",
     "lodash": "4.17.4",
@@ -97,8 +98,7 @@
     "prismjs": "1.6.0",
     "prop-types": "15.5.10",
     "query-string": "4.3.4",
-    "react-bootstrap": "0.31.0",
-    "slate": "0.20.6",
+    "react-bootstrap": "0.31.2",
     "slate-markdown-serializer": "0.1.5"
   },
   "keywords": [

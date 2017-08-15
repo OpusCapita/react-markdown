@@ -58,7 +58,11 @@ if(WEBPACK_BUNDLE_ANALYZE && IS_PRODUCTION_MODE) {
   plugins.push(bundleAnalyzerPlugin);
 }
 
-const entries = [];
+/* TODO
+   Remove core-js when String.prototype.startsWith and endsWith methods
+   will be replaced by ES5 compatible analogs
+ */
+const entries = ["core-js/es6/string.js"];
 
 entries.push(
   (IS_PRODUCTION_MODE || IS_LINK_MODE) ?
