@@ -18,7 +18,7 @@
     "grails-plugin-deploy-release": "npm run grails-plugin-package -- --release && grails-plugin-deploy --release"
   },
   "license": "Apache-2.0",
-  "repository": "OpusCapita/react-markdown-editor",
+  "repository": "OpusCapita/react-markdown",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
     "access": "public"

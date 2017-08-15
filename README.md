@@ -1,24 +1,24 @@
-[![CircleCI Status](https://circleci.com/gh/OpusCapita/react-markdown/tree/master.svg?style=shield&circle-token=:circle-token)](https://circleci.com/gh/OpusCapita/react-markdown-editor)
-![badge-npm-version](https://img.shields.io/npm/v/@opuscapita/react-markdown-editor.svg) 
-![badge-license](https://img.shields.io/github/license/OpusCapita/react-markdown-editor.svg)
+[![CircleCI Status](https://circleci.com/gh/OpusCapita/react-markdown/tree/master.svg?style=shield&circle-token=:circle-token)](https://circleci.com/gh/OpusCapita/react-markdown)
+![badge-npm-version](https://img.shields.io/npm/v/@opuscapita/react-markdown.svg) 
+![badge-license](https://img.shields.io/github/license/OpusCapita/react-markdown.svg)
 
 # React Markdown Editor
 
 Markdwon editor based on [slate-js](https://github.com/ianstormtaylor/slate)
 
-![demo](https://raw.githubusercontent.com/OpusCapita/react-markdown-editor/master/demo.gif)
+![demo](https://raw.githubusercontent.com/OpusCapita/react-markdown/master/demo.gif)
 
 ## Usage
 
 Install npm package:
 
-`npm install -E @opuscapita/react-markdown-editor`
+`npm install -E @opuscapita/react-markdown`
 
 Import it to your application
 
-`import { MarkdownInput } from '@opuscapita/react-markdown-editor'`
+`import { MarkdownInput } from '@opuscapita/react-markdown`
 
-See interactive example for more details: https://opuscapita.github.io/react-markdown-editor
+See interactive example for more details: https://opuscapita.github.io/react-markdown
 
 > Demo powered by [React Showroom](https://github.com/OpusCapita/react-showroom-client)
 
