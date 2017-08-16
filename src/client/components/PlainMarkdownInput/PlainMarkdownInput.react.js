@@ -2,7 +2,6 @@ import React from 'react';
 import Types from 'prop-types';
 import FullScreenButton from '../SlateEditor/plugins/slate-fullscreen-plugin/FullScreenButton';
 import DropdownButton from 'react-bootstrap/lib/DropdownButton';
-import MenuItem from 'react-bootstrap/lib/MenuItem';
 import schema from './slate/schema';
 import shortcuts from './slate/shortcuts';
 import './PlainMarkdownInput.less';
@@ -103,24 +102,12 @@ class PlainMarkdownInput extends React.Component {
                 title={<i className="fa fa-header"/>}
                 className="Hello"
               >
-                <MenuItem>
-                  <HeaderOneButton state={editorState} onChange={this.handleChange}/>
-                </MenuItem>
-                <MenuItem>
-                  <HeaderTwoButton state={editorState} onChange={this.handleChange}/>
-                </MenuItem>
-                <MenuItem>
-                  <HeaderThreeButton state={editorState} onChange={this.handleChange}/>
-                </MenuItem>
-                <MenuItem>
-                  <HeaderFourButton state={editorState} onChange={this.handleChange}/>
-                </MenuItem>
-                <MenuItem>
-                  <HeaderFiveButton state={editorState} onChange={this.handleChange}/>
-                </MenuItem>
-                <MenuItem>
-                  <HeaderSixButton state={editorState} onChange={this.handleChange}/>
-                </MenuItem>
+                <HeaderOneButton state={editorState} onChange={this.handleChange}/>
+                <HeaderTwoButton state={editorState} onChange={this.handleChange}/>
+                <HeaderThreeButton state={editorState} onChange={this.handleChange}/>
+                <HeaderFourButton state={editorState} onChange={this.handleChange}/>
+                <HeaderFiveButton state={editorState} onChange={this.handleChange}/>
+                <HeaderSixButton state={editorState} onChange={this.handleChange}/>
               </DropdownButton>
             </div>
           </SlateToolbarGroup>

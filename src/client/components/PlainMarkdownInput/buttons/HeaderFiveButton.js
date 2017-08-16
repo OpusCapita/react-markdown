@@ -1,5 +1,6 @@
 import React from 'react';
 import Types from 'prop-types';
+import MenuItem from 'react-bootstrap/lib/MenuItem';
 
 import {
   wrapHeaderFiveMarkdown,
@@ -10,11 +11,11 @@ import {
 const MarkdownHeaderFiveButton = ({ state, onChange }) => {
   const active = hasHeaderFiveMarkdown(state);
   return (
-    <strong
+    <MenuItem
       onClick={e => onChange(active ? unwrapHeaderFiveMarkdown(state) : wrapHeaderFiveMarkdown(state))}
     >
       Header 5
-    </strong>
+    </MenuItem>
   );
 };
 
