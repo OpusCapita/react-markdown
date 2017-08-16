@@ -8,27 +8,19 @@ import {
   hasHeaderTwoMarkdown,
   unwrapHeaderTwoMarkdown
 } from '../slate/transforms';
-import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
-import Tooltip from 'react-bootstrap/lib/Tooltip';
 
-import './HeaderStyles.css';
-
-const MarkdownHeaderTwoButton = ({ state, onChange, disabled }) => {
+const MarkdownHeaderTwoButton = ({ state, onChange }) => {
   const active = hasHeaderTwoMarkdown(state);
   return (
-    <OverlayTrigger placement="bottom" overlay={<Tooltip id="h2-tp">Header size 2</Tooltip>}>
-      <button className={classnames('btn btn-default', { active })}
-        disabled={disabled || hasMultiLineSelection(state)}
-        onClick={e => onChange(active ? unwrapHeaderTwoMarkdown(state) : wrapHeaderTwoMarkdown(state))}
-      >
-        <i className="fa fa-header heading2"/>
-      </button>
-    </OverlayTrigger>
+    <strong
+      onClick={e => onChange(active ? unwrapHeaderTwoMarkdown(state) : wrapHeaderTwoMarkdown(state))}
+    >
+      Header 2
+    </strong>
   );
 };
 
 MarkdownHeaderTwoButton.propTypes = {
-  disabled: Types.bool,
   state: Types.object,
   onChange: Types.func
 };

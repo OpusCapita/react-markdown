@@ -1,6 +1,8 @@
 import React from 'react';
 import Types from 'prop-types';
 import FullScreenButton from '../SlateEditor/plugins/slate-fullscreen-plugin/FullScreenButton';
+import DropdownButton from 'react-bootstrap/lib/DropdownButton';
+import MenuItem from 'react-bootstrap/lib/MenuItem';
 import schema from './slate/schema';
 import shortcuts from './slate/shortcuts';
 import './PlainMarkdownInput.less';
@@ -69,7 +71,7 @@ class PlainMarkdownInput extends React.Component {
           key={index}
           extension={extension}
           disabled={false}
-        />
+          />
       );
     });
 
@@ -82,7 +84,7 @@ class PlainMarkdownInput extends React.Component {
         plugins={[
           AutocompletePlugin({ extensions: extensions, onChange: this.handleChange })
         ]}
-      >
+        >
         <SlateToolbar>
           <SlateToolbarGroup>
             <BoldButton/>
@@ -95,12 +97,32 @@ class PlainMarkdownInput extends React.Component {
           </SlateToolbarGroup>
 
           <SlateToolbarGroup>
-            <HeaderOneButton/>
-            <HeaderTwoButton/>
-            <HeaderThreeButton/>
-            <HeaderFourButton/>
-            <HeaderFiveButton/>
-            <HeaderSixButton/>
+            <div title="Insert header">
+              <DropdownButton
+                id="oc-md--toolbar__header-dropdown"
+                title={<i className="fa fa-header"/>}
+                className="Hello"
+                >
+                <MenuItem>
+                  <HeaderOneButton state={editorState} onChange={this.handleChange}/>
+                </MenuItem>
+                <MenuItem>
+                  <HeaderTwoButton state={editorState} onChange={this.handleChange}/>
+                </MenuItem>
+                <MenuItem>
+                  <HeaderThreeButton state={editorState} onChange={this.handleChange}/>
+                </MenuItem>
+                <MenuItem>
+                  <HeaderFourButton state={editorState} onChange={this.handleChange}/>
+                </MenuItem>
+                <MenuItem>
+                  <HeaderFiveButton state={editorState} onChange={this.handleChange}/>
+                </MenuItem>
+                <MenuItem>
+                  <HeaderSixButton state={editorState} onChange={this.handleChange}/>
+                </MenuItem>
+              </DropdownButton>
+            </div>
           </SlateToolbarGroup>
 
           <SlateToolbarGroup>

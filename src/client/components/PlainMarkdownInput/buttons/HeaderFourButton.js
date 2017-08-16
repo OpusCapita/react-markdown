@@ -8,27 +8,19 @@ import {
   hasHeaderFourMarkdown,
   unwrapHeaderFourMarkdown
 } from '../slate/transforms';
-import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
-import Tooltip from 'react-bootstrap/lib/Tooltip';
 
-import './HeaderStyles.css';
-
-const MarkdownHeaderFourButton = ({ state, onChange, disabled }) => {
+const MarkdownHeaderFourButton = ({ state, onChange }) => {
   const active = hasHeaderFourMarkdown(state);
   return (
-    <OverlayTrigger placement="bottom" overlay={<Tooltip id="h4-tp">Header size 4</Tooltip>}>
-      <button className={classnames('btn btn-default', { active })}
-        disabled={disabled || hasMultiLineSelection(state)}
-        onClick={e => onChange(active ? unwrapHeaderFourMarkdown(state) : wrapHeaderFourMarkdown(state))}
-      >
-        <i className="fa fa-header heading4"/>
-      </button>
-    </OverlayTrigger>
+    <strong
+      onClick={e => onChange(active ? unwrapHeaderFourMarkdown(state) : wrapHeaderFourMarkdown(state))}
+    >
+      Header 4
+    </strong>
   );
 };
 
 MarkdownHeaderFourButton.propTypes = {
-  disabled: Types.bool,
   state: Types.object,
   onChange: Types.func
 };

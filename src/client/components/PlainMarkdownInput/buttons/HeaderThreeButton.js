@@ -8,27 +8,19 @@ import {
   hasHeaderThreeMarkdown,
   unwrapHeaderThreeMarkdown
 } from '../slate/transforms';
-import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
-import Tooltip from 'react-bootstrap/lib/Tooltip';
 
-import './HeaderStyles.css';
-
-const MarkdownHeaderThreeButton = ({ state, onChange, disabled }) => {
+const MarkdownHeaderThreeButton = ({ state, onChange }) => {
   const active = hasHeaderThreeMarkdown(state);
   return (
-    <OverlayTrigger placement="bottom" overlay={<Tooltip id="h3-tp">Header size 3</Tooltip>}>
-      <button className={classnames('btn btn-default', { active })}
-        disabled={disabled || hasMultiLineSelection(state)}
-        onClick={e => onChange(active ? unwrapHeaderThreeMarkdown(state) : wrapHeaderThreeMarkdown(state))}
-      >
-        <i className="fa fa-header heading3"/>
-      </button>
-    </OverlayTrigger>
+    <strong
+      onClick={e => onChange(active ? unwrapHeaderThreeMarkdown(state) : wrapHeaderThreeMarkdown(state))}
+    >
+      Header 3
+    </strong>
   );
 };
 
 MarkdownHeaderThreeButton.propTypes = {
-  disabled: Types.bool,
   state: Types.object,
   onChange: Types.func
 };
