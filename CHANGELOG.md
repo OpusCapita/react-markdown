@@ -1,3 +1,6 @@
+## [v1.0.0](https://github.com/OpusCapita/react-markdown-editor/compare/v0.0.1-beta.2...v1.0.0) (Wed, 16 Aug 2017 07:47:20 GMT)
+ - Update package version to 1.0.0 (Kirill Volkovich <volkovich@scand.com>, 46eacf3)
+
 ## [v0.0.1-beta.2](https://github.com/OpusCapita/react-markdown-editor/compare/v0.0.1-beta.1...v0.0.1-beta.2) (Mon, 14 Aug 2017 08:19:51 GMT)
  - Update "npm-scripts" 1.0.8 => 2.0.0 (Kirill Volkovich <volkovich@scand.com>, 167c364)
  - Fix fullscreen bug with overflow (Kirill Volkovich <volkovich@scand.com>, 45cc8b0)
