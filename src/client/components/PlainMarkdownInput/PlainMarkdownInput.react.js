@@ -26,11 +26,36 @@ import {
 } from './buttons';
 
 import { SlateContent, SlateEditor, SlateToolbar, SlateToolbarGroup } from '../SlateEditor';
-import { Plain } from '@opuscapita/slate';
+import { Plain, Raw } from '@opuscapita/slate';
+
+function deserialize(string, options = {}) {
+  let raw =  {
+    kind: 'state',
+    document: {
+      kind: 'document',
+      nodes: [{
+        kind: 'block',
+        type: 'multiline',
+        nodes: [
+          {
+            kind: 'text',
+            ranges: [
+              {
+                text: string,
+                marks: [],
+              }
+            ]
+          }
+        ]
+      }]
+    }
+  };
+  return Raw.deserialize(raw);
+}
 
 class PlainMarkdownInput extends React.Component {
   state = {
-    editorState: Plain.deserialize(this.props.value || ''),
+    editorState: deserialize(this.props.value || ''),
     fullScreen: false
   };
 
@@ -80,44 +105,10 @@ class PlainMarkdownInput extends React.Component {
         schema={schema}
         onChange={this.handleChange}
         plugins={[
-          AutocompletePlugin({ extensions: extensions, onChange: this.handleChange })
+          // AutocompletePlugin({ extensions: extensions, onChange: this.handleChange })
         ]}
       >
-        <SlateToolbar>
-          <SlateToolbarGroup>
-            <BoldButton/>
-            <ItalicButton/>
-            <StrikethroughButton/>
-          </SlateToolbarGroup>
 
-          <SlateToolbarGroup>
-            <LinkButton/>
-          </SlateToolbarGroup>
-
-          <SlateToolbarGroup>
-            <HeaderOneButton/>
-            <HeaderTwoButton/>
-            <HeaderThreeButton/>
-            <HeaderFourButton/>
-            <HeaderFiveButton/>
-            <HeaderSixButton/>
-          </SlateToolbarGroup>
-
-          <SlateToolbarGroup>
-            <OrderedListButton/>
-            <UnorderedListButton/>
-          </SlateToolbarGroup>
-
-          <SlateToolbarGroup>
-            {objectReferenceButtons}
-          </SlateToolbarGroup>
-
-          <SlateToolbarGroup className="react-markdown--plain-markdown-input__fullscreen-button">
-            <FullScreenButton onClick={this.handleFullScreen} fullScreen={fullScreen} />
-          </SlateToolbarGroup>
-
-          {children}
-        </SlateToolbar>
         <SlateContent />
       </SlateEditor>
     );
