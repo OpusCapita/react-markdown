@@ -1,19 +1,18 @@
 import React from 'react';
 import Types from 'prop-types';
 
-import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
-import Tooltip from 'react-bootstrap/lib/Tooltip';
-
 import { wrapLinkMarkdown, hasMultiLineSelection } from '../slate/transforms';
 
 const MarkdownLinkButton = ({ state, onChange, disabled }) => (
-  <OverlayTrigger placement="bottom" overlay={<Tooltip id="link-tp">Insert link</Tooltip>}>
-    <button className="btn btn-default" disabled={disabled || hasMultiLineSelection(state)}
-      onClick={e => onChange(wrapLinkMarkdown(state))}
-    >
-      <i className="fa fa-link"/>
-    </button>
-  </OverlayTrigger>
+  <button
+    className="btn btn-default"
+    disabled={disabled || hasMultiLineSelection(state)}
+    onClick={e => onChange(wrapLinkMarkdown(state))}
+    type="button"
+    title="Insert link"
+  >
+    <i className="fa fa-link"/>
+  </button>
 );
 
 MarkdownLinkButton.propTypes = {
