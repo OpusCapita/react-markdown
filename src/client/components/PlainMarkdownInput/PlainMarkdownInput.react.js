@@ -71,7 +71,7 @@ class PlainMarkdownInput extends React.Component {
           key={index}
           extension={extension}
           disabled={false}
-          />
+        />
       );
     });
 
@@ -84,7 +84,7 @@ class PlainMarkdownInput extends React.Component {
         plugins={[
           AutocompletePlugin({ extensions: extensions, onChange: this.handleChange })
         ]}
-        >
+      >
         <SlateToolbar>
           <SlateToolbarGroup>
             <BoldButton/>
@@ -102,7 +102,7 @@ class PlainMarkdownInput extends React.Component {
                 id="oc-md--toolbar__header-dropdown"
                 title={<i className="fa fa-header"/>}
                 className="Hello"
-                >
+              >
                 <MenuItem>
                   <HeaderOneButton state={editorState} onChange={this.handleChange}/>
                 </MenuItem>

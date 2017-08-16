@@ -1,10 +1,8 @@
 import React from 'react';
 import Types from 'prop-types';
-import classnames from 'classnames';
 
 import {
   wrapHeaderFourMarkdown,
-  hasMultiLineSelection,
   hasHeaderFourMarkdown,
   unwrapHeaderFourMarkdown
 } from '../slate/transforms';
