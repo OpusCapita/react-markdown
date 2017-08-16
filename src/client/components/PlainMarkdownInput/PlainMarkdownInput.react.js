@@ -4,6 +4,7 @@ import FullScreenButton from '../SlateEditor/plugins/slate-fullscreen-plugin/Ful
 import DropdownButton from 'react-bootstrap/lib/DropdownButton';
 import schema from './slate/schema';
 import shortcuts from './slate/shortcuts';
+import { hasMultiLineSelection } from './slate/transforms';
 import './PlainMarkdownInput.less';
 
 import {
@@ -98,9 +99,9 @@ class PlainMarkdownInput extends React.Component {
           <SlateToolbarGroup>
             <div title="Insert header">
               <DropdownButton
-                id="oc-md--toolbar__header-dropdown"
+                id="oc-md--toolbar__headers-dropdown"
                 title={<i className="fa fa-header"/>}
-                className="Hello"
+                disabled={hasMultiLineSelection(editorState)}
               >
                 <HeaderOneButton state={editorState} onChange={this.handleChange}/>
                 <HeaderTwoButton state={editorState} onChange={this.handleChange}/>
