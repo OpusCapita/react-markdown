@@ -33,33 +33,6 @@ Configurable extensions with autocomplete for **products**, **terms**, etc.
     extensions={[
       {
         objectClassName: 'Product',
-        specialCharacter: '$',
-        color: '#f396c3',
-        termRegex: /^\$(\w*)$/,
-        searchItems(term) {
-          const items = [
-            {_objectLabel: 'a1'},
-            {_objectLabel: 'a2'},
-            {_objectLabel: 'a23'},
-            {_objectLabel: 'b1'},
-            {_objectLabel: 'ba2'},
-            {_objectLabel: 'ba21'},
-            {_objectLabel: 'ba222'},
-            {_objectLabel: 'ba23'},
-            {_objectLabel: 'ba24'},
-            {_objectLabel: 'ba25'},
-            {_objectLabel: 'ba255'},
-            {_objectLabel: 'ba256'},
-            {_objectLabel: 'ba257'}
-          ];
-          return Promise.resolve(items.filter(({_objectLabel}) => _objectLabel.startsWith(term.substring(1))));
-        },
-        markdownText(item) {
-          return '$' + item._objectLabel;
-        }
-      },
-      {
-        objectClassName: 'Term',
         specialCharacter: '#',
         color: '#9ed69e',
         termRegex: /^\#(\w*)$/,
@@ -83,6 +56,33 @@ Configurable extensions with autocomplete for **products**, **terms**, etc.
         },
         markdownText(item) {
           return '#' + item._objectLabel;
+        }
+      },
+      {
+        objectClassName: 'Term',
+        specialCharacter: '$',
+        color: '#f396c3',
+        termRegex: /^\$(\w*)$/,
+        searchItems(term) {
+          const items = [
+            {_objectLabel: 'a1'},
+            {_objectLabel: 'a2'},
+            {_objectLabel: 'a23'},
+            {_objectLabel: 'b1'},
+            {_objectLabel: 'ba2'},
+            {_objectLabel: 'ba21'},
+            {_objectLabel: 'ba222'},
+            {_objectLabel: 'ba23'},
+            {_objectLabel: 'ba24'},
+            {_objectLabel: 'ba25'},
+            {_objectLabel: 'ba255'},
+            {_objectLabel: 'ba256'},
+            {_objectLabel: 'ba257'}
+          ];
+          return Promise.resolve(items.filter(({_objectLabel}) => _objectLabel.startsWith(term.substring(1))));
+        },
+        markdownText(item) {
+          return '$' + item._objectLabel;
         }
       }
     ]}
