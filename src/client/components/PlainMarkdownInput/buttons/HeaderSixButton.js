@@ -14,7 +14,7 @@ const MarkdownHeaderSixButton = ({ state, onChange }) => {
     <MenuItem
       onClick={e => onChange(active ? unwrapHeaderSixMarkdown(state) : wrapHeaderSixMarkdown(state))}
     >
-      Header 6
+      <strong>Header 6</strong>
     </MenuItem>
   );
 };

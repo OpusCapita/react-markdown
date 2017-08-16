@@ -14,7 +14,7 @@ const MarkdownHeaderFiveButton = ({ state, onChange }) => {
     <MenuItem
       onClick={e => onChange(active ? unwrapHeaderFiveMarkdown(state) : wrapHeaderFiveMarkdown(state))}
     >
-      Header 5
+      <strong>Header 5</strong>
     </MenuItem>
   );
 };
