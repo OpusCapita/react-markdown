@@ -10,7 +10,7 @@ import text from './example.md';
 
 @showroomScopeDecorator
 export default
-class MarkdownEditorScope extends React.Component {
+class MarkdownInputScope extends React.Component {
   state = {
     value: text
   };

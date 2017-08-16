@@ -1,5 +1,5 @@
 {
-  "name": "@opuscapita/react-markdown-editor",
+  "name": "@opuscapita/react-markdown",
   "version": "0.0.1-beta.2",
   "description": "React markdown editor component",
   "scripts": {
@@ -8,7 +8,7 @@
     "lint": "eslint src/client",
     "test": "mocha --require config/test/mocha-setup.js --recursive 'src/**/*.spec.js' --require ignore-styles",
     "publish-release": "update-changelog -- --all && npm run npm-build && npm-publish --release",
-    "start": "showroom-scan src && babel-node --presets es2015,stage-0 www/index",
+    "start": "cross-env NODE_ENV=development showroom-scan src && babel-node --presets es2015,stage-0 www/index",
     "gh-pages-generate": "showroom-scan src && sh scripts/gh-pages/generate.sh",
     "gh-pages-deploy": "npm run gh-pages-generate && sh scripts/gh-pages/deploy.sh",
     "grails-plugin-build": "rimraf build && npm run npm-build",
@@ -18,7 +18,7 @@
     "grails-plugin-deploy-release": "npm run grails-plugin-package -- --release && grails-plugin-deploy --release"
   },
   "license": "Apache-2.0",
-  "repository": "OpusCapita/react-markdown-editor",
+  "repository": "OpusCapita/react-markdown",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
     "access": "public"

@@ -1,6 +1,6 @@
 ### Synopsis
 
-MarkdownEditor
+MarkdownInput
 
 ### Props Reference
 
@@ -17,17 +17,17 @@ Configurable extensions with autocomplete for **products**, **terms**, etc.
 | Name               | Type            | Description                                                                                      |
 | ------------------ | :-------------- | ------------------------------------------------------------------------------------------------ |
 | objectClassName    | string         | Object class name displayed on buttons ('Product', 'Term', etc.)                                 |
-| specialCharacter   | string         | Is used for inserting it into plain markdown editor on button ('Term', 'Product', etc.) click.   |
-| color              | string         | Color of object reference element in rich markdown editor.                                       |
-| termRegex          | regex          | Is used to check if item can be inserted after caret position in plain markdown editor.          |
+| specialCharacter   | string         | Is used for inserting it into plain markdown input on button ('Term', 'Product', etc.) click.   |
+| color              | string         | Color of object reference element in rich markdown input.                                       |
+| termRegex          | regex          | Is used to check if item can be inserted after caret position in plain markdown input.          |
 | searchItems        | func           | Is used to search items by input term.                                                           |
-| markdownText       | func           | Is used to get text for markdown editor based on selected item.                            |
+| markdownText       | func           | Is used to get text for markdown input based on selected item.                            |
 
 ### Code Example
 
 ```
 <div style={{ height: '70vh' }}>
-  <MarkdownEditor
+  <MarkdownInput
     onChange={_scope.handleValueChange}
     value={_scope.state.value}
     extensions={[
@@ -93,7 +93,7 @@ Configurable extensions with autocomplete for **products**, **terms**, etc.
 
 ### Component Name
 
-MarkdownEditor
+MarkdownInput
 
 ### License
 

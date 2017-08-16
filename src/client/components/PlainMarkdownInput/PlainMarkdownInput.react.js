@@ -3,7 +3,7 @@ import Types from 'prop-types';
 import FullScreenButton from '../SlateEditor/plugins/slate-fullscreen-plugin/FullScreenButton';
 import schema from './slate/schema';
 import shortcuts from './slate/shortcuts';
-import './PlainMarkdownEditor.less';
+import './PlainMarkdownInput.less';
 
 import {
   AutocompletePlugin,
@@ -28,7 +28,7 @@ import {
 import { SlateContent, SlateEditor, SlateToolbar, SlateToolbarGroup } from '../SlateEditor';
 import { Plain } from '@opuscapita/slate';
 
-class PlainMarkdownEditor extends React.Component {
+class PlainMarkdownInput extends React.Component {
   state = {
     editorState: Plain.deserialize(this.props.value || ''),
     fullScreen: false
@@ -112,7 +112,7 @@ class PlainMarkdownEditor extends React.Component {
             {objectReferenceButtons}
           </SlateToolbarGroup>
 
-          <SlateToolbarGroup className="react-markdown--plain-markdown-editor__fullscreen-button">
+          <SlateToolbarGroup className="react-markdown--plain-markdown-input__fullscreen-button">
             <FullScreenButton onClick={this.handleFullScreen} fullScreen={fullScreen} />
           </SlateToolbarGroup>
 
@@ -124,7 +124,7 @@ class PlainMarkdownEditor extends React.Component {
   }
 }
 
-PlainMarkdownEditor.propTypes = {
+PlainMarkdownInput.propTypes = {
   extensions: Types.array,
   value: Types.string,
   onChange: Types.func,
@@ -132,7 +132,7 @@ PlainMarkdownEditor.propTypes = {
   fullScreen: Types.bool
 };
 
-PlainMarkdownEditor.defaultProps = {
+PlainMarkdownInput.defaultProps = {
   extensions: [],
   value: '',
   fullScreen: false,
@@ -140,4 +140,4 @@ PlainMarkdownEditor.defaultProps = {
   onChange: () => {}
 };
 
-export default PlainMarkdownEditor;
+export default PlainMarkdownInput;
