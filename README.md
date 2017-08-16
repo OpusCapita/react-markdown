@@ -16,7 +16,7 @@ Install npm package:
 
 Import it to your application
 
-`import { MarkdownInput } from '@opuscapita/react-markdown`
+`import MarkdownInput from '@opuscapita/react-markdown`
 
 See interactive example for more details: https://opuscapita.github.io/react-markdown
 
