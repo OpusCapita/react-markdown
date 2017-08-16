@@ -9,10 +9,11 @@ const NODE_ENV = process.env.NODE_ENV;
 module.exports = {
   entry: [
     /* TODO
-   Remove core-js when String.prototype.startsWith and endsWith methods
+   Remove core-js string when String.prototype.startsWith and endsWith methods
    will be replaced by ES5 compatible analogs
    */
     "core-js/es6/string.js",
+    "core-js/es6/promise.js",
     path.resolve(__dirname, '../../www/index-page.js')
   ],
   context: path.resolve(__dirname),
