@@ -107,10 +107,10 @@
     "slate-markdown-serializer": "0.1.5"
   },
   "grails": {
-    "groupId": "com.jcatalog.grailsplugins",
+    "groupId": "com.opuscapita.grailsplugins",
     "buildDir": "lib",
     "standaloneFiles": {
-      "index.js": "web-app/MarkdownBundle.js"
+      "index.js": "web-app/components/MarkdownInput.js"
     }
   },
   "keywords": [
