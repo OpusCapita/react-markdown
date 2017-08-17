@@ -1,6 +1,6 @@
 {
   "name": "@opuscapita/react-markdown",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "React markdown editor component",
   "scripts": {
     "npm-build": "rimraf lib && cross-env NODE_ENV=production webpack --config ./config/webpack.config.js --hide-modules",
