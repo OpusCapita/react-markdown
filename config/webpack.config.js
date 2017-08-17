@@ -80,7 +80,7 @@ module.exports = {
     publicPath: '/',
     path: path.resolve(__dirname, '../lib'),
     filename: `index.js`,
-    library: `${PACKAGE_NAME}`,
+    library: `MarkdownInput`,
     libraryTarget: 'umd'
   },
   devtool: IS_PRODUCTION_MODE ? false : 'inline-source-map',
