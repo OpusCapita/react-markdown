@@ -1,3 +1,9 @@
+## [v1.0.2](Thu, 17 Aug 2017 06:50:27 GMT)
+ - Returing back mocha junit reporter as it is used in CircleCI build (Alexey Sergeev <sab@scand.com>, 14d4a4c)
+ - Cleanup dependencies (Alexey Sergeev <sab@scand.com>, ad24399)
+ - Renaming webpack output library name from '@opuscapita/react-markdown' to 'MarkdownInput' (Alexey Sergeev <sab@scand.com>, f9216b0)
+ - Deleting local gh-branch if it exist (Alexey Sergeev <sab@scand.com>, 21e024a)
+
 ## [v1.0.1](Thu, 17 Aug 2017 04:33:30 GMT)
  - Replace header buttons in toolbar by dropdown (#35)
     
