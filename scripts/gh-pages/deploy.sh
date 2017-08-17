@@ -1,6 +1,9 @@
 #!/bin/sh
 
-git branch -D gh-pages &&
+if [ `git branch --list gh-pages`]
+then
+   git branch -D gh-pages
+fi
 git checkout -b gh-pages &&
 git ls-files | grep -v -e "\(^\.gitignore$\|^\.gitattributes$\|^\.gh-pages-tmp$\)" | xargs rm -rf
 mv .gh-pages-tmp/* . &&
