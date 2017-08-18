@@ -16,27 +16,33 @@ Prism.languages.insertBefore('markdown', 'prolog', {
     inside: {}
   },
   header1: {
-    pattern: /^#{1}[\s]+.*$/,
+    pattern: /(\n|\r\n|\r)#[\s]+.*(?=\n|\r\n|\r)/,
+    lookbehind: true,
     inside: {}
   },
   header2: {
-    pattern: /^#{2}[\s]+.*/,
+    pattern: /(\n|\r\n|\r)#{2}[\s]+.*(?=\n|\r\n|\r)/,
+    lookbehind: true,
     inside: {}
   },
   header3: {
-    pattern: /^#{3}[\s]+.*/,
+    pattern: /(\n|\r\n|\r)#{3}[\s]+.*(?=\n|\r\n|\r)/,
+    lookbehind: true,
     inside: {}
   },
   header4: {
-    pattern: /^#{4}[\s]+.*/,
+    pattern: /(\n|\r\n|\r)#{4}[\s]+.*(?=\n|\r\n|\r)/,
+    lookbehind: true,
     inside: {}
   },
   header5: {
-    pattern: /^#{5}[\s]+.*/,
+    pattern: /(\n|\r\n|\r)#{5}[\s]+.*(?=\n|\r\n|\r)/,
+    lookbehind: true,
     inside: {}
   },
   header6: {
-    pattern: /^#{6}[\s]+.*/,
+    pattern: /(\n|\r\n|\r)#{6}[\s]+.*(?=\n|\r\n|\r)/,
+    lookbehind: true,
     inside: {}
   },
   'header-no-offset': {
@@ -234,7 +240,7 @@ Prism.languages.markdown.blockquote.inside.strikethrough = Prism.util.clone(Pris
 Prism.languages.markdown.blockquote.inside.url = Prism.util.clone(Prism.languages.markdown.url);
 
 let rendererComponent = props => {
-  return (<div>{props.node.text}</div>);
+  // return (<div>{props.node.text}</div>);
   let isLine = props.node.type === 'multiline';
   let hasMarks = props.mark;
 
@@ -295,8 +301,12 @@ function addMarks(characters, tokens, offset) {
     }
 
     const { content, length, type } = token;
-    const mark = Mark.create({ type });
 
+    if (Array.isArray(content)) {
+      addMarks(characters, content, updatedOffset);
+    }
+
+    const mark = Mark.create({ type });
     for (let i = updatedOffset; i < updatedOffset + length; i++) {
       let char = characters.get(i);
       let { marks } = char;
@@ -304,10 +314,6 @@ function addMarks(characters, tokens, offset) {
       marks = marks.add(mark);
       char = char.set('marks', marks);
       characters.set(i, char);
-    }
-
-    if (Array.isArray(content)) {
-      addMarks(characters, content, updatedOffset);
     }
 
     updatedOffset += length;
