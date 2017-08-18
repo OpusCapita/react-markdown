@@ -1,31 +1,3 @@
-just a text
-**bold text**
-*italic text*
-***bold italic text***
-***bold italic text**italic*
-***bold italic text*bold**
-**_bold italic text_bold**
-__*bold italic text*bold__
-
-__bold text__
-_italic text_
-___bold italic text___
-
-___bold italic text__italic_
-___bold italic text_bold__
-
-~~strike-through text~~
-*~~strike-through text inside italic~~*
-~~*italic inside strike-through text*~~
-**~~strike-through text inside bold~~**
-~~**bold inside strike-through text**~~
-
-[opuscapita](https://www.opuscapita.com/)
-**[opuscapita](https://www.opuscapita.com/)**
-[**opuscapita**](https://www.opuscapita.com/)
-*[**opuscapita**](https://www.opuscapita.com/)*
-~~[**opuscapita**](https://www.opuscapita.com/)~~
-**~~[**opuscapita**](https://www.opuscapita.com/)~~
 
 # header `code`
 # header [url](uefasdfs)
@@ -83,6 +55,13 @@ Unordered
     + Facilisis in pretium nisl aliquet
     - Nulla volutpat aliquam velit
 + Very easy!
+
+Oredered
+
+1 Item
+2 Item
+3 Item
+4 Item
 
 code block
 
