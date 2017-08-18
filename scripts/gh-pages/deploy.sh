@@ -1,6 +1,6 @@
 #!/bin/sh
 
-if [ `git branch --list gh-pages`]
+if [ `git branch --list gh-pages`];
 then
    git branch -D gh-pages
 fi
