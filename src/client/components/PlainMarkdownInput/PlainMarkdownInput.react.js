@@ -64,7 +64,7 @@ class PlainMarkdownInput extends React.Component {
   }
 
   handleChange = (editorState) => {
-    this.props.onChange(Plain.serialize(editorState));
+    this.props.onChange(Raw.serialize(editorState));
 
     console.log('handleChange #2');
     this.setState({ editorState });
