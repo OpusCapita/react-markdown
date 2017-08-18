@@ -234,6 +234,7 @@ Prism.languages.markdown.blockquote.inside.strikethrough = Prism.util.clone(Pris
 Prism.languages.markdown.blockquote.inside.url = Prism.util.clone(Prism.languages.markdown.url);
 
 let rendererComponent = props => {
+  return (<div>{props.node.text}</div>);
   let isLine = props.node.type === 'multiline';
   let hasMarks = props.mark;
 
