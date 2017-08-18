@@ -5,6 +5,7 @@ const webpack = require('webpack');
 const WriteFilePlugin = require('write-file-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const ProgressBarPlugin = require('progress-bar-webpack-plugin');
+const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
 
 const PACKAGE_VERSION = require('../package.json').version;
 const PACKAGE_NAME = require('../package.json').name;
@@ -22,7 +23,8 @@ let plugins = [
       'process.env.HOST': JSON.stringify(HOST),
       'process.env.PORT': JSON.stringify(PORT),
       'process.env.NODE_ENV': `"${NODE_ENV}"`
-    })
+    }),
+    new LodashModuleReplacementPlugin()
 ];
 
 if(IS_LINK_MODE) {
@@ -30,7 +32,7 @@ if(IS_LINK_MODE) {
 }
 
 if(IS_PRODUCTION_MODE) {
-  let uglifyPlugin = new webpack.optimize.UglifyJsPlugin({
+  const uglifyPlugin = new webpack.optimize.UglifyJsPlugin({
     compress: {
       warnings: false,
       screw_ie8: true
@@ -162,7 +164,7 @@ module.exports = {
           loader: 'babel-loader',
           options: {
             presets: ['es2015', 'stage-0', 'react'],
-            plugins: ['transform-decorators-legacy']
+            plugins: ['transform-decorators-legacy', 'lodash']
           }
         }],
         include: [

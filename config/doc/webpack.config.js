@@ -1,5 +1,6 @@
 const path = require('path');
 const webpack = require('webpack');
+const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
 
 const PACKAGE_VERSION = require('../../package.json').version;
 const PACKAGE_NAME = require('../../package.json').name;
@@ -28,6 +29,7 @@ module.exports = {
       new webpack.DefinePlugin({
         'process.env.NODE_ENV': '"production"'
       }),
+      new LodashModuleReplacementPlugin(),
       new webpack.optimize.UglifyJsPlugin({
         compress: {
           warnings: false,
@@ -111,7 +113,7 @@ module.exports = {
           loader: 'babel-loader',
           options: {
             presets: ['es2015', 'stage-0', 'react'],
-            plugins: ['transform-decorators-legacy']
+            plugins: ['transform-decorators-legacy', 'lodash']
           }
         }],
         include: [
