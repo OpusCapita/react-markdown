@@ -103,7 +103,11 @@ module.exports = {
   },
   resolve: {
     modules: ['node_modules'],
-    extensions: ['.json', '.js']
+    extensions: ['.json', '.js'],
+    alias: {
+      // See https://github.com/OpusCapita/react-markdown/issues/39
+      '@opuscapita/slate': '@opuscapita/slate/dist/slate'
+    }
   },
   resolveLoader: {
     moduleExtensions: ['-loader']
