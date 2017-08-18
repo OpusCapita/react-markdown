@@ -7,16 +7,7 @@ import './SlateEditor.less';
 
 class SlateEditor extends React.Component {
   render() {
-    const {
-      children,
-      plugins,
-      state,
-      schema,
-      onChange,
-      onDocumentChange,
-      onSelectionChange,
-      fullScreen
-    } = this.props;
+    const { children, plugins, state, schema, onChange, fullScreen, onKeyDown, } = this.props;
     return (
       <div
         className={classnames(
@@ -24,14 +15,7 @@ class SlateEditor extends React.Component {
           { 'react-markdown--slate-editor--fulscreen': fullScreen }
         )}
       >
-        {Utils.cloneElement(children, {
-          plugins,
-          state,
-          schema,
-          onChange,
-          onDocumentChange,
-          onSelectionChange
-        })}
+        {Utils.cloneElement(children, { plugins, state, schema, onChange, onKeyDown })}
       </div>
     );
   }
@@ -42,8 +26,7 @@ SlateEditor.propTypes = {
   state: Types.any,
   schema: Types.object,
   onChange: Types.func,
-  onDocumentChange: Types.func,
-  onSelectionChange: Types.func,
+  onKeyDown: Types.func,
   fullScreen: Types.bool
 };
 

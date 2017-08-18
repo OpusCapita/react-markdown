@@ -64,22 +64,9 @@ class PlainMarkdownInput extends React.Component {
   }
 
   handleChange = (editorState) => {
-    this.props.onChange(Raw.serialize(editorState));
-
-    console.log('handleChange #2');
+    // this.props.onChange(Raw.serialize(editorState));
     this.setState({ editorState });
-    console.log('handleChange #3');
   };
-
-
-  handleDocumentChange = (document, editorState) => {
-    console.log('handleDocumentChange');
-  };
-
-  handleSelectionChange = (selection, editorState) => {
-    console.log('handleSelectionChange');
-  };
-
 
   handleFullScreen = () => {
     let fullScreen = !this.state.fullScreen;
@@ -115,14 +102,48 @@ class PlainMarkdownInput extends React.Component {
         state={editorState}
         fullScreen={fullScreen}
         schema={schema}
+        onKeyDown={this.onKeyDown}
         onChange={this.handleChange}
-        onDocumentChange={this.handleDocumentChange}
-        onSelectionChange={this.handleSelectionChange}
         plugins={[
           // AutocompletePlugin({ extensions: extensions, onChange: this.handleChange })
         ]}
       >
 
+        <SlateToolbar>
+          <SlateToolbarGroup>
+            <BoldButton/>
+            <ItalicButton/>
+            <StrikethroughButton/>
+          </SlateToolbarGroup>
+
+          <SlateToolbarGroup>
+            <LinkButton/>
+          </SlateToolbarGroup>
+
+          <SlateToolbarGroup>
+            <HeaderOneButton/>
+            <HeaderTwoButton/>
+            <HeaderThreeButton/>
+            <HeaderFourButton/>
+            <HeaderFiveButton/>
+            <HeaderSixButton/>
+          </SlateToolbarGroup>
+
+          <SlateToolbarGroup>
+            <OrderedListButton/>
+            <UnorderedListButton/>
+          </SlateToolbarGroup>
+
+          <SlateToolbarGroup>
+            {objectReferenceButtons}
+          </SlateToolbarGroup>
+
+          <SlateToolbarGroup className="react-markdown--plain-markdown-input__fullscreen-button">
+            <FullScreenButton onClick={this.handleFullScreen} fullScreen={fullScreen} />
+          </SlateToolbarGroup>
+
+          {children}
+        </SlateToolbar>
         <SlateContent />
       </SlateEditor>
     );

@@ -50,11 +50,13 @@ Prism.languages.insertBefore('markdown', 'prolog', {
     inside: {}
   },
   list: [{
-    pattern: /^\s*[\+\-\*](\s).*/,
+    // pattern: /\s*[\+\-\*](\s).*/,
+    pattern: /(\n|\r\n|\r|)(\s*[\+\-\*](\s).*)/,
+    lookbehind: true,
     inside: {}
   }],
   'ordered-list': [{
-    pattern: /^\s*\d\.(\s).*/,
+    pattern: /\n(\s*\d\.(\s).*)/,
     inside: {}
   }],
   url: {
@@ -66,12 +68,13 @@ Prism.languages.insertBefore('markdown', 'prolog', {
     }
   },
   code: [{
-    pattern: /(^|[^`])```[^`\n\r]*[^`\n\r]```(?!`)/,
-    lookbehind: true,
-    inside: {}
-  }, {
     pattern: /(^|[^`])`[^`\n\r]*[^`\n\r]`(?!`)/,
     lookbehind: true,
+  }],
+  codeblock: [{
+    pattern: /(\n|\r\n|\r)```((\n|\r\n|\r).*)*(\n|\r\n|\r)```(?=\n|\r\n|\r)/,
+    lookbehind: true,
+    inside: {}
   }],
   bold: [{
     pattern: /(^|[^*])\*\*([^\*\r\n]*(\*[^\*\r\n]+\*[^\*\r\n]*)+|[^*\r\n]+)\*\*/,
@@ -240,7 +243,6 @@ Prism.languages.markdown.blockquote.inside.strikethrough = Prism.util.clone(Pris
 Prism.languages.markdown.blockquote.inside.url = Prism.util.clone(Prism.languages.markdown.url);
 
 let rendererComponent = props => {
-  // return (<div>{props.node.text}</div>);
   let isLine = props.node.type === 'multiline';
   let hasMarks = props.mark;
 
@@ -248,33 +250,11 @@ let rendererComponent = props => {
     return (<div className="oc-md-hl-block">{props.children}</div>);
   }
 
-  if (hasMarks && props.mark.type === 'code') {
-    const className = props.mark ? 'oc-md-hl-' + props.mark.type : '';
-
-    if (typeof props.children === 'string') {
-      /* Wrap <span>children</span> - set cursor properly on mouse click inside "code" node */
-      return (
-        <span className={className}>
-          <span>{props.children}</span>
-          <span className="oc-md-hl-code-background"></span>
-        </span>
-      );
-    }
-
-    return (
-      <span className={className}>
-        {props.children}
-        <span className="oc-md-hl-code-background"></span>
-      </span>
-    );
-  }
-
   if (hasMarks) {
     const className = props.mark ? 'oc-md-hl-' + props.mark.type : '';
+    let content = props.children;
     return (
-      <span className={className}>
-        {props.children}
-      </span>
+      <span className={className}>{content}</span>
     );
   }
 
@@ -326,6 +306,8 @@ function markdownDecorator(text, block) {
   const string = text.text;
   const grammar = Prism.languages[language];
   const tokens = Prism.tokenize(string, grammar);
+
+  // console.log('tokens:', tokens);
 
   addMarks(characters, tokens, 0);
   return characters.asImmutable();
