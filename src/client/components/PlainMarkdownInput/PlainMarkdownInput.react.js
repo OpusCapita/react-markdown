@@ -69,6 +69,16 @@ class PlainMarkdownInput extends React.Component {
     this.setState({ editorState });
   };
 
+
+  handleDocumentChange = (document, editorState) => {
+    //
+  };
+
+  handleSelectionChange = (selection, editorState) => {
+    //
+  };
+
+
   handleFullScreen = () => {
     let fullScreen = !this.state.fullScreen;
 
@@ -104,6 +114,8 @@ class PlainMarkdownInput extends React.Component {
         fullScreen={fullScreen}
         schema={schema}
         onChange={this.handleChange}
+        onDocumentChange={this.handleDocumentChange}
+        onSelectionChange={this.handleSelectionChange}
         plugins={[
           // AutocompletePlugin({ extensions: extensions, onChange: this.handleChange })
         ]}
