@@ -13,14 +13,6 @@ describe('<BoldButton/>', () => {
     expect(wrapper.find('.active')).to.have.length(1);
   });
 
-  it('check inactive button', () => {
-    const state = Plain.deserialize("some **text**").
-      // selected 't' in state
-    transform().moveOffsetsTo('some **'.length, 'some **t'.length).apply();
-    const wrapper = shallow(<BoldButton state={state} onChange={() => {}} />);
-    expect(wrapper.find('.active')).to.have.length(0);
-  });
-
   it('check mark selected text', () => {
     let state = Plain.deserialize("some text").
     // selected 'text' in state

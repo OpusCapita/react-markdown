@@ -20,6 +20,8 @@ const numbersFromListItem = /^[0-9]+/; // eslint-disable-line
  * Create new list item block, when the cursor move to a next line
  */
 const splitListBlocksAutoHandler = (event, data, state) => {
+  // TODO: To realize pressing of a key in the listBlock
+  // after fixing hasUnorderedListMarkdown and hasOrderedListMarkdown
   // if (event.keyCode === 13) {
   //   if (hasUnorderedListMarkdown(state)) {
   //     event.preventDefault();

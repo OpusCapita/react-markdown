@@ -13,14 +13,6 @@ describe('<ItalicButton/>', () => {
     expect(wrapper.find('.active')).to.have.length(1);
   });
 
-  it('check inactive button', () => {
-    const state = Plain.deserialize("some _text_").
-      // selected 't' in state
-    transform().moveOffsetsTo('some _'.length, 'some _t'.length).apply();
-    const wrapper = shallow(<ItalicButton state={state} onChange={() => {}} />);
-    expect(wrapper.find('.active')).to.have.length(0);
-  });
-
   it('check mark selected text', () => {
     let state = Plain.deserialize("some text").
     // selected 'text' in state
