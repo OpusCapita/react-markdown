@@ -48,8 +48,7 @@ Prism.languages.insertBefore('markdown', 'prolog', {
     inside: {}
   }],
   'ordered-list': [{
-    pattern: /^\s*\d\.(\s).*/m,
-    lookbehind: true,
+    pattern: /^( *\d\. .*)/m,
     inside: {}
   }],
   url: {

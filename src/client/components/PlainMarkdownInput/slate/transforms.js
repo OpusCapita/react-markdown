@@ -1,6 +1,6 @@
 // common reg expressions
-const olRegExp = /^[0-9]+\.\s/m;
-const ulRegExp = /^\*\s/m;
+const olRegExp = /^ *[0-9]+\.\s/m;
+const ulRegExp = /^ *[\*\+\-]\s/m;
 const h1RegExp = /^#\s/m;
 const h2RegExp = /^##\s/m;
 const h3RegExp = /^###\s/m;
@@ -9,25 +9,14 @@ const h5RegExp = /^#####\s/m;
 const h6RegExp = /^######\s/m;
 
 const regExpMark = {
-  '*': /\*/g,
-  '**': /\*\*/g,
-  '***': /\*\*\*/g,
-  '_': /_/g,
-  '__': /__/g,
-  '___': /___/g,
-  '~~': /~~/g,
-  all: /\*{1,4}|_{1,4}|~~/g,
-  // all: /\*{1,4}|_{1,4}|~~|\(|\)|\[|\]|\{|\}/g, // will use this code in future
+  all: /\*{1,4}|_{1,4}|~~|\n/g,
 };
 
-const BOLD_LENGTH = 2;
-const ITALIC_LENGTH = 1;
-const ALL_LENGTH = 3;
-const STRIKETHROUGH_LENGTH = 2;
 const lengths = {
-  bold: BOLD_LENGTH,
-  italic: ITALIC_LENGTH,
-  'strike-through': STRIKETHROUGH_LENGTH
+  bold: 2,
+  italic: 1,
+  'strike-through': 2,
+  all: 3,
 };
 
 function getMarks() {
@@ -146,14 +135,25 @@ function getAllPositions(text) {
     }
   }
 
+  function clearAllMarksStates() {
+    for (let token in markState) {
+      if (markState[token]) {
+        marks[token].pop();
+        markState[token] = false;
+      }
+    }
+  }
+
   for (let i = 0; i < tokens.length; i++) {
     let tokenData = tokens[i];
     const token = tokenData.token;
     const position = tokenData.position;
 
+    if (token === '\n') {
+      clearAllMarksStates();
     // Current token is ~~
     // Or Current token is a closing token. Current position is between two equal marks.
-    if (token === '~~' || markState[token]) {
+    } else if (token === '~~' || markState[token]) {
       addTokenPos(token, position);
     } else {
       if (token === '___' || token === '***' || // Current token  is long token or
@@ -205,21 +205,21 @@ function getPositionsData(markType) {
   if (markType === 'bold') {
     mark1 = '__';
     mark2 = '**';
-    markLength = BOLD_LENGTH;
+    markLength = lengths.bold;
   } else if (markType === 'italic') {
     mark1 = '_';
     mark2 = '*';
-    markLength = ITALIC_LENGTH;
+    markLength = lengths.italic;
   }
   if (markType === 'strike-through') {
-    markLength = STRIKETHROUGH_LENGTH;
+    markLength = lengths['strike-through'];
     positionsData = [{ mark: '~~', allLength: markLength }];
   } else {
     positionsData = [
       { mark: mark1, allLength: markLength },
       { mark: mark2, allLength: markLength },
-      { mark: '___', allLength: ALL_LENGTH },
-      { mark: '***', allLength: ALL_LENGTH },
+      { mark: '___', allLength: lengths.all },
+      { mark: '***', allLength: lengths.all },
     ];
   }
   return positionsData;
@@ -287,11 +287,23 @@ function unwrapText({ state, markType }) {
   return state;
 }
 
-function getCurrentLine(state) {
-  const { startOffset, endOffset, focusText } = state;
+function getPreviousLineEnd(state) {
+  const { startOffset, focusText } = state;
   const text = focusText.text;
-  const prevLineEnd = text.lastIndexOf('\n', startOffset);
+  const startPos = startOffset - (text[startOffset] === '\n' ? 1 : 0);
+  return text.lastIndexOf('\n', startPos);
+}
 
+function getCurrentLine(state) {
+  const { startOffset, focusText } = state;
+  const text = focusText.text;
+
+  if (startOffset === 0 && text[startOffset] === '\n' ||
+    text[startOffset - 1] === '\n' && text[startOffset] === '\n') {
+    return '';
+  }
+
+  const prevLineEnd = getPreviousLineEnd(state);
   return (prevLineEnd === -1 ? text : text.substr(prevLineEnd + 1)).split('\n', 1)[0];
 }
 
@@ -301,22 +313,10 @@ function getCurrentLine(state) {
  * @param regExp - match regexp
  * @param state - editor state
  */
-function hasBlock_(regExp, state) {
+function hasBlock(regExp, state) {
   let currLine = getCurrentLine(state);
   return regExp.test(currLine);
 }
-
-/**
- * Has block selected
- *
- * @param regExp - match regexp
- * @param state - editor state
- */
-// const hasBlock = function(regExp, state) {
-//   const { focusText } = state;
-//   const focusedText = focusText.text;
-//   return regExp.test(focusedText);
-// };
 
 /**
  * Unwrap block
@@ -326,11 +326,12 @@ function hasBlock_(regExp, state) {
  */
 const unwrapBlock = function(removedLength, state) {
   const { startOffset, endOffset } = state;
+  const prevLineEnd = getPreviousLineEnd(state);
   return state.transform().
-  moveOffsetsTo(0).
-  deleteForward(removedLength).
-  moveOffsetsTo(Math.max(startOffset - removedLength, 0), Math.max(endOffset - removedLength, 0)).
-  focus().apply();
+    moveOffsetsTo(prevLineEnd + 1).
+    deleteForward(removedLength).
+    moveOffsetsTo(Math.max(startOffset - removedLength, 0), Math.max(endOffset - removedLength, 0)).
+    focus().apply();
 };
 
 /**
@@ -341,21 +342,31 @@ const unwrapBlock = function(removedLength, state) {
  * @param state - editor state
  */
 const wrapBlock = function(matchRules, text, state) {
-  const { startOffset, endOffset, focusText } = state;
-  const focusedText = focusText.text;
-  const t = state.transform().moveOffsetsTo(0);
+  const { startOffset, endOffset } = state;
+  let currLine = getCurrentLine(state);
+  const previousLineEnd = getPreviousLineEnd(state);
+  let afterState = null;
   let length = 0;
   for (let i = 0, k = matchRules.length; i < k; i++) {
-    const result = matchRules[i].exec(focusedText);
+    const result = matchRules[i].exec(currLine);
     if (result) {
       length = result[0].length;
-      t.deleteForward(length);
+      afterState = unwrapBlock(length, state);
       break;
     }
   }
-  return t.insertText(text).
-  moveOffsetsTo(Math.max(startOffset + text.length - length, 0), Math.max(endOffset + text.length - length, 0)).
-  focus().apply();
+
+  if (!afterState) {
+    afterState = state;
+  }
+
+  const delta = text.length - length;
+
+  return afterState.transform().
+    moveOffsetsTo(previousLineEnd + 1).
+    insertText(text).
+    moveOffsetsTo(Math.max(startOffset + delta, 0), Math.max(endOffset + delta, 0)).
+    focus().apply();
 };
 
 /**
@@ -450,7 +461,7 @@ export const hasStrikethroughMarkdown = state => {
     positions: allPositions['~~'],
     startOffset,
     endOffset,
-    markLength: STRIKETHROUGH_LENGTH
+    markLength: lengths['strike-through']
   });
 };
 
@@ -488,9 +499,15 @@ export const unwrapStrikethroughMarkdown = state => {
  * @param state - editor state
  */
 export const unwrapOrderedListMarkdown = state => {
-  const { focusText } = state;
-  const focusedText = focusText.text;
-  const result = olRegExp.exec(focusedText);
+  let currLine = getCurrentLine(state);
+  const result = olRegExp.exec(currLine);
+  const length = result[0].length;
+  return unwrapBlock(length, state);
+};
+
+export const unwrapUnorderedListMarkdown = state => {
+  let currLine = getCurrentLine(state);
+  const result = ulRegExp.exec(currLine);
   const length = result[0].length;
   return unwrapBlock(length, state);
 };
@@ -521,23 +538,24 @@ export const wrapLinkMarkdown = state => {
  */
 export const hasMultiLineSelection = ({ selection: { startKey, endKey } }) => startKey !== endKey;
 
-export const hasUnorderedListMarkdown = hasBlock_.bind(null, ulRegExp);
-export const hasOrderedListMarkdown = hasBlock_.bind(null, olRegExp);
-export const hasHeaderOneMarkdown = hasBlock_.bind(null, h1RegExp);
-export const hasHeaderTwoMarkdown = hasBlock_.bind(null, h2RegExp);
-export const hasHeaderThreeMarkdown = hasBlock_.bind(null, h3RegExp);
-export const hasHeaderFourMarkdown = hasBlock_.bind(null, h4RegExp);
-export const hasHeaderFiveMarkdown = hasBlock_.bind(null, h5RegExp);
-export const hasHeaderSixMarkdown = hasBlock_.bind(null, h6RegExp);
+export const hasUnorderedListMarkdown = hasBlock.bind(null, ulRegExp);
+export const hasOrderedListMarkdown = hasBlock.bind(null, olRegExp);
+export const hasHeaderOneMarkdown = hasBlock.bind(null, h1RegExp);
+export const hasHeaderTwoMarkdown = hasBlock.bind(null, h2RegExp);
+export const hasHeaderThreeMarkdown = hasBlock.bind(null, h3RegExp);
+export const hasHeaderFourMarkdown = hasBlock.bind(null, h4RegExp);
+export const hasHeaderFiveMarkdown = hasBlock.bind(null, h5RegExp);
+export const hasHeaderSixMarkdown = hasBlock.bind(null, h6RegExp);
+
 export const unwrapHeaderOneMarkdown = unwrapBlock.bind(null, '# '.length);
 export const unwrapHeaderTwoMarkdown = unwrapBlock.bind(null, '## '.length);
 export const unwrapHeaderThreeMarkdown = unwrapBlock.bind(null, '### '.length);
 export const unwrapHeaderFourMarkdown = unwrapBlock.bind(null, '#### '.length);
 export const unwrapHeaderFiveMarkdown = unwrapBlock.bind(null, '##### '.length);
 export const unwrapHeaderSixMarkdown = unwrapBlock.bind(null, '###### '.length);
+
 export const wrapUnorderedListMarkdown = wrapBlock.bind(null,
   [olRegExp, h1RegExp, h2RegExp, h3RegExp, h4RegExp, h5RegExp, h6RegExp], '* ');
-export const unwrapUnorderedListMarkdown = unwrapBlock.bind(null, '* '.length);
 export const wrapOrderedListMarkdown = wrapBlock.bind(null,
   [ulRegExp, h1RegExp, h2RegExp, h3RegExp, h4RegExp, h5RegExp, h6RegExp], '1. ');
 export const wrapHeaderOneMarkdown = wrapBlock.bind(null,

@@ -26,7 +26,7 @@ import {
 } from './buttons';
 
 import { SlateContent, SlateEditor, SlateToolbar, SlateToolbarGroup } from '../SlateEditor';
-import { Plain, Raw } from '@opuscapita/slate'; // eslint-disable-line
+import { Raw } from '@opuscapita/slate';
 
 function deserialize(string, options = {}) {
   let raw = {
@@ -64,7 +64,6 @@ class PlainMarkdownInput extends React.Component {
   }
 
   handleChange = (editorState) => {
-    // this.props.onChange(Raw.serialize(editorState));
     this.setState({ editorState });
   };
 

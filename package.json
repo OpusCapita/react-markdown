@@ -6,7 +6,7 @@
     "npm-build": "rimraf lib && cross-env NODE_ENV=production webpack --config ./config/webpack.config.js --hide-modules",
     "link-mode": "cross-env NODE_ENV=link webpack --config ./config/webpack.config.js",
     "lint": "eslint src/client",
-    "test": "mocha --require config/test/mocha-setup.js --recursive 'src/**/*.spec.js' --require ignore-styles",
+    "test": "mocha --require config/test/mocha-setup.js --recursive src/**/*.spec.js --require ignore-styles",
     "npm-publish": "update-changelog -- --all && npm run npm-build && npm-publish",
     "publish-release": "npm run grails-plugin-deploy-release && npm run npm-publish -- --release",
     "start": "cross-env NODE_ENV=development showroom-scan src && babel-node --presets es2015,stage-0 www/index",
