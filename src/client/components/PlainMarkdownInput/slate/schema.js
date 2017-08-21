@@ -16,47 +16,40 @@ Prism.languages.insertBefore('markdown', 'prolog', {
     inside: {}
   },
   header1: {
-    pattern: /(\n|\r\n|\r)#[\s]+.*(?=\n|\r\n|\r)/,
-    lookbehind: true,
+    pattern: /^#{1}[\s]+.*$/m,
     inside: {}
   },
   header2: {
-    pattern: /(\n|\r\n|\r)#{2}[\s]+.*(?=\n|\r\n|\r)/,
-    lookbehind: true,
+    pattern: /^#{2}[\s]+.*$/m,
     inside: {}
   },
   header3: {
-    pattern: /(\n|\r\n|\r)#{3}[\s]+.*(?=\n|\r\n|\r)/,
-    lookbehind: true,
+    pattern: /^#{3}[\s]+.*$/m,
     inside: {}
   },
   header4: {
-    pattern: /(\n|\r\n|\r)#{4}[\s]+.*(?=\n|\r\n|\r)/,
-    lookbehind: true,
+    pattern: /^#{4}[\s]+.*$/m,
     inside: {}
   },
   header5: {
-    pattern: /(\n|\r\n|\r)#{5}[\s]+.*(?=\n|\r\n|\r)/,
-    lookbehind: true,
+    pattern: /^#{5}[\s]+.*$/m,
     inside: {}
   },
   header6: {
-    pattern: /(\n|\r\n|\r)#{6}[\s]+.*(?=\n|\r\n|\r)/,
-    lookbehind: true,
+    pattern: /^#{6}[\s]+.*$/m,
     inside: {}
   },
   'header-no-offset': {
-    pattern: /(^\s{1,3})#{1,6}[\s]+.*$/,
+    pattern: /(^\s{1,3})#{1,6}[\s]+.*$/m,
     inside: {}
   },
   list: [{
-    // pattern: /\s*[\+\-\*](\s).*/,
-    pattern: /(\n|\r\n|\r|)(\s*[\+\-\*](\s).*)/,
-    lookbehind: true,
+    pattern: /^( *[\+\-\*] .*)/m,
     inside: {}
   }],
   'ordered-list': [{
-    pattern: /\n(\s*\d\.(\s).*)/,
+    pattern: /^\s*\d\.(\s).*/m,
+    lookbehind: true,
     inside: {}
   }],
   url: {
@@ -68,12 +61,11 @@ Prism.languages.insertBefore('markdown', 'prolog', {
     }
   },
   code: [{
-    pattern: /(^|[^`])`[^`\n\r]*[^`\n\r]`(?!`)/,
+    pattern: /(^|[^`])(```|`)[^`\n\r]*[^`\n\r]\2(?!`)/m,
     lookbehind: true,
   }],
   codeblock: [{
-    pattern: /(\n|\r\n|\r)```((\n|\r\n|\r).*)*(\n|\r\n|\r)```(?=\n|\r\n|\r)/,
-    lookbehind: true,
+    pattern: /^```(?: *)(\n[^`]*)*\n```(?: *)/m,
     inside: {}
   }],
   bold: [{
@@ -306,9 +298,6 @@ function markdownDecorator(text, block) {
   const string = text.text;
   const grammar = Prism.languages[language];
   const tokens = Prism.tokenize(string, grammar);
-
-  // console.log('tokens:', tokens);
-
   addMarks(characters, tokens, 0);
   return characters.asImmutable();
 }

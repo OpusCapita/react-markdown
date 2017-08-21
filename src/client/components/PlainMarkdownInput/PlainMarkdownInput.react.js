@@ -6,7 +6,7 @@ import shortcuts from './slate/shortcuts';
 import './PlainMarkdownInput.less';
 
 import {
-  AutocompletePlugin,
+  AutocompletePlugin, // eslint-disable-line
   ObjectReferenceButton
 } from '../SlateEditor/plugins';
 
@@ -26,10 +26,10 @@ import {
 } from './buttons';
 
 import { SlateContent, SlateEditor, SlateToolbar, SlateToolbarGroup } from '../SlateEditor';
-import { Plain, Raw } from '@opuscapita/slate';
+import { Plain, Raw } from '@opuscapita/slate'; // eslint-disable-line
 
 function deserialize(string, options = {}) {
-  let raw =  {
+  let raw = {
     kind: 'state',
     document: {
       kind: 'document',
@@ -77,13 +77,13 @@ class PlainMarkdownInput extends React.Component {
     this.props.onFullScreen(fullScreen);
   };
 
-  onKeyDown(event, data, state) {
+  handleKeyDown(event, data, state) {
     return shortcuts(event, data, state);
   }
 
   render() {
     const { editorState } = this.state;
-    const { children, extensions } = this.props;
+    const { children, extensions } = this.props; // eslint-disable-line
 
     const fullScreen = this.props.fullScreen;
 
@@ -102,7 +102,7 @@ class PlainMarkdownInput extends React.Component {
         state={editorState}
         fullScreen={fullScreen}
         schema={schema}
-        onKeyDown={this.onKeyDown}
+        onKeyDown={this.handleKeyDown}
         onChange={this.handleChange}
         plugins={[
           // AutocompletePlugin({ extensions: extensions, onChange: this.handleChange })

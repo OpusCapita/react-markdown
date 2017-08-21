@@ -38,10 +38,11 @@ describe('plain editor schema', () => {
   });
 
   it('should highlight code (tripple ticks)', () => {
-    let html;
+    let html, candidate;
 
     html = '```code```';
-    assert.equal(getHtml(html), '<span class="token code">```code```</span>');
+    candidate = '<span class="token code">```code```</span>';
+    assert.equal(getHtml(html), candidate);
 
     html = '````code```';
     assert.equal(getHtml(html), '````code```');
@@ -50,32 +51,31 @@ describe('plain editor schema', () => {
     assert.equal(getHtml(html), '```code````');
   });
 
-//   it('should highlight code block', () => {
-//     let html;
+  it('should highlight code block', () => {
+    let html, candidate;
 
-//     html =
-// `\`\`\`
-// code
-// \`\`\``;
-//     assert.equal(getHtml(html), '<span class="token code">```\ncode\n```</span>');
+    html =
+`\`\`\`
+code
+\`\`\``;
+    candidate = '<span class="token codeblock">```\ncode\n```</span>';
+    assert.equal(getHtml(html), candidate);
 
-//     html = '````code```';
-//     assert.equal(getHtml(html), '`<span class="token code">```code```</span>');
-
-//     html = '```code````';
-//     assert.equal(getHtml(html), '<span class="token code">```code```</span>`');
-
-//     html = '```````';
-//     assert.equal(getHtml(html), '`<span class="token code">``````</span>');
-
-//     html = '```````';
-//     assert.equal(getHtml(html), '<span class="token code">``````</span>`');
-//   });
+    html =
+`\`\`\`
+co\`\`de
+\`\`\``;
+    candidate =
+`\`\`\`
+co\`\`de
+\`\`\``;
+    assert.equal(getHtml(html), candidate);
+  });
 
   it('should highlight header1', () => {
     let html;
 
-    html = '# Header';
+    html = `# Header`;
     assert.equal(getHtml(html), '<span class="token header1"># Header</span>');
 
     html = '#Header';
@@ -251,19 +251,19 @@ describe('plain editor schema', () => {
 `- item-1
 - item-2
 - item-3`;
-    candidate = `<span class="token list">- item-1</span><span class="token list">\n- item-2</span><span class="token list">\n- item-3</span>`;
+    candidate = `<span class="token list">- item-1</span>\n<span class="token list">- item-2</span>\n<span class="token list">- item-3</span>`;
 
     assert.equal(getHtml(html), candidate);
 
     html =
-`- item-1
+      `- item-1
   - item-1-1
   - item-1-2
 - item-2
   - item-1-2
 - item-3`;
 
-    candidate = '<span class="token list">- item-1</span><span class="token list">\n  - item-1-1</span><span class="token list">\n  - item-1-2</span><span class="token list">\n- item-2</span><span class="token list">\n  - item-1-2</span><span class="token list">\n- item-3</span>';
+    candidate = '<span class="token list">- item-1</span>\n<span class="token list">  - item-1-1</span>\n<span class="token list">  - item-1-2</span>\n<span class="token list">- item-2</span>\n<span class="token list">  - item-1-2</span>\n<span class="token list">- item-3</span>';
 
     assert.equal(getHtml(html), candidate);
   });

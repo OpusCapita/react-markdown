@@ -10,11 +10,11 @@ import {
   unwrapStrikethroughMarkdown,
 } from './transforms';
 
-import hasUnorderedListMarkdown from './transforms';
-import hasOrderedListMarkdown from './transforms';
+import hasUnorderedListMarkdown from './transforms'; // eslint-disable-line
+import hasOrderedListMarkdown from './transforms'; // eslint-disable-line
 
-const emptyListItem = /^[0-9]+\.\s$/;
-const numbersFromListItem = /^[0-9]+/;
+const emptyListItem = /^[0-9]+\.\s$/; // eslint-disable-line
+const numbersFromListItem = /^[0-9]+/; // eslint-disable-line
 
 /**
  * Create new list item block, when the cursor move to a next line
