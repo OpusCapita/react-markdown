@@ -1,3 +1,18 @@
+## [v1.0.2](Thu, 17 Aug 2017 06:50:27 GMT)
+ - Returing back mocha junit reporter as it is used in CircleCI build (Alexey Sergeev <sab@scand.com>, 14d4a4c)
+ - Cleanup dependencies (Alexey Sergeev <sab@scand.com>, ad24399)
+ - Renaming webpack output library name from '@opuscapita/react-markdown' to 'MarkdownInput' (Alexey Sergeev <sab@scand.com>, f9216b0)
+ - Deleting local gh-branch if it exist (Alexey Sergeev <sab@scand.com>, 21e024a)
+
+## [v1.0.1](Thu, 17 Aug 2017 04:33:30 GMT)
+ - Replace header buttons in toolbar by dropdown (#35)
+    
+    *  #33 Replace header (1-6) buttons in toolbar with dropdown (Kirill Volkovich <kvolkovich-sc@users.noreply.github.com>, 093fe4f)
+ - Add promises for IE11 (Kirill Volkovich <volkovich@scand.com>, 2078eb6)
+ - Fix editor height (Kirill Volkovich <volkovich@scand.com>, 286e99f)
+ - Update MarkdownInput documentation (Kirill Volkovich <volkovich@scand.com>, 6606359)
+ - Update README.md (Kirill Volkovich <kvolkovich-sc@users.noreply.github.com>, 2bd2979)
+
 ## [v1.0.0](https://github.com/OpusCapita/react-markdown-editor/compare/v0.0.1-beta.2...v1.0.0) (Wed, 16 Aug 2017 07:47:20 GMT)
  - Update package version to 1.0.0 (Kirill Volkovich <volkovich@scand.com>, 46eacf3)
 

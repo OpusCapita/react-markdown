@@ -1,5 +1,6 @@
 const path = require('path');
 const webpack = require('webpack');
+const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
 
 const PACKAGE_VERSION = require('../../package.json').version;
 const PACKAGE_NAME = require('../../package.json').name;
@@ -9,10 +10,11 @@ const NODE_ENV = process.env.NODE_ENV;
 module.exports = {
   entry: [
     /* TODO
-   Remove core-js when String.prototype.startsWith and endsWith methods
+   Remove core-js string when String.prototype.startsWith and endsWith methods
    will be replaced by ES5 compatible analogs
    */
     "core-js/es6/string.js",
+    "core-js/es6/promise.js",
     path.resolve(__dirname, '../../www/index-page.js')
   ],
   context: path.resolve(__dirname),
@@ -27,6 +29,7 @@ module.exports = {
       new webpack.DefinePlugin({
         'process.env.NODE_ENV': '"production"'
       }),
+      new LodashModuleReplacementPlugin(),
       new webpack.optimize.UglifyJsPlugin({
         compress: {
           warnings: false,
@@ -110,7 +113,7 @@ module.exports = {
           loader: 'babel-loader',
           options: {
             presets: ['es2015', 'stage-0', 'react'],
-            plugins: ['transform-decorators-legacy']
+            plugins: ['transform-decorators-legacy', 'lodash']
           }
         }],
         include: [

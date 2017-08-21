@@ -1,4 +1,6 @@
 .react-markdown--slate-content {
+  display: flex;
+  justify-content: stretch;
   border-top: 1px solid rgba(0, 0, 0, 0.1);
   padding: 5px;
   overflow: auto;
@@ -7,4 +9,8 @@
   font-size: 14px;
   font-family: Ubuntu Mono, Monaco, monospace;
   padding-left: 7ch;
+}
+
+.react-markdown--slate-content__editor {
+  min-height: 100%;
 }

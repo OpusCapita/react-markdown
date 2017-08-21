@@ -19,6 +19,7 @@ const SlateContent = ({
         state={state}
         schema={schema}
         onChange={onChange}
+        className={`react-markdown--slate-content__editor`}
         {...rest}
       />
       {children}

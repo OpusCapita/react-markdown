@@ -2,7 +2,7 @@ process.env.NODE_ENV = 'test';
 
 require('babel-register')({
   presets: ['es2015', 'stage-0', 'react'],
-  plugins: ['transform-decorators-legacy']
+  plugins: ['transform-decorators-legacy', 'lodash']
 });
 
 var jsdom = require('jsdom').jsdom;

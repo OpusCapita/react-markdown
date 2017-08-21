@@ -5,6 +5,7 @@ const webpack = require('webpack');
 const WriteFilePlugin = require('write-file-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const ProgressBarPlugin = require('progress-bar-webpack-plugin');
+const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
 
 const PACKAGE_VERSION = require('../package.json').version;
 const PACKAGE_NAME = require('../package.json').name;
@@ -22,7 +23,8 @@ let plugins = [
       'process.env.HOST': JSON.stringify(HOST),
       'process.env.PORT': JSON.stringify(PORT),
       'process.env.NODE_ENV': `"${NODE_ENV}"`
-    })
+    }),
+    new LodashModuleReplacementPlugin()
 ];
 
 if(IS_LINK_MODE) {
@@ -30,7 +32,7 @@ if(IS_LINK_MODE) {
 }
 
 if(IS_PRODUCTION_MODE) {
-  let uglifyPlugin = new webpack.optimize.UglifyJsPlugin({
+  const uglifyPlugin = new webpack.optimize.UglifyJsPlugin({
     compress: {
       warnings: false,
       screw_ie8: true
@@ -59,10 +61,13 @@ if(WEBPACK_BUNDLE_ANALYZE && IS_PRODUCTION_MODE) {
 }
 
 /* TODO
-   Remove core-js when String.prototype.startsWith and endsWith methods
+   Remove core-js string when String.prototype.startsWith and endsWith methods
    will be replaced by ES5 compatible analogs
  */
-const entries = ["core-js/es6/string.js"];
+const entries = [
+  "core-js/es6/string.js",
+  "core-js/es6/promise.js"
+];
 
 entries.push(
   (IS_PRODUCTION_MODE || IS_LINK_MODE) ?
@@ -77,7 +82,7 @@ module.exports = {
     publicPath: '/',
     path: path.resolve(__dirname, '../lib'),
     filename: `index.js`,
-    library: `${PACKAGE_NAME}`,
+    library: `MarkdownInput`,
     libraryTarget: 'umd'
   },
   devtool: IS_PRODUCTION_MODE ? false : 'inline-source-map',
@@ -159,7 +164,7 @@ module.exports = {
           loader: 'babel-loader',
           options: {
             presets: ['es2015', 'stage-0', 'react'],
-            plugins: ['transform-decorators-legacy']
+            plugins: ['transform-decorators-legacy', 'lodash']
           }
         }],
         include: [
