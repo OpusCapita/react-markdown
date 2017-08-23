@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 
 import Prism from 'prismjs';
-import { grammar } from './schema';
+import { grammar } from '../schema';
 import { assert } from 'chai';
 
 let getHtml = (str) => Prism.highlight(str, grammar);
@@ -641,6 +641,24 @@ co\`\`de
 
     html = '~~strikethrough~~';
     candidate = `<span class="token strikethrough">~~strikethrough~~</span>`;
+    assert.equal(getHtml(html), candidate);
+  });
+
+  it ('should highlight _italic_ empty _italic_', () => {
+    let html;
+    let candidate;
+
+    html = '_italic_ empty _italic_';
+    candidate = `<span class="token italic">_italic_</span> empty <span class="token italic">_italic_</span>`;
+    assert.equal(getHtml(html), candidate);
+  });
+
+  it ('should not highlight _italic \n empty italic_', () => {
+    let html;
+    let candidate;
+
+    html = '_italic \n empty italic_';
+    candidate = `_italic \n empty italic_`;
     assert.equal(getHtml(html), candidate);
   });
 

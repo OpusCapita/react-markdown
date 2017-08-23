@@ -48,7 +48,7 @@ Prism.languages.insertBefore('markdown', 'prolog', {
     inside: {}
   }],
   'ordered-list': [{
-    pattern: /^( *\d\. .*)/m,
+    pattern: /^( *\d+\. .*)/m,
     inside: {}
   }],
   url: {
@@ -68,26 +68,27 @@ Prism.languages.insertBefore('markdown', 'prolog', {
     inside: {}
   }],
   bold: [{
-    pattern: /(^|[^*])\*\*([^\*\r\n]*(\*[^\*\r\n]+\*[^\*\r\n]*)+|[^*\r\n]+)\*\*/,
+    pattern: /(^|[^*])\*\*([^\*\r\n]*(\*[^\*\r\n]+\*[^\*\r\n]*)+|[^*\r\n]+)\*\*/m,
     lookbehind: true,
     greedy: true,
     inside: {
       italic: [{
         lookbehind: true,
-        pattern: /(.{2,}?)\*[^\*\r\n]+\*(?=.{2,})/,
+        pattern: /(.{2,}?)\*[^\*\r\n]+\*(?=.{2,})/m,
         inside: {}
       }, {
-        pattern: /_[^_\r\n]+_/,
+        pattern: /_[^_\r\n]+_/m,
         inside: {}
       }]
     }
   }, {
-    pattern: /(^|[^_]\b)__([^_\r\n]*(_[^_\r\n]+_[^_\r\n]*)+|[^\r\n]+)__/,
+    pattern: /(^|[^_]\b)__([^_\r\n]*(_[^_\r\n]+_[^_\r\n]*)+|[^\r\n]+)__/m,
     lookbehind: true,
     greedy: true,
     inside: {
       italic: [{
         lookbehind: true,
+        // pattern: /\b_(?! )([\w*~\- ]*?_)\b/m,
         pattern: /(.{2,}?)_[^_\r\n]+_(?=.{2,})/,
         inside: {}
       }, {
@@ -97,37 +98,41 @@ Prism.languages.insertBefore('markdown', 'prolog', {
     }
   }],
   italic: [{
-    pattern: /([^*]|^)\*([^*\r\n]*(\*\*[^*\r\n]+\*\*[^*\r\n]*)+|[^*\r\n]+)\*/,
+    pattern: /([^*]|^)\*([^*\r\n]*(\*\*[^*\r\n]+\*\*[^*\r\n]*)+|[^*\r\n]+)\*/m,
     lookbehind: true,
     greedy: true,
     inside: {
       bold: [{
-        pattern: /(\b)__([^_\r\n]).+__(?=\b)/,
+        pattern: /(\b)__([^_\r\n]).+__(?=\b)/m,
         lookbehind: true,
         inside: {}
       }, {
         lookbehind: true,
-        pattern: /(.+?)\*\*[^*\r\n]+\*\*(?=.+)/,
+        pattern: /(.+?)\*\*[^*\r\n]+\*\*(?=.+)/m,
         inside: {}
       }]
     }
   }, {
-    pattern: /(?=\b)_[^]*([^_\r\n]*(__[^_\r\n]+__[^_\r\n]*)+|[^_\r\n]+)[^]*_(?=\b)/,
+    pattern: /\b_(?! )([\w*~\- ]*?_)\b/m,
+    // pattern: /\b_(?! )([\w*~\- ]*?([A-Za-z0-9*~\- ]_|___))\b/m,
+    // pattern: /(?=\b)_[^]*([^_\r\n]*(__[^_\r\n]+__[^_\r\n]*)+|[^_\r\n]+?)[^]*_(?=\b)/m,
     greedy: true,
     inside: {
       bold: [{
         lookbehind: true,
-        pattern: /(.+?)__[^_\r\n]+__(?=.+)/,
+        pattern: /\b__[a-z]*?__\b/m,
+        // pattern: /\b__[\w*~\- ]*?__\b/m,
+        // pattern: /(.+?)__[^_\r\n]+__(?=.+)/m,
         inside: {}
       }, {
         lookbehind: true,
-        pattern: /(.+?)\*\*[^*\r\n]+\*\*(?=.+)/,
+        pattern: /(.+?)\*\*[^*\r\n]+\*\*(?=.+)/m,
         inside: {}
       }]
     }
   }],
   strikethrough: {
-    pattern: /~~[^~\r\n].+[^~\r\n]~~/,
+    pattern: /~~[^~\r\n].+[^~\r\n]~~/m,
     greedy: true,
     inside: {}
   },
@@ -244,9 +249,16 @@ let rendererComponent = props => {
   if (hasMarks) {
     const className = props.mark ? 'oc-md-hl-' + props.mark.type : '';
     let content = props.children;
-    return (
-      <span className={className}>{content}</span>
-    );
+
+    if (props.mark.type === 'hr') {
+      return (
+        <span><span className={className}>{content}</span><br/></span>
+      );
+    } else {
+      return (
+        <span className={className}>{content}</span>
+      );
+    }
   }
 
   return null;

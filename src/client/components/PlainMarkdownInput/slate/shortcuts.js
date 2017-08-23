@@ -8,61 +8,71 @@ import {
   hasStrikethroughMarkdown,
   wrapStrikethroughMarkdown,
   unwrapStrikethroughMarkdown,
+  hasUnorderedListMarkdown,
+  hasOrderedListMarkdown,
+  unwrapOrderedListMarkdown,
+  unwrapUnorderedListMarkdown,
+  getCurrentLine,
 } from './transforms';
 
-import hasUnorderedListMarkdown from './transforms'; // eslint-disable-line
-import hasOrderedListMarkdown from './transforms'; // eslint-disable-line
+const unorderedPref = /^ *[\+\-\*] /m;
+const orderedPref = /^ *[0-9]+\. /m;
+const orderedPrefDiv = /^( *)([0-9]+)(?:\. )/m;
 
-const emptyListItem = /^[0-9]+\.\s$/; // eslint-disable-line
-const numbersFromListItem = /^[0-9]+/; // eslint-disable-line
+/**
+ * Add line break to the end of this line
+ *
+ * @param {object} state - Slate's state
+ * @param {string} listType - current list's type (ordered or unordered)
+ */
+function addLineBreak(state, listType) {
+  const regular = listType === 'ordered' ? orderedPref : unorderedPref;
+  const unwrapper = listType === 'ordered' ? unwrapOrderedListMarkdown : unwrapUnorderedListMarkdown;
+  const currentLine = getCurrentLine(state);
+  let res = regular.exec(currentLine);
+  let pref = res ? res[0] : '';
+  if (currentLine === pref) {
+    // unwrap current empty line and add line break
+    return unwrapper(state).transform().insertText(`\n`).focus().apply();
+  } else {
+    if (listType === 'ordered') {
+      res = orderedPrefDiv.exec(currentLine);
+      pref = res ? `${res[1]}${parseInt(res[2]) + 1}. ` : pref;
+    }
+    // add line break and list prefix
+    return state.transform().insertText(`\n${pref}`).focus().apply();
+  }
+}
 
 /**
  * Create new list item block, when the cursor move to a next line
  */
-const splitListBlocksAutoHandler = (event, data, state) => {
-  // TODO: To realize pressing of a key in the listBlock
-  // after fixing hasUnorderedListMarkdown and hasOrderedListMarkdown
-  // if (event.keyCode === 13) {
-  //   if (hasUnorderedListMarkdown(state)) {
-  //     event.preventDefault();
-  //
-  //     const t = state.transform();
-  //     const { focusText } = state;
-  //     const focusedText = focusText.text;
-  //     if (focusedText === '* ') {
-  //       t.removeTextByKey(focusText.key, 0, focusedText.length).splitBlock();
-  //     } else {
-  //       t.splitBlock().insertText('* ');
-  //     }
-  //     return t.focus().apply();
-  //   } else if (hasOrderedListMarkdown(state)) {
-  //     event.preventDefault();
-  //
-  //     const t = state.transform();
-  //     const { focusText } = state;
-  //     const focusedText = focusText.text;
-  //
-  //     if (emptyListItem.test(focusedText)) {
-  //       t.removeTextByKey(focusText.key, 0, focusedText.length).splitBlock();
-  //     } else {
-  //       const number = parseInt(numbersFromListItem.exec(focusedText)[0], 0);
-  //       t.splitBlock().insertText(`${number + 1}. `);
-  //     }
-  //     return t.focus().apply();
-  //   }
-  // }
-
+const splitListBlock = (event, data, state) => {
   if (event.keyCode === 13) {
     event.preventDefault();
     event.stopPropagation();
+    if (hasUnorderedListMarkdown(state)) {
+      return addLineBreak(state, 'unordered');
+    } else if (hasOrderedListMarkdown(state)) {
+      return addLineBreak(state, 'ordered');
+    }
+
     return state.transform().insertText(`\n`).focus().apply();
   }
 
   return undefined;
 };
 
+/**
+ * Key press handler
+ *
+ * @param event
+ * @param data
+ * @param state
+ * @returns {object||undefined} - state when it has been changed or undefined in other cases
+ */
 export default (event, data, state) => {
-  const result = splitListBlocksAutoHandler(event, data, state);
+  const result = splitListBlock(event, data, state);
 
   if (result) {
     return result;

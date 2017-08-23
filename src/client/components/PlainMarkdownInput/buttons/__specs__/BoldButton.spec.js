@@ -3,10 +3,11 @@ import { shallow } from 'enzyme';
 import { expect } from 'chai';
 import { Plain } from '@opuscapita/slate';
 import BoldButton from '../BoldButton';
+import deserialize from '../../slate/deserialize';
 
 describe('<BoldButton/>', () => {
   it('check active button', () => {
-    const state = Plain.deserialize("some **text**").
+    const state = deserialize("some **text**").
       // selected 'text' in state
     transform().moveOffsetsTo('some **'.length, 'some **text'.length).apply();
     const wrapper = shallow(<BoldButton state={state} onChange={() => {}} />);
@@ -14,7 +15,7 @@ describe('<BoldButton/>', () => {
   });
 
   it('check mark selected text', () => {
-    let state = Plain.deserialize("some text").
+    let state = deserialize("some text").
     // selected 'text' in state
     transform().moveOffsetsTo('some '.length, 'some text'.length).apply();
     const wrapper = shallow(<BoldButton state={state} onChange={(newState) => { state = newState }} />);
@@ -23,7 +24,7 @@ describe('<BoldButton/>', () => {
   });
 
   it('check unmark selected text', () => {
-    let state = Plain.deserialize("some **text**").
+    let state = deserialize("some **text**").
     // selected 'text' in state
     transform().moveOffsetsTo('some **'.length, 'some **text'.length).apply();
     const wrapper = shallow(<BoldButton state={state} onChange={(newState) => { state = newState }} />);
@@ -32,13 +33,13 @@ describe('<BoldButton/>', () => {
   });
 
   it('check enabled button', () => {
-    let state = Plain.deserialize("some **text**\nnext line");
+    let state = deserialize("some **text**\nnext line");
     const wrapper = shallow(<BoldButton state={state} onChange={() => {}} />);
     expect(wrapper.find('button[disabled=true]')).to.have.length(0);
   });
 
   it('check disabled button', () => {
-    let state = Plain.deserialize("some **text**\nnext line").
+    let state = deserialize("some **text**\nnext line").
     // select all text
     transform().selectAll().apply();
     const wrapper = shallow(<BoldButton state={state} onChange={() => {}} />);

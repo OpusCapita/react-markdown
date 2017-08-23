@@ -294,7 +294,7 @@ function getPreviousLineEnd(state) {
   return text.lastIndexOf('\n', startPos);
 }
 
-function getCurrentLine(state) {
+export const getCurrentLine = state => {
   const { startOffset, focusText } = state;
   const text = focusText.text;
 
@@ -305,7 +305,7 @@ function getCurrentLine(state) {
 
   const prevLineEnd = getPreviousLineEnd(state);
   return (prevLineEnd === -1 ? text : text.substr(prevLineEnd + 1)).split('\n', 1)[0];
-}
+};
 
 /**
  * Has block selected
@@ -530,13 +530,21 @@ export const wrapLinkMarkdown = state => {
   return t.focus().apply();
 };
 
+export const hasMultiLineSelection = state => {
+  const { startOffset, endOffset, focusText } = state;
+  const text = focusText.text;
+  const startPos = startOffset - (text[startOffset] === '\n' ? 1 : 0);
+  const endPos = endOffset - (text[endOffset] === '\n' ? 1 : 0);
+  return text.lastIndexOf('\n', startPos) !== text.lastIndexOf('\n', endPos);
+};
+
 /**
  * Check is the current state selected as multi line
  *
  * @param startKey - start selection key in current editor state
  * @param endKey - end selection key in current editor state
  */
-export const hasMultiLineSelection = ({ selection: { startKey, endKey } }) => startKey !== endKey;
+// export const hasMultiLineSelection = ({ selection: { startKey, endKey } }) => startKey !== endKey;
 
 export const hasUnorderedListMarkdown = hasBlock.bind(null, ulRegExp);
 export const hasOrderedListMarkdown = hasBlock.bind(null, olRegExp);

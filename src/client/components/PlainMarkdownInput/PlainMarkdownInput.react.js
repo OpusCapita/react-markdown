@@ -4,6 +4,7 @@ import FullScreenButton from '../SlateEditor/plugins/slate-fullscreen-plugin/Ful
 import DropdownButton from 'react-bootstrap/lib/DropdownButton';
 import schema from './slate/schema';
 import shortcuts from './slate/shortcuts';
+import deserialize from './slate/deserialize';
 import { hasMultiLineSelection } from './slate/transforms';
 import './PlainMarkdownInput.less';
 
@@ -28,32 +29,6 @@ import {
 } from './buttons';
 
 import { SlateContent, SlateEditor, SlateToolbar, SlateToolbarGroup } from '../SlateEditor';
-import { Raw } from '@opuscapita/slate';
-
-function deserialize(string, options = {}) {
-  let raw = {
-    kind: 'state',
-    document: {
-      kind: 'document',
-      nodes: [{
-        kind: 'block',
-        type: 'multiline',
-        nodes: [
-          {
-            kind: 'text',
-            ranges: [
-              {
-                text: string,
-                marks: [],
-              }
-            ]
-          }
-        ]
-      }]
-    }
-  };
-  return Raw.deserialize(raw);
-}
 
 class PlainMarkdownInput extends React.Component {
   state = {
