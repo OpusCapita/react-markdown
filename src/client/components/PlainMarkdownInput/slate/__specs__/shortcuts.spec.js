@@ -271,7 +271,7 @@ describe('plain editor shortcuts', () => {
       let state = deserialize(text).transform().
       moveOffsetsTo('~~strikethrough'.length, '~~strikethrough'.length).apply();
       let result = shortcuts(getOtherEvent(), getOtherData(), state);
-      expect(result).to.be.undefined;
+      expect(result).to.be.undefined; // eslint-disable-line
     });
   });
 });

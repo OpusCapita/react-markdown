@@ -644,7 +644,7 @@ co\`\`de
     assert.equal(getHtml(html), candidate);
   });
 
-  it ('should highlight _italic_ empty _italic_', () => {
+  it('should highlight _italic_ empty _italic_', () => {
     let html;
     let candidate;
 
@@ -653,7 +653,16 @@ co\`\`de
     assert.equal(getHtml(html), candidate);
   });
 
-  it ('should not highlight _italic \n empty italic_', () => {
+  it('should highlight _italic __bold__ italic_', () => {
+    let html;
+    let candidate;
+
+    html = '_italic __bold__ italic_';
+    candidate = `<span class="token italic">_italic <span class="token bold">__bold__</span> italic_</span>`;
+    assert.equal(getHtml(html), candidate);
+  });
+
+  it('should not highlight _italic \n empty italic_', () => {
     let html;
     let candidate;
 

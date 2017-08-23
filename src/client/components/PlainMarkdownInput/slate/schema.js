@@ -10,6 +10,27 @@ import { Mark } from '@opuscapita/slate';
 // eslint-disable-next-line
 Prism.languages.markdown = Prism.languages.extend("markup", {});
 
+/**
+ * Create regExp which parses that cases:
+ *
+ * 1. _italic_ simple _italic_
+ *
+ * 2. _italic __bold__ italic_
+ *
+ * 3. _italic_italic italic__
+ *    _italic italic_italic_
+ *
+ * 4. __italic_italic italic_
+ */
+const italicStr = [
+  '\\b((_(?!(_| ))[\\w]*?_)',
+  '|_(?!(_| ))(([A-Za-z0-9*~\\- ]_?)*[A-Za-z0-9*~\\- ])\\b__(([A-Za-z0-9*~\\- ]_?)*[A-Za-z0-9*~\\-])__\\b',
+  '([A-Za-z0-9*~\\- ]_?)*[A-Za-z0-9*~\\-]_',
+  '|_(?!(_| ))(([A-Za-z0-9*~\\- ]_?)*[A-Za-z0-9*~\\- ])(_|__)',
+  '|__(([A-Za-z0-9*~\\- ]_?)*[A-Za-z0-9*~\\- ])_)\\b'
+].join('');
+const italicRegExp = new RegExp(italicStr, 'm');
+
 Prism.languages.insertBefore('markdown', 'prolog', {
   blockquote: {
     pattern: /^>(?:[\t ]*>)*.*/m,
@@ -88,7 +109,6 @@ Prism.languages.insertBefore('markdown', 'prolog', {
     inside: {
       italic: [{
         lookbehind: true,
-        // pattern: /\b_(?! )([\w*~\- ]*?_)\b/m,
         pattern: /(.{2,}?)_[^_\r\n]+_(?=.{2,})/,
         inside: {}
       }, {
@@ -113,16 +133,12 @@ Prism.languages.insertBefore('markdown', 'prolog', {
       }]
     }
   }, {
-    pattern: /\b_(?! )([\w*~\- ]*?_)\b/m,
-    // pattern: /\b_(?! )([\w*~\- ]*?([A-Za-z0-9*~\- ]_|___))\b/m,
-    // pattern: /(?=\b)_[^]*([^_\r\n]*(__[^_\r\n]+__[^_\r\n]*)+|[^_\r\n]+?)[^]*_(?=\b)/m,
+    pattern: italicRegExp,
     greedy: true,
     inside: {
       bold: [{
         lookbehind: true,
-        pattern: /\b__[a-z]*?__\b/m,
-        // pattern: /\b__[\w*~\- ]*?__\b/m,
-        // pattern: /(.+?)__[^_\r\n]+__(?=.+)/m,
+        pattern: /(.+?)__[^_\r\n]+__(?=.+)/m,
         inside: {}
       }, {
         lookbehind: true,

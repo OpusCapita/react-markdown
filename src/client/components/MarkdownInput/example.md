@@ -1,3 +1,40 @@
+_italic_ simple _italic_
+_italic __bold__ italic_
+_italic_italic italic__
+_italic italic_italic_
+__italic_italic italic_
+
+just a text
+_italic_ simple _italic_
+_italic __bo_ld__ italic_ simple _italic_
+_italic_italic italic__
+**bold text**
+*italic text*
+***bold italic text***
+***bold italic text**italic*
+***bold italic text*bold**
+**_bold italic text_bold**
+__*bold italic text*bold__
+
+__bold text__
+_italic text_
+___bold italic text___
+
+___bold italic text__italic_
+___bold italic text_bold__
+
+~~strike-through text~~
+*~~strike-through text inside italic~~*
+~~*italic inside strike-through text*~~
+**~~strike-through text inside bold~~**
+~~**bold inside strike-through text**~~
+
+[opuscapita](https://www.opuscapita.com/)
+**[opuscapita](https://www.opuscapita.com/)**
+[**opuscapita**](https://www.opuscapita.com/)
+*[**opuscapita**](https://www.opuscapita.com/)*
+~~[**opuscapita**](https://www.opuscapita.com/)~~
+**~~[**opuscapita**](https://www.opuscapita.com/)~~
 
 # header `code`
 # header [url](uefasdfs)
@@ -58,10 +95,10 @@ Unordered
 
 Oredered
 
-1 Item
-2 Item
-3 Item
-4 Item
+1. Item
+2. Item
+3. Item
+4. Item
 
 code block
 

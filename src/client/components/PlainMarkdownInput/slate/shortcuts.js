@@ -37,7 +37,7 @@ function addLineBreak(state, listType) {
   } else {
     if (listType === 'ordered') {
       res = orderedPrefDiv.exec(currentLine);
-      pref = res ? `${res[1]}${parseInt(res[2]) + 1}. ` : pref;
+      pref = res ? `${res[1]}${parseInt(res[2]) + 1}. ` : pref; // eslint-disable-line
     }
     // add line break and list prefix
     return state.transform().insertText(`\n${pref}`).focus().apply();
