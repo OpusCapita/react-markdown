@@ -15,19 +15,25 @@ Prism.languages.markdown = Prism.languages.extend("markup", {});
  *
  * 1. _italic_ simple _italic_
  *
- * 2. _italic __bold__ italic_
+ * 2. _italic __bold__ italic_ simple _italic_
  *
- * 3. _italic_italic italic__
- *    _italic italic_italic_
+ * 3. _italic_italic italic__ simple _italic_
+ *    _italic italic_italic_ simple _italic_
  *
- * 4. __italic_italic italic_
+ * 4. __italic_italic italic_ simple _italic_
+ *
+ * 5. ___bold__ italic_
+ *
+ * 6. _italic __bold___
  */
 const italicStr = [
-  '\\b((_(?!(_| ))[\\w]*?_)',
-  '|_(?!(_| ))(([A-Za-z0-9*~\\- ]_?)*[A-Za-z0-9*~\\- ])\\b__(([A-Za-z0-9*~\\- ]_?)*[A-Za-z0-9*~\\-])__\\b',
-  '([A-Za-z0-9*~\\- ]_?)*[A-Za-z0-9*~\\-]_',
-  '|_(?!(_| ))(([A-Za-z0-9*~\\- ]_?)*[A-Za-z0-9*~\\- ])(_|__)',
-  '|__(([A-Za-z0-9*~\\- ]_?)*[A-Za-z0-9*~\\- ])_)\\b'
+  '\\b((_(?!(_| ))[^\\s]*_)',
+  '|_(?!(_| ))(([^_\\r\\n]_?)*[^_\\r\\n])\\b__(([^_\\r\\n]_?)*[^_\\s ])__\\b',
+  '([^_\\r\\n]_?)*?[^_\\s ]_',
+  '|_(?!(_| ))(([^_\\r\\n]_?)*?[^_\\r\\n])(_|__)',
+  '|__(([^_\\r\\n]_?)*?[^_\\r\\n])_)\\b',
+  '|\\b(___(?! )(([^\\r\\n]_?)*?[^\\s_])_',
+  '|_(?! )(([^\\r\\n]_?)*?[^\\s_])___)\\b'
 ].join('');
 const italicRegExp = new RegExp(italicStr, 'm');
 
@@ -103,13 +109,13 @@ Prism.languages.insertBefore('markdown', 'prolog', {
       }]
     }
   }, {
-    pattern: /(^|[^_]\b)__([^_\r\n]*(_[^_\r\n]+_[^_\r\n]*)+|[^\r\n]+)__/m,
+    pattern: /(^|[^_]\b)__((([^_\r\n]_?)*[^_\r\n])|[^\r\n_]+)__\b/m,
     lookbehind: true,
     greedy: true,
     inside: {
       italic: [{
         lookbehind: true,
-        pattern: /(.{2,}?)_[^_\r\n]+_(?=.{2,})/,
+        pattern: /(.{2,}?)_([^_\s]_?)*[^_\s]_(?=.{2,})/,
         inside: {}
       }, {
         pattern: /\*[^*\r\n]+\*/,
@@ -138,7 +144,7 @@ Prism.languages.insertBefore('markdown', 'prolog', {
     inside: {
       bold: [{
         lookbehind: true,
-        pattern: /(.+?)__[^_\r\n]+__(?=.+)/m,
+        pattern: /(.+?)__([^_\r\n]+_?)*[^_\r\n]+__(?=.+)/m,
         inside: {}
       }, {
         lookbehind: true,
