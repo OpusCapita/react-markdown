@@ -193,13 +193,6 @@ function selectionWithinMarks(positions, pos1, pos2, markLength) {
   return -1;
 }
 
-function checkOneMark({ positions, startOffset, endOffset, markLength }) {
-  return startOffset !== endOffset &&
-    selectionWithinMarks(positions, startOffset, endOffset, markLength) !== -1 ||
-    startOffset === endOffset &&
-    withinMark(positions, startOffset, markLength) !== -1;
-}
-
 function getPositionsData(markType) {
   let positionsData, mark1, mark2, markLength;
   if (markType === 'bold') {
@@ -223,24 +216,6 @@ function getPositionsData(markType) {
     ];
   }
   return positionsData;
-}
-
-function hasMark({ focusedText, markType, startOffset, endOffset }) {
-  const positionsData = getPositionsData(markType);
-  const allPositions = getAllPositions(focusedText);
-  for (let i = 0; i < positionsData.length; i++) {
-    const condition = checkOneMark({
-      positions: allPositions[positionsData[i].mark],
-      startOffset,
-      endOffset,
-      markLength: positionsData[i].allLength
-    });
-    if (condition) {
-      return true;
-    }
-  }
-
-  return false;
 }
 
 function unwrapFromMark({ state, positions, markLength, allLength }) {
@@ -401,7 +376,7 @@ function getLetterMarks(state) { // eslint-disable-line
     }
 
     let currOffset = startOffset + 1;
-    while (resultMarks.length > 0 && currOffset <= endOffset) {
+    while (resultMarks.length > 0 && currOffset < endOffset) {
       const tmpMarks = [];
       const currMarks = state.customCharacters.get(currOffset).marks.toArray();
       for (let i = 0; i < currMarks.length; i++) {
@@ -424,12 +399,12 @@ function getLetterMarks(state) { // eslint-disable-line
  * @param state - editor state
  */
 export const hasItalicMarkdown = state => {
-  // const letterMarks = getLetterMarks(state);
-  // return letterMarks.indexOf('italic') !== -1;
+  const letterMarks = getLetterMarks(state);
+  return letterMarks.indexOf('italic') !== -1;
 
-  const { startOffset, endOffset, focusText } = state;
-  const focusedText = focusText.text;
-  return hasMark({ focusedText, markType: 'italic', startOffset, endOffset });
+  // const { startOffset, endOffset, focusText } = state;
+  // const focusedText = focusText.text;
+  // return hasMark({ focusedText, markType: 'italic', startOffset, endOffset });
 };
 
 /**
@@ -466,12 +441,12 @@ export const unwrapItalicMarkdown = state => {
  * @param state - editor state
  */
 export const hasBoldMarkdown = state => {
-  // const letterMarks = getLetterMarks(state);
-  // return letterMarks.indexOf('bold') !== -1;
+  const letterMarks = getLetterMarks(state);
+  return letterMarks.indexOf('bold') !== -1;
 
-  const { startOffset, endOffset, focusText } = state;
-  const focusedText = focusText.text;
-  return hasMark({ focusedText, markType: 'bold', startOffset, endOffset });
+  // const { startOffset, endOffset, focusText } = state;
+  // const focusedText = focusText.text;
+  // return hasMark({ focusedText, markType: 'bold', startOffset, endOffset });
 };
 
 /**
@@ -508,19 +483,19 @@ export const unwrapBoldMarkdown = state => {
  * @param state - editor state
  */
 export const hasStrikethroughMarkdown = state => {
-  // const letterMarks = getLetterMarks(state);
-  // return letterMarks.indexOf('strikethrough') !== -1;
+  const letterMarks = getLetterMarks(state);
+  return letterMarks.indexOf('strikethrough') !== -1;
 
-  const { startOffset, endOffset, focusText } = state;
-  const focusedText = focusText.text;
-  const allPositions = getAllPositions(focusedText);
-
-  return checkOneMark({
-    positions: allPositions['~~'],
-    startOffset,
-    endOffset,
-    markLength: lengths['strike-through']
-  });
+  // const { startOffset, endOffset, focusText } = state;
+  // const focusedText = focusText.text;
+  // const allPositions = getAllPositions(focusedText);
+  //
+  // return checkOneMark({
+  //   positions: allPositions['~~'],
+  //   startOffset,
+  //   endOffset,
+  //   markLength: lengths['strike-through']
+  // });
 };
 
 /**

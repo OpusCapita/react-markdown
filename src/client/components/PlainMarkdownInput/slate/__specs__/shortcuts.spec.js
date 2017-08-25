@@ -4,6 +4,7 @@ import { expect } from 'chai';
 import { Plain } from '@opuscapita/slate';
 import deserialize from '../deserialize';
 import shortcuts from '../shortcuts';
+import { createCustomCharacters } from '../schema';
 import {
   hasBoldMarkdown,
   hasItalicMarkdown,
@@ -129,10 +130,10 @@ describe('plain editor shortcuts', () => {
   describe('press ctrl + b', () => {
     it('unwrap bold without selection', () => {
       const text = '**bold text**';
-      let state = deserialize(text).transform().
-      moveOffsetsTo('**bold'.length, '**bold'.length).apply();
+      let state = createCustomCharacters(deserialize(text).transform().
+      moveOffsetsTo('**bold'.length, '**bold'.length).apply());
       expect(hasBoldMarkdown(state)).to.equal(true);
-      let newState = shortcuts(getOtherEvent(), getBoldData(), state);
+      let newState = createCustomCharacters(shortcuts(getOtherEvent(), getBoldData(), state));
       let result = 'bold text';
       expect(Plain.serialize(newState)).to.equal(result);
       expect(hasBoldMarkdown(newState)).to.equal(false);
@@ -140,10 +141,10 @@ describe('plain editor shortcuts', () => {
 
     it('unwrap bold with all selection', () => {
       const text = '**bold text**';
-      let state = deserialize(text).transform().
-      moveOffsetsTo(0, text.length).apply();
+      let state = createCustomCharacters(deserialize(text).transform().
+      moveOffsetsTo(0, text.length).apply());
       expect(hasBoldMarkdown(state)).to.equal(true);
-      let newState = shortcuts(getOtherEvent(), getBoldData(), state);
+      let newState = createCustomCharacters(shortcuts(getOtherEvent(), getBoldData(), state));
       let result = 'bold text';
       expect(Plain.serialize(newState)).to.equal(result);
       expect(hasBoldMarkdown(newState)).to.equal(false);
@@ -151,10 +152,10 @@ describe('plain editor shortcuts', () => {
 
     it('wrap bold with selection', () => {
       const text = 'bold text';
-      let state = deserialize(text).transform().
-      moveOffsetsTo(0, 'bold'.length).apply();
+      let state = createCustomCharacters(deserialize(text).transform().
+      moveOffsetsTo(0, 'bold'.length).apply());
       expect(hasBoldMarkdown(state)).to.equal(false);
-      let newState = shortcuts(getOtherEvent(), getBoldData(), state);
+      let newState = createCustomCharacters(shortcuts(getOtherEvent(), getBoldData(), state));
       let result = '**bold** text';
       expect(Plain.serialize(newState)).to.equal(result);
       expect(hasBoldMarkdown(newState)).to.equal(true);
@@ -162,23 +163,23 @@ describe('plain editor shortcuts', () => {
 
     it('wrap bold without selection', () => {
       const text = 'bold text';
-      let state = deserialize(text).transform().
-      moveOffsetsTo('bold'.length, 'bold'.length).apply();
+      let state = createCustomCharacters(deserialize(text).transform().
+      moveOffsetsTo('bold'.length, 'bold'.length).apply());
       expect(hasBoldMarkdown(state)).to.equal(false);
-      let newState = shortcuts(getOtherEvent(), getBoldData(), state);
+      let newState = createCustomCharacters(shortcuts(getOtherEvent(), getBoldData(), state));
       let result = 'bold**** text';
       expect(Plain.serialize(newState)).to.equal(result);
-      expect(hasBoldMarkdown(newState)).to.equal(true);
+      expect(hasBoldMarkdown(newState)).to.equal(false);
     });
   });
 
   describe('press ctrl + i', () => {
     it('unwrap italic without selection', () => {
       const text = '_italic text_';
-      let state = deserialize(text).transform().
-      moveOffsetsTo('_italic'.length, '_italic'.length).apply();
+      let state = createCustomCharacters(deserialize(text).transform().
+      moveOffsetsTo('_italic'.length, '_italic'.length).apply());
       expect(hasItalicMarkdown(state)).to.equal(true);
-      let newState = shortcuts(getOtherEvent(), getItalicData(), state);
+      let newState = createCustomCharacters(shortcuts(getOtherEvent(), getItalicData(), state));
       let result = 'italic text';
       expect(Plain.serialize(newState)).to.equal(result);
       expect(hasItalicMarkdown(newState)).to.equal(false);
@@ -186,10 +187,10 @@ describe('plain editor shortcuts', () => {
 
     it('unwrap italic with all selection', () => {
       const text = '_italic text_';
-      let state = deserialize(text).transform().
-      moveOffsetsTo(0, text.length).apply();
+      let state = createCustomCharacters(deserialize(text).transform().
+      moveOffsetsTo(0, text.length).apply());
       expect(hasItalicMarkdown(state)).to.equal(true);
-      let newState = shortcuts(getOtherEvent(), getItalicData(), state);
+      let newState = createCustomCharacters(shortcuts(getOtherEvent(), getItalicData(), state));
       let result = 'italic text';
       expect(Plain.serialize(newState)).to.equal(result);
       expect(hasItalicMarkdown(newState)).to.equal(false);
@@ -197,10 +198,10 @@ describe('plain editor shortcuts', () => {
 
     it('wrap italic with selection', () => {
       const text = 'italic text';
-      let state = deserialize(text).transform().
-      moveOffsetsTo(0, 'italic'.length).apply();
+      let state = createCustomCharacters(deserialize(text).transform().
+      moveOffsetsTo(0, 'italic'.length).apply());
       expect(hasItalicMarkdown(state)).to.equal(false);
-      let newState = shortcuts(getOtherEvent(), getItalicData(), state);
+      let newState = createCustomCharacters(shortcuts(getOtherEvent(), getItalicData(), state));
       let result = '_italic_ text';
       expect(Plain.serialize(newState)).to.equal(result);
       expect(hasItalicMarkdown(newState)).to.equal(true);
@@ -208,24 +209,24 @@ describe('plain editor shortcuts', () => {
 
     it('wrap italic without selection', () => {
       const text = 'italic text';
-      let state = deserialize(text).transform().
-      moveOffsetsTo('italic'.length, 'italic'.length).apply();
+      let state = createCustomCharacters(deserialize(text).transform().
+      moveOffsetsTo('italic'.length, 'italic'.length).apply());
       expect(hasItalicMarkdown(state)).to.equal(false);
-      let newState = shortcuts(getOtherEvent(), getItalicData(), state);
-      newState = newState.transform().insertText(' ').focus().apply();
+      let newState = createCustomCharacters(shortcuts(getOtherEvent(), getItalicData(), state));
+      newState = createCustomCharacters(newState.transform().insertText(' ').focus().apply());
       let result = 'italic_ _ text';
       expect(Plain.serialize(newState)).to.equal(result);
-      expect(hasItalicMarkdown(newState)).to.equal(true);
+      expect(hasItalicMarkdown(newState)).to.equal(false);
     });
   });
 
   describe('press ctrl + s', () => {
     it('unwrap strikethrough without selection', () => {
       const text = '~~strikethrough text~~';
-      let state = deserialize(text).transform().
-      moveOffsetsTo('~~strikethrough'.length, '~~strikethrough'.length).apply();
+      let state = createCustomCharacters(deserialize(text).transform().
+      moveOffsetsTo('~~strikethrough'.length, '~~strikethrough'.length).apply());
       expect(hasStrikethroughMarkdown(state)).to.equal(true);
-      let newState = shortcuts(getOtherEvent(), getStrikethroughData(), state);
+      let newState = createCustomCharacters(shortcuts(getOtherEvent(), getStrikethroughData(), state));
       let result = 'strikethrough text';
       expect(Plain.serialize(newState)).to.equal(result);
       expect(hasStrikethroughMarkdown(newState)).to.equal(false);
@@ -233,10 +234,10 @@ describe('plain editor shortcuts', () => {
 
     it('unwrap strikethrough with all selection', () => {
       const text = '~~strikethrough text~~';
-      let state = deserialize(text).transform().
-      moveOffsetsTo(0, text.length).apply();
+      let state = createCustomCharacters(deserialize(text).transform().
+      moveOffsetsTo(0, text.length).apply());
       expect(hasStrikethroughMarkdown(state)).to.equal(true);
-      let newState = shortcuts(getOtherEvent(), getStrikethroughData(), state);
+      let newState = createCustomCharacters(shortcuts(getOtherEvent(), getStrikethroughData(), state));
       let result = 'strikethrough text';
       expect(Plain.serialize(newState)).to.equal(result);
       expect(hasStrikethroughMarkdown(newState)).to.equal(false);
@@ -244,10 +245,10 @@ describe('plain editor shortcuts', () => {
 
     it('wrap strikethrough with selection', () => {
       const text = 'strikethrough text';
-      let state = deserialize(text).transform().
-      moveOffsetsTo(0, 'strikethrough'.length).apply();
+      let state = createCustomCharacters(deserialize(text).transform().
+      moveOffsetsTo(0, 'strikethrough'.length).apply());
       expect(hasStrikethroughMarkdown(state)).to.equal(false);
-      let newState = shortcuts(getOtherEvent(), getStrikethroughData(), state);
+      let newState = createCustomCharacters(shortcuts(getOtherEvent(), getStrikethroughData(), state));
       let result = '~~strikethrough~~ text';
       expect(Plain.serialize(newState)).to.equal(result);
       expect(hasStrikethroughMarkdown(newState)).to.equal(true);
@@ -255,13 +256,13 @@ describe('plain editor shortcuts', () => {
 
     it('wrap strikethrough without selection', () => {
       const text = 'strikethrough text';
-      let state = deserialize(text).transform().
-      moveOffsetsTo('strikethrough'.length, 'strikethrough'.length).apply();
+      let state = createCustomCharacters(deserialize(text).transform().
+      moveOffsetsTo('strikethrough'.length, 'strikethrough'.length).apply());
       expect(hasStrikethroughMarkdown(state)).to.equal(false);
-      let newState = shortcuts(getOtherEvent(), getStrikethroughData(), state);
+      let newState = createCustomCharacters(shortcuts(getOtherEvent(), getStrikethroughData(), state));
       let result = 'strikethrough~~~~ text';
       expect(Plain.serialize(newState)).to.equal(result);
-      expect(hasStrikethroughMarkdown(newState)).to.equal(true);
+      expect(hasStrikethroughMarkdown(newState)).to.equal(false);
     });
   });
 

@@ -361,5 +361,15 @@ const schema = {
     render: rendererComponent
   }]
 };
+
+export const createCustomCharacters = editorState => {
+  const { focusText } = editorState;
+  const characters = focusText.characters.asMutable();
+  const tokens = Prism.tokenize(focusText.text, grammar); // eslint-disable-line
+  addMarks(characters, tokens, 0);
+  editorState.customCharacters = characters.asImmutable(); // eslint-disable-line
+  return editorState;
+};
+
 export default schema;
 export const grammar = Prism.languages.markdown;

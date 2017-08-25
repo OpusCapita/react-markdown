@@ -4,20 +4,21 @@ import { expect } from 'chai';
 import { Plain } from '@opuscapita/slate';
 import StrikethroughButton from '../StrikethroughButton';
 import deserialize from '../../slate/deserialize';
+import { createCustomCharacters } from '../../slate/schema';
 
 describe('<StrikethroughButton/>', () => {
   it('check active button', () => {
-    const state = deserialize("some ~~text~~").
+    const state = createCustomCharacters(deserialize("some ~~text~~").
       // selected 'text' in state
-    transform().moveOffsetsTo('some ~~'.length, 'some ~~text'.length).apply();
+    transform().moveOffsetsTo('some ~~'.length, 'some ~~text'.length).apply());
     const wrapper = shallow(<StrikethroughButton state={state} onChange={() => {}} />);
     expect(wrapper.find('.active')).to.have.length(1);
   });
 
   it('check mark selected text', () => {
-    let state = deserialize("some text").
+    let state = createCustomCharacters(deserialize("some text").
     // selected 'text' in state
-    transform().moveOffsetsTo('some '.length, 'some text'.length).apply();
+    transform().moveOffsetsTo('some '.length, 'some text'.length).apply());
     const wrapper = shallow(
       <StrikethroughButton state={state} onChange={(newState) => { state = newState }} />
     );
@@ -26,9 +27,9 @@ describe('<StrikethroughButton/>', () => {
   });
 
   it('check unmark selected text', () => {
-    let state = deserialize("some ~~text~~").
+    let state = createCustomCharacters(deserialize("some ~~text~~").
     // selected 'text' in state
-    transform().moveOffsetsTo('some ~~'.length, 'some ~~text'.length).apply();
+    transform().moveOffsetsTo('some ~~'.length, 'some ~~text'.length).apply());
     const wrapper = shallow(
       <StrikethroughButton state={state} onChange={(newState) => { state = newState }} />
     );
