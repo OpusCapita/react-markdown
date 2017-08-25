@@ -499,6 +499,20 @@ co\`\`de
     assert.equal(getHtml(html), candidate);
   });
 
+  // this case isn't processed
+  it.skip('should highlight ___bold italic text_ bold__', () => {
+    let html = '___bold italic text_ bold__';
+    let candidate = '<span class="token bold">__<span class="token italic">_bold italic text_</span> bold__</span>';
+    assert.equal(getHtml(html), candidate);
+  });
+
+  // this case isn't processed
+  it.skip('should highlight __bold _italic text bold___', () => {
+    let html = '__bold _italic text bold___';
+    let candidate = '<span class="token bold">__bold <span class="token italic">_italic text bold_</span>__</span>';
+    assert.equal(getHtml(html), candidate);
+  });
+
   it('should highlight _italic __bold___', () => {
     let html = '_italic __bold___';
     let candidate = '<span class="token italic">_italic <span class="token bold">__bold__</span>_</span>';

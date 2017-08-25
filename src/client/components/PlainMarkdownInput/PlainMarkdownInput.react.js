@@ -1,8 +1,10 @@
 import React from 'react';
 import Types from 'prop-types';
+import Prism from 'prismjs';
 import FullScreenButton from '../SlateEditor/plugins/slate-fullscreen-plugin/FullScreenButton';
 import DropdownButton from 'react-bootstrap/lib/DropdownButton';
 import schema from './slate/schema';
+import { grammar, addMarks } from './slate/schema';
 import shortcuts from './slate/shortcuts';
 import deserialize from './slate/deserialize';
 import { hasMultiLineSelection } from './slate/transforms';
@@ -30,9 +32,20 @@ import {
 
 import { SlateContent, SlateEditor, SlateToolbar, SlateToolbarGroup } from '../SlateEditor';
 
+const createCustomCharacters = editorState => {
+  const { focusText } = editorState;
+  const characters = focusText.characters.asMutable();
+  const tokens = Prism.tokenize(focusText.text, grammar);
+  addMarks(characters, tokens, 0);
+  editorState.customCharacters = characters.asImmutable(); // eslint-disable-line
+  // editorState.customCharacters = focusText.characters;
+  return editorState;
+};
+
+
 class PlainMarkdownInput extends React.Component {
   state = {
-    editorState: deserialize(this.props.value || ''),
+    editorState: createCustomCharacters(deserialize(this.props.value || '')),
     fullScreen: false
   };
 
@@ -40,8 +53,9 @@ class PlainMarkdownInput extends React.Component {
     this.initialBodyOverflowStyle = document.body.style.overflow;
   }
 
+
   handleChange = (editorState) => {
-    this.setState({ editorState });
+    this.setState({ editorState: createCustomCharacters(editorState) });
   };
 
   handleFullScreen = () => {

@@ -32,7 +32,11 @@ const italicStr = [
   '([^_\\r\\n]_?)*?[^_\\s ]_',
   '|_(?!(_| ))(([^_\\r\\n]_?)*?[^_\\r\\n])(_|__)',
   '|__(([^_\\r\\n]_?)*?[^_\\r\\n])_)\\b',
+  // this code will use in tomorrow
+  // '|\\b(___(?! )(([^\\r\\n]_?)*?[^\\s_])([^\\s_]__ )((([^^\\s_]_?)*?[^\\s_])_)',
   '|\\b(___(?! )(([^\\r\\n]_?)*?[^\\s_])_',
+  // this code will use in tomorrow
+  // '|(_(?! )(([^\\s]_?)*?[^\\s_])( __[^\\s _])((([^\\r\\n_]_?)*?[^\\s_])___)))\\b'
   '|_(?! )(([^\\r\\n]_?)*?[^\\s_])___)\\b'
 ].join('');
 const italicRegExp = new RegExp(italicStr, 'm');
@@ -260,19 +264,34 @@ Prism.languages.markdown.blockquote.inside.italic = Prism.util.clone(Prism.langu
 Prism.languages.markdown.blockquote.inside.strikethrough = Prism.util.clone(Prism.languages.markdown.strikethrough);
 Prism.languages.markdown.blockquote.inside.url = Prism.util.clone(Prism.languages.markdown.url);
 
-let rendererComponent = props => {
-  let isLine = props.node.type === 'multiline';
-  let hasMarks = props.mark;
+// function setMarks(props) {
+//   const mark = Mark.create({ type: props.mark.type });
+//   let endOffset = props.offset + props.text.length;
+//   let customCharacters = props.state.customCharacters.asMutable();
+//   for (let i = props.offset; i < endOffset; i++) {
+//     let char = props.state.customCharacters.get(i);
+//     let { marks } = char;
+//     marks = marks.add(mark);
+//     char = char.set('marks', marks);
+//     customCharacters.set(i, char);
+//   }
+//
+//   props.state.customCharacters = customCharacters.asImmutable();
+// }
 
-  if (isLine) {
+let rendererComponent = props => {
+  if (props.node.type === 'multiline') {
     return (<div className="oc-md-hl-block">{props.children}</div>);
   }
 
-  if (hasMarks) {
-    const className = props.mark ? 'oc-md-hl-' + props.mark.type : '';
+  if (props.mark) {
+    // setMarks(props);
+
+    let markType = props.mark.type;
+    const className = 'oc-md-hl-' + markType;
     let content = props.children;
 
-    if (props.mark.type === 'hr') {
+    if (markType === 'hr') {
       return (
         <span><span className={className}>{content}</span><br/></span>
       );
@@ -295,7 +314,7 @@ rendererComponent.propTypes = {
  * Define a decorator for markdown styles.
  */
 
-function addMarks(characters, tokens, offset) {
+export const addMarks = (characters, tokens, offset) => {
   let updatedOffset = offset;
 
   for (let i = 0; i < tokens.length; i++) {
@@ -323,7 +342,7 @@ function addMarks(characters, tokens, offset) {
 
     updatedOffset += length;
   }
-}
+};
 
 function markdownDecorator(text, block) {
   const characters = text.characters.asMutable();

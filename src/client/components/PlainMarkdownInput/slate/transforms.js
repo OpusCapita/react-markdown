@@ -369,12 +369,64 @@ const wrapBlock = function(matchRules, text, state) {
     focus().apply();
 };
 
+function getLetterMarks(state) { // eslint-disable-line
+  const { startOffset, endOffset } = state;
+  let resultMarks = [];
+
+  if (startOffset === endOffset) {
+    if (startOffset === 0) {
+      return [];
+    }
+
+    const marksPrev = state.customCharacters.get(startOffset - 1).marks.toArray();
+    const marksPrevArray = [];
+    for (let i = 0; i < marksPrev.length; i++) {
+      marksPrevArray.push(marksPrev[i].type);
+    }
+    const marksNext = state.customCharacters.get(startOffset).marks.toArray();
+    for (let i = 0; i < marksNext.length; i++) {
+      const currMark = marksNext[i].type;
+      if (marksPrevArray.indexOf(currMark) !== -1) {
+        resultMarks.push(currMark);
+      }
+    }
+  } else {
+    if (hasMultiLineSelection(state)) {
+      return [];
+    }
+
+    const startMarks = state.customCharacters.get(startOffset).marks.toArray();
+    for (let i = 0; i < startMarks.length; i++) {
+      resultMarks.push(startMarks[i].type);
+    }
+
+    let currOffset = startOffset + 1;
+    while (resultMarks.length > 0 && currOffset <= endOffset) {
+      const tmpMarks = [];
+      const currMarks = state.customCharacters.get(currOffset).marks.toArray();
+      for (let i = 0; i < currMarks.length; i++) {
+        const currMark = currMarks[i].type;
+        if (resultMarks.indexOf(currMark) !== -1) {
+          tmpMarks.push(currMark);
+        }
+      }
+      resultMarks = tmpMarks;
+      currOffset++
+    }
+  }
+
+  return resultMarks;
+}
+
 /**
  * Has text wrapped italic markdown tokens
  *
  * @param state - editor state
  */
 export const hasItalicMarkdown = state => {
+  // const letterMarks = getLetterMarks(state);
+  // return letterMarks.indexOf('italic') !== -1;
+
   const { startOffset, endOffset, focusText } = state;
   const focusedText = focusText.text;
   return hasMark({ focusedText, markType: 'italic', startOffset, endOffset });
@@ -414,6 +466,9 @@ export const unwrapItalicMarkdown = state => {
  * @param state - editor state
  */
 export const hasBoldMarkdown = state => {
+  // const letterMarks = getLetterMarks(state);
+  // return letterMarks.indexOf('bold') !== -1;
+
   const { startOffset, endOffset, focusText } = state;
   const focusedText = focusText.text;
   return hasMark({ focusedText, markType: 'bold', startOffset, endOffset });
@@ -453,6 +508,9 @@ export const unwrapBoldMarkdown = state => {
  * @param state - editor state
  */
 export const hasStrikethroughMarkdown = state => {
+  // const letterMarks = getLetterMarks(state);
+  // return letterMarks.indexOf('strikethrough') !== -1;
+
   const { startOffset, endOffset, focusText } = state;
   const focusedText = focusText.text;
   const allPositions = getAllPositions(focusedText);
