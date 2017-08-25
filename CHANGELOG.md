@@ -1,3 +1,10 @@
+## [v1.0.3](https://github.com/OpusCapita/react-markdown/compare/v1.0.2...v1.0.3) (Fri, 25 Aug 2017 11:37:13 GMT)
+ - #41 Fix - Could not position cursor to the Markdown Input if value is empty (#42) (Kirill Volkovich <kvolkovich-sc@users.noreply.github.com>, 7920efc)
+ - Fixing script (Alexey Sergeev <sab@scand.com>, 717317e)
+ - Fixing script (Alexey Sergeev <sab@scand.com>, ec21b12)
+ - Optimizing lodash package inside result web(packed) files (Alexey Sergeev <sab@scand.com>, f6c0a6a)
+ - Update demo.gif (Kirill Volkovich <volkovich@scand.com>, da568c4)
+
 ## [v1.0.2](Thu, 17 Aug 2017 06:50:27 GMT)
  - Returing back mocha junit reporter as it is used in CircleCI build (Alexey Sergeev <sab@scand.com>, 14d4a4c)
  - Cleanup dependencies (Alexey Sergeev <sab@scand.com>, ad24399)
