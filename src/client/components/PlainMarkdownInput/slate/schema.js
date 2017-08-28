@@ -4,13 +4,6 @@ import Prism from 'prismjs';
 import { Mark } from '@opuscapita/slate';
 
 /**
- * Add the markdown syntax to Prism.
- */
-
-// eslint-disable-next-line
-Prism.languages.markdown = Prism.languages.extend("markup", {});
-
-/**
  * Create regExp which parses that cases:
  *
  * 1. _italic_ simple _italic_
@@ -37,6 +30,11 @@ const italicStr = [
 ].join('');
 const italicRegExp = new RegExp(italicStr, 'm');
 
+/**
+ * Add the markdown syntax to Prism.
+ */
+// eslint-disable-next-line
+Prism.languages.markdown = Prism.languages.extend("markup", {});
 Prism.languages.insertBefore('markdown', 'prolog', {
   blockquote: {
     pattern: /^>(?:[\t ]*>)*.*/m,
@@ -341,10 +339,6 @@ const charactersCache = {
     return this.characters;
   }
 };
-
-// function markdownDecorator(text, block) {
-//   return charactersCache.getCharacters(text);
-// }
 
 const schema = {
   rules: [{
