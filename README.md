@@ -1,12 +1,13 @@
+# React Markdown
+
 [![CircleCI Status](https://circleci.com/gh/OpusCapita/react-markdown/tree/master.svg?style=shield&circle-token=:circle-token)](https://circleci.com/gh/OpusCapita/react-markdown)
 ![badge-npm-version](https://img.shields.io/npm/v/@opuscapita/react-markdown.svg) 
 ![badge-license](https://img.shields.io/github/license/OpusCapita/react-markdown.svg)
-
-# React Markdown
-
-Built using [slate-js](https://github.com/ianstormtaylor/slate)
+![NPM Downloads](https://img.shields.io/npm/dm/@opuscapita/react-markdown.svg)
 
 ![demo](https://raw.githubusercontent.com/OpusCapita/react-markdown/master/demo.gif)
+
+Built using [slate-js](https://github.com/ianstormtaylor/slate)
 
 ## Usage
 

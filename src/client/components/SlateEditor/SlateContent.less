@@ -11,6 +11,13 @@
   padding-left: 7ch;
 }
 
+
+.react-markdown--slate-content > div {
+  // https://github.com/OpusCapita/react-markdown/issues/41
+  // Could not position cursor to the Markdown Input if value is empty
+  flex: 1 0;
+}
+
 .react-markdown--slate-content__editor {
   min-height: 100%;
 }
