@@ -303,9 +303,7 @@ export const addMarks = (characters, tokens, offset) => {
 
     const { content, length, type } = token;
 
-    if (Array.isArray(content)) {
-      addMarks(characters, content, updatedOffset);
-    }
+    addMarks(characters, content, updatedOffset);
 
     const mark = Mark.create({ type });
     for (let i = updatedOffset; i < updatedOffset + length; i++) {

@@ -14,6 +14,16 @@ describe('plain editor deserialize', () => {
     expect(Plain.serialize(state)).to.equal(text2);
   });
 
+  it('deserialize #2', () => {
+    const text1 = `
+plain text
+plain text
+plain text
+`;
+    let state = deserialize(text1);
+    expect(Plain.serialize(state)).to.equal(text1);
+  });
+
   it('the state is the deserialized text', () => {
     const text2 = '***bold italic text***';
     let state = deserialize(text2);

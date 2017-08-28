@@ -139,7 +139,7 @@ const wrapBlock = function(matchRules, text, state) {
   const { startOffset, endOffset } = state;
   let currLine = getCurrentLine(state);
   const previousLineEnd = getPreviousLineEnd(state);
-  let afterState = null;
+  let afterState = state;
   let length = 0;
   for (let i = 0, k = matchRules.length; i < k; i++) {
     const result = matchRules[i].exec(currLine);
@@ -148,10 +148,6 @@ const wrapBlock = function(matchRules, text, state) {
       afterState = unwrapBlock(length, state);
       break;
     }
-  }
-
-  if (!afterState) {
-    afterState = state;
   }
 
   const delta = text.length - length;

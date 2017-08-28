@@ -30,14 +30,14 @@ function addLineBreak(state, listType) {
   const unwrapper = listType === 'ordered' ? unwrapOrderedListMarkdown : unwrapUnorderedListMarkdown;
   const currentLine = getCurrentLine(state);
   let res = regular.exec(currentLine);
-  let pref = res ? res[0] : '';
+  let pref = res[0];
   if (currentLine === pref) {
     // unwrap current empty line and add line break
     return unwrapper(state).transform().insertText(`\n`).focus().apply();
   } else {
     if (listType === 'ordered') {
       res = orderedPrefDiv.exec(currentLine);
-      pref = res ? `${res[1]}${parseInt(res[2]) + 1}. ` : pref; // eslint-disable-line
+      pref = `${res[1]}${parseInt(res[2]) + 1}. `; // eslint-disable-line
     }
     // add line break and list prefix
     return state.transform().insertText(`\n${pref}`).focus().apply();
@@ -47,7 +47,7 @@ function addLineBreak(state, listType) {
 /**
  * Create new list item block, when the cursor move to a next line
  */
-const splitListBlock = (event, data, state) => {
+const splitLine = (event, data, state) => {
   if (event.keyCode === 13) {
     event.preventDefault();
     event.stopPropagation();
@@ -72,7 +72,7 @@ const splitListBlock = (event, data, state) => {
  * @returns {object||undefined} - state when it has been changed or undefined in other cases
  */
 export default (event, data, state) => {
-  const result = splitListBlock(event, data, state);
+  const result = splitLine(event, data, state);
 
   if (result) {
     return result;

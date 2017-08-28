@@ -13,11 +13,20 @@ import {
   wrapStrikethroughMarkdown,
   unwrapStrikethroughMarkdown,
   hasMultiLineSelection,
+  getCurrentLine,
 } from '../transforms';
 import deserialize from '../deserialize';
 import { createCustomCharacters } from '../../slate/schema';
 
 describe('plain editor transform', () => {
+  describe('getCurrentLine', () => {
+    const text = `\n\nsome text`;
+    let state = createCustomCharacters(deserialize(text).
+    transform().moveOffsetsTo(1, 1).apply());
+    const result = getCurrentLine(state);
+    expect(result).to.equal('');
+  });
+
   describe('Has Marks', () => {
     it('just a text', () => {
       let state = createCustomCharacters(deserialize('just a text ').

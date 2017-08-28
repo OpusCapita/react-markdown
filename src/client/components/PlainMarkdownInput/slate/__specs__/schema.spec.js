@@ -1,13 +1,70 @@
 /* eslint-disable max-len */
 
 import Prism from 'prismjs';
+import schema from '../schema';
 import { grammar } from '../schema';
-import { assert } from 'chai';
+import { assert, expect } from 'chai';
+import { shallow } from 'enzyme';
 
 let getHtml = (str) => Prism.highlight(str, grammar);
 let escapeRegExp = (str) => str.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+const rendererComponent = schema.rules[0].render;
 
 describe('plain editor schema', () => {
+  describe('render component', () => {
+    it('render multiline', () => {
+      const props = {
+        node: { type: 'multiline' },
+        children: 'some text'
+      };
+      const result = rendererComponent(props);
+      const wrapper = shallow(result);
+      expect(wrapper.find('div')).to.have.length(1);
+      expect(wrapper.find('div').hasClass('oc-md-hl-block')).to.equal(true);
+      expect(wrapper.text()).to.equal(props.children);
+    });
+
+    it('render props without marks', () => {
+      const props = {
+        node: { type: 'text' },
+        children: 'some text'
+      };
+      const result = rendererComponent(props);
+      expect(result).to.be.null; // eslint-disable-line
+    });
+
+    it('render props with marks', () => {
+      const props = {
+        node: { type: 'text' },
+        children: 'some text',
+        mark: { type: 'italic' }
+      };
+      const result = rendererComponent(props);
+      const wrapper = shallow(result);
+      expect(wrapper.find('span')).to.have.length(1);
+      expect(wrapper.find('span').hasClass('oc-md-hl-italic')).to.equal(true);
+      expect(wrapper.text()).to.equal(props.children);
+    });
+
+    it('render props with marks', () => {
+      const props = {
+        node: { type: 'text' },
+        children: '---',
+        mark: { type: 'hr' }
+      };
+      const result = rendererComponent(props);
+      const wrapper = shallow(result);
+      expect(wrapper.find('span')).to.have.length(2);
+      expect(wrapper.find('span').at(1).hasClass('oc-md-hl-hr')).to.equal(true);
+      expect(wrapper.find('span').at(1).text()).to.equal(props.children);
+    });
+  });
+
+  describe('schema - rules - match', () => {
+    const result = schema.rules[0].match();
+    expect(result).to.equal(true);
+  });
+
   it('should highlight blockquote', () => {
     let html;
 
