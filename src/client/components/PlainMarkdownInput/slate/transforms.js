@@ -349,7 +349,7 @@ function getLetterMarks(state) { // eslint-disable-line
   let resultMarks = [];
 
   if (startOffset === endOffset) {
-    if (startOffset === 0) {
+    if (startOffset === 0 || startOffset >= state.customCharacters.size) {
       return [];
     }
 
