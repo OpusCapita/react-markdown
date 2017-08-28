@@ -445,28 +445,28 @@ describe('plain editor transform', () => {
 
   describe('Unwrap marks', () => {
     it('Unwrap bold from **bold text**', () => {
-      let state = deserialize('**bold text**').
-      transform().moveOffsetsTo('**'.length, '**bold text'.length).apply();
+      let state = createCustomCharacters(deserialize('**bold text**').
+      transform().moveOffsetsTo('**'.length, '**bold text'.length).apply());
       state = unwrapBoldMarkdown(state);
       expect(Plain.serialize(state)).to.equal('bold text');
 
-      state = deserialize('**bold text**').
-      transform().moveOffsetsTo(6, 6).apply();
+      state = createCustomCharacters(deserialize('**bold text**').
+      transform().moveOffsetsTo(6, 6).apply());
       state = unwrapBoldMarkdown(state);
       expect(Plain.serialize(state)).to.equal('bold text');
 
-      state = deserialize('**bold text**').
-      transform().moveOffsetsTo(1, 1).apply();
+      state = createCustomCharacters(deserialize('**bold text**').
+      transform().moveOffsetsTo(1, 1).apply());
       state = unwrapBoldMarkdown(state);
       expect(Plain.serialize(state)).to.equal('bold text');
 
-      state = deserialize('**bold text**').
-      transform().moveOffsetsTo('**bold text*'.length, '**bold text*'.length).apply();
+      state = createCustomCharacters(deserialize('**bold text**').
+      transform().moveOffsetsTo('**bold text*'.length, '**bold text*'.length).apply());
       state = unwrapBoldMarkdown(state);
       expect(Plain.serialize(state)).to.equal('bold text');
 
-      state = deserialize('**bold text**').
-      transform().moveOffsetsTo(0, 0).apply();
+      state = createCustomCharacters(deserialize('**bold text**').
+      transform().moveOffsetsTo(0, 0).apply());
       expect(hasBoldMarkdown(state)).is.not.equal(true);
       state = unwrapBoldMarkdown(state);
       expect(Plain.serialize(state)).to.equal('**bold text**');
@@ -479,23 +479,23 @@ describe('plain editor transform', () => {
     });
 
     it('Unwrap bold from __bold text__', () => {
-      let state = deserialize('__bold text__').
-      transform().moveOffsetsTo('__'.length, '__bold text'.length).apply();
+      let state = createCustomCharacters(deserialize('__bold text__').
+      transform().moveOffsetsTo('__'.length, '__bold text'.length).apply());
       state = unwrapBoldMarkdown(state);
       expect(Plain.serialize(state)).to.equal('bold text');
 
-      state = deserialize('__bold text__').
-      transform().moveOffsetsTo(6, 6).apply();
+      state = createCustomCharacters(deserialize('__bold text__').
+      transform().moveOffsetsTo(6, 6).apply());
       state = unwrapBoldMarkdown(state);
       expect(Plain.serialize(state)).to.equal('bold text');
 
-      state = deserialize('__bold text__').
-      transform().moveOffsetsTo(1, 1).apply();
+      state = createCustomCharacters(deserialize('__bold text__').
+      transform().moveOffsetsTo(1, 1).apply());
       state = unwrapBoldMarkdown(state);
       expect(Plain.serialize(state)).to.equal('bold text');
 
-      state = deserialize('__bold text__').
-      transform().moveOffsetsTo('__bold text_'.length, '__bold text_'.length).apply();
+      state = createCustomCharacters(deserialize('__bold text__').
+      transform().moveOffsetsTo('__bold text_'.length, '__bold text_'.length).apply());
       state = unwrapBoldMarkdown(state);
       expect(Plain.serialize(state)).to.equal('bold text');
 
@@ -513,177 +513,157 @@ describe('plain editor transform', () => {
     });
 
     it('Unwrap italic from *italic text*', () => {
-      let state = deserialize('*italic text*').
-      transform().moveOffsetsTo(1, '*italic text'.length).apply();
+      let state = createCustomCharacters(deserialize('*italic text*').
+      transform().moveOffsetsTo(1, '*italic text'.length).apply());
       state = unwrapItalicMarkdown(state);
       expect(Plain.serialize(state)).to.equal('italic text');
 
-      state = deserialize('*italic text*').
-      transform().moveOffsetsTo(6, 6).apply();
+      state = createCustomCharacters(deserialize('*italic text*').
+      transform().moveOffsetsTo(6, 6).apply());
       state = unwrapItalicMarkdown(state);
       expect(Plain.serialize(state)).to.equal('italic text');
 
-      state = deserialize('*italic text*').
-      transform().moveOffsetsTo(1, 1).apply();
+      state = createCustomCharacters(deserialize('*italic text*').
+      transform().moveOffsetsTo(1, 1).apply());
       state = unwrapItalicMarkdown(state);
       expect(Plain.serialize(state)).to.equal('italic text');
 
-      state = deserialize('*italic text*').
-      transform().moveOffsetsTo('*italic text'.length, '*italic text'.length).apply();
+      state = createCustomCharacters(deserialize('*italic text*').
+      transform().moveOffsetsTo('*italic text'.length, '*italic text'.length).apply());
       state = unwrapItalicMarkdown(state);
       expect(Plain.serialize(state)).to.equal('italic text');
 
-      state = deserialize('*italic text*').
-      transform().moveOffsetsTo(0, 0).apply();
+      state = createCustomCharacters(deserialize('*italic text*').
+      transform().moveOffsetsTo(0, 0).apply());
       state = unwrapItalicMarkdown(state);
       expect(Plain.serialize(state)).to.equal('*italic text*');
 
-      state = deserialize('*italic text*').
-      transform().moveOffsetsTo('*italic text*'.length, '*italic text*'.length).apply();
+      state = createCustomCharacters(deserialize('*italic text*').
+      transform().moveOffsetsTo('*italic text*'.length, '*italic text*'.length).apply());
       state = unwrapItalicMarkdown(state);
       expect(Plain.serialize(state)).to.equal('*italic text*');
     });
 
     it('Unwrap italic from _italic text_', () => {
-      let state = deserialize('_italic text_').
-      transform().moveOffsetsTo('_'.length, '_italic text'.length).apply();
+      let state = createCustomCharacters(deserialize('_italic text_').
+      transform().moveOffsetsTo('_'.length, '_italic text'.length).apply());
       state = unwrapItalicMarkdown(state);
       expect(Plain.serialize(state)).to.equal('italic text');
 
-      state = deserialize('_italic text_').
-      transform().moveOffsetsTo(6, 6).apply();
+      state = createCustomCharacters(deserialize('_italic text_').
+      transform().moveOffsetsTo(6, 6).apply());
       state = unwrapItalicMarkdown(state);
       expect(Plain.serialize(state)).to.equal('italic text');
 
-      state = deserialize('_italic text_').
-      transform().moveOffsetsTo(1, 1).apply();
+      state = createCustomCharacters(deserialize('_italic text_').
+      transform().moveOffsetsTo(1, 1).apply());
       state = unwrapItalicMarkdown(state);
       expect(Plain.serialize(state)).to.equal('italic text');
 
-      state = deserialize('_italic text_').
-      transform().moveOffsetsTo('_italic text'.length, '_italic text'.length).apply();
+      state = createCustomCharacters(deserialize('_italic text_').
+      transform().moveOffsetsTo('_italic text'.length, '_italic text'.length).apply());
       state = unwrapItalicMarkdown(state);
       expect(Plain.serialize(state)).to.equal('italic text');
 
-      state = deserialize('_italic text_').
-      transform().moveOffsetsTo(0, 0).apply();
+      state = createCustomCharacters(deserialize('_italic text_').
+      transform().moveOffsetsTo(0, 0).apply());
       state = unwrapItalicMarkdown(state);
       expect(Plain.serialize(state)).to.equal('_italic text_');
 
-      state = deserialize('_italic text_').
-      transform().moveOffsetsTo('_italic text_'.length, '_italic text_'.length).apply();
+      state = createCustomCharacters(deserialize('_italic text_').
+      transform().moveOffsetsTo('_italic text_'.length, '_italic text_'.length).apply());
       state = unwrapItalicMarkdown(state);
       expect(Plain.serialize(state)).to.equal('_italic text_');
     });
 
     it('Unwrap from simple text', () => {
-      let state = deserialize('just a text').
-      transform().moveOffsetsTo(6, 6).apply();
-      state = unwrapItalicMarkdown(state);
+      let state = createCustomCharacters(deserialize('just a text').
+      transform().moveOffsetsTo(6, 6).apply());
+      state = createCustomCharacters(unwrapItalicMarkdown(state));
       expect(Plain.serialize(state)).to.equal('just a text');
-      state = unwrapBoldMarkdown(state);
+      state = createCustomCharacters(unwrapBoldMarkdown(state));
       expect(Plain.serialize(state)).to.equal('just a text');
-      state = unwrapStrikethroughMarkdown(state);
+      state = createCustomCharacters(unwrapStrikethroughMarkdown(state));
       expect(Plain.serialize(state)).to.equal('just a text');
     });
 
     it('Unwrap strike-through from ~~strike-through text~~', () => {
-      let state = deserialize('~~strike-through text~~').
-      transform().moveOffsetsTo(2, '~~strike-through text'.length).apply();
+      let state = createCustomCharacters(deserialize('~~strike-through text~~').
+      transform().moveOffsetsTo(2, '~~strike-through text'.length).apply());
       state = unwrapStrikethroughMarkdown(state);
       expect(Plain.serialize(state)).to.equal('strike-through text');
 
-      state = deserialize('~~strike-through text~~').
-      transform().moveOffsetsTo(6, 6).apply();
+      state = createCustomCharacters(deserialize('~~strike-through text~~').
+      transform().moveOffsetsTo(6, 6).apply());
       state = unwrapStrikethroughMarkdown(state);
       expect(Plain.serialize(state)).to.equal('strike-through text');
 
-      state = deserialize('~~strike-through text~~').
-      transform().moveOffsetsTo(1, 1).apply();
+      state = createCustomCharacters(deserialize('~~strike-through text~~').
+      transform().moveOffsetsTo(1, 1).apply());
       state = unwrapStrikethroughMarkdown(state);
       expect(Plain.serialize(state)).to.equal('strike-through text');
 
-      state = deserialize('~~strike-through text~~').
+      state = createCustomCharacters(deserialize('~~strike-through text~~').
       transform().
       moveOffsetsTo('~~strike-through text~'.length, '~~strike-through text~'.length).
-      apply();
+      apply());
       state = unwrapStrikethroughMarkdown(state);
       expect(Plain.serialize(state)).to.equal('strike-through text');
 
-      state = deserialize('~~strike-through text~~').
-      transform().moveOffsetsTo(0, 0).apply();
+      state = createCustomCharacters(deserialize('~~strike-through text~~').
+      transform().moveOffsetsTo(0, 0).apply());
       state = unwrapStrikethroughMarkdown(state);
       expect(Plain.serialize(state)).to.equal('~~strike-through text~~');
 
-      state = deserialize('~~strike-through text~~').
+      state = createCustomCharacters(deserialize('~~strike-through text~~').
       transform().
       moveOffsetsTo('~~strike-through text~~'.length, '~~strike-through text~~'.length).
-      apply();
+      apply());
       state = unwrapStrikethroughMarkdown(state);
       expect(Plain.serialize(state)).to.equal('~~strike-through text~~');
     });
 
     it('Unwrap from ***bold italic text***', () => {
-      let state = deserialize('***bold italic text***').
-      transform().moveOffsetsTo('**'.length, '***bold italic text*'.length).apply();
+      let state = createCustomCharacters(deserialize('***bold italic text***').
+      transform().moveOffsetsTo('**'.length, '***bold italic text*'.length).apply());
       state = unwrapBoldMarkdown(state);
       expect(Plain.serialize(state)).to.equal('*bold italic text*');
 
-      state = deserialize('***bold italic text***').
-      transform().moveOffsetsTo(6, 6).apply();
-      state = unwrapBoldMarkdown(state);
+      state = createCustomCharacters(deserialize('***bold italic text***').
+      transform().moveOffsetsTo(6, 6).apply());
+      state = createCustomCharacters(unwrapBoldMarkdown(state));
       state = unwrapItalicMarkdown(state);
       expect(Plain.serialize(state)).to.equal('bold italic text');
 
-      state = deserialize('***bold italic text***').
-      transform().moveOffsetsTo(1, 1).apply();
-      state = unwrapItalicMarkdown(state);
-      expect(Plain.serialize(state)).to.equal('**bold italic text**');
-
-      state = deserialize('***bold italic text***').
-      transform().moveOffsetsTo(2, 2).apply();
-      state = unwrapItalicMarkdown(state);
-      expect(Plain.serialize(state)).to.equal('**bold italic text**');
-
-      state = deserialize('***bold italic text***').
-      transform().moveOffsetsTo('***bold italic text**'.length, '***bold italic text**'.length).apply();
-      state = unwrapBoldMarkdown(state);
+      state = createCustomCharacters(deserialize('***bold italic text***').transform().
+      moveOffsetsTo('***bold italic text**'.length, '***bold italic text**'.length).apply());
+      state = createCustomCharacters(unwrapBoldMarkdown(state));
       expect(Plain.serialize(state)).to.equal('*bold italic text*');
 
-      state = deserialize('***bold italic text***').
-      transform().moveOffsetsTo('***bold italic text*'.length, '***bold italic text*'.length).apply();
+      state = createCustomCharacters(deserialize('***bold italic text***').transform().
+      moveOffsetsTo('***bold italic text*'.length, '***bold italic text*'.length).apply());
       state = unwrapBoldMarkdown(state);
       expect(Plain.serialize(state)).to.equal('*bold italic text*');
-
-      state = deserialize('***bold italic text***').
-      transform().moveOffsetsTo('***bold italic text**'.length, '***bold italic text**'.length).apply();
-      state = unwrapItalicMarkdown(state);
-      expect(Plain.serialize(state)).to.equal('**bold italic text**');
-
-      state = Plain.deserialize('***bold italic text***').
-      transform().moveOffsetsTo('***bold italic text*'.length, '***bold italic text*'.length).apply();
-      state = unwrapItalicMarkdown(state);
-      expect(Plain.serialize(state)).to.equal('**bold italic text**');
     });
 
     it('Unwrap of a selected text', () => {
-      let state = deserialize('***bold italic text***').
-      transform().moveOffsetsTo(3, '***bold italic text'.length).apply();
-      state = unwrapItalicMarkdown(state);
+      let state = createCustomCharacters(deserialize('***bold italic text***').
+      transform().moveOffsetsTo(3, '***bold italic text'.length).apply());
+      state = createCustomCharacters(unwrapItalicMarkdown(state));
       expect(Plain.serialize(state)).to.equal('**bold italic text**');
       state = unwrapBoldMarkdown(state);
       expect(Plain.serialize(state)).to.equal('bold italic text');
 
-      state = deserialize('***bold italic text***').
-      transform().moveOffsetsTo(3, '***bold italic text'.length).apply();
-      state = unwrapBoldMarkdown(state);
+      state = createCustomCharacters(deserialize('***bold italic text***').
+      transform().moveOffsetsTo(3, '***bold italic text'.length).apply());
+      state = createCustomCharacters(unwrapBoldMarkdown(state));
       expect(Plain.serialize(state)).to.equal('*bold italic text*');
       state = unwrapItalicMarkdown(state);
       expect(Plain.serialize(state)).to.equal('bold italic text');
 
-      state = deserialize('***bold italic text***').
-      transform().moveOffsetsTo(0, '***bold italic text***'.length).apply();
-      state = unwrapBoldMarkdown(state);
+      state = createCustomCharacters(deserialize('***bold italic text***').
+      transform().moveOffsetsTo(0, '***bold italic text***'.length).apply());
+      state = createCustomCharacters(unwrapBoldMarkdown(state));
       expect(Plain.serialize(state)).to.equal('*bold italic text*');
       state = unwrapItalicMarkdown(state);
       expect(Plain.serialize(state)).to.equal('bold italic text');

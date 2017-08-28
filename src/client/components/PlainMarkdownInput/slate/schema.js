@@ -342,9 +342,9 @@ const charactersCache = {
   }
 };
 
-function markdownDecorator(text, block) {
-  return charactersCache.getCharacters(text);
-}
+// function markdownDecorator(text, block) {
+//   return charactersCache.getCharacters(text);
+// }
 
 const schema = {
   rules: [{

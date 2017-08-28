@@ -8,69 +8,70 @@ const h4RegExp = /^####\s/m;
 const h5RegExp = /^#####\s/m;
 const h6RegExp = /^######\s/m;
 
-const regExpMark = {
-  all: /\*{1,4}|_{1,4}|~~|\n/g,
-};
+// const regExpMark = {
+//   all: /\*{1,4}|_{1,4}|~~|\n/g,
+// };
 
 const lengths = {
   bold: 2,
   italic: 1,
   'strike-through': 2,
+  'strikethrough': 2,
   all: 3,
 };
 
-function getMarks() {
-  return {
-    '*': [],
-    '**': [],
-    '***': [],
-    '_': [],
-    '__': [],
-    '___': [],
-    '~~': [],
-  };
-}
+// function getMarks() {
+//   return {
+//     '*': [],
+//     '**': [],
+//     '***': [],
+//     '_': [],
+//     '__': [],
+//     '___': [],
+//     '~~': [],
+//   };
+// }
 
-function getMarkState() {
-  return {
-    '*': false,
-    '**': false,
-    '***': false,
-    '_': false,
-    '__': false,
-    '___': false,
-    '~~': false,
-  };
-}
+// function getMarkState() {
+//   return {
+//     '*': false,
+//     '**': false,
+//     '***': false,
+//     '_': false,
+//     '__': false,
+//     '___': false,
+//     '~~': false,
+//   };
+// }
 
-function getTokensFromText(text) {
-  const tokens = [];
-  let tokenHalf = null; // Next half of long token '____' or '****'
-  const re = regExpMark.all;
-  let res = re.exec(text); // Get first token
-
-  while (res) {
-    let token;
-    if (tokenHalf) {
-      token = tokenHalf.token;
-      res.index = tokenHalf.index;
-      tokenHalf = null;
-    } else {
-      token = res[0];
-
-      if (token === '____' || token === '****') { // Create two tokens from it
-        token = token.substr(0, 2);
-        tokenHalf = { token: token, index: res.index + 2 };
-      }
-    }
-    tokens.push({ token, position: res.index });
-
-    if (!tokenHalf) {
-      res = re.exec(text); // Get next token
-    }
-  }
-  return tokens;
-}
+// function getTokensFromText(text) {
+//   const tokens = [];
+//   let tokenHalf = null; // Next half of long token '____' or '****'
+//   const re = regExpMark.all;
+//   let res = re.exec(text); // Get first token
+//
+//   while (res) {
+//     let token;
+//     if (tokenHalf) {
+//       token = tokenHalf.token;
+//       res.index = tokenHalf.index;
+//       tokenHalf = null;
+//     } else {
+//       token = res[0];
+//
+//       if (token === '____' || token === '****') { // Create two tokens from it
+//         token = token.substr(0, 2);
+//         tokenHalf = { token: token, index: res.index + 2 };
+//       }
+//     }
+//     tokens.push({ token, position: res.index });
+//
+//     if (!tokenHalf) {
+//       res = re.exec(text); // Get next token
+//     }
+//   }
+//   return tokens;
+// }
 
 /**
  * Function getAllPositions returns all positions of the bold and italic marks in line
@@ -79,187 +80,233 @@ function getTokensFromText(text) {
  * @returns {{}}
  */
 
-function getAllPositions(text) {
-  let marks = getMarks();
-  let markState = getMarkState();
-  const tokens = getTokensFromText(text);
+// function getAllPositions(text) {
+//   let marks = getMarks();
+//   let markState = getMarkState();
+//   const tokens = getTokensFromText(text);
+//
+//   function addTokenPos(token, pos) {
+//     if (markState[token]) {
+//       for (let mark in markState) {
+//         if (mark !== token && markState[mark]) {
+//           const markPos = marks[mark][marks[mark].length - 1];
+//           const tokenPrevPos = marks[token][marks[token].length - 1];
+//           if (tokenPrevPos < markPos) {
+//             markState[mark] = false;
+//             marks[mark].pop();
+//           }
+//         }
+//       }
+//     }
+//
+//     markState[token] = !markState[token];
+//     marks[token].push(pos);
+//   }
+//
+//   function addTokenPositions(token1, token2, pos11, pos12, pos2) {
+//     marks[token1].push(pos11, pos12);
+//     addTokenPos(token2, pos2);
+//   }
+//
+//   /**
+//    * Method saveTokenAfterLong divide previous long token to two tokens
+//    *
+//    * Example 1:
+//    *  token === '*', previous token === '***'  =>  Divide previous token to '**', '*' then save them.
+//    *  After it save token '*'
+//    *
+//    * Example 2:
+//    *  token === '__', previous token === '___'  =>  Divide previous token to '_', '__' then save them.
+//    *  After it save token '__'
+//    *
+//    * @param token
+//    * @param currPos
+//    * @param mark
+//    */
+//
+//   function saveTokenAfterLong({ token, currPos, mark }) {
+//     const mark2 = mark + mark; // _ -> __; * -> **
+//     const mark3 = mark2 + mark; // _ -> ___; * -> *** - Long mark
+//     markState[mark3] = false;
+//     const longPos = marks[mark3].pop();
+//     if (token === mark) {
+//       addTokenPositions(token, mark2, longPos + 2, currPos, longPos);
+//     } else {
+//       addTokenPositions(token, mark, longPos + 1, currPos, longPos);
+//     }
+//   }
+//
+//   function clearAllMarksStates() {
+//     for (let token in markState) {
+//       if (markState[token]) {
+//         marks[token].pop();
+//         markState[token] = false;
+//       }
+//     }
+//   }
+//
+//   for (let i = 0; i < tokens.length; i++) {
+//     let tokenData = tokens[i];
+//     const token = tokenData.token;
+//     const position = tokenData.position;
+//
+//     if (token === '\n') {
+//       clearAllMarksStates();
+//     // Current token is ~~
+//     // Or Current token is a closing token. Current position is between two equal marks.
+//     } else if (token === '~~' || markState[token]) {
+//       addTokenPos(token, position);
+//     } else {
+//       if (token === '___' || token === '***' || // Current token  is long token or
+//         (token === '_' || token === '__') && !markState['___'] || // Previous token is not long token with same mark
+//         (token === '*' || token === '**') && !markState['***']) {
+//         addTokenPos(token, position); // Current token is an opening token
+//       } else { // Previous token is long token with same mark
+//         if (token === '_' || token === '__') { // Previous token is '___'
+//           saveTokenAfterLong({ token, currPos: position, mark: '_' });
+//         } else { // Previous token is '***'
+//           saveTokenAfterLong({ token, currPos: position, mark: '*' });
+//         }
+//       }
+//     }
+//   }
+//   return marks;
+// }
 
-  function addTokenPos(token, pos) {
-    if (markState[token]) {
-      for (let mark in markState) {
-        if (mark !== token && markState[mark]) {
-          const markPos = marks[mark][marks[mark].length - 1];
-          const tokenPrevPos = marks[token][marks[token].length - 1];
-          if (tokenPrevPos < markPos) {
-            markState[mark] = false;
-            marks[mark].pop();
-          }
-        }
+// function withinMark(positions, currPosition, markLength) {
+//   for (let i = 0; i < positions.length - 1; i += 2) {
+//     if (positions[i] < currPosition && currPosition < positions[i + 1] + markLength) {
+//       return i;
+//     }
+//   }
+//
+//   return -1;
+// }
+
+// function selectionWithinMarks(positions, pos1, pos2, markLength) {
+//   for (let i = 0; i < positions.length - 1; i += 2) {
+//     if (positions[i] <= pos1 && pos1 <= positions[i + 1] + markLength &&
+//       positions[i] <= pos2 && pos2 <= positions[i + 1] + markLength) {
+//       return i;
+//     }
+//   }
+//
+//   return -1;
+// }
+
+// function getPositionsData(markType) {
+//   let positionsData, mark1, mark2, markLength;
+//   if (markType === 'bold') {
+//     mark1 = '__';
+//     mark2 = '**';
+//     markLength = lengths.bold;
+//   } else if (markType === 'italic') {
+//     mark1 = '_';
+//     mark2 = '*';
+//     markLength = lengths.italic;
+//   }
+//   if (markType === 'strike-through') {
+//     markLength = lengths['strike-through'];
+//     positionsData = [{ mark: '~~', allLength: markLength }];
+//   } else {
+//     positionsData = [
+//       { mark: mark1, allLength: markLength },
+//       { mark: mark2, allLength: markLength },
+//       { mark: '___', allLength: lengths.all },
+//       { mark: '***', allLength: lengths.all },
+//     ];
+//   }
+//   return positionsData;
+// }
+
+// function unwrapFromMark({ state, positions, markLength, allLength }) {
+//   const { startOffset, endOffset, focusText } = state;
+//   allLength = allLength || markLength; // eslint-disable-line
+//   let numPos = startOffset === endOffset ?
+//     withinMark(positions, startOffset, allLength) :
+//     selectionWithinMarks(positions, startOffset, endOffset, allLength);
+//   if (numPos !== -1) {
+//     let delta1 = startOffset - positions[numPos];
+//     let delta2 = positions[numPos + 1] - startOffset - markLength;
+//     let startPos = startOffset - markLength;
+//     startPos = startPos < positions[numPos] ? positions[numPos] : startPos;
+//     let endPos = endOffset - markLength;
+//     let maxNewEndPos = positions[numPos + 1] + allLength - markLength;
+//     endPos -= endOffset > maxNewEndPos ? endOffset - maxNewEndPos : 0;
+//     return state.transform().move(-delta1). // Move cursor to an opening mark
+//     removeTextByKey(focusText.key, startOffset - delta1, markLength). // Remove an opening mark
+//     move(delta1 + delta2). // Move cursor to a closing mark
+//     removeTextByKey(focusText.key, startOffset + delta2, markLength). // Remove a closing mark
+//     moveOffsetsTo(startPos, endPos).
+//     focus().apply();
+//   }
+//   return -1;
+// }
+
+function getMarkPositions({ state, markType }) {
+  const { startOffset, endOffset } = state;
+  let hasMark = true;
+  let startPos = startOffset - 1;
+
+  while (hasMark && startPos >= 0) {
+    const marks = state.customCharacters.get(startPos).marks.toArray();
+    let hasMarkOfPos = false;
+    for (let i = 0; i < marks.length; i++) {
+      if (markType === marks[i].type) {
+        hasMarkOfPos = true;
+        break;
       }
     }
 
-    markState[token] = !markState[token];
-    marks[token].push(pos);
-  }
-
-  function addTokenPositions(token1, token2, pos11, pos12, pos2) {
-    marks[token1].push(pos11, pos12);
-    addTokenPos(token2, pos2);
-  }
-
-  /**
-   * Method saveTokenAfterLong divide previous long token to two tokens
-   *
-   * Example 1:
-   *  token === '*', previous token === '***'  =>  Divide previous token to '**', '*' then save them.
-   *  After it save token '*'
-   *
-   * Example 2:
-   *  token === '__', previous token === '___'  =>  Divide previous token to '_', '__' then save them.
-   *  After it save token '__'
-   *
-   * @param token
-   * @param currPos
-   * @param mark
-   */
-
-  function saveTokenAfterLong({ token, currPos, mark }) {
-    const mark2 = mark + mark; // _ -> __; * -> **
-    const mark3 = mark2 + mark; // _ -> ___; * -> *** - Long mark
-    markState[mark3] = false;
-    const longPos = marks[mark3].pop();
-    if (token === mark) {
-      addTokenPositions(token, mark2, longPos + 2, currPos, longPos);
+    if (hasMarkOfPos) {
+      startPos--;
     } else {
-      addTokenPositions(token, mark, longPos + 1, currPos, longPos);
+      hasMark = false;
     }
   }
+  startPos++;
 
-  function clearAllMarksStates() {
-    for (let token in markState) {
-      if (markState[token]) {
-        marks[token].pop();
-        markState[token] = false;
+  let endPos = endOffset;
+  hasMark = true;
+  while (hasMark && endPos < state.customCharacters.size) {
+    const marks = state.customCharacters.get(endPos).marks.toArray();
+    let hasMarkOfPos = false;
+    for (let i = 0; i < marks.length; i++) {
+      if (markType === marks[i].type) {
+        hasMarkOfPos = true;
+        break;
       }
     }
-  }
 
-  for (let i = 0; i < tokens.length; i++) {
-    let tokenData = tokens[i];
-    const token = tokenData.token;
-    const position = tokenData.position;
-
-    if (token === '\n') {
-      clearAllMarksStates();
-    // Current token is ~~
-    // Or Current token is a closing token. Current position is between two equal marks.
-    } else if (token === '~~' || markState[token]) {
-      addTokenPos(token, position);
+    if (hasMarkOfPos) {
+      endPos++;
     } else {
-      if (token === '___' || token === '***' || // Current token  is long token or
-        (token === '_' || token === '__') && !markState['___'] || // Previous token is not long token with same mark
-        (token === '*' || token === '**') && !markState['***']) {
-        addTokenPos(token, position); // Current token is an opening token
-      } else { // Previous token is long token with same mark
-        if (token === '_' || token === '__') { // Previous token is '___'
-          saveTokenAfterLong({ token, currPos: position, mark: '_' });
-        } else { // Previous token is '***'
-          saveTokenAfterLong({ token, currPos: position, mark: '*' });
-        }
-      }
+      hasMark = false;
     }
   }
-  return marks;
-}
+  endPos--;
 
-function withinMark(positions, currPosition, markLength) {
-  for (let i = 0; i < positions.length - 1; i += 2) {
-    if (positions[i] < currPosition && currPosition < positions[i + 1] + markLength) {
-      return i;
-    }
-  }
-
-  return -1;
-}
-
-function selectionWithinMarks(positions, pos1, pos2, markLength) {
-  for (let i = 0; i < positions.length - 1; i += 2) {
-    if (positions[i] <= pos1 && pos1 <= positions[i + 1] + markLength &&
-      positions[i] <= pos2 && pos2 <= positions[i + 1] + markLength) {
-      return i;
-    }
-  }
-
-  return -1;
-}
-
-function getPositionsData(markType) {
-  let positionsData, mark1, mark2, markLength;
-  if (markType === 'bold') {
-    mark1 = '__';
-    mark2 = '**';
-    markLength = lengths.bold;
-  } else if (markType === 'italic') {
-    mark1 = '_';
-    mark2 = '*';
-    markLength = lengths.italic;
-  }
-  if (markType === 'strike-through') {
-    markLength = lengths['strike-through'];
-    positionsData = [{ mark: '~~', allLength: markLength }];
-  } else {
-    positionsData = [
-      { mark: mark1, allLength: markLength },
-      { mark: mark2, allLength: markLength },
-      { mark: '___', allLength: lengths.all },
-      { mark: '***', allLength: lengths.all },
-    ];
-  }
-  return positionsData;
-}
-
-function unwrapFromMark({ state, positions, markLength, allLength }) {
-  const { startOffset, endOffset, focusText } = state;
-  allLength = allLength || markLength; // eslint-disable-line
-  let numPos = startOffset === endOffset ?
-    withinMark(positions, startOffset, allLength) :
-    selectionWithinMarks(positions, startOffset, endOffset, allLength);
-  if (numPos !== -1) {
-    let delta1 = startOffset - positions[numPos];
-    let delta2 = positions[numPos + 1] - startOffset - markLength;
-    let startPos = startOffset - markLength;
-    startPos = startPos < positions[numPos] ? positions[numPos] : startPos;
-    let endPos = endOffset - markLength;
-    let maxNewEndPos = positions[numPos + 1] + allLength - markLength;
-    endPos -= endOffset > maxNewEndPos ? endOffset - maxNewEndPos : 0;
-    return state.transform().move(-delta1). // Move cursor to an opening mark
-    removeTextByKey(focusText.key, startOffset - delta1, markLength). // Remove an opening mark
-    move(delta1 + delta2). // Move cursor to a closing mark
-    removeTextByKey(focusText.key, startOffset + delta2, markLength). // Remove a closing mark
-    moveOffsetsTo(startPos, endPos).
-    focus().apply();
-  }
-  return -1;
+  return { startPos, endPos };
 }
 
 function unwrapText({ state, markType }) {
-  const { focusText } = state;
-  const positionsData = getPositionsData(markType);
-  const allPositions = getAllPositions(focusText.text);
-  for (let i = 0; i < positionsData.length; i++) {
-    const markPositions = allPositions[positionsData[i].mark];
-    const res = unwrapFromMark({
-      state,
-      positions: markPositions,
-      markLength: lengths[markType],
-      allLength: positionsData[i].allLength
-    });
-    if (res !== -1) {
-      return res;
-    }
+  const { startOffset, endOffset, focusText } = state;
+  const { startPos, endPos } = getMarkPositions({ state, markType });
+
+  if (startOffset === endOffset && (startOffset === startPos || startOffset === endPos + 1)) {
+    return state;
   }
 
-  return state;
+  const markLength = lengths[markType];
+  const startNewOffset = Math.max(startPos, startOffset - markLength);
+  let maxNewEndPos = endPos - markLength * 2 + 1;
+
+  const endNewOffset = Math.min(endOffset - markLength, maxNewEndPos);
+  return state.transform().
+    removeTextByKey(focusText.key, endPos - markLength + 1, markLength). // Remove a closing mark
+    removeTextByKey(focusText.key, startPos, markLength). // Remove an opening mark
+    moveOffsetsTo(startNewOffset, endNewOffset).
+    focus().apply();
 }
 
 function getPreviousLineEnd(state) {
@@ -504,7 +551,7 @@ export const wrapStrikethroughMarkdown = state => {
  * @param state - editor state
  */
 export const unwrapStrikethroughMarkdown = state => {
-  return unwrapText({ state, markType: 'strike-through' });
+  return unwrapText({ state, markType: 'strikethrough' });
 };
 
 /**
