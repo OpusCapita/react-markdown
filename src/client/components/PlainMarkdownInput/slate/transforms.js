@@ -401,10 +401,6 @@ function getLetterMarks(state) { // eslint-disable-line
 export const hasItalicMarkdown = state => {
   const letterMarks = getLetterMarks(state);
   return letterMarks.indexOf('italic') !== -1;
-
-  // const { startOffset, endOffset, focusText } = state;
-  // const focusedText = focusText.text;
-  // return hasMark({ focusedText, markType: 'italic', startOffset, endOffset });
 };
 
 /**
@@ -443,10 +439,6 @@ export const unwrapItalicMarkdown = state => {
 export const hasBoldMarkdown = state => {
   const letterMarks = getLetterMarks(state);
   return letterMarks.indexOf('bold') !== -1;
-
-  // const { startOffset, endOffset, focusText } = state;
-  // const focusedText = focusText.text;
-  // return hasMark({ focusedText, markType: 'bold', startOffset, endOffset });
 };
 
 /**
@@ -485,17 +477,6 @@ export const unwrapBoldMarkdown = state => {
 export const hasStrikethroughMarkdown = state => {
   const letterMarks = getLetterMarks(state);
   return letterMarks.indexOf('strikethrough') !== -1;
-
-  // const { startOffset, endOffset, focusText } = state;
-  // const focusedText = focusText.text;
-  // const allPositions = getAllPositions(focusedText);
-  //
-  // return checkOneMark({
-  //   positions: allPositions['~~'],
-  //   startOffset,
-  //   endOffset,
-  //   markLength: lengths['strike-through']
-  // });
 };
 
 /**
@@ -577,7 +558,6 @@ export const hasMultiLineSelection = state => {
  * @param startKey - start selection key in current editor state
  * @param endKey - end selection key in current editor state
  */
-// export const hasMultiLineSelection = ({ selection: { startKey, endKey } }) => startKey !== endKey;
 
 export const hasUnorderedListMarkdown = hasBlock.bind(null, ulRegExp);
 export const hasOrderedListMarkdown = hasBlock.bind(null, olRegExp);

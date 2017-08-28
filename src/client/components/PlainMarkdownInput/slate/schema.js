@@ -349,7 +349,7 @@ function markdownDecorator(text, block) {
 const schema = {
   rules: [{
     match: () => true,
-    decorate: markdownDecorator,
+    decorate: charactersCache.getCharacters.bind(charactersCache),
     render: rendererComponent
   }]
 };
