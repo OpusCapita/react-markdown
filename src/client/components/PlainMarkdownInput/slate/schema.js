@@ -4,51 +4,76 @@ import Prism from 'prismjs';
 import { Mark } from '@opuscapita/slate';
 
 /**
+ * Create regExp which parses that cases:
+ *
+ * 1. _italic_ simple _italic_
+ *
+ * 2. _italic __bold__ italic_ simple _italic_
+ *
+ * 3. _italic_italic italic__ simple _italic_
+ *    _italic italic_italic_ simple _italic_
+ *
+ * 4. __italic_italic italic_ simple _italic_
+ *
+ * 5. ___bold__ italic_
+ *
+ * 6. _italic __bold___
+ */
+const italicStr = [
+  '\\b((_(?!(_| ))[^\\s]*_)',
+  '|_(?!(_| ))(([^_\\r\\n]_?)*[^_\\r\\n])\\b__(([^_\\r\\n]_?)*[^_\\s ])__\\b',
+  '([^_\\r\\n]_?)*?[^_\\s ]_',
+  '|_(?!(_| ))(([^_\\r\\n]_?)*?[^_\\r\\n])(_|__)',
+  '|__(([^_\\r\\n]_?)*?[^_\\r\\n])_)\\b',
+  '|\\b(___(?! )(([^\\r\\n]_?)*?[^\\s_])_',
+  '|_(?! )(([^\\r\\n]_?)*?[^\\s_])___)\\b'
+].join('');
+const italicRegExp = new RegExp(italicStr, 'm');
+
+/**
  * Add the markdown syntax to Prism.
  */
-
 // eslint-disable-next-line
 Prism.languages.markdown = Prism.languages.extend("markup", {});
-
 Prism.languages.insertBefore('markdown', 'prolog', {
   blockquote: {
     pattern: /^>(?:[\t ]*>)*.*/m,
     inside: {}
   },
   header1: {
-    pattern: /^#{1}[\s]+.*$/,
+    pattern: /^#{1}[\s]+.*$/m,
     inside: {}
   },
   header2: {
-    pattern: /^#{2}[\s]+.*/,
+    pattern: /^#{2}[\s]+.*$/m,
     inside: {}
   },
   header3: {
-    pattern: /^#{3}[\s]+.*/,
+    pattern: /^#{3}[\s]+.*$/m,
     inside: {}
   },
   header4: {
-    pattern: /^#{4}[\s]+.*/,
+    pattern: /^#{4}[\s]+.*$/m,
     inside: {}
   },
   header5: {
-    pattern: /^#{5}[\s]+.*/,
+    pattern: /^#{5}[\s]+.*$/m,
     inside: {}
   },
   header6: {
-    pattern: /^#{6}[\s]+.*/,
+    pattern: /^#{6}[\s]+.*$/m,
     inside: {}
   },
   'header-no-offset': {
-    pattern: /(^\s{1,3})#{1,6}[\s]+.*$/,
+    pattern: /(^\s{1,3})#{1,6}[\s]+.*$/m,
     inside: {}
   },
   list: [{
-    pattern: /^\s*[\+\-\*](\s).*/,
+    pattern: /^( *[\+\-\*] .*)/m,
     inside: {}
   }],
   'ordered-list': [{
-    pattern: /^\s*\d\.(\s).*/,
+    pattern: /^( *\d+\. .*)/m,
     inside: {}
   }],
   url: {
@@ -60,35 +85,35 @@ Prism.languages.insertBefore('markdown', 'prolog', {
     }
   },
   code: [{
-    pattern: /(^|[^`])```[^`\n\r]*[^`\n\r]```(?!`)/,
-    lookbehind: true,
-    inside: {}
-  }, {
-    pattern: /(^|[^`])`[^`\n\r]*[^`\n\r]`(?!`)/,
+    pattern: /(^|[^`])(```|`)[^`\n\r]*[^`\n\r]\2(?!`)/m,
     lookbehind: true,
   }],
+  codeblock: [{
+    pattern: /^```(?: *)(\n[^`]*)*\n```(?: *)/m,
+    inside: {}
+  }],
   bold: [{
-    pattern: /(^|[^*])\*\*([^\*\r\n]*(\*[^\*\r\n]+\*[^\*\r\n]*)+|[^*\r\n]+)\*\*/,
+    pattern: /(^|[^*])\*\*([^\*\r\n]*(\*[^\*\r\n]+\*[^\*\r\n]*)+|[^*\r\n]+)\*\*/m,
     lookbehind: true,
     greedy: true,
     inside: {
       italic: [{
         lookbehind: true,
-        pattern: /(.{2,}?)\*[^\*\r\n]+\*(?=.{2,})/,
+        pattern: /(.{2,}?)\*[^\*\r\n]+\*(?=.{2,})/m,
         inside: {}
       }, {
-        pattern: /_[^_\r\n]+_/,
+        pattern: /_[^_\r\n]+_/m,
         inside: {}
       }]
     }
   }, {
-    pattern: /(^|[^_]\b)__([^_\r\n]*(_[^_\r\n]+_[^_\r\n]*)+|[^\r\n]+)__/,
+    pattern: /(^|[^_]\b)__((([^_\r\n]_?)*[^_\r\n])|[^\r\n_]+)__\b/m,
     lookbehind: true,
     greedy: true,
     inside: {
       italic: [{
         lookbehind: true,
-        pattern: /(.{2,}?)_[^_\r\n]+_(?=.{2,})/,
+        pattern: /(.{2,}?)_([^_\s]_?)*[^_\s]_(?=.{2,})/,
         inside: {}
       }, {
         pattern: /\*[^*\r\n]+\*/,
@@ -97,37 +122,37 @@ Prism.languages.insertBefore('markdown', 'prolog', {
     }
   }],
   italic: [{
-    pattern: /([^*]|^)\*([^*\r\n]*(\*\*[^*\r\n]+\*\*[^*\r\n]*)+|[^*\r\n]+)\*/,
+    pattern: /([^*]|^)\*([^*\r\n]*(\*\*[^*\r\n]+\*\*[^*\r\n]*)+|[^*\r\n]+)\*/m,
     lookbehind: true,
     greedy: true,
     inside: {
       bold: [{
-        pattern: /(\b)__([^_\r\n]).+__(?=\b)/,
+        pattern: /(\b)__([^_\r\n]).+__(?=\b)/m,
         lookbehind: true,
         inside: {}
       }, {
         lookbehind: true,
-        pattern: /(.+?)\*\*[^*\r\n]+\*\*(?=.+)/,
+        pattern: /(.+?)\*\*[^*\r\n]+\*\*(?=.+)/m,
         inside: {}
       }]
     }
   }, {
-    pattern: /(?=\b)_[^]*([^_\r\n]*(__[^_\r\n]+__[^_\r\n]*)+|[^_\r\n]+)[^]*_(?=\b)/,
+    pattern: italicRegExp,
     greedy: true,
     inside: {
       bold: [{
         lookbehind: true,
-        pattern: /(.+?)__[^_\r\n]+__(?=.+)/,
+        pattern: /(.+?)__([^_\r\n]+_?)*[^_\r\n]+__(?=.+)/m,
         inside: {}
       }, {
         lookbehind: true,
-        pattern: /(.+?)\*\*[^*\r\n]+\*\*(?=.+)/,
+        pattern: /(.+?)\*\*[^*\r\n]+\*\*(?=.+)/m,
         inside: {}
       }]
     }
   }],
   strikethrough: {
-    pattern: /~~[^~\r\n].+[^~\r\n]~~/,
+    pattern: /~~[^~\r\n].+[^~\r\n]~~/m,
     greedy: true,
     inside: {}
   },
@@ -234,41 +259,24 @@ Prism.languages.markdown.blockquote.inside.strikethrough = Prism.util.clone(Pris
 Prism.languages.markdown.blockquote.inside.url = Prism.util.clone(Prism.languages.markdown.url);
 
 let rendererComponent = props => {
-  let isLine = props.node.type === 'line';
-  let hasMarks = props.mark;
-
-  if (isLine) {
+  if (props.node.type === 'multiline') {
     return (<div className="oc-md-hl-block">{props.children}</div>);
   }
 
-  if (hasMarks && props.mark.type === 'code') {
-    const className = props.mark ? 'oc-md-hl-' + props.mark.type : '';
+  if (props.mark) {
+    let markType = props.mark.type;
+    const className = 'oc-md-hl-' + markType;
+    let content = props.children;
 
-    if (typeof props.children === 'string') {
-      /* Wrap <span>children</span> - set cursor properly on mouse click inside "code" node */
+    if (markType === 'hr') {
       return (
-        <span className={className}>
-          <span>{props.children}</span>
-          <span className="oc-md-hl-code-background"></span>
-        </span>
+        <span><span className={className}>{content}</span><br/></span>
+      );
+    } else {
+      return (
+        <span className={className}>{content}</span>
       );
     }
-
-    return (
-      <span className={className}>
-        {props.children}
-        <span className="oc-md-hl-code-background"></span>
-      </span>
-    );
-  }
-
-  if (hasMarks) {
-    const className = props.mark ? 'oc-md-hl-' + props.mark.type : '';
-    return (
-      <span className={className}>
-        {props.children}
-      </span>
-    );
   }
 
   return null;
@@ -294,8 +302,10 @@ function addMarks(characters, tokens, offset) {
     }
 
     const { content, length, type } = token;
-    const mark = Mark.create({ type });
 
+    addMarks(characters, content, updatedOffset);
+
+    const mark = Mark.create({ type });
     for (let i = updatedOffset; i < updatedOffset + length; i++) {
       let char = characters.get(i);
       let { marks } = char;
@@ -305,31 +315,48 @@ function addMarks(characters, tokens, offset) {
       characters.set(i, char);
     }
 
-    if (Array.isArray(content)) {
-      addMarks(characters, content, updatedOffset);
-    }
-
     updatedOffset += length;
   }
 }
 
-function markdownDecorator(text, block) {
-  const characters = text.characters.asMutable();
-  const language = 'markdown';
-  const string = text.text;
-  const grammar = Prism.languages[language];
-  const tokens = Prism.tokenize(string, grammar);
+/**
+ * Object caches the last values of tokens and characters
+ * if the text hasn't changed, returns characters from the cache
+ * if the text has changed, tokens and characters are recalculated and save in a cache
+ */
+const charactersCache = {
+  lastText: null,
+  lastTokens: null,
+  characters: null,
 
-  addMarks(characters, tokens, 0);
-  return characters.asImmutable();
-}
+  getCharacters(text) {
+    if (text.text !== this.lastText || !this.characters) {
+      let characters = text.characters.asMutable();
+      const grammar = Prism.languages.markdown;
+      this.lastText = text.text;
+      this.lastTokens = Prism.tokenize(text.text, grammar);
+      addMarks(characters, this.lastTokens, 0); // Add marks to characters
+      this.characters = characters.asImmutable();
+    }
+
+    return this.characters;
+  }
+};
 
 const schema = {
   rules: [{
     match: () => true,
-    decorate: markdownDecorator,
+    decorate: charactersCache.getCharacters.bind(charactersCache),
     render: rendererComponent
   }]
 };
+
+export const createCustomCharacters = editorState => {
+  const { focusText } = editorState;
+  // eslint-disable-next-line
+  editorState.customCharacters = charactersCache.getCharacters(focusText);
+  return editorState;
+};
+
 export default schema;
 export const grammar = Prism.languages.markdown;

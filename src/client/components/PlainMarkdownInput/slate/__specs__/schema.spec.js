@@ -1,13 +1,70 @@
 /* eslint-disable max-len */
 
 import Prism from 'prismjs';
-import { grammar } from './schema';
-import { assert } from 'chai';
+import schema from '../schema';
+import { grammar } from '../schema';
+import { assert, expect } from 'chai';
+import { shallow } from 'enzyme';
 
 let getHtml = (str) => Prism.highlight(str, grammar);
 let escapeRegExp = (str) => str.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+const rendererComponent = schema.rules[0].render;
 
 describe('plain editor schema', () => {
+  describe('render component', () => {
+    it('render multiline', () => {
+      const props = {
+        node: { type: 'multiline' },
+        children: 'some text'
+      };
+      const result = rendererComponent(props);
+      const wrapper = shallow(result);
+      expect(wrapper.find('div')).to.have.length(1);
+      expect(wrapper.find('div').hasClass('oc-md-hl-block')).to.equal(true);
+      expect(wrapper.text()).to.equal(props.children);
+    });
+
+    it('render props without marks', () => {
+      const props = {
+        node: { type: 'text' },
+        children: 'some text'
+      };
+      const result = rendererComponent(props);
+      expect(result).to.be.null; // eslint-disable-line
+    });
+
+    it('render props with marks', () => {
+      const props = {
+        node: { type: 'text' },
+        children: 'some text',
+        mark: { type: 'italic' }
+      };
+      const result = rendererComponent(props);
+      const wrapper = shallow(result);
+      expect(wrapper.find('span')).to.have.length(1);
+      expect(wrapper.find('span').hasClass('oc-md-hl-italic')).to.equal(true);
+      expect(wrapper.text()).to.equal(props.children);
+    });
+
+    it('render props with marks', () => {
+      const props = {
+        node: { type: 'text' },
+        children: '---',
+        mark: { type: 'hr' }
+      };
+      const result = rendererComponent(props);
+      const wrapper = shallow(result);
+      expect(wrapper.find('span')).to.have.length(2);
+      expect(wrapper.find('span').at(1).hasClass('oc-md-hl-hr')).to.equal(true);
+      expect(wrapper.find('span').at(1).text()).to.equal(props.children);
+    });
+  });
+
+  describe('schema - rules - match', () => {
+    const result = schema.rules[0].match();
+    expect(result).to.equal(true);
+  });
+
   it('should highlight blockquote', () => {
     let html;
 
@@ -38,10 +95,11 @@ describe('plain editor schema', () => {
   });
 
   it('should highlight code (tripple ticks)', () => {
-    let html;
+    let html, candidate;
 
     html = '```code```';
-    assert.equal(getHtml(html), '<span class="token code">```code```</span>');
+    candidate = '<span class="token code">```code```</span>';
+    assert.equal(getHtml(html), candidate);
 
     html = '````code```';
     assert.equal(getHtml(html), '````code```');
@@ -50,32 +108,31 @@ describe('plain editor schema', () => {
     assert.equal(getHtml(html), '```code````');
   });
 
-//   it('should highlight code block', () => {
-//     let html;
+  it('should highlight code block', () => {
+    let html, candidate;
 
-//     html =
-// `\`\`\`
-// code
-// \`\`\``;
-//     assert.equal(getHtml(html), '<span class="token code">```\ncode\n```</span>');
+    html =
+`\`\`\`
+code
+\`\`\``;
+    candidate = '<span class="token codeblock">```\ncode\n```</span>';
+    assert.equal(getHtml(html), candidate);
 
-//     html = '````code```';
-//     assert.equal(getHtml(html), '`<span class="token code">```code```</span>');
-
-//     html = '```code````';
-//     assert.equal(getHtml(html), '<span class="token code">```code```</span>`');
-
-//     html = '```````';
-//     assert.equal(getHtml(html), '`<span class="token code">``````</span>');
-
-//     html = '```````';
-//     assert.equal(getHtml(html), '<span class="token code">``````</span>`');
-//   });
+    html =
+`\`\`\`
+co\`\`de
+\`\`\``;
+    candidate =
+`\`\`\`
+co\`\`de
+\`\`\``;
+    assert.equal(getHtml(html), candidate);
+  });
 
   it('should highlight header1', () => {
     let html;
 
-    html = '# Header';
+    html = `# Header`;
     assert.equal(getHtml(html), '<span class="token header1"># Header</span>');
 
     html = '#Header';
@@ -251,19 +308,19 @@ describe('plain editor schema', () => {
 `- item-1
 - item-2
 - item-3`;
-    candidate = `<span class="token list">- item-1</span><span class="token list">\n- item-2</span><span class="token list">\n- item-3</span>`;
+    candidate = `<span class="token list">- item-1</span>\n<span class="token list">- item-2</span>\n<span class="token list">- item-3</span>`;
 
     assert.equal(getHtml(html), candidate);
 
     html =
-`- item-1
+      `- item-1
   - item-1-1
   - item-1-2
 - item-2
   - item-1-2
 - item-3`;
 
-    candidate = '<span class="token list">- item-1</span><span class="token list">\n  - item-1-1</span><span class="token list">\n  - item-1-2</span><span class="token list">\n- item-2</span><span class="token list">\n  - item-1-2</span><span class="token list">\n- item-3</span>';
+    candidate = '<span class="token list">- item-1</span>\n<span class="token list">  - item-1-1</span>\n<span class="token list">  - item-1-2</span>\n<span class="token list">- item-2</span>\n<span class="token list">  - item-1-2</span>\n<span class="token list">- item-3</span>';
 
     assert.equal(getHtml(html), candidate);
   });
@@ -491,11 +548,38 @@ describe('plain editor schema', () => {
     html = '_italic__italic_italic_';
     candidate = '<span class="token italic">_italic__italic_italic_</span>';
     assert.equal(getHtml(html), candidate);
+  });
 
-    // uncompatible with markdown-it. should be:
-    // html = '___italic__italic_';
-    // candidate = '<span class="token italic">_italic__italic_</span>__';
-    // assert.equal(getHtml(html), candidate);
+  it('should highlight ___bold__ italic_', () => {
+    let html = '___bold__ italic_';
+    let candidate = '<span class="token italic">_<span class="token bold">__bold__</span> italic_</span>';
+    assert.equal(getHtml(html), candidate);
+  });
+
+  // this case isn't processed
+  it.skip('should highlight ___bold italic text_ bold__', () => {
+    let html = '___bold italic text_ bold__';
+    let candidate = '<span class="token bold">__<span class="token italic">_bold italic text_</span> bold__</span>';
+    assert.equal(getHtml(html), candidate);
+  });
+
+  // this case isn't processed
+  it.skip('should highlight __bold _italic text bold___', () => {
+    let html = '__bold _italic text bold___';
+    let candidate = '<span class="token bold">__bold <span class="token italic">_italic text bold_</span>__</span>';
+    assert.equal(getHtml(html), candidate);
+  });
+
+  it('should highlight _italic __bold___', () => {
+    let html = '_italic __bold___';
+    let candidate = '<span class="token italic">_italic <span class="token bold">__bold__</span>_</span>';
+    assert.equal(getHtml(html), candidate);
+  });
+
+  it('should highlight __bold _italic_ bold__ simple __bold__', () => {
+    let html = '__bold _italic_ bold__ simple __bold__';
+    let candidate = '<span class="token bold">__bold <span class="token italic">_italic_</span> bold__</span> simple <span class="token bold">__bold__</span>';
+    assert.equal(getHtml(html), candidate);
   });
 
   it('should highlight italic (asterisks)', () => {
@@ -644,6 +728,42 @@ describe('plain editor schema', () => {
     assert.equal(getHtml(html), candidate);
   });
 
+  it('should highlight _italic_ empty _italic_', () => {
+    let html;
+    let candidate;
+
+    html = '_italic_ empty _italic_';
+    candidate = `<span class="token italic">_italic_</span> empty <span class="token italic">_italic_</span>`;
+    assert.equal(getHtml(html), candidate);
+  });
+
+  it('should highlight _italic __bold__ italic_', () => {
+    let html;
+    let candidate;
+
+    html = '_italic __bold__ italic_';
+    candidate = `<span class="token italic">_italic <span class="token bold">__bold__</span> italic_</span>`;
+    assert.equal(getHtml(html), candidate);
+  });
+
+  it('should highlight _italic __bold_bold_bold__ italic_', () => {
+    let html;
+    let candidate;
+
+    html = '_italic __bold_bold_bold__ italic_';
+    candidate = `<span class="token italic">_italic <span class="token bold">__bold_bold_bold__</span> italic_</span>`;
+    assert.equal(getHtml(html), candidate);
+  });
+
+  it('should not highlight _italic \n empty italic_', () => {
+    let html;
+    let candidate;
+
+    html = '_italic \n empty italic_';
+    candidate = `_italic \n empty italic_`;
+    assert.equal(getHtml(html), candidate);
+  });
+
   it('should highlight strikethrough inside italic', () => {
     let html;
     let candidate;
@@ -753,8 +873,15 @@ describe('plain editor schema', () => {
     assert.equal(getHtml(html), candidate);
 
     html = '~~___bold___~~';
-    candidate = `<span class="token strikethrough">~~<span class="token bold">__<span class="token italic">_bold_</span>__</span>~~</span>`;
-    assert.equal(getHtml(html), candidate);
+    let candidate1 = escapeRegExp(
+      `<span class="token strikethrough">~~<span class="token bold">__<span class="token italic">_bold_</span>__</span>~~</span>`
+    );
+    let candidate2 = escapeRegExp(
+      `<span class="token strikethrough">~~<span class="token italic">_<span class="token bold">__bold__</span>_</span>~~</span>`
+    );
+
+    assert.match(getHtml(html), new RegExp(`(${candidate1}|${candidate2})`));
+
 
     html = '~~***bold***~~';
     candidate = `<span class="token strikethrough">~~<span class="token bold">**<span class="token italic">*bold*</span>**</span>~~</span>`;

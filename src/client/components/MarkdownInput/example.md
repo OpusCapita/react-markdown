@@ -1,4 +1,23 @@
 just a text
+
+_italic_ simple _italic_
+_italic __bold__ italic_ simple _italic_
+_italic __bold_bold_bold__ italic_ simple _italic_
+_italic_italic italic__ simple _italic_
+_italic italic_italic_ simple _italic_
+__italic_italic italic_ simple _italic_
+
+___bold__ italic_
+_italic __bold___
+
+__bold__ simple __bold__
+__bold _italic_ bold__
+__bold _italic_ bold__ simple __bold__
+
+__bold _italic_italic_ bold__
+__bold text_bold__
+__bold italic text_bold__
+
 **bold text**
 *italic text*
 ***bold italic text***
@@ -83,6 +102,13 @@ Unordered
     + Facilisis in pretium nisl aliquet
     - Nulla volutpat aliquam velit
 + Very easy!
+
+Oredered
+
+1. Item
+2. Item
+3. Item
+4. Item
 
 code block
 

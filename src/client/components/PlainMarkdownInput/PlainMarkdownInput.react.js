@@ -3,7 +3,9 @@ import Types from 'prop-types';
 import FullScreenButton from '../SlateEditor/plugins/slate-fullscreen-plugin/FullScreenButton';
 import DropdownButton from 'react-bootstrap/lib/DropdownButton';
 import schema from './slate/schema';
+import { createCustomCharacters } from './slate/schema';
 import shortcuts from './slate/shortcuts';
+import deserialize from './slate/deserialize';
 import { hasMultiLineSelection } from './slate/transforms';
 import './PlainMarkdownInput.less';
 
@@ -28,11 +30,10 @@ import {
 } from './buttons';
 
 import { SlateContent, SlateEditor, SlateToolbar, SlateToolbarGroup } from '../SlateEditor';
-import { Plain } from '@opuscapita/slate';
 
 class PlainMarkdownInput extends React.Component {
   state = {
-    editorState: Plain.deserialize(this.props.value || ''),
+    editorState: createCustomCharacters(deserialize(this.props.value || '')),
     fullScreen: false
   };
 
@@ -40,10 +41,9 @@ class PlainMarkdownInput extends React.Component {
     this.initialBodyOverflowStyle = document.body.style.overflow;
   }
 
-  handleChange = (editorState) => {
-    this.props.onChange(Plain.serialize(editorState));
 
-    this.setState({ editorState });
+  handleChange = (editorState) => {
+    this.setState({ editorState: createCustomCharacters(editorState) });
   };
 
   handleFullScreen = () => {
@@ -55,7 +55,7 @@ class PlainMarkdownInput extends React.Component {
     this.props.onFullScreen(fullScreen);
   };
 
-  onKeyDown(event, data, state) {
+  handleKeyDown(event, data, state) {
     return shortcuts(event, data, state);
   }
 
@@ -80,11 +80,13 @@ class PlainMarkdownInput extends React.Component {
         state={editorState}
         fullScreen={fullScreen}
         schema={schema}
+        onKeyDown={this.handleKeyDown}
         onChange={this.handleChange}
         plugins={[
           AutocompletePlugin({ extensions: extensions, onChange: this.handleChange })
         ]}
       >
+
         <SlateToolbar>
           <SlateToolbarGroup>
             <BoldButton/>

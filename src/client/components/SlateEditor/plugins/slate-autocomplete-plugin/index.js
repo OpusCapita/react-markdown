@@ -10,7 +10,7 @@ const AutocompletePlugin = options => ({
       <AutocompleteContainer
         state={state}
         options={options}
-        onChange={options.onChange}
+        onChange={options.onChange} // eslint-disable-line
       >
         {children}
       </AutocompleteContainer>

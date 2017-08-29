@@ -1,12 +1,92 @@
 // common reg expressions
-const olRegExp = /^[0-9]+\.\s/;
-const ulRegExp = /^\*\s/;
-const h1RegExp = /^#\s/;
-const h2RegExp = /^##\s/;
-const h3RegExp = /^###\s/;
-const h4RegExp = /^####\s/;
-const h5RegExp = /^#####\s/;
-const h6RegExp = /^######\s/;
+const olRegExp = /^ *[0-9]+\.\s/m;
+const ulRegExp = /^ *[\*\+\-]\s/m;
+const h1RegExp = /^#\s/m;
+const h2RegExp = /^##\s/m;
+const h3RegExp = /^###\s/m;
+const h4RegExp = /^####\s/m;
+const h5RegExp = /^#####\s/m;
+const h6RegExp = /^######\s/m;
+
+const lengths = {
+  bold: 2,
+  italic: 1,
+  'strikethrough': 2,
+  all: 3,
+};
+
+function getMarkPositions({ state, markType }) {
+  const { startOffset, endOffset } = state;
+  let hasMark = true;
+  let startPos = startOffset - 1;
+
+  while (hasMark && startPos >= 0) {
+    const marks = state.customCharacters.get(startPos).marks.toArray();
+    let hasMarkOfPos = false;
+    for (let i = 0; i < marks.length; i++) {
+      if (markType === marks[i].type) {
+        hasMarkOfPos = true;
+        break;
+      }
+    }
+
+    if (hasMarkOfPos) {
+      startPos--;
+    } else {
+      hasMark = false;
+    }
+  }
+  startPos++;
+
+  let endPos = endOffset;
+  hasMark = true;
+  while (hasMark && endPos < state.customCharacters.size) {
+    const marks = state.customCharacters.get(endPos).marks.toArray();
+    let hasMarkOfPos = false;
+    for (let i = 0; i < marks.length; i++) {
+      if (markType === marks[i].type) {
+        hasMarkOfPos = true;
+        break;
+      }
+    }
+
+    if (hasMarkOfPos) {
+      endPos++;
+    } else {
+      hasMark = false;
+    }
+  }
+  endPos--;
+
+  return { startPos, endPos };
+}
+
+function unwrapText({ state, markType }) {
+  const { startOffset, endOffset, focusText } = state;
+  const { startPos, endPos } = getMarkPositions({ state, markType });
+
+  if (startOffset === endOffset && (startOffset === startPos || startOffset === endPos + 1)) {
+    return state;
+  }
+
+  const markLength = lengths[markType];
+  const startNewOffset = Math.max(startPos, startOffset - markLength);
+  let maxNewEndPos = endPos - markLength * 2 + 1;
+
+  const endNewOffset = Math.min(endOffset - markLength, maxNewEndPos);
+  return state.transform().
+    removeTextByKey(focusText.key, endPos - markLength + 1, markLength). // Remove a closing mark
+    removeTextByKey(focusText.key, startPos, markLength). // Remove an opening mark
+    moveOffsetsTo(startNewOffset, endNewOffset).
+    focus().apply();
+}
+
+function getPreviousLineEnd(state) {
+  const { startOffset, focusText } = state;
+  const text = focusText.text;
+  const startPos = startOffset - (text[startOffset] === '\n' ? 1 : 0);
+  return text.lastIndexOf('\n', startPos);
+}
 
 /**
  * Has block selected
@@ -14,11 +94,10 @@ const h6RegExp = /^######\s/;
  * @param regExp - match regexp
  * @param state - editor state
  */
-const hasBlock = function(regExp, state) {
-  const { focusText } = state;
-  const focusedText = focusText.text;
-  return regExp.test(focusedText);
-};
+function hasBlock(regExp, state) {
+  let currLine = getCurrentLine(state); // eslint-disable-line
+  return regExp.test(currLine);
+}
 
 /**
  * Unwrap block
@@ -26,14 +105,15 @@ const hasBlock = function(regExp, state) {
  * @param removedLength - first length should be removed
  * @param state - editor state
  */
-const unwrapBlock = function(removedLength, state) {
+function unwrapBlock(removedLength, state) {
   const { startOffset, endOffset } = state;
+  const prevLineEnd = getPreviousLineEnd(state);
   return state.transform().
-    moveOffsetsTo(0).
+    moveOffsetsTo(prevLineEnd + 1).
     deleteForward(removedLength).
     moveOffsetsTo(Math.max(startOffset - removedLength, 0), Math.max(endOffset - removedLength, 0)).
     focus().apply();
-};
+}
 
 /**
  * Wrap block
@@ -42,22 +122,90 @@ const unwrapBlock = function(removedLength, state) {
  * @param text - marker of the block
  * @param state - editor state
  */
-const wrapBlock = function(matchRules, text, state) {
-  const { startOffset, endOffset, focusText } = state;
-  const focusedText = focusText.text;
-  const t = state.transform().moveOffsetsTo(0);
+function wrapBlock(matchRules, text, state) {
+  const { startOffset, endOffset } = state;
+  let currLine = getCurrentLine(state); // eslint-disable-line
+  const previousLineEnd = getPreviousLineEnd(state);
+  let afterState = state;
   let length = 0;
   for (let i = 0, k = matchRules.length; i < k; i++) {
-    const result = matchRules[i].exec(focusedText);
+    const result = matchRules[i].exec(currLine);
     if (result) {
       length = result[0].length;
-      t.deleteForward(length);
+      afterState = unwrapBlock(length, state);
       break;
     }
   }
-  return t.insertText(text).
-    moveOffsetsTo(Math.max(startOffset + text.length - length, 0), Math.max(endOffset + text.length - length, 0)).
+
+  const delta = text.length - length;
+
+  return afterState.transform().
+    moveOffsetsTo(previousLineEnd + 1).
+    insertText(text).
+    moveOffsetsTo(Math.max(startOffset + delta, 0), Math.max(endOffset + delta, 0)).
     focus().apply();
+}
+
+function getOffsetMarks(state) {
+  const { startOffset, endOffset } = state;
+  let resultMarks = [];
+
+  if (startOffset === endOffset) {
+    if (startOffset === 0 || startOffset >= state.customCharacters.size) {
+      return [];
+    }
+
+    const marksPrev = state.customCharacters.get(startOffset - 1).marks.toArray();
+    const marksPrevArray = [];
+    for (let i = 0; i < marksPrev.length; i++) {
+      marksPrevArray.push(marksPrev[i].type);
+    }
+    const marksNext = state.customCharacters.get(startOffset).marks.toArray();
+    for (let i = 0; i < marksNext.length; i++) {
+      const currMark = marksNext[i].type;
+      if (marksPrevArray.indexOf(currMark) !== -1) {
+        resultMarks.push(currMark);
+      }
+    }
+  } else {
+    if (hasMultiLineSelection(state)) {
+      return [];
+    }
+
+    const startMarks = state.customCharacters.get(startOffset).marks.toArray();
+    for (let i = 0; i < startMarks.length; i++) {
+      resultMarks.push(startMarks[i].type);
+    }
+
+    let currOffset = startOffset + 1;
+    while (resultMarks.length > 0 && currOffset < endOffset) {
+      const tmpMarks = [];
+      const currMarks = state.customCharacters.get(currOffset).marks.toArray();
+      for (let i = 0; i < currMarks.length; i++) {
+        const currMark = currMarks[i].type;
+        if (resultMarks.indexOf(currMark) !== -1) {
+          tmpMarks.push(currMark);
+        }
+      }
+      resultMarks = tmpMarks;
+      currOffset++
+    }
+  }
+
+  return resultMarks;
+}
+
+export const getCurrentLine = state => {
+  const { startOffset, focusText } = state;
+  const text = focusText.text;
+
+  if (startOffset === 0 && text[startOffset] === '\n' ||
+    text[startOffset - 1] === '\n' && text[startOffset] === '\n') {
+    return '';
+  }
+
+  const prevLineEnd = getPreviousLineEnd(state);
+  return (prevLineEnd === -1 ? text : text.substr(prevLineEnd + 1)).split('\n', 1)[0];
 };
 
 /**
@@ -66,14 +214,8 @@ const wrapBlock = function(matchRules, text, state) {
  * @param state - editor state
  */
 export const hasItalicMarkdown = state => {
-  const { startOffset, endOffset, focusText } = state;
-  const focusedText = focusText.text;
-  if ((startOffset - 1) >= 0 && endOffset + 1 <= focusedText.length) {
-    const text = focusedText.slice(startOffset - 1, endOffset + 1);
-    return text && text.startsWith('_') && text.endsWith('_');
-  } else {
-    return false;
-  }
+  const offsetMarks = getOffsetMarks(state);
+  return offsetMarks.indexOf('italic') !== -1;
 };
 
 /**
@@ -87,8 +229,8 @@ export const wrapItalicMarkdown = state => {
   if (startOffset === endOffset) {
     const text = '';
     t.insertText('_' + text + '_').
-      move(-1).
-      extend(text.length * -1);
+    move(-1).
+    extend(text.length * -1);
   } else {
     t.wrapText('_', '_');
   }
@@ -101,11 +243,7 @@ export const wrapItalicMarkdown = state => {
  * @param state - editor state
  */
 export const unwrapItalicMarkdown = state => {
-  const { startOffset, endOffset, focusText } = state;
-  return state.transform().
-    removeTextByKey(focusText.key, endOffset, 1).
-    removeTextByKey(focusText.key, startOffset - 1, 1).
-    focus().apply();
+  return unwrapText({ state, markType: 'italic' });
 };
 
 /**
@@ -114,14 +252,8 @@ export const unwrapItalicMarkdown = state => {
  * @param state - editor state
  */
 export const hasBoldMarkdown = state => {
-  const { startOffset, endOffset, focusText } = state;
-  const focusedText = focusText.text;
-  if ((startOffset - 2) >= 0 && endOffset + 2 <= focusedText.length) {
-    const text = focusedText.slice(startOffset - 2, endOffset + 2);
-    return text && text.startsWith('**') && text.endsWith('**');
-  } else {
-    return false;
-  }
+  const offsetMarks = getOffsetMarks(state);
+  return offsetMarks.indexOf('bold') !== -1;
 };
 
 /**
@@ -135,8 +267,8 @@ export const wrapBoldMarkdown = state => {
   if (startOffset === endOffset) {
     const text = '';
     t.insertText('**' + text + '**').
-      move(-2).
-      extend(text.length * -1);
+    move(-2).
+    extend(text.length * -1);
   } else {
     t.wrapText('**', '**');
   }
@@ -149,11 +281,7 @@ export const wrapBoldMarkdown = state => {
  * @param state - editor state
  */
 export const unwrapBoldMarkdown = state => {
-  const { startOffset, endOffset, focusText } = state;
-  return state.transform().
-    removeTextByKey(focusText.key, endOffset, 2).
-    removeTextByKey(focusText.key, startOffset - 2, 2).
-    focus().apply()
+  return unwrapText({ state, markType: 'bold' });
 };
 
 /**
@@ -162,14 +290,8 @@ export const unwrapBoldMarkdown = state => {
  * @param state - editor state
  */
 export const hasStrikethroughMarkdown = state => {
-  const { startOffset, endOffset, focusText } = state;
-  const focusedText = focusText.text;
-  if ((startOffset - 2) >= 0 && endOffset + 2 <= focusedText.length) {
-    const text = focusedText.slice(startOffset - 2, endOffset + 2);
-    return text && text.startsWith('~~') && text.endsWith('~~');
-  } else {
-    return false;
-  }
+  const offsetMarks = getOffsetMarks(state);
+  return offsetMarks.indexOf('strikethrough') !== -1;
 };
 
 /**
@@ -183,8 +305,8 @@ export const wrapStrikethroughMarkdown = state => {
   if (startOffset === endOffset) {
     const text = '';
     t.insertText('~~' + text + '~~').
-      move(-2).
-      extend(text.length * -1)
+    move(-2).
+    extend(text.length * -1)
   } else {
     t.wrapText('~~', '~~');
   }
@@ -192,16 +314,12 @@ export const wrapStrikethroughMarkdown = state => {
 };
 
 /**
- * Unwrap text with strikethrought markdown tokens
+ * Unwrap text with strike-throught markdown tokens
  *
  * @param state - editor state
  */
 export const unwrapStrikethroughMarkdown = state => {
-  const { startOffset, endOffset, focusText } = state;
-  return state.transform().
-    removeTextByKey(focusText.key, endOffset, 2).
-    removeTextByKey(focusText.key, startOffset - 2, 2).
-    focus().apply()
+  return unwrapText({ state, markType: 'strikethrough' });
 };
 
 /**
@@ -210,9 +328,20 @@ export const unwrapStrikethroughMarkdown = state => {
  * @param state - editor state
  */
 export const unwrapOrderedListMarkdown = state => {
-  const { focusText } = state;
-  const focusedText = focusText.text;
-  const result = olRegExp.exec(focusedText);
+  let currLine = getCurrentLine(state);
+  const result = olRegExp.exec(currLine);
+  const length = result[0].length;
+  return unwrapBlock(length, state);
+};
+
+/**
+ * Unwrap text with UL markdown token
+ *
+ * @param state - editor state
+ */
+export const unwrapUnorderedListMarkdown = state => {
+  let currLine = getCurrentLine(state);
+  const result = ulRegExp.exec(currLine);
   const length = result[0].length;
   return unwrapBlock(length, state);
 };
@@ -238,10 +367,15 @@ export const wrapLinkMarkdown = state => {
 /**
  * Check is the current state selected as multi line
  *
- * @param startKey - start selection key in current editor state
- * @param endKey - end selection key in current editor state
+ * @param state - editor state
  */
-export const hasMultiLineSelection = ({ selection: { startKey, endKey } }) => startKey !== endKey;
+export const hasMultiLineSelection = state => {
+  const { startOffset, endOffset, focusText } = state;
+  const text = focusText.text;
+  const startPos = startOffset - (text[startOffset] === '\n' ? 1 : 0);
+  const endPos = endOffset - (text[endOffset] === '\n' ? 1 : 0);
+  return text.lastIndexOf('\n', startPos) !== text.lastIndexOf('\n', endPos);
+};
 
 export const hasUnorderedListMarkdown = hasBlock.bind(null, ulRegExp);
 export const hasOrderedListMarkdown = hasBlock.bind(null, olRegExp);
@@ -251,15 +385,16 @@ export const hasHeaderThreeMarkdown = hasBlock.bind(null, h3RegExp);
 export const hasHeaderFourMarkdown = hasBlock.bind(null, h4RegExp);
 export const hasHeaderFiveMarkdown = hasBlock.bind(null, h5RegExp);
 export const hasHeaderSixMarkdown = hasBlock.bind(null, h6RegExp);
+
 export const unwrapHeaderOneMarkdown = unwrapBlock.bind(null, '# '.length);
 export const unwrapHeaderTwoMarkdown = unwrapBlock.bind(null, '## '.length);
 export const unwrapHeaderThreeMarkdown = unwrapBlock.bind(null, '### '.length);
 export const unwrapHeaderFourMarkdown = unwrapBlock.bind(null, '#### '.length);
 export const unwrapHeaderFiveMarkdown = unwrapBlock.bind(null, '##### '.length);
 export const unwrapHeaderSixMarkdown = unwrapBlock.bind(null, '###### '.length);
+
 export const wrapUnorderedListMarkdown = wrapBlock.bind(null,
   [olRegExp, h1RegExp, h2RegExp, h3RegExp, h4RegExp, h5RegExp, h6RegExp], '* ');
-export const unwrapUnorderedListMarkdown = unwrapBlock.bind(null, '* '.length);
 export const wrapOrderedListMarkdown = wrapBlock.bind(null,
   [ulRegExp, h1RegExp, h2RegExp, h3RegExp, h4RegExp, h5RegExp, h6RegExp], '1. ');
 export const wrapHeaderOneMarkdown = wrapBlock.bind(null,
