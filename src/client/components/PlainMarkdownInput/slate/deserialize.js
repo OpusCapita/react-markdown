@@ -22,5 +22,6 @@ export default string => {
       }]
     }
   };
-  return Raw.deserialize(raw);
+  return Raw.deserialize(raw).transform().
+    moveOffsetsTo(0).focus().apply();
 };
