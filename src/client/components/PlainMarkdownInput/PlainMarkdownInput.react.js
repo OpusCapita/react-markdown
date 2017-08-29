@@ -10,7 +10,7 @@ import { hasMultiLineSelection } from './slate/transforms';
 import './PlainMarkdownInput.less';
 
 import {
-  AutocompletePlugin, // eslint-disable-line
+  AutocompletePlugin,
   ObjectReferenceButton
 } from '../SlateEditor/plugins';
 
@@ -61,7 +61,7 @@ class PlainMarkdownInput extends React.Component {
 
   render() {
     const { editorState } = this.state;
-    const { children, extensions } = this.props; // eslint-disable-line
+    const { children, extensions } = this.props;
 
     const fullScreen = this.props.fullScreen;
 
@@ -83,7 +83,7 @@ class PlainMarkdownInput extends React.Component {
         onKeyDown={this.handleKeyDown}
         onChange={this.handleChange}
         plugins={[
-          // AutocompletePlugin({ extensions: extensions, onChange: this.handleChange })
+          AutocompletePlugin({ extensions: extensions, onChange: this.handleChange })
         ]}
       >
 

@@ -291,7 +291,7 @@ rendererComponent.propTypes = {
  * Define a decorator for markdown styles.
  */
 
-export const addMarks = (characters, tokens, offset) => {
+function addMarks(characters, tokens, offset) {
   let updatedOffset = offset;
 
   for (let i = 0; i < tokens.length; i++) {
@@ -317,8 +317,13 @@ export const addMarks = (characters, tokens, offset) => {
 
     updatedOffset += length;
   }
-};
+}
 
+/**
+ * Object caches the last values of tokens and characters
+ * if the text hasn't changed, returns characters from the cache
+ * if the text has changed, tokens and characters are recalculated and save in a cache
+ */
 const charactersCache = {
   lastText: null,
   lastTokens: null,
@@ -330,7 +335,7 @@ const charactersCache = {
       const grammar = Prism.languages.markdown;
       this.lastText = text.text;
       this.lastTokens = Prism.tokenize(text.text, grammar);
-      addMarks(characters, this.lastTokens, 0);
+      addMarks(characters, this.lastTokens, 0); // Add marks to characters
       this.characters = characters.asImmutable();
     }
 

@@ -88,19 +88,6 @@ function getPreviousLineEnd(state) {
   return text.lastIndexOf('\n', startPos);
 }
 
-export const getCurrentLine = state => {
-  const { startOffset, focusText } = state;
-  const text = focusText.text;
-
-  if (startOffset === 0 && text[startOffset] === '\n' ||
-    text[startOffset - 1] === '\n' && text[startOffset] === '\n') {
-    return '';
-  }
-
-  const prevLineEnd = getPreviousLineEnd(state);
-  return (prevLineEnd === -1 ? text : text.substr(prevLineEnd + 1)).split('\n', 1)[0];
-};
-
 /**
  * Has block selected
  *
@@ -108,7 +95,7 @@ export const getCurrentLine = state => {
  * @param state - editor state
  */
 function hasBlock(regExp, state) {
-  let currLine = getCurrentLine(state);
+  let currLine = getCurrentLine(state); // eslint-disable-line
   return regExp.test(currLine);
 }
 
@@ -118,7 +105,7 @@ function hasBlock(regExp, state) {
  * @param removedLength - first length should be removed
  * @param state - editor state
  */
-const unwrapBlock = function(removedLength, state) {
+function unwrapBlock(removedLength, state) {
   const { startOffset, endOffset } = state;
   const prevLineEnd = getPreviousLineEnd(state);
   return state.transform().
@@ -126,7 +113,7 @@ const unwrapBlock = function(removedLength, state) {
     deleteForward(removedLength).
     moveOffsetsTo(Math.max(startOffset - removedLength, 0), Math.max(endOffset - removedLength, 0)).
     focus().apply();
-};
+}
 
 /**
  * Wrap block
@@ -135,9 +122,9 @@ const unwrapBlock = function(removedLength, state) {
  * @param text - marker of the block
  * @param state - editor state
  */
-const wrapBlock = function(matchRules, text, state) {
+function wrapBlock(matchRules, text, state) {
   const { startOffset, endOffset } = state;
-  let currLine = getCurrentLine(state);
+  let currLine = getCurrentLine(state); // eslint-disable-line
   const previousLineEnd = getPreviousLineEnd(state);
   let afterState = state;
   let length = 0;
@@ -157,9 +144,9 @@ const wrapBlock = function(matchRules, text, state) {
     insertText(text).
     moveOffsetsTo(Math.max(startOffset + delta, 0), Math.max(endOffset + delta, 0)).
     focus().apply();
-};
+}
 
-function getLetterMarks(state) { // eslint-disable-line
+function getOffsetMarks(state) {
   const { startOffset, endOffset } = state;
   let resultMarks = [];
 
@@ -208,14 +195,27 @@ function getLetterMarks(state) { // eslint-disable-line
   return resultMarks;
 }
 
+export const getCurrentLine = state => {
+  const { startOffset, focusText } = state;
+  const text = focusText.text;
+
+  if (startOffset === 0 && text[startOffset] === '\n' ||
+    text[startOffset - 1] === '\n' && text[startOffset] === '\n') {
+    return '';
+  }
+
+  const prevLineEnd = getPreviousLineEnd(state);
+  return (prevLineEnd === -1 ? text : text.substr(prevLineEnd + 1)).split('\n', 1)[0];
+};
+
 /**
  * Has text wrapped italic markdown tokens
  *
  * @param state - editor state
  */
 export const hasItalicMarkdown = state => {
-  const letterMarks = getLetterMarks(state);
-  return letterMarks.indexOf('italic') !== -1;
+  const offsetMarks = getOffsetMarks(state);
+  return offsetMarks.indexOf('italic') !== -1;
 };
 
 /**
@@ -252,8 +252,8 @@ export const unwrapItalicMarkdown = state => {
  * @param state - editor state
  */
 export const hasBoldMarkdown = state => {
-  const letterMarks = getLetterMarks(state);
-  return letterMarks.indexOf('bold') !== -1;
+  const offsetMarks = getOffsetMarks(state);
+  return offsetMarks.indexOf('bold') !== -1;
 };
 
 /**
@@ -290,8 +290,8 @@ export const unwrapBoldMarkdown = state => {
  * @param state - editor state
  */
 export const hasStrikethroughMarkdown = state => {
-  const letterMarks = getLetterMarks(state);
-  return letterMarks.indexOf('strikethrough') !== -1;
+  const offsetMarks = getOffsetMarks(state);
+  return offsetMarks.indexOf('strikethrough') !== -1;
 };
 
 /**
@@ -334,6 +334,11 @@ export const unwrapOrderedListMarkdown = state => {
   return unwrapBlock(length, state);
 };
 
+/**
+ * Unwrap text with UL markdown token
+ *
+ * @param state - editor state
+ */
 export const unwrapUnorderedListMarkdown = state => {
   let currLine = getCurrentLine(state);
   const result = ulRegExp.exec(currLine);
@@ -359,6 +364,11 @@ export const wrapLinkMarkdown = state => {
   return t.focus().apply();
 };
 
+/**
+ * Check is the current state selected as multi line
+ *
+ * @param state - editor state
+ */
 export const hasMultiLineSelection = state => {
   const { startOffset, endOffset, focusText } = state;
   const text = focusText.text;
@@ -366,13 +376,6 @@ export const hasMultiLineSelection = state => {
   const endPos = endOffset - (text[endOffset] === '\n' ? 1 : 0);
   return text.lastIndexOf('\n', startPos) !== text.lastIndexOf('\n', endPos);
 };
-
-/**
- * Check is the current state selected as multi line
- *
- * @param startKey - start selection key in current editor state
- * @param endKey - end selection key in current editor state
- */
 
 export const hasUnorderedListMarkdown = hasBlock.bind(null, ulRegExp);
 export const hasOrderedListMarkdown = hasBlock.bind(null, olRegExp);
