@@ -1,7 +1,7 @@
 import React from 'react';
 import Types from 'prop-types';
 import Prism from 'prismjs';
-import { Mark } from '@opuscapita/slate';
+import { Mark } from 'slate';
 
 /**
  * Add the markdown syntax to Prism.

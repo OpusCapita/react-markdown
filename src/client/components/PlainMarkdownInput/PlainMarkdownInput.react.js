@@ -28,7 +28,7 @@ import {
 } from './buttons';
 
 import { SlateContent, SlateEditor, SlateToolbar, SlateToolbarGroup } from '../SlateEditor';
-import { Plain } from '@opuscapita/slate';
+import Plain from 'slate-plain-serializer';
 
 class PlainMarkdownInput extends React.Component {
   state = {
@@ -40,7 +40,11 @@ class PlainMarkdownInput extends React.Component {
     this.initialBodyOverflowStyle = document.body.style.overflow;
   }
 
-  handleChange = (editorState) => {
+  handleChange = (obj) => {
+    // XXX Slate "Editor.props.onChange" behavior changed
+    // https://github.com/ianstormtaylor/slate/blob/master/packages/slate/Changelog.md#0220--september-5-2017
+    let editorState = obj.state || obj;
+
     this.props.onChange(Plain.serialize(editorState));
 
     this.setState({ editorState });

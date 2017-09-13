@@ -153,7 +153,7 @@ export const unwrapBoldMarkdown = state => {
   return state.transform().
     removeTextByKey(focusText.key, endOffset, 2).
     removeTextByKey(focusText.key, startOffset - 2, 2).
-    focus().apply()
+    focus().apply();
 };
 
 /**
