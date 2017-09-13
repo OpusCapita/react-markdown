@@ -1,7 +1,7 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 import { expect } from 'chai';
-import { Plain } from '@opuscapita/slate';
+import Plain from 'slate-plain-serializer';
 import HeaderTwoButton from '../HeaderTwoButton';
 
 describe('<HeaderTwoButton/>', () => {

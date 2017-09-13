@@ -88,12 +88,15 @@
     "write-file-webpack-plugin": "3.4.2"
   },
   "dependencies": {
-    "@opuscapita/slate": "0.21.2-08-15-2017-1",
     "classnames": "2.2.5",
+    "immutable": "3.8.1",
     "lodash": "4.17.4",
     "prismjs": "1.6.0",
     "prop-types": "15.5.10",
-    "react-bootstrap": "0.31.2"
+    "react-bootstrap": "0.31.2",
+    "slate": "0.24.0",
+    "slate-plain-serializer": "0.1.0",
+    "slate-react": "0.1.0"
   },
   "grails": {
     "groupId": "com.opuscapita.grailsplugins",

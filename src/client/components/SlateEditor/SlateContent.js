@@ -1,5 +1,5 @@
 import React from 'react';
-import { Editor } from '@opuscapita/slate';
+import { Editor } from 'slate-react';
 import Types from 'prop-types';
 import './SlateContent.less';
 
