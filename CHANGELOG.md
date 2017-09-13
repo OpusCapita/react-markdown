@@ -1,3 +1,10 @@
+## [v1.0.4](https://github.com/OpusCapita/react-markdown/compare/v1.0.3...v1.0.4) (Wed, 13 Sep 2017 14:50:03 GMT)
+ - Merge branch 'master' of opuscapita.github.com:OpusCapita/react-markdown (894cbe8 749d4f0, 9866bc4)
+ - Replace "@opuscapita/slate" => "slate*" dependency (#49) (Kirill Volkovich <kvolkovich-sc@users.noreply.github.com>, 749d4f0)
+ - Replace "@opuscapita/slate" => "slate*" dependency (Kirill Volkovich <kirill.volkovich@jcatalog.com>, 894cbe8)
+ - Update README.md (Alexey Sergeev <asergeev-sc@users.noreply.github.com>, 8eb2896)
+ - Update README.md (Alexey Sergeev <asergeev-sc@users.noreply.github.com>, 01e187e)
+
 ## [v1.0.3](https://github.com/OpusCapita/react-markdown/compare/v1.0.2...v1.0.3) (Fri, 25 Aug 2017 11:37:13 GMT)
  - #41 Fix - Could not position cursor to the Markdown Input if value is empty (#42) (Kirill Volkovich <kvolkovich-sc@users.noreply.github.com>, 7920efc)
  - Fixing script (Alexey Sergeev <sab@scand.com>, 717317e)
