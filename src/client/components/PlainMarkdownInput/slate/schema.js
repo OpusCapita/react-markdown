@@ -2,6 +2,20 @@ import React from 'react';
 import Types from 'prop-types';
 import Prism from 'prismjs';
 import { Mark } from 'slate';
+import MarkdownIt from 'markdown-it';
+import _ from 'lodash';
+
+const markdown = new MarkdownIt({
+  html:         false,        // Enable HTML tags in source
+  xhtmlOut:     false,        // Use '/' to close single tags (<br />).
+                              // This is only for full CommonMark compatibility.
+  breaks:       false,        // Convert '\n' in paragraphs into <br>
+  langPrefix:   'language-',  // CSS language prefix for fenced blocks. Can be
+                              // useful for external highlighters.
+  // Enable some language-neutral replacement + quotes beautification
+  typographer:  false
+});
+
 
 /**
  * Add the markdown syntax to Prism.
@@ -313,14 +327,346 @@ function addMarks(characters, tokens, offset) {
   }
 }
 
+function changeText(tokens, markup = '') {
+  for (let i = 0; i < tokens.length; i++) {
+    if (tokens[i].type === 'text') {
+      tokens[i] = (i === 0 && markup !== '' ? `${markup} ` : '') + tokens[i].content;
+    } else if (tokens[i].type === 'code_inline') {
+      let content = `${tokens[i].markup}${tokens[i].content}${tokens[i].markup}`;
+      let length = content.length;
+      if (tokens[i].markup === '```') {
+        content = [content];
+      }
+      tokens[i] = {
+        type: "code",
+        content,
+        length,
+        greedy: false
+      };
+    }
+  }
+  return tokens;
+}
+
+function getTokensLength(tokens) {
+  if (typeof token === 'string') {
+    return token.length;
+  }
+  return tokens.reduce((acc, token) => {
+    // if (typeof token === 'string') {
+    //   return token.length;
+    // }
+    return acc + (token.length ? token.length : 0);
+  }, 0);
+}
+
+function getHeaderContent(tokens, type, markup = '') {
+  const content = {
+    type: type,
+    content: changeText(tokens[1].children, markup),
+    greedy: false
+  };
+  content.length = getTokensLength(content.content);
+  return content;
+}
+
+function getContent(tokens, type, markup = '') {
+  const content = {
+    type: type,
+    content: preprocessTokens(tokens.slice(1, -1))
+  };
+  if (markup !== '') {
+    content.markup = markup;
+  }
+  return content;
+}
+
+const HEADERS = {
+  h1: 'header1',
+  h2: 'header2',
+  h3: 'header3',
+  h4: 'header4',
+  h5: 'header5',
+  h6: 'header6'
+};
+
+function joinArrString(arr) {
+  let resultArr = [];
+  let stringArr = [];
+  for (let i = 0; i < arr.length; i++) {
+    if (typeof arr[i] === 'string') {
+      stringArr.push(arr[i]);
+    } else {
+      if (stringArr.length > 0) {
+        resultArr.push(stringArr.join(''));
+        stringArr = [];
+      }
+      resultArr.push(arr[i]);
+    }
+  }
+  if (stringArr.length > 0) {
+    resultArr.push(stringArr.join(''));
+  }
+  return resultArr;
+}
+
+function parseBlockquote(token) {
+  if (token.type === 'blockquote') {
+    token = parseBlockquote(token.content);
+    token.unshift('>');
+  } else {
+    token.unshift(' ');
+  }
+  return token;
+}
+
+function preprocessTokens(tokens) {
+  let tokensLen = tokens.length;
+
+  if (tokens.length === 1) {
+    if (tokens[0].type === 'hr') {
+      return [{
+        type: "hr",
+        content: tokens[0].markup,
+        length: 3,
+        greedy: false
+      }]
+    } else if (tokens[0].type === 'code_block' &&
+      !/^[\+\-\*]/.test(tokens[0].content) && tokens[0].markup === '') {
+      return [tokens[0].content];
+    }
+  }
+
+  if (tokens.length > 2) {
+    if (tokens[0].type === 'blockquote_open' &&
+      tokens[tokensLen - 1].type === 'blockquote_close') {
+      return getContent(tokens, 'blockquote', tokens[0].markup);
+    }
+    if (tokens[0].type === 'bullet_list_open' &&
+      tokens[tokensLen - 1].type === 'bullet_list_close') {
+      return getContent(tokens, 'bullet_list', tokens[0].markup);
+    }
+    if (tokens[0].type === 'list_item_open' &&
+      tokens[tokensLen - 1].type === 'list_item_close') {
+      return getContent(tokens, 'list_item', tokens[0].markup);
+    }
+    if (tokens[0].type === 'paragraph_open' &&
+      tokens[tokensLen - 1].type === 'paragraph_close') {
+      return changeText(tokens[1].children);
+    }
+    if (tokens[0].type === 'heading_open' &&
+      tokens[tokensLen - 1].type === 'heading_close') {
+      return [getHeaderContent(tokens, HEADERS[tokens[0].tag], tokens[0].markup)];
+    }
+  }
+  return tokens;
+}
+
+const EMPHASISES = {
+  strong: 'bold',
+  em: 'italic',
+  s: 'strikethrough',
+  link: 'url'
+};
+
+function getEmphasisType(openTag) {
+  return EMPHASISES[openTag.split('_')[0]];
+}
+
+function getCloseTag(openTag) {
+  return `${openTag.split('_')[0]}_close`;
+}
+
+function getClosePos(tokens, startPos, closeTag) {
+  for (let i = startPos + 1; i < tokens.length; i++) {
+    if (tokens[i].type === closeTag) {
+      return i;
+    }
+  }
+
+  return -1;
+}
+
+function getAttr(attrs, attrName) {
+  let attr = null;
+  for (let i = 0; i < attrs.length; i++) {
+    if (attrs[i][0] === attrName) {
+      return attrs[i][1];
+    }
+  }
+  return false;
+}
+
+function getOneEmphasis(tokens, startPos, closePos) {
+  let intEmphasis = parseEmphasis(tokens.slice(startPos + 1, closePos));
+  if (Array.isArray(intEmphasis) && intEmphasis.length === 1) {
+    intEmphasis = intEmphasis[0];
+  }
+  if (typeof intEmphasis !== 'string') {
+    intEmphasis.length = getTokensLength([intEmphasis]);
+  }
+  return intEmphasis;
+}
+
+function parseEmphasis(tokens) {
+  const newTokens = [];
+  let i = 0;
+  while (i < tokens.length) {
+    if (typeof tokens[i] === 'string') {
+      if (tokens[i] !== '') {
+        newTokens.push(tokens[i]);
+      }
+      i++;
+    } else {
+      const currTag = tokens[i].type;
+      if (currTag === 'strong_open' ||
+        currTag === 's_open' ||
+        currTag === 'em_open' ||
+        currTag === 'link_open') {
+        const closeTag = getCloseTag(currTag);
+        const closePos = getClosePos(tokens, i, closeTag);
+        if (closePos !== -1) {
+          if (currTag === 'link_open') {
+            let urlContent = `(${getAttr(tokens[i].attrs, 'href')})`;
+            urlContent = urlContent.length > 0 ? urlContent : '';
+            let intEmphasis = getOneEmphasis(tokens, i, closePos);
+            const urlLength = urlContent.length;
+            const newToken = {
+              type: "url",
+              content: [
+                {
+                  type: "punctuation",
+                  content: "[",
+                  length: 1,
+                  greedy: false
+                },
+                intEmphasis,
+                {
+                  type: "punctuation",
+                  content: "]",
+                  length: 1,
+                  greedy: false
+                },
+                {
+                  type: "punctuation",
+                  content: urlContent,
+                  length: urlLength,
+                  greedy: false
+                }
+              ],
+              length: 1 + intEmphasis.length + 1 + urlLength,
+              greedy: false
+            };
+            newTokens.push(newToken);
+          } else {
+            let intEmphasis = getOneEmphasis(tokens, i, closePos);
+            let rawContent = joinArrString(_.flattenDeep([
+              tokens[i].markup,
+              intEmphasis,
+              tokens[i].markup
+            ]));
+            let contentLength = getTokensLength(rawContent);
+            newTokens.push({
+              type: getEmphasisType(currTag),
+              content: rawContent,
+              length: contentLength,
+              greedy: true
+            });
+          }
+          i = closePos + 1;
+        } else {
+          newTokens.push(tokens[i]);
+          i++;
+        }
+      } else {
+        newTokens.push(tokens[i]);
+        i++;
+      }
+    }
+  }
+  return newTokens;
+}
+
+function process1(string, tokens) {
+  if (tokens.type === 'blockquote') {
+    tokens.content = joinArrString(parseBlockquote(tokens));
+    tokens.length = getTokensLength(tokens.content);
+    tokens.greedy = false;
+    delete tokens.markup;
+    tokens = [tokens];
+  } else if (tokens.type === 'bullet_list' && tokens.content.type === 'list_item') {
+    tokens.content.content.unshift(`${tokens.markup} `);
+    tokens.type = 'list';
+    tokens = [{
+      type: 'list',
+      content: joinArrString(tokens.content.content),
+    }];
+  }
+
+  let result = /^[ ]+/.exec(string);
+  if (result) {
+    if (Array.isArray(tokens)) {
+      tokens.unshift(result[0]);
+    } else if (Array.isArray(tokens.content)) {
+      tokens.content.unshift(result[0]);
+    } else {
+      tokens = [result[0], tokens];
+    }
+  }
+
+  result = /[ ]+$/.exec(string);
+  if (result) {
+    if (Array.isArray(tokens)) {
+      tokens.push(result[0]);
+    } else if (Array.isArray(tokens.content)) {
+      tokens.content.push(result[0]);
+    } else {
+      tokens = [tokens, result[0]];
+    }
+  }
+
+  if (Array.isArray(tokens)) {
+    tokens = joinArrString(tokens);
+    tokens = parseEmphasis(tokens);
+  } else if (Array.isArray(tokens.content)) {
+    tokens.content = joinArrString(tokens.content);
+    tokens.content = parseEmphasis(tokens.content);
+  }
+
+  return tokens;
+}
+
+function getTokens(string) {
+  let tokens = markdown.parse(string, {});
+  tokens = preprocessTokens(tokens);
+  tokens = process1(string, tokens);
+  return tokens;
+}
+
+let cache = {
+  text: '',
+  tokens: null,
+  markers: null
+};
+
 function markdownDecorator(text, block) {
   const characters = text.characters.asMutable();
   const language = 'markdown';
   const string = text.text;
-  const grammar = Prism.languages[language];
-  const tokens = Prism.tokenize(string, grammar);
 
-  addMarks(characters, tokens, 0);
+  if (string !== cache.text) {
+    cache.text = string;
+    // const grammar = Prism.languages[language];
+    // cache.tokens = Prism.tokenize(string, grammar);
+    cache.markers = getTokens(string);
+
+    // console.log(' ');
+    // console.log(string);
+    // // console.log(JSON.stringify(cache.tokens));
+    // console.log(JSON.stringify(cache.markers));
+  }
+  addMarks(characters, cache.markers, 0);
+  // addMarks(characters, cache.tokens, 0);
   return characters.asImmutable();
 }
 
