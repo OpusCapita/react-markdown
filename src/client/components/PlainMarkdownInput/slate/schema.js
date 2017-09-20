@@ -349,13 +349,10 @@ function changeText(tokens, markup = '') {
 }
 
 function getTokensLength(tokens) {
-  if (typeof token === 'string') {
-    return token.length;
+  if (typeof tokens === 'string') {
+    return tokens.length;
   }
   return tokens.reduce((acc, token) => {
-    // if (typeof token === 'string') {
-    //   return token.length;
-    // }
     return acc + (token.length ? token.length : 0);
   }, 0);
 }
@@ -439,9 +436,18 @@ function preprocessTokens(tokens) {
         length: 3,
         greedy: false
       }]
-    } else if (tokens[0].type === 'code_block' &&
-      !/^[\+\-\*]/.test(tokens[0].content) && tokens[0].markup === '') {
-      return [tokens[0].content];
+    } else if (tokens[0].type === 'code_block') {
+      let res = /^[\+\-\*](?= )/.test(tokens[0].content);
+      if (!res && tokens[0].markup === '') {
+        return [tokens[0].content];
+      } else {
+        const content = {
+          type: 'list',
+          content: [tokens[0].content],
+          markup: res[0]
+        };
+        return [content];
+      }
     }
   }
 
@@ -611,15 +617,12 @@ function process1(string, oldTokens) {
     }];
   }
 
-  if (HEADERS_STR.indexOf(tokens[0].type) !== -1 || tokens[0].type === 'list' || tokens[0].type === 'blockquote') {
-    tokens[0].content = joinArrString(tokens[0].content);
-    tokens[0].content = parseEmphasis(tokens[0].content);
-    tokens[0].length = getTokensLength(tokens[0].content);
-  }
-
   let result = /^[ ]+/.exec(string);
   if (result) {
-    if (Array.isArray(tokens)) {
+    if (Array.isArray(tokens) && tokens[0] && tokens[0].content &&
+      Array.isArray(tokens[0].content) && typeof tokens[0].content[0] === 'string') {
+      tokens[0].content[0] = result[0] + tokens[0].content[0];
+    } else if (Array.isArray(tokens)) {
       tokens.unshift(result[0]);
     } else if (Array.isArray(tokens.content)) {
       tokens.content.unshift(result[0]);
@@ -637,6 +640,13 @@ function process1(string, oldTokens) {
     } else {
       tokens = [tokens, result[0]];
     }
+  }
+
+  if (tokens[0] && (HEADERS_STR.indexOf(tokens[0].type) !== -1 || tokens[0].type === 'list' ||
+    tokens[0].type === 'blockquote')) {
+    tokens[0].content = joinArrString(tokens[0].content);
+    tokens[0].content = parseEmphasis(tokens[0].content);
+    tokens[0].length = getTokensLength(tokens[0].content);
   }
 
   if (Array.isArray(tokens)) {
