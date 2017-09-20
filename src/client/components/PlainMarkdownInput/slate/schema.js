@@ -611,7 +611,7 @@ function process1(string, oldTokens) {
     }];
   }
 
-  if (HEADERS_STR.indexOf(tokens[0].type) !== -1) {
+  if (HEADERS_STR.indexOf(tokens[0].type) !== -1 || tokens[0].type === 'list' || tokens[0].type === 'blockquote') {
     tokens[0].content = joinArrString(tokens[0].content);
     tokens[0].content = parseEmphasis(tokens[0].content);
     tokens[0].length = getTokensLength(tokens[0].content);
@@ -674,10 +674,10 @@ function markdownDecorator(text, block) {
     cache.tokens = Prism.tokenize(string, grammar);
     cache.markers = getTokens(string);
 
-    // console.log(' ');
-    // console.log(string);
-    // console.log(JSON.stringify(cache.tokens));
-    // console.log(JSON.stringify(cache.markers));
+    console.log(' ');
+    console.log(string);
+    console.log(JSON.stringify(cache.tokens));
+    console.log(JSON.stringify(cache.markers));
   }
   addMarks(characters, cache.markers, 0);
   // addMarks(characters, cache.tokens, 0);
