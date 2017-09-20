@@ -6,14 +6,14 @@ import MarkdownIt from 'markdown-it';
 import _ from 'lodash';
 
 const markdown = new MarkdownIt({
-  html:         false,        // Enable HTML tags in source
-  xhtmlOut:     false,        // Use '/' to close single tags (<br />).
-                              // This is only for full CommonMark compatibility.
-  breaks:       false,        // Convert '\n' in paragraphs into <br>
-  langPrefix:   'language-',  // CSS language prefix for fenced blocks. Can be
-                              // useful for external highlighters.
+  html: false,              // Enable HTML tags in source
+  xhtmlOut: false,          // Use '/' to close single tags (<br />).
+                            // This is only for full CommonMark compatibility.
+  breaks: false,            // Convert '\n' in paragraphs into <br>
+  langPrefix: 'language-',  // CSS language prefix for fenced blocks. Can be
+                            // useful for external highlighters.
   // Enable some language-neutral replacement + quotes beautification
-  typographer:  false
+  typographer: false
 });
 
 
@@ -330,14 +330,14 @@ function addMarks(characters, tokens, offset) {
 function changeText(tokens, markup = '') {
   for (let i = 0; i < tokens.length; i++) {
     if (tokens[i].type === 'text') {
-      tokens[i] = (i === 0 && markup !== '' ? `${markup} ` : '') + tokens[i].content;
+      tokens[i] = (i === 0 && markup !== '' ? `${markup} ` : '') + tokens[i].content; // eslint-disable-line
     } else if (tokens[i].type === 'code_inline') {
       let content = `${tokens[i].markup}${tokens[i].content}${tokens[i].markup}`;
       let length = content.length;
       if (tokens[i].markup === '```') {
         content = [content];
       }
-      tokens[i] = {
+      tokens[i] = { // eslint-disable-line
         type: "code",
         content,
         length,
@@ -373,7 +373,7 @@ function getHeaderContent(tokens, type, markup = '') {
 function getContent(tokens, type, markup = '') {
   const content = {
     type: type,
-    content: preprocessTokens(tokens.slice(1, -1))
+    content: preprocessTokens(tokens.slice(1, -1)) // eslint-disable-line
   };
   if (markup !== '') {
     content.markup = markup;
@@ -389,6 +389,14 @@ const HEADERS = {
   h5: 'header5',
   h6: 'header6'
 };
+const HEADERS_STR = [
+  'header1',
+  'header2',
+  'header3',
+  'header4',
+  'header5',
+  'header6'
+];
 
 function joinArrString(arr) {
   let resultArr = [];
@@ -412,7 +420,7 @@ function joinArrString(arr) {
 
 function parseBlockquote(token) {
   if (token.type === 'blockquote') {
-    token = parseBlockquote(token.content);
+    token = parseBlockquote(token.content); // eslint-disable-line
     token.unshift('>');
   } else {
     token.unshift(' ');
@@ -477,9 +485,9 @@ function getCloseTag(openTag) {
   return `${openTag.split('_')[0]}_close`;
 }
 
-function getClosePos(tokens, startPos, closeTag) {
+function getClosePos(tokens, startPos, closeTag, markup) {
   for (let i = startPos + 1; i < tokens.length; i++) {
-    if (tokens[i].type === closeTag) {
+    if (tokens[i].type === closeTag && tokens[i].markup === markup) {
       return i;
     }
   }
@@ -488,7 +496,6 @@ function getClosePos(tokens, startPos, closeTag) {
 }
 
 function getAttr(attrs, attrName) {
-  let attr = null;
   for (let i = 0; i < attrs.length; i++) {
     if (attrs[i][0] === attrName) {
       return attrs[i][1];
@@ -498,7 +505,7 @@ function getAttr(attrs, attrName) {
 }
 
 function getOneEmphasis(tokens, startPos, closePos) {
-  let intEmphasis = parseEmphasis(tokens.slice(startPos + 1, closePos));
+  let intEmphasis = parseEmphasis(tokens.slice(startPos + 1, closePos)); // eslint-disable-line
   if (Array.isArray(intEmphasis) && intEmphasis.length === 1) {
     intEmphasis = intEmphasis[0];
   }
@@ -524,7 +531,7 @@ function parseEmphasis(tokens) {
         currTag === 'em_open' ||
         currTag === 'link_open') {
         const closeTag = getCloseTag(currTag);
-        const closePos = getClosePos(tokens, i, closeTag);
+        const closePos = getClosePos(tokens, i, closeTag, tokens[i].markup);
         if (closePos !== -1) {
           if (currTag === 'link_open') {
             let urlContent = `(${getAttr(tokens[i].attrs, 'href')})`;
@@ -587,7 +594,8 @@ function parseEmphasis(tokens) {
   return newTokens;
 }
 
-function process1(string, tokens) {
+function process1(string, oldTokens) {
+  let tokens = oldTokens;
   if (tokens.type === 'blockquote') {
     tokens.content = joinArrString(parseBlockquote(tokens));
     tokens.length = getTokensLength(tokens.content);
@@ -601,6 +609,12 @@ function process1(string, tokens) {
       type: 'list',
       content: joinArrString(tokens.content.content),
     }];
+  }
+
+  if (HEADERS_STR.indexOf(tokens[0].type) !== -1) {
+    tokens[0].content = joinArrString(tokens[0].content);
+    tokens[0].content = parseEmphasis(tokens[0].content);
+    tokens[0].length = getTokensLength(tokens[0].content);
   }
 
   let result = /^[ ]+/.exec(string);
@@ -656,13 +670,13 @@ function markdownDecorator(text, block) {
 
   if (string !== cache.text) {
     cache.text = string;
-    // const grammar = Prism.languages[language];
-    // cache.tokens = Prism.tokenize(string, grammar);
+    const grammar = Prism.languages[language];
+    cache.tokens = Prism.tokenize(string, grammar);
     cache.markers = getTokens(string);
 
     // console.log(' ');
     // console.log(string);
-    // // console.log(JSON.stringify(cache.tokens));
+    // console.log(JSON.stringify(cache.tokens));
     // console.log(JSON.stringify(cache.markers));
   }
   addMarks(characters, cache.markers, 0);
