@@ -340,8 +340,7 @@ function changeText(tokens, markup = '') {
       tokens[i] = { // eslint-disable-line
         type: "code",
         content,
-        length,
-        greedy: false
+        length
       };
     }
   }
@@ -360,8 +359,7 @@ function getTokensLength(tokens) {
 function getHeaderContent(tokens, type, markup = '') {
   const content = {
     type: type,
-    content: changeText(tokens[1].children, markup),
-    greedy: false
+    content: changeText(tokens[1].children, markup)
   };
   content.length = getTokensLength(content.content);
   return content;
@@ -394,6 +392,15 @@ const HEADERS_STR = [
   'header5',
   'header6'
 ];
+const EMPHASISES = {
+  strong: 'bold',
+  em: 'italic',
+  s: 'strikethrough',
+  link: 'url'
+};
+const INLINE_OPEN = [
+  'strong_open', 's_open', 'em_open', 'link_open'
+];
 
 function joinArrString(arr) {
   let resultArr = [];
@@ -425,29 +432,36 @@ function parseBlockquote(token) {
   return token;
 }
 
+function getHRToken(tokens) {
+  return [{
+    type: "hr",
+    content: tokens[0].markup,
+    length: 3
+  }]
+}
+
+function parseCodeBlock(tokens) {
+  let res = /^[\+\-\*](?= )/.test(tokens[0].content);
+  if (!res && tokens[0].markup === '') {
+    return [tokens[0].content];
+  } else {
+    const content = {
+      type: 'list',
+      content: [tokens[0].content],
+      markup: res[0]
+    };
+    return [content];
+  }
+}
+
 function preprocessTokens(tokens) {
   let tokensLen = tokens.length;
 
   if (tokens.length === 1) {
     if (tokens[0].type === 'hr') {
-      return [{
-        type: "hr",
-        content: tokens[0].markup,
-        length: 3,
-        greedy: false
-      }]
+      return getHRToken(tokens);
     } else if (tokens[0].type === 'code_block') {
-      let res = /^[\+\-\*](?= )/.test(tokens[0].content);
-      if (!res && tokens[0].markup === '') {
-        return [tokens[0].content];
-      } else {
-        const content = {
-          type: 'list',
-          content: [tokens[0].content],
-          markup: res[0]
-        };
-        return [content];
-      }
+      return parseCodeBlock(tokens);
     }
   }
 
@@ -475,13 +489,6 @@ function preprocessTokens(tokens) {
   }
   return tokens;
 }
-
-const EMPHASISES = {
-  strong: 'bold',
-  em: 'italic',
-  s: 'strikethrough',
-  link: 'url'
-};
 
 function getEmphasisType(openTag) {
   return EMPHASISES[openTag.split('_')[0]];
@@ -521,6 +528,48 @@ function getOneEmphasis(tokens, startPos, closePos) {
   return intEmphasis;
 }
 
+function getUrlToken({ tokens, intEmphasis, num }) {
+  let urlContent = `(${getAttr(tokens[num].attrs, 'href')})`;
+  urlContent = urlContent.length > 0 ? urlContent : '';
+  const urlLength = urlContent.length;
+  return {
+    type: "url",
+    content: [
+      {
+        type: "punctuation",
+        content: "[",
+        length: 1
+      },
+      intEmphasis,
+      {
+        type: "punctuation",
+        content: "]",
+        length: 1
+      },
+      {
+        type: "punctuation",
+        content: urlContent,
+        length: urlLength
+      }
+    ],
+    length: 1 + intEmphasis.length + 1 + urlLength
+  };
+}
+
+function getEmphasisToken({ tokens, intEmphasis, currTag, num }) {
+  let rawContent = joinArrString(_.flattenDeep([
+    tokens[num].markup,
+    intEmphasis,
+    tokens[num].markup
+  ]));
+  let contentLength = getTokensLength(rawContent);
+  return {
+    type: getEmphasisType(currTag),
+    content: rawContent,
+    length: contentLength
+  };
+}
+
 function parseEmphasis(tokens) {
   const newTokens = [];
   let i = 0;
@@ -532,69 +581,22 @@ function parseEmphasis(tokens) {
       i++;
     } else {
       const currTag = tokens[i].type;
-      if (currTag === 'strong_open' ||
-        currTag === 's_open' ||
-        currTag === 'em_open' ||
-        currTag === 'link_open') {
+      if (INLINE_OPEN.indexOf(currTag) !== -1) {
         const closeTag = getCloseTag(currTag);
         const closePos = getClosePos(tokens, i, closeTag, tokens[i].markup);
         if (closePos !== -1) {
+          let intEmphasis = getOneEmphasis(tokens, i, closePos);
           if (currTag === 'link_open') {
-            let urlContent = `(${getAttr(tokens[i].attrs, 'href')})`;
-            urlContent = urlContent.length > 0 ? urlContent : '';
-            let intEmphasis = getOneEmphasis(tokens, i, closePos);
-            const urlLength = urlContent.length;
-            const newToken = {
-              type: "url",
-              content: [
-                {
-                  type: "punctuation",
-                  content: "[",
-                  length: 1,
-                  greedy: false
-                },
-                intEmphasis,
-                {
-                  type: "punctuation",
-                  content: "]",
-                  length: 1,
-                  greedy: false
-                },
-                {
-                  type: "punctuation",
-                  content: urlContent,
-                  length: urlLength,
-                  greedy: false
-                }
-              ],
-              length: 1 + intEmphasis.length + 1 + urlLength,
-              greedy: false
-            };
-            newTokens.push(newToken);
+            newTokens.push(getUrlToken({ tokens, intEmphasis, num: i }));
           } else {
-            let intEmphasis = getOneEmphasis(tokens, i, closePos);
-            let rawContent = joinArrString(_.flattenDeep([
-              tokens[i].markup,
-              intEmphasis,
-              tokens[i].markup
-            ]));
-            let contentLength = getTokensLength(rawContent);
-            newTokens.push({
-              type: getEmphasisType(currTag),
-              content: rawContent,
-              length: contentLength,
-              greedy: true
-            });
+            newTokens.push(getEmphasisToken({ tokens, intEmphasis, currTag, num: i }));
           }
           i = closePos + 1;
-        } else {
-          newTokens.push(tokens[i]);
-          i++;
+          continue;
         }
-      } else {
-        newTokens.push(tokens[i]);
-        i++;
       }
+      newTokens.push(tokens[i]);
+      i++;
     }
   }
   return newTokens;
@@ -605,7 +607,6 @@ function process1(string, oldTokens) {
   if (tokens.type === 'blockquote') {
     tokens.content = joinArrString(parseBlockquote(tokens));
     tokens.length = getTokensLength(tokens.content);
-    tokens.greedy = false;
     delete tokens.markup;
     tokens = [tokens];
   } else if (tokens.type === 'bullet_list' && tokens.content.type === 'list_item') {
