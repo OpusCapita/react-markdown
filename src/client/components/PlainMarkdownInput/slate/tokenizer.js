@@ -51,13 +51,14 @@ function getHeaderContent(tokens, type, markup = '') {
   return content;
 }
 
-function getBlockContent(tokens, type, markup = '') {
+function getBlockContent(tokens, type, markup, start = false) {
   const content = {
-    type: type,
-    content: processBlockTokens(tokens.slice(1, -1)) // eslint-disable-line
+    type,
+    content: processBlockTokens(tokens.slice(1, -1)), // eslint-disable-line
+    markup
   };
-  if (markup !== '') {
-    content.markup = markup;
+  if (start) {
+    content.start = start;
   }
   return content;
 }
@@ -143,18 +144,24 @@ function getHRToken(tokens) {
   }]
 }
 
+function getList(tokens, type, markup) {
+  return [{
+    type,
+    content: [tokens[0].content],
+    markup
+  }];
+}
+
 function parseCodeBlock(tokens) {
   let res = /^[\+\-\*](?= )/.test(tokens[0].content);
-  if (!res && tokens[0].markup === '') {
-    return [tokens[0].content];
-  } else {
-    const content = {
-      type: 'list',
-      content: [tokens[0].content],
-      markup: res[0]
-    };
-    return [content];
+  if (res) {
+    return getList(tokens, 'list', res[0]);
   }
+  res = /^[\d]+(\.|\))(?= )/.test(tokens[0].content);
+  if (res) {
+    return getList(tokens, 'ordered-list', res[0]);
+  }
+  return [tokens[0].content];
 }
 
 function getEmphasisType(openTag) {
@@ -270,9 +277,13 @@ function parseEmphasis(tokens) {
 }
 
 function getListToken(tokens) {
-  tokens.content.content.unshift(`${tokens.markup} `);
+  if (tokens.type === 'ordered-list') {
+    tokens.content.content.unshift(`${tokens.start}${tokens.markup} `);
+  } else {
+    tokens.content.content.unshift(`${tokens.markup} `);
+  }
   return {
-    type: 'list',
+    type: tokens.type === 'ordered-list' ? 'ordered-list' : 'list',
     content: joinArrString(tokens.content.content),
   };
 }
@@ -289,7 +300,8 @@ function getBlockquoteToken(token) {
 function parseBlock(tokens) {
   if (tokens.type === 'blockquote') {
     return [getBlockquoteToken(tokens)];
-  } else if (tokens.type === 'bullet_list' && tokens.content.type === 'list_item') {
+  } else if (tokens.type === 'bullet_list' && tokens.content.type === 'list_item' ||
+    tokens.type === 'ordered-list' && tokens.content.type === 'list_item') {
     return [getListToken(tokens)];
   }
   return tokens;
@@ -335,7 +347,7 @@ function processEmphasis(tokens) {
 /* eslint-disable */
 function processInline(tokens) {
   if (tokens[0] && (HEADERS_STR.indexOf(tokens[0].type) !== -1 || tokens[0].type === 'list' ||
-      tokens[0].type === 'header-no-offset' || tokens[0].type === 'blockquote')) {
+      tokens[0].type === 'ordered-list' || tokens[0].type === 'header-no-offset' || tokens[0].type === 'blockquote')) {
     tokens[0].content = processEmphasis(tokens[0].content);
     tokens[0].length = getTokensLength(tokens[0].content);
   } else if (Array.isArray(tokens)) {
@@ -364,6 +376,10 @@ function processBlockTokens(tokens) {
         if (firstType === TOKENS_DATA[i].open && lastType === TOKENS_DATA[i].close) {
           return getBlockContent(tokens, TOKENS_DATA[i].tokenName, tokens[0].markup);
         }
+      }
+      if (firstType === 'ordered_list_open' && lastType === 'ordered_list_close') {
+        const start = tokens[0].attrs ? (getAttr(tokens[0].attrs, 'start') || 1) : 1;
+        return getBlockContent(tokens, 'ordered-list', tokens[0].markup, start);
       }
       if (firstType === 'paragraph_open' && lastType === 'paragraph_close') {
         return changeText(tokens[1].children);
