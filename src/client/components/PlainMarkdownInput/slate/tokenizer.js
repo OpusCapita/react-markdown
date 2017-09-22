@@ -299,7 +299,7 @@ function restoreSpaces(string, tokens) {
   let result = /^[ ]+/.exec(string);
   if (result) {
     if (HEADERS_STR.indexOf(tokens[0].type) !== -1) {
-      tokens[0].type = 'header-no-offset';
+      tokens[0].type = 'header-no-offset'; // eslint-disable-line
     }
 
     if (Array.isArray(tokens) && tokens[0] && tokens[0].content &&
