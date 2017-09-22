@@ -87,6 +87,23 @@ const EMPHASISES = {
 const INLINE_OPEN = [
   'strong_open', 's_open', 'em_open', 'link_open'
 ];
+const TOKENS_DATA = [
+  {
+    open: 'blockquote_open',
+    close: 'blockquote_close',
+    tokenName: 'blockquote'
+  },
+  {
+    open: 'bullet_list_open',
+    close: 'bullet_list_close',
+    tokenName: 'bullet_list'
+  },
+  {
+    open: 'list_item_open',
+    close: 'list_item_close',
+    tokenName: 'list_item'
+  },
+];
 
 function joinArrString(arr) {
   let resultArr = [];
@@ -264,7 +281,7 @@ function getListToken(tokens) {
 function getBlockquoteToken(token) {
   token.content = joinArrString(parseBlockquote(token));
   token.length = getTokensLength(token.content);
-  delete token.markup; // eslint-disable-line
+  delete token.markup;
   return token;
 }
 /* eslint-enable */
@@ -274,42 +291,6 @@ function parseBlock(tokens) {
     return [getBlockquoteToken(tokens)];
   } else if (tokens.type === 'bullet_list' && tokens.content.type === 'list_item') {
     return [getListToken(tokens)];
-  }
-  return tokens;
-}
-
-function processBlockTokens(tokens) {
-  let tokensLen = tokens.length;
-
-  if (tokensLen === 1) {
-    if (tokens[0].type === 'hr') {
-      return getHRToken(tokens);
-    } else if (tokens[0].type === 'code_block') {
-      return parseCodeBlock(tokens);
-    }
-  }
-
-  if (tokensLen > 2) {
-    if (tokens[0].type === 'blockquote_open' &&
-      tokens[tokensLen - 1].type === 'blockquote_close') {
-      return getBlockContent(tokens, 'blockquote', tokens[0].markup);
-    }
-    if (tokens[0].type === 'bullet_list_open' &&
-      tokens[tokensLen - 1].type === 'bullet_list_close') {
-      return getBlockContent(tokens, 'bullet_list', tokens[0].markup);
-    }
-    if (tokens[0].type === 'list_item_open' &&
-      tokens[tokensLen - 1].type === 'list_item_close') {
-      return getBlockContent(tokens, 'list_item', tokens[0].markup);
-    }
-    if (tokens[0].type === 'paragraph_open' &&
-      tokens[tokensLen - 1].type === 'paragraph_close') {
-      return changeText(tokens[1].children);
-    }
-    if (tokens[0].type === 'heading_open' &&
-      tokens[tokensLen - 1].type === 'heading_close') {
-      return [getHeaderContent(tokens, HEADERS[tokens[0].tag], tokens[0].markup)];
-    }
   }
   return tokens;
 }
@@ -343,26 +324,64 @@ function restoreSpaces(string, tokens) {
   return tokens;
 }
 
-function processInline(string, oldTokens) {
-  let tokens = parseBlock(oldTokens);
-  tokens = restoreSpaces(string, tokens);
+function processEmphasis(tokens) {
+  return parseEmphasis(joinArrString(tokens));
+}
 
+/* eslint-disable */
+function processInline(tokens) {
   if (tokens[0] && (HEADERS_STR.indexOf(tokens[0].type) !== -1 || tokens[0].type === 'list' ||
       tokens[0].type === 'blockquote')) {
-    tokens[0].content = joinArrString(tokens[0].content);
-    tokens[0].content = parseEmphasis(tokens[0].content);
+    tokens[0].content = processEmphasis(tokens[0].content);
     tokens[0].length = getTokensLength(tokens[0].content);
   } else if (Array.isArray(tokens)) {
-    tokens = joinArrString(tokens);
-    tokens = parseEmphasis(tokens);
+    tokens = processEmphasis(tokens);
+  }
+
+  return tokens;
+}
+/* eslint-enable */
+
+function processBlockTokens(tokens) {
+  let tokensLen = tokens.length;
+
+  if (tokensLen > 0) {
+    const firstType = tokens[0].type;
+    if (tokensLen === 1) {
+      if (firstType === 'hr') {
+        return getHRToken(tokens);
+      } else if (firstType === 'code_block') {
+        return parseCodeBlock(tokens);
+      }
+    }
+    if (tokensLen > 2) {
+      const lastType = tokens[tokensLen - 1].type;
+      for (let i = 0; i < TOKENS_DATA.length; i++) {
+        if (firstType === TOKENS_DATA[i].open && lastType === TOKENS_DATA[i].close) {
+          return getBlockContent(tokens, TOKENS_DATA[i].tokenName, tokens[0].markup);
+        }
+      }
+      if (firstType === 'paragraph_open' && lastType === 'paragraph_close') {
+        return changeText(tokens[1].children);
+      }
+      if (firstType === 'heading_open' && lastType === 'heading_close') {
+        return [getHeaderContent(tokens, HEADERS[tokens[0].tag], tokens[0].markup)];
+      }
+    }
   }
 
   return tokens;
 }
 
+function processContent(string, oldTokens) {
+  let tokens = parseBlock(oldTokens);
+  tokens = restoreSpaces(string, tokens);
+  return processInline(tokens);
+}
+
 export const parse = function(string) {
   let tokens = markdown.parse(string, {});
   tokens = processBlockTokens(tokens);
-  tokens = processInline(string, tokens);
+  tokens = processContent(string, tokens);
   return tokens;
 };
