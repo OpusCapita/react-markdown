@@ -350,6 +350,7 @@ function processInline(tokens) {
       tokens[0].type === 'ordered-list' || tokens[0].type === 'header-no-offset' || tokens[0].type === 'blockquote')) {
     tokens[0].content = processEmphasis(tokens[0].content);
     tokens[0].length = getTokensLength(tokens[0].content);
+    delete tokens[0].markup;
   } else if (Array.isArray(tokens)) {
     tokens = processEmphasis(tokens);
   }
