@@ -12,57 +12,6 @@ const markdown = new MarkdownIt({
   typographer: false
 });
 
-
-function changeText(tokens, markup = '') {
-  for (let i = 0; i < tokens.length; i++) {
-    if (tokens[i].type === 'text') {
-      tokens[i] = (i === 0 && markup !== '' ? `${markup} ` : '') + tokens[i].content; // eslint-disable-line
-    } else if (tokens[i].type === 'code_inline') {
-      let content = `${tokens[i].markup}${tokens[i].content}${tokens[i].markup}`;
-      let length = content.length;
-      if (tokens[i].markup === '```') {
-        content = [content];
-      }
-      tokens[i] = { // eslint-disable-line
-        type: "code",
-        content,
-        length
-      };
-    }
-  }
-  return tokens;
-}
-
-function getTokensLength(tokens) {
-  if (typeof tokens === 'string') {
-    return tokens.length;
-  }
-  return tokens.reduce((acc, token) => {
-    return acc + (token.length ? token.length : 0);
-  }, 0);
-}
-
-function getHeaderContent(tokens, type, markup = '') {
-  const content = {
-    type: type,
-    content: changeText(tokens[1].children, markup)
-  };
-  content.length = getTokensLength(content.content);
-  return content;
-}
-
-function getBlockContent(tokens, type, markup, start = false) {
-  const content = {
-    type,
-    content: processBlockTokens(tokens.slice(1, -1)), // eslint-disable-line
-    markup
-  };
-  if (start) {
-    content.start = start;
-  }
-  return content;
-}
-
 const HEADERS = {
   h1: 'header1',
   h2: 'header2',
@@ -105,6 +54,72 @@ const TOKENS_DATA = [
     tokenName: 'list_item'
   },
 ];
+
+function changeText(tokens, markup = '') {
+  for (let i = 0; i < tokens.length; i++) {
+    if (tokens[i].type === 'text') {
+      tokens[i] = (i === 0 && markup !== '' ? `${markup} ` : '') + tokens[i].content; // eslint-disable-line
+    } else if (tokens[i].type === 'code_inline') {
+      let content = `${tokens[i].markup}${tokens[i].content}${tokens[i].markup}`;
+      let length = content.length;
+      if (tokens[i].markup === '```') {
+        content = [content];
+      }
+      tokens[i] = { // eslint-disable-line
+        type: "code",
+        content,
+        length
+      };
+    }
+  }
+  return tokens;
+}
+
+/**
+ * getTokensLength - Function calculate tokens' length
+ *
+ * @param tokens
+ * @returns {Number}
+ */
+
+function getTokensLength(tokens) {
+  if (typeof tokens === 'string') {
+    return tokens.length;
+  }
+  return tokens.reduce((acc, token) => {
+    return acc + (token.length ? token.length : 0);
+  }, 0);
+}
+
+/**
+ * getHeaderContent - Function create content for header-token
+ *
+ * @param tokens
+ * @param type
+ * @param markup
+ * @returns {{type: *, content}}
+ */
+
+function getHeaderContent(tokens, type, markup = '') {
+  const content = {
+    type: type,
+    content: changeText(tokens[1].children, markup)
+  };
+  content.length = getTokensLength(content.content);
+  return content;
+}
+
+function getBlockContent(tokens, type, markup, start = false) {
+  const content = {
+    type,
+    content: processBlockTokens(tokens.slice(1, -1)), // eslint-disable-line
+    markup
+  };
+  if (start) {
+    content.start = start;
+  }
+  return content;
+}
 
 function joinArrString(arr) {
   let resultArr = [];
@@ -202,6 +217,15 @@ function getOneEmphasis(tokens, startPos, closePos) {
   return intEmphasis;
 }
 
+/**
+ * getUrlToken - Function create url-token
+ *
+ * @param tokens
+ * @param intEmphasis
+ * @param num
+ * @returns {{type: string, content: [null,null,null,null], length: *}}
+ */
+
 function getUrlToken({ tokens, intEmphasis, num }) {
   let urlContent = `(${getAttr(tokens[num].attrs, 'href')})`;
   urlContent = urlContent.length > 0 ? urlContent : '';
@@ -230,6 +254,16 @@ function getUrlToken({ tokens, intEmphasis, num }) {
   };
 }
 
+/**
+ * getEmphasisToken - Function create emphasis-token
+ *
+ * @param tokens
+ * @param intEmphasis
+ * @param currTag
+ * @param num
+ * @returns {{type, content, length}}
+ */
+
 function getEmphasisToken({ tokens, intEmphasis, currTag, num }) {
   let rawContent = joinArrString(_.flattenDeep([
     tokens[num].markup,
@@ -243,6 +277,13 @@ function getEmphasisToken({ tokens, intEmphasis, currTag, num }) {
     length: contentLength
   };
 }
+
+/**
+ * parseEmphasis - Function parse inline and extract emphasis-tokens
+ *
+ * @param tokens
+ * @returns {Array}
+ */
 
 function parseEmphasis(tokens) {
   const newTokens = [];
@@ -307,6 +348,16 @@ function parseBlock(tokens) {
   return tokens;
 }
 
+/**
+ * restoreSpaces
+ *
+ *  Function restore starting and finishing spaces what Markdown-it was deleting
+ *
+ * @param {string} string - original line
+ * @param {Array} tokens
+ * @returns {*}
+ */
+
 function restoreSpaces(string, tokens) {
   let result = /^[ ]+/.exec(string);
   if (result) {
@@ -346,8 +397,9 @@ function processEmphasis(tokens) {
 
 /* eslint-disable */
 function processInline(tokens) {
-  if (tokens[0] && (HEADERS_STR.indexOf(tokens[0].type) !== -1 || tokens[0].type === 'list' ||
-      tokens[0].type === 'ordered-list' || tokens[0].type === 'header-no-offset' || tokens[0].type === 'blockquote')) {
+  if (tokens[0] && (HEADERS_STR.indexOf(tokens[0].type) !== -1 ||
+      tokens[0].type === 'list' || tokens[0].type === 'ordered-list' ||
+      tokens[0].type === 'header-no-offset' || tokens[0].type === 'blockquote')) {
     tokens[0].content = processEmphasis(tokens[0].content);
     tokens[0].length = getTokensLength(tokens[0].content);
     delete tokens[0].markup;
@@ -394,15 +446,10 @@ function processBlockTokens(tokens) {
   return tokens;
 }
 
-function processContent(string, oldTokens) {
-  let tokens = parseBlock(oldTokens);
-  tokens = restoreSpaces(string, tokens);
-  return processInline(tokens);
-}
-
 export const parse = function(string) {
   let tokens = markdown.parse(string, {});
   tokens = processBlockTokens(tokens);
-  tokens = processContent(string, tokens);
-  return tokens;
+  tokens = parseBlock(tokens);
+  tokens = restoreSpaces(string, tokens);
+  return processInline(tokens);
 };
