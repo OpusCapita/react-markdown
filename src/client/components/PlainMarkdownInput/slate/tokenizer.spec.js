@@ -680,9 +680,56 @@ describe('plain editor tokenizer', () => {
         "length": 29
       }]);
     });
+
+    it('not lists', () => {
+      expect(parse('1 item-1')).to.deep.equal(["1 item-1"]);
+      expect(parse('  2 item-2')).to.deep.equal(["  2 item-2"]);
+      expect(parse('    3 item-3')).to.deep.equal(["    3 item-3"]);
+    });
   });
 
   describe('tokenize unordered lists', () => {
+    it('emphasis inside list', () => {
+      expect(parse('- _text_')).to.deep.equal([{
+        "type": "list",
+        "content": ["- ", { "type": "italic", "content": ["_text_"], "length": 6 }],
+        "length": 8
+      }]);
+      expect(parse('- *text*')).to.deep.equal([{
+        "type": "list",
+        "content": ["- ", { "type": "italic", "content": ["*text*"], "length": 6 }],
+        "length": 8
+      }]);
+      expect(parse('- __text__')).to.deep.equal([{
+        "type": "list",
+        "content": ["- ", { "type": "bold", "content": ["__text__"], "length": 8 }],
+        "length": 10
+      }]);
+      expect(parse('- **text**')).to.deep.equal([{
+        "type": "list",
+        "content": ["- ", { "type": "bold", "content": ["**text**"], "length": 8 }],
+        "length": 10
+      }]);
+      expect(parse('- ~~text~~')).to.deep.equal([{
+        "type": "list",
+        "content": ["- ", { "type": "strikethrough", "content": ["~~text~~"], "length": 8 }],
+        "length": 10
+      }]);
+    });
+
+    it('inline code inside list', () => {
+      expect(parse('- `text`')).to.deep.equal([{
+        "type": "list",
+        "content": ["- ", { "type": "code", "content": "`text`", "length": 6 }],
+        "length": 8
+      }]);
+      expect(parse('- ```text```')).to.deep.equal([{
+        "type": "list",
+        "content": ["- ", { "type": "code", "content": ["```text```"], "length": 10 }],
+        "length": 12
+      }]);
+    });
+
     it('+ Create a list by starting a line with `+`, `-`, or `*`', () => {
       expect(parse('+ Create a list by starting a line with `+`, `-`, or `*`')).to.deep.equal([{
         "type": "list",
@@ -738,6 +785,11 @@ describe('plain editor tokenizer', () => {
         "length": 34
       }]);
     });
+
+    it('not lists', () => {
+      expect(parse('word - item-1')).to.deep.equal(["word - item-1"]);
+      expect(parse('word * item-1')).to.deep.equal(["word * item-1"]);
+    });
   });
 
   describe('tokenize hr', () => {
@@ -751,6 +803,47 @@ describe('plain editor tokenizer', () => {
 
     it('___', () => {
       expect(parse('___')).to.deep.equal([{ "type": "hr", "content": "___", "length": 3 }]);
+    });
+
+    it('-----', () => {
+      expect(parse('-----')).to.deep.equal([{ "type": "hr", "content": "-----", "length": 5 }]);
+    });
+
+    it('*****', () => {
+      expect(parse('*****')).to.deep.equal([{ "type": "hr", "content": "*****", "length": 5 }]);
+    });
+
+    it(' ---', () => {
+      expect(parse(' ---')).to.deep.equal([" ", { "type": "hr", "content": "---", "length": 3 }]);
+    });
+
+    it('  ---', () => {
+      expect(parse('  ---')).to.deep.equal(["  ", { "type": "hr", "content": "---", "length": 3 }]);
+    });
+
+    it('   ---', () => {
+      expect(parse('   ---')).to.deep.equal(["   ", { "type": "hr", "content": "---", "length": 3 }]);
+    });
+
+    it(' ***', () => {
+      expect(parse(' ***')).to.deep.equal([" ", { "type": "hr", "content": "***", "length": 3 }]);
+    });
+
+    it('  ***', () => {
+      expect(parse('  ***')).to.deep.equal(["  ", { "type": "hr", "content": "***", "length": 3 }]);
+    });
+
+    it('   ***', () => {
+      expect(parse('   ***')).to.deep.equal(["   ", { "type": "hr", "content": "***", "length": 3 }]);
+    });
+
+    it('not hr', () => {
+      expect(parse('word-----')).to.deep.equal(["word-----"]);
+      expect(parse('word*****')).to.deep.equal(["word*****"]);
+      expect(parse('-----word')).to.deep.equal(["-----word"]);
+      expect(parse('*****word')).to.deep.equal(["*****word"]);
+      expect(parse('    ---')).to.deep.equal(["    ---"]);
+      expect(parse('    ***')).to.deep.equal(["    ***"]);
     });
   });
 
@@ -809,6 +902,67 @@ describe('plain editor tokenizer', () => {
         }],
         "length": 40
       }]);
+    });
+
+
+    it('> _text_', () => {
+      expect(parse('> _text_')).to.deep.equal([{
+        "type": "blockquote",
+        "content": ["> ", { "type": "italic", "content": ["_text_"], "length": 6 }],
+        "length": 8
+      }]);
+    });
+
+    it('> *text*', () => {
+      expect(parse('> *text*')).to.deep.equal([{
+        "type": "blockquote",
+        "content": ["> ", { "type": "italic", "content": ["*text*"], "length": 6 }],
+        "length": 8
+      }]);
+    });
+
+    it('> __text__', () => {
+      expect(parse('> __text__')).to.deep.equal([{
+        "type": "blockquote",
+        "content": ["> ", { "type": "bold", "content": ["__text__"], "length": 8 }],
+        "length": 10
+      }]);
+    });
+
+    it('> **text**', () => {
+      expect(parse('> **text**')).to.deep.equal([{
+        "type": "blockquote",
+        "content": ["> ", { "type": "bold", "content": ["**text**"], "length": 8 }],
+        "length": 10
+      }]);
+    });
+
+    it('> ~~text~~', () => {
+      expect(parse('> ~~text~~')).to.deep.equal([{
+        "type": "blockquote",
+        "content": ["> ", { "type": "strikethrough", "content": ["~~text~~"], "length": 8 }],
+        "length": 10
+      }]);
+    });
+
+    it('> `text`', () => {
+      expect(parse('> `text`')).to.deep.equal([{
+        "type": "blockquote",
+        "content": ["> ", { "type": "code", "content": "`text`", "length": 6 }],
+        "length": 8
+      }]);
+    });
+
+    it('> ```text```', () => {
+      expect(parse('> ```text```')).to.deep.equal([{
+        "type": "blockquote",
+        "content": ["> ", { "type": "code", "content": ["```text```"], "length": 10 }],
+        "length": 12
+      }]);
+    });
+
+    it('not blockquotes "word > quote text"', () => {
+      expect(parse('word > quote text')).to.deep.equal(["word > quote text"]);
     });
   });
 
@@ -916,6 +1070,154 @@ describe('plain editor tokenizer', () => {
         "length": 49
       }]);
     });
+
+    it('[_opuscapita_](https://www.opuscapita.com/)', () => {
+      expect(parse('[_opuscapita_](https://www.opuscapita.com/)')).to.deep.equal([{
+        "type": "url",
+        "content": [{ "type": "punctuation", "content": "[", "length": 1 }, {
+          "type": "italic",
+          "content": ["_opuscapita_"],
+          "length": 12
+        }, { "type": "punctuation", "content": "]", "length": 1 }, {
+          "type": "punctuation",
+          "content": "(https://www.opuscapita.com/)",
+          "length": 29
+        }],
+        "length": 43
+      }]);
+    });
+
+    it('[*opuscapita*](https://www.opuscapita.com/)', () => {
+      expect(parse('[*opuscapita*](https://www.opuscapita.com/)')).to.deep.equal([{
+        "type": "url",
+        "content": [{ "type": "punctuation", "content": "[", "length": 1 }, {
+          "type": "italic",
+          "content": ["*opuscapita*"],
+          "length": 12
+        }, { "type": "punctuation", "content": "]", "length": 1 }, {
+          "type": "punctuation",
+          "content": "(https://www.opuscapita.com/)",
+          "length": 29
+        }],
+        "length": 43
+      }]);
+    });
+
+    it('[__opuscapita__](https://www.opuscapita.com/)', () => {
+      expect(parse('[__opuscapita__](https://www.opuscapita.com/)')).to.deep.equal([{
+        "type": "url",
+        "content": [{ "type": "punctuation", "content": "[", "length": 1 }, {
+          "type": "bold",
+          "content": ["__opuscapita__"],
+          "length": 14
+        }, { "type": "punctuation", "content": "]", "length": 1 }, {
+          "type": "punctuation",
+          "content": "(https://www.opuscapita.com/)",
+          "length": 29
+        }],
+        "length": 45
+      }]);
+    });
+
+    it('[~~opuscapita~~](https://www.opuscapita.com/)', () => {
+      expect(parse('[~~opuscapita~~](https://www.opuscapita.com/)')).to.deep.equal([{
+        "type": "url",
+        "content": [{ "type": "punctuation", "content": "[", "length": 1 }, {
+          "type": "strikethrough",
+          "content": ["~~opuscapita~~"],
+          "length": 14
+        }, { "type": "punctuation", "content": "]", "length": 1 }, {
+          "type": "punctuation",
+          "content": "(https://www.opuscapita.com/)",
+          "length": 29
+        }],
+        "length": 45
+      }]);
+    });
+
+    it('**[opuscapita](https://www.opuscapita.com/)**', () => {
+      expect(parse('**[opuscapita](https://www.opuscapita.com/)**')).to.deep.equal([{
+        "type": "bold",
+        "content": ["**", {
+          "type": "url",
+          "content": [{ "type": "punctuation", "content": "[", "length": 1 }, "opuscapita", {
+            "type": "punctuation",
+            "content": "]",
+            "length": 1
+          }, { "type": "punctuation", "content": "(https://www.opuscapita.com/)", "length": 29 }],
+          "length": 41
+        }, "**"],
+        "length": 45
+      }]);
+    });
+
+    it('*[opuscapita](https://www.opuscapita.com/)*', () => {
+      expect(parse('*[opuscapita](https://www.opuscapita.com/)*')).to.deep.equal([{
+        "type": "italic",
+        "content": ["*", {
+          "type": "url",
+          "content": [{ "type": "punctuation", "content": "[", "length": 1 }, "opuscapita", {
+            "type": "punctuation",
+            "content": "]",
+            "length": 1
+          }, { "type": "punctuation", "content": "(https://www.opuscapita.com/)", "length": 29 }],
+          "length": 41
+        }, "*"],
+        "length": 43
+      }]);
+    });
+
+    it('~~[opuscapita](https://www.opuscapita.com/)~~', () => {
+      expect(parse('~~[opuscapita](https://www.opuscapita.com/)~~')).to.deep.equal([{
+        "type": "strikethrough",
+        "content": ["~~", {
+          "type": "url",
+          "content": [{ "type": "punctuation", "content": "[", "length": 1 }, "opuscapita", {
+            "type": "punctuation",
+            "content": "]",
+            "length": 1
+          }, { "type": "punctuation", "content": "(https://www.opuscapita.com/)", "length": 29 }],
+          "length": 41
+        }, "~~"],
+        "length": 45
+      }]);
+    });
+
+    it('[](https://www.opuscapita.com/)', () => {
+      expect(parse('[](https://www.opuscapita.com/)')).to.deep.equal([{
+        "type": "url",
+        "content": [{ "type": "punctuation", "content": "[", "length": 1 }, "", {
+          "type": "punctuation",
+          "content": "]",
+          "length": 1
+        }, { "type": "punctuation", "content": "(https://www.opuscapita.com/)", "length": 29 }],
+        "length": 31
+      }]);
+    });
+
+    it('[]()', () => {
+      expect(parse('[]()')).to.deep.equal([{
+        "type": "url",
+        "content": [{ "type": "punctuation", "content": "[", "length": 1 }, "", {
+          "type": "punctuation",
+          "content": "]",
+          "length": 1
+        }, { "type": "punctuation", "content": "()", "length": 2 }],
+        "length": 4
+      }]);
+    });
+
+    it('[opuscapita]()', () => {
+      expect(parse('[opuscapita]()')).to.deep.equal([{
+        "type": "url",
+        "content": [{ "type": "punctuation", "content": "[", "length": 1 }, "opuscapita", {
+          "type": "punctuation",
+          "content": "]",
+          "length": 1
+        }, { "type": "punctuation", "content": "()", "length": 2 }],
+        "length": 14
+      }]);
+    });
   });
 
   describe('tokenize inline code', () => {
@@ -949,6 +1251,25 @@ describe('plain editor tokenizer', () => {
         "content": ["```inline code```"],
         "length": 17
       }]);
+    });
+
+    it('`+`, `-`, or `*`', () => {
+      expect(parse('`+`, `-`, or `*`')).to.deep.equal([{
+        "type": "code",
+        "content": "`+`",
+        "length": 3
+      }, ", ", { "type": "code", "content": "`-`", "length": 3 }, ", or ", {
+        "type": "code",
+        "content": "`*`",
+        "length": 3
+      }]);
+    });
+
+    it('not inline code', () => {
+      expect(parse('````code```')).to.deep.equal(["````code```"]);
+      expect(parse('```code````')).to.deep.equal(["```code````"]);
+      expect(parse('``code`')).to.deep.equal(["``code`"]);
+      expect(parse('`code``')).to.deep.equal(["`code``"]);
     });
   });
 
@@ -1019,11 +1340,32 @@ describe('plain editor tokenizer', () => {
       }]);
     });
 
+    it('not headers', () => {
+      expect(parse('#Header')).to.deep.equal(["#Header"]);
+      expect(parse('##Header')).to.deep.equal(["##Header"]);
+      expect(parse('###Header')).to.deep.equal(["###Header"]);
+      expect(parse('####Header')).to.deep.equal(["####Header"]);
+      expect(parse('#####Header')).to.deep.equal(["#####Header"]);
+      expect(parse('######Header')).to.deep.equal(["######Header"]);
+      expect(parse('    #Header')).to.deep.equal(["    #Header"]);
+      expect(parse(' #Header')).to.deep.equal([" #Header"]);
+    });
+
     it('header with *italic*', () => {
       expect(parse('# header *italic*')).to.deep.equal([{
         "type": "header1",
         "content": ["# header ", { "type": "italic", "content": ["*italic*"], "length": 8 }],
         "length": 17
+      }]);
+      expect(parse('# _text_')).to.deep.equal([{
+        "type": "header1",
+        "content": ["# ", { "type": "italic", "content": ["_text_"], "length": 6 }],
+        "length": 8
+      }]);
+      expect(parse('# *text*')).to.deep.equal([{
+        "type": "header1",
+        "content": ["# ", { "type": "italic", "content": ["*text*"], "length": 6 }],
+        "length": 8
       }]);
       expect(parse('## header *italic*')).to.deep.equal([{
         "type": "header2",
@@ -1049,6 +1391,19 @@ describe('plain editor tokenizer', () => {
         "type": "header6",
         "content": ["###### header ", { "type": "italic", "content": ["*italic*"], "length": 8 }],
         "length": 22
+      }]);
+    });
+
+    it('header with **bold**', () => {
+      expect(parse('# __text__')).to.deep.equal([{
+        "type": "header1",
+        "content": ["# ", { "type": "bold", "content": ["__text__"], "length": 8 }],
+        "length": 10
+      }]);
+      expect(parse('# **text**')).to.deep.equal([{
+        "type": "header1",
+        "content": ["# ", { "type": "bold", "content": ["**text**"], "length": 8 }],
+        "length": 10
       }]);
     });
 

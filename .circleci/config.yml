@@ -28,20 +28,20 @@ jobs:
           name: lint
           command: npm run lint
 
-      #- run:
-      #    name: test
-      #    command: |
-      #      mkdir junit
-      #      npm test -- --reporter mocha-junit-reporter
+      - run:
+          name: test
+          command: |
+            mkdir junit
+            npm test -- --reporter mocha-junit-reporter
 
-      #    environment:
-      #      MOCHA_FILE: junit/test-results.xml
+          environment:
+            MOCHA_FILE: junit/test-results.xml
 
-      #- store_test_results:
-      #    path: junit
+      - store_test_results:
+          path: junit
 
-      #- store_artifacts:
-      #    path: junit
+      - store_artifacts:
+          path: junit
 
       # - deploy:
       #     command: |

@@ -91,6 +91,24 @@ function getTokensLength(tokens) {
   }, 0);
 }
 
+function getEmptyText() {
+  return {
+    "type": "text",
+    "tag": "",
+    "attrs": null,
+    "map": null,
+    "nesting": 0,
+    "level": 0,
+    "children": null,
+    "content": "",
+    "markup": "",
+    "info": "",
+    "meta": null,
+    "block": false,
+    "hidden": false
+  };
+}
+
 /**
  * getHeaderContent - Function create content for header-token
  *
@@ -101,6 +119,9 @@ function getTokensLength(tokens) {
  */
 
 function getHeaderContent(tokens, type, markup = '') {
+  if (tokens[1].children[0].type !== 'text') {
+    tokens[1].children.unshift(getEmptyText());
+  }
   const content = {
     type: type,
     content: changeText(tokens[1].children, markup)
@@ -155,7 +176,7 @@ function getHRToken(tokens) {
   return [{
     type: "hr",
     content: tokens[0].markup,
-    length: 3
+    length: tokens[0].markup.length,
   }]
 }
 
@@ -301,6 +322,9 @@ function parseEmphasis(tokens) {
         const closePos = getClosePos(tokens, i, closeTag, tokens[i].markup);
         if (closePos !== -1) {
           let intEmphasis = getOneEmphasis(tokens, i, closePos);
+          if (Array.isArray(intEmphasis) && intEmphasis.length === 0) {
+            intEmphasis = '';
+          }
           if (currTag === 'link_open') {
             newTokens.push(getUrlToken({ tokens, intEmphasis, num: i }));
           } else {
