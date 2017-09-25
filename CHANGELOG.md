@@ -1,3 +1,6 @@
+## [v1.0.5](https://github.com/OpusCapita/react-markdown/compare/v1.0.4...v1.0.5) (Mon, 25 Sep 2017 15:59:01 GMT)
+ - Update PlainMarkdownInput editorState when new "value" property passed (Kirill Volkovich <kirill.volkovich@jcatalog.com>, e164da7)
+
 ## [v1.0.4](https://github.com/OpusCapita/react-markdown/compare/v1.0.3...v1.0.4) (Wed, 13 Sep 2017 14:50:03 GMT)
  - Merge branch 'master' of opuscapita.github.com:OpusCapita/react-markdown (894cbe8 749d4f0, 9866bc4)
  - Replace "@opuscapita/slate" => "slate*" dependency (#49) (Kirill Volkovich <kvolkovich-sc@users.noreply.github.com>, 749d4f0)
