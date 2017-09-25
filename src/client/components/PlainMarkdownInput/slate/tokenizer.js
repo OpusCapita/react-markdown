@@ -118,16 +118,16 @@ function getEmptyText() {
  * @returns {{type: *, content}}
  */
 
-function getHeaderContent(tokens, type, markup = '') {
+function getHeaderContent(tokens, type, markup) {
   if (tokens[1].children[0].type !== 'text') {
     tokens[1].children.unshift(getEmptyText());
   }
-  const content = {
-    type: type,
-    content: changeText(tokens[1].children, markup)
+  let content = changeText(tokens[1].children, markup);
+  return {
+    type,
+    content,
+    length: getTokensLength(content)
   };
-  content.length = getTokensLength(content.content);
-  return content;
 }
 
 function getBlockContent(tokens, type, markup, start = false) {
