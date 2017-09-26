@@ -100,7 +100,6 @@
   },
   "grails": {
     "buildDir": "lib",
-    "artefactId": "jcatalog-markdown-resources",
     "standaloneFiles": {
       "index.js": "web-app/components/MarkdownInput.js"
     }
