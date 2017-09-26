@@ -1,3 +1,14 @@
+## [v1.0.8](https://github.com/OpusCapita/react-markdown/compare/v1.0.7...v1.0.8) (Tue, 26 Sep 2017 07:52:06 GMT)
+ - Remove artefactId to "jcatalog-markdown-resources" added by mistake (Kirill Volkovich <kirill.volkovich@jcatalog.com>, f6c3fe7)
+
+## [v1.0.7](https://github.com/OpusCapita/react-markdown/compare/v1.0.6...v1.0.7) (Tue, 26 Sep 2017 07:47:10 GMT)
+ - Set artefactId to "jcatalog-markdown-resources" (Kirill Volkovich <kirill.volkovich@jcatalog.com>, 116ffdf)
+
+## [v1.0.6](https://github.com/OpusCapita/react-markdown/compare/v1.0.5...v1.0.6) (Tue, 26 Sep 2017 07:38:02 GMT)
+
+## [v1.0.5](https://github.com/OpusCapita/react-markdown/compare/v1.0.4...v1.0.5) (Mon, 25 Sep 2017 15:59:01 GMT)
+ - Update PlainMarkdownInput editorState when new "value" property passed (Kirill Volkovich <kirill.volkovich@jcatalog.com>, e164da7)
+
 ## [v1.0.4](https://github.com/OpusCapita/react-markdown/compare/v1.0.3...v1.0.4) (Wed, 13 Sep 2017 14:50:03 GMT)
  - Merge branch 'master' of opuscapita.github.com:OpusCapita/react-markdown (894cbe8 749d4f0, 9866bc4)
  - Replace "@opuscapita/slate" => "slate*" dependency (#49) (Kirill Volkovich <kvolkovich-sc@users.noreply.github.com>, 749d4f0)

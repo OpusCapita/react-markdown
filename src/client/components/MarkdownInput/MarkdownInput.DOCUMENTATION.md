@@ -29,7 +29,7 @@ Configurable extensions with autocomplete for **products**, **terms**, etc.
 <div style={{ height: '70vh' }}>
   <MarkdownInput
     onChange={_scope.handleValueChange}
-    value={_scope.state.value}
+    value={_scope.state.markdownExample}
     extensions={[
       {
         objectClassName: 'Product',

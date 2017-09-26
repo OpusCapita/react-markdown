@@ -12,11 +12,12 @@ import text from './example.md';
 export default
 class MarkdownInputScope extends React.Component {
   state = {
-    value: text
+    markdownExample: text,
+    updatedMarkdown: ''
   };
 
   handleValueChange = (value) => {
-    this.setState({ value });
+    this.setState({ updatedMarkdown: value });
   }
 
   render() {

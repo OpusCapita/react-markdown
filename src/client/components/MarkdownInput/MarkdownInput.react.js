@@ -16,14 +16,11 @@ class MarkdownInput extends React.Component {
   };
 
   state = {
-    value: this.props.value,
     fullScreen: false
   };
 
   handleChangeValue = (value) => {
     this.props.onChange(value);
-
-    this.setState({ value });
   };
 
   handleFullScreen = (fullScreen) => {
@@ -31,8 +28,8 @@ class MarkdownInput extends React.Component {
   };
 
   render() {
-    const { value, fullScreen } = this.state;
-    const { extensions } = this.props;
+    const { fullScreen } = this.state;
+    const { value, extensions } = this.props;
 
     return (
       <PlainMarkdownInput

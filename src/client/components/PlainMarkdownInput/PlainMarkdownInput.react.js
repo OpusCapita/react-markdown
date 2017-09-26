@@ -57,6 +57,19 @@ class PlainMarkdownInput extends React.Component {
 
   componentWillMount() {
     this.initialBodyOverflowStyle = document.body.style.overflow;
+    this.handleNewValue(this.props.value);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (this.props.value !== nextProps.value) {
+      this.handleNewValue(nextProps.value);
+    }
+  }
+
+  handleNewValue(value) {
+    this.setState({
+      editorState: Plain.deserialize(value || '')
+    });
   }
 
   handleChange = (obj) => {

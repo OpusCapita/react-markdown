@@ -1,6 +1,6 @@
 {
   "name": "@opuscapita/react-markdown",
-  "version": "1.0.5",
+  "version": "1.0.9",
   "description": "React markdown editor component",
   "scripts": {
     "npm-build": "rimraf lib && cross-env NODE_ENV=production webpack --config ./config/webpack.config.js --hide-modules",
@@ -104,7 +104,6 @@
     "slate-react": "0.1.0"
   },
   "grails": {
-    "groupId": "com.opuscapita.grailsplugins",
     "buildDir": "lib",
     "standaloneFiles": {
       "index.js": "web-app/components/MarkdownInput.js"
