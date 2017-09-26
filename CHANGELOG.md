@@ -1,3 +1,6 @@
+## [v1.0.8](https://github.com/OpusCapita/react-markdown/compare/v1.0.7...v1.0.8) (Tue, 26 Sep 2017 07:52:06 GMT)
+ - Remove artefactId to "jcatalog-markdown-resources" added by mistake (Kirill Volkovich <kirill.volkovich@jcatalog.com>, f6c3fe7)
+
 ## [v1.0.7](https://github.com/OpusCapita/react-markdown/compare/v1.0.6...v1.0.7) (Tue, 26 Sep 2017 07:47:10 GMT)
  - Set artefactId to "jcatalog-markdown-resources" (Kirill Volkovich <kirill.volkovich@jcatalog.com>, 116ffdf)
 
