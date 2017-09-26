@@ -33,27 +33,10 @@ import { SlateContent, SlateEditor, SlateToolbar, SlateToolbarGroup } from '../S
 import Plain from 'slate-plain-serializer';
 
 class PlainMarkdownInput extends React.Component {
-  constructor(props) {
-    super(props);
-
-    let editorState = Plain.deserialize(props.value || '');
-    let stateJSON = editorState.toJSON();
-    let nodesSize = stateJSON.document.nodes.length;
-    for (let i = 0; i < nodesSize; i++) {
-      let node = stateJSON.document.nodes[i];
-      let text = node.nodes[0].ranges[0].text;
-      node.data = {
-        text,
-        tokensParse: parse(text),
-      };
-    }
-    editorState = State.fromJSON(stateJSON);
-
-    this.state = {
-      editorState,
-      fullScreen: false
-    };
-  }
+  state = {
+    editorState: '',
+    fullScreen: false
+  };
 
   componentWillMount() {
     this.initialBodyOverflowStyle = document.body.style.overflow;
@@ -67,8 +50,22 @@ class PlainMarkdownInput extends React.Component {
   }
 
   handleNewValue(value) {
+    let editorState = Plain.deserialize(value || '');
+    let stateJSON = editorState.toJSON();
+    let nodesSize = stateJSON.document.nodes.length;
+    for (let i = 0; i < nodesSize; i++) {
+      let node = stateJSON.document.nodes[i];
+      let text = node.nodes[0].ranges[0].text;
+      node.data = {
+        text,
+        tokensParse: parse(text),
+      };
+    }
+    editorState = State.fromJSON(stateJSON);
+
     this.setState({
-      editorState: Plain.deserialize(value || '')
+      editorState
+      // editorState: Plain.deserialize(value || '')
     });
   }
 
