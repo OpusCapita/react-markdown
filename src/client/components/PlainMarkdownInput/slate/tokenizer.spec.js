@@ -3,6 +3,14 @@ import { expect } from 'chai';
 
 describe('plain editor tokenizer', () => {
   describe('tokenize emphasis #1', () => {
+    it('empty line', () => {
+      expect(parse('')).to.deep.equal([]);
+    });
+
+    it('just a text', () => {
+      expect(parse('just a text')).to.deep.equal(['just a text']);
+    });
+
     it('_~~_test2_~~', () => {
       expect(parse('_~~_test2_~~')).to.deep.equal(["_", {
         "type": "strikethrough",

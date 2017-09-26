@@ -6,6 +6,8 @@ import schema from './slate/schema';
 import shortcuts from './slate/shortcuts';
 import { hasMultiLineSelection } from './slate/transforms';
 import './PlainMarkdownInput.less';
+import { State } from 'slate';
+import { parse } from './slate/tokenizer';
 
 import {
   AutocompletePlugin,
@@ -31,10 +33,27 @@ import { SlateContent, SlateEditor, SlateToolbar, SlateToolbarGroup } from '../S
 import Plain from 'slate-plain-serializer';
 
 class PlainMarkdownInput extends React.Component {
-  state = {
-    editorState: Plain.deserialize(this.props.value || ''),
-    fullScreen: false
-  };
+  constructor(props) {
+    super(props);
+
+    let editorState = Plain.deserialize(props.value || '');
+    let stateJSON = editorState.toJSON();
+    let nodesSize = stateJSON.document.nodes.length;
+    for (let i = 0; i < nodesSize; i++) {
+      let node = stateJSON.document.nodes[i];
+      let text = node.nodes[0].ranges[0].text;
+      node.data = {
+        text,
+        tokensParse: parse(text),
+      };
+    }
+    editorState = State.fromJSON(stateJSON);
+
+    this.state = {
+      editorState,
+      fullScreen: false
+    };
+  }
 
   componentWillMount() {
     this.initialBodyOverflowStyle = document.body.style.overflow;
@@ -45,6 +64,32 @@ class PlainMarkdownInput extends React.Component {
     // https://github.com/ianstormtaylor/slate/blob/master/packages/slate/Changelog.md#0220--september-5-2017
     let editorState = obj.state || obj;
 
+    let numBlock = false;
+    let key = editorState.blocks.get(0).key;
+    let nodesSize = editorState.document.nodes.size;
+    for (let i = 0; i < nodesSize; i++) {
+      if (key === editorState.document.nodes.get(i).key) {
+        numBlock = i;
+        break;
+      }
+    }
+
+    if (numBlock) {
+      let text = editorState.texts.get(0).text;
+      let editorStateMutable = editorState.asMutable();
+
+      const currNode = editorState.document.nodes.get(numBlock).asMutable();
+      currNode.data = {
+        text,
+        tokensParse: parse(text),
+      };
+      let nodes = editorState.document.nodes.asMutable();
+      nodes.set(numBlock, currNode.asImmutable());
+      editorStateMutable.document = editorStateMutable.document.asMutable();
+      editorStateMutable.document.nodes = nodes.asImmutable();
+      editorStateMutable.document = editorStateMutable.document.asImmutable();
+      editorState = editorStateMutable.asImmutable();
+    }
     this.props.onChange(Plain.serialize(editorState));
 
     this.setState({ editorState });

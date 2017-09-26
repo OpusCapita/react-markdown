@@ -249,7 +249,6 @@ function getOneEmphasis(tokens, startPos, closePos) {
 
 function getUrlToken({ tokens, intEmphasis, num }) {
   let urlContent = `(${getAttr(tokens[num].attrs, 'href')})`;
-  urlContent = urlContent.length > 0 ? urlContent : '';
   const urlLength = urlContent.length;
   return {
     type: "url",
