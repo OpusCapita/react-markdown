@@ -99,8 +99,8 @@
     "slate-react": "0.1.0"
   },
   "grails": {
-    "groupId": "com.opuscapita.grailsplugins",
     "buildDir": "lib",
+    "artefactId": "jcatalog-markdown-resources",
     "standaloneFiles": {
       "index.js": "web-app/components/MarkdownInput.js"
     }
