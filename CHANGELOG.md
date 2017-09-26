@@ -1,3 +1,5 @@
+## [v1.0.6](https://github.com/OpusCapita/react-markdown/compare/v1.0.5...v1.0.6) (Tue, 26 Sep 2017 07:38:02 GMT)
+
 ## [v1.0.5](https://github.com/OpusCapita/react-markdown/compare/v1.0.4...v1.0.5) (Mon, 25 Sep 2017 15:59:01 GMT)
  - Update PlainMarkdownInput editorState when new "value" property passed (Kirill Volkovich <kirill.volkovich@jcatalog.com>, e164da7)
 
