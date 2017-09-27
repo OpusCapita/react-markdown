@@ -82,37 +82,26 @@ const addMarks = function addMarks(characters, tokens, offset) {
   }
 };
 
-/**
- * Object caches the last values of tokens and characters
- * if the text hasn't changed, returns characters from the cache
- * if the text has changed, tokens and characters are recalculated and save in a cache
- */
-const charactersCache = {
-  lastText: null,
-  lastCharacters: null,
-
-  setCharacters(text, tokens, blockText) {
-    this.lastText = blockText;
-    let characters = text.characters.asMutable();
-    addMarks(characters, tokens, 0); // Add marks to characters
-    this.lastCharacters = characters.asImmutable();
-  },
-
-  decorate(text, block) {
-    if (block.data) {
-      let blockText = block.data.text;
-      if (blockText && blockText === text.text && blockText !== this.lastText) {
-        this.setCharacters(text, block.data.tokens, blockText);
-      }
-    }
-    return this.lastCharacters;
+function markdownDecorator(text, block) {
+  if (text.charsData && text.charsData.text === text.text) {
+    return text.charsData.characters;
   }
-};
+  if (block.data) {
+    let characters = text.characters.asMutable();
+    addMarks(characters, block.data.tokens, 0); // Add marks to characters
+    text.charsData = { // eslint-disable-line
+      text: text.text,
+      characters: characters.asImmutable()
+    };
+    return text.charsData.characters;
+  }
+  return text.characters;
+}
 
 const schema = {
   rules: [{
     match: () => true,
-    decorate: charactersCache.decorate.bind(charactersCache),
+    decorate: markdownDecorator,
     render: rendererComponent
   }]
 };
