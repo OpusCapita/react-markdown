@@ -102,13 +102,13 @@ const charactersCache = {
   decorate(text, block) {
     if (block.data) {
       let blockText, tokens;
-      if (block.data.get) {
+      /*if (block.data.get) {
         blockText = block.data.get('text');
         tokens = block.data.get('tokensParse');
-      } else {
+      } else {*/
         blockText = block.data.text;
         tokens = block.data.tokensParse;
-      }
+      // }
 
       if (blockText && blockText !== this.lastText) {
         this.lastText = blockText;
@@ -116,6 +116,12 @@ const charactersCache = {
         this.setCharacters(text);
       }
     }
+
+    if (text.text !== this.lastText) {
+      this.lastText = text.text;
+      this.lastTokens = parse(this.lastText);
+    }
+
     return this.lastCharacters;
   }
 };

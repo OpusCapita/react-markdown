@@ -51,19 +51,61 @@ class PlainMarkdownInput extends React.Component {
 
   handleNewValue(value) {
     let editorState = Plain.deserialize(value || '');
-    let stateJSON = editorState.toJSON();
-    let nodesSize = stateJSON.document.nodes.length;
+    // let stateJSON = editorState.toJSON();
+    // let nodesSize = stateJSON.document.nodes.length;
+    // for (let i = 0; i < nodesSize; i++) {
+    //   let node = stateJSON.document.nodes[i];
+    //   let text = node.nodes[0].ranges[0].text;
+    //   node.data = {
+    //     text,
+    //     tokensParse: parse(text),
+    //   };
+    // }
+    // editorState = State.fromJSON(stateJSON);
+
+
+
+
+    let nodes = editorState.document.nodes.asMutable();
+    let nodesSize = nodes.size;
     for (let i = 0; i < nodesSize; i++) {
-      let node = stateJSON.document.nodes[i];
-      let text = node.nodes[0].ranges[0].text;
-      node.data = {
-        text,
-        tokensParse: parse(text),
-      };
+      // const currNode = nodes.get(i);
+      // let text = currNode.nodes.get(0).text;
+      // currNode.data = {
+      //   text,
+      //   tokensParse: parse(text),
+      // };
+      // nodes.set(i, currNode.asImmutable());
+
+      PlainMarkdownInput.setDataToNode(nodes, i);
     }
-    editorState = State.fromJSON(stateJSON);
+    // let editorStateMutable = editorState.asMutable();
+    // editorStateMutable.document = editorStateMutable.document.asMutable();
+    // editorStateMutable.document.nodes = nodes.asImmutable();
+    // editorStateMutable.document = editorStateMutable.document.asImmutable();
+    // editorState = editorStateMutable.asImmutable();
+
+    editorState = PlainMarkdownInput.setNodesToState(editorState, nodes);
 
     this.setState({ editorState });
+  }
+
+  static setNodesToState(editorState, nodes) {
+    let editorStateMutable = editorState.asMutable();
+    editorStateMutable.document = editorStateMutable.document.asMutable();
+    editorStateMutable.document.nodes = nodes.asImmutable();
+    editorStateMutable.document = editorStateMutable.document.asImmutable();
+    return editorStateMutable.asImmutable();
+  }
+
+  static setDataToNode(nodes, numBlock, text) {
+    const currNode = nodes.get(numBlock).asMutable();
+    text = text || currNode.nodes.get(0).text;
+    currNode.data = {
+      text,
+      tokensParse: parse(text),
+    };
+    nodes.set(numBlock, currNode.asImmutable());
   }
 
   handleChange = (obj) => {
@@ -83,19 +125,22 @@ class PlainMarkdownInput extends React.Component {
 
     if (numBlock) {
       let text = editorState.texts.get(0).text;
-      let editorStateMutable = editorState.asMutable();
 
-      const currNode = editorState.document.nodes.get(numBlock).asMutable();
-      currNode.data = {
-        text,
-        tokensParse: parse(text),
-      };
       let nodes = editorState.document.nodes.asMutable();
-      nodes.set(numBlock, currNode.asImmutable());
-      editorStateMutable.document = editorStateMutable.document.asMutable();
-      editorStateMutable.document.nodes = nodes.asImmutable();
-      editorStateMutable.document = editorStateMutable.document.asImmutable();
-      editorState = editorStateMutable.asImmutable();
+      // const currNode = nodes.get(numBlock).asMutable();
+      // currNode.data = {
+      //   text,
+      //   tokensParse: parse(text),
+      // };
+      // nodes.set(numBlock, currNode.asImmutable());
+
+      PlainMarkdownInput.setDataToNode(nodes, numBlock, text);
+      // let editorStateMutable = editorState.asMutable();
+      // editorStateMutable.document = editorStateMutable.document.asMutable();
+      // editorStateMutable.document.nodes = nodes.asImmutable();
+      // editorStateMutable.document = editorStateMutable.document.asImmutable();
+      // editorState = editorStateMutable.asImmutable();
+      editorState = PlainMarkdownInput.setNodesToState(editorState, nodes);
     }
     this.props.onChange(Plain.serialize(editorState));
 
