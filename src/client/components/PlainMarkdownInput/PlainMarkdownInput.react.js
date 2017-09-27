@@ -6,7 +6,6 @@ import schema from './slate/schema';
 import shortcuts from './slate/shortcuts';
 import { hasMultiLineSelection } from './slate/transforms';
 import './PlainMarkdownInput.less';
-import { State } from 'slate';
 import { parse } from './slate/tokenizer';
 
 import {
@@ -51,46 +50,16 @@ class PlainMarkdownInput extends React.Component {
 
   handleNewValue(value) {
     let editorState = Plain.deserialize(value || '');
-    // let stateJSON = editorState.toJSON();
-    // let nodesSize = stateJSON.document.nodes.length;
-    // for (let i = 0; i < nodesSize; i++) {
-    //   let node = stateJSON.document.nodes[i];
-    //   let text = node.nodes[0].ranges[0].text;
-    //   node.data = {
-    //     text,
-    //     tokensParse: parse(text),
-    //   };
-    // }
-    // editorState = State.fromJSON(stateJSON);
-
-
-
-
     let nodes = editorState.document.nodes.asMutable();
     let nodesSize = nodes.size;
     for (let i = 0; i < nodesSize; i++) {
-      // const currNode = nodes.get(i);
-      // let text = currNode.nodes.get(0).text;
-      // currNode.data = {
-      //   text,
-      //   tokensParse: parse(text),
-      // };
-      // nodes.set(i, currNode.asImmutable());
-
-      PlainMarkdownInput.setDataToNode(nodes, i);
+      this.setDataToNode(nodes, i);
     }
-    // let editorStateMutable = editorState.asMutable();
-    // editorStateMutable.document = editorStateMutable.document.asMutable();
-    // editorStateMutable.document.nodes = nodes.asImmutable();
-    // editorStateMutable.document = editorStateMutable.document.asImmutable();
-    // editorState = editorStateMutable.asImmutable();
-
-    editorState = PlainMarkdownInput.setNodesToState(editorState, nodes);
-
+    editorState = this.setNodesToState(editorState, nodes);
     this.setState({ editorState });
   }
 
-  static setNodesToState(editorState, nodes) {
+  setNodesToState(editorState, nodes) {
     let editorStateMutable = editorState.asMutable();
     editorStateMutable.document = editorStateMutable.document.asMutable();
     editorStateMutable.document.nodes = nodes.asImmutable();
@@ -98,12 +67,12 @@ class PlainMarkdownInput extends React.Component {
     return editorStateMutable.asImmutable();
   }
 
-  static setDataToNode(nodes, numBlock, text) {
+  setDataToNode(nodes, numBlock, text) {
     const currNode = nodes.get(numBlock).asMutable();
-    text = text || currNode.nodes.get(0).text;
+    text = text || currNode.nodes.get(0).text; // eslint-disable-line
     currNode.data = {
       text,
-      tokensParse: parse(text),
+      tokens: parse(text),
     };
     nodes.set(numBlock, currNode.asImmutable());
   }
@@ -113,7 +82,7 @@ class PlainMarkdownInput extends React.Component {
     // https://github.com/ianstormtaylor/slate/blob/master/packages/slate/Changelog.md#0220--september-5-2017
     let editorState = obj.state || obj;
 
-    let numBlock = false;
+    let numBlock = -1;
     let key = editorState.blocks.get(0).key;
     let nodesSize = editorState.document.nodes.size;
     for (let i = 0; i < nodesSize; i++) {
@@ -123,24 +92,11 @@ class PlainMarkdownInput extends React.Component {
       }
     }
 
-    if (numBlock) {
+    if (numBlock !== -1) {
       let text = editorState.texts.get(0).text;
-
       let nodes = editorState.document.nodes.asMutable();
-      // const currNode = nodes.get(numBlock).asMutable();
-      // currNode.data = {
-      //   text,
-      //   tokensParse: parse(text),
-      // };
-      // nodes.set(numBlock, currNode.asImmutable());
-
-      PlainMarkdownInput.setDataToNode(nodes, numBlock, text);
-      // let editorStateMutable = editorState.asMutable();
-      // editorStateMutable.document = editorStateMutable.document.asMutable();
-      // editorStateMutable.document.nodes = nodes.asImmutable();
-      // editorStateMutable.document = editorStateMutable.document.asImmutable();
-      // editorState = editorStateMutable.asImmutable();
-      editorState = PlainMarkdownInput.setNodesToState(editorState, nodes);
+      this.setDataToNode(nodes, numBlock, text);
+      editorState = this.setNodesToState(editorState, nodes);
     }
     this.props.onChange(Plain.serialize(editorState));
 

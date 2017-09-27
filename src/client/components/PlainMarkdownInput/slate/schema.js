@@ -1,7 +1,6 @@
 import React from 'react';
 import Types from 'prop-types';
 import { Mark } from 'slate';
-import { parse } from './tokenizer';
 
 let rendererComponent = props => {
   let isLine = props.node.type === 'line';
@@ -53,7 +52,7 @@ rendererComponent.propTypes = {
  * Define a decorator for markdown styles.
  */
 
-function addMarks(characters, tokens, offset) {
+const addMarks = function addMarks(characters, tokens, offset) {
   let updatedOffset = offset;
 
   for (let i = 0; i < tokens.length; i++) {
@@ -81,7 +80,7 @@ function addMarks(characters, tokens, offset) {
 
     updatedOffset += length;
   }
-}
+};
 
 /**
  * Object caches the last values of tokens and characters
@@ -90,38 +89,22 @@ function addMarks(characters, tokens, offset) {
  */
 const charactersCache = {
   lastText: null,
-  lastTokens: null,
   lastCharacters: null,
 
-  setCharacters(text) {
+  setCharacters(text, tokens, blockText) {
+    this.lastText = blockText;
     let characters = text.characters.asMutable();
-    addMarks(characters, this.lastTokens, 0); // Add marks to characters
+    addMarks(characters, tokens, 0); // Add marks to characters
     this.lastCharacters = characters.asImmutable();
   },
 
   decorate(text, block) {
     if (block.data) {
-      let blockText, tokens;
-      /*if (block.data.get) {
-        blockText = block.data.get('text');
-        tokens = block.data.get('tokensParse');
-      } else {*/
-        blockText = block.data.text;
-        tokens = block.data.tokensParse;
-      // }
-
-      if (blockText && blockText !== this.lastText) {
-        this.lastText = blockText;
-        this.lastTokens = tokens;
-        this.setCharacters(text);
+      let blockText = block.data.text;
+      if (blockText && blockText === text.text && blockText !== this.lastText) {
+        this.setCharacters(text, block.data.tokens, blockText);
       }
     }
-
-    if (text.text !== this.lastText) {
-      this.lastText = text.text;
-      this.lastTokens = parse(this.lastText);
-    }
-
     return this.lastCharacters;
   }
 };
