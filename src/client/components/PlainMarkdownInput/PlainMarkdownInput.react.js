@@ -63,10 +63,7 @@ class PlainMarkdownInput extends React.Component {
     }
     editorState = State.fromJSON(stateJSON);
 
-    this.setState({
-      editorState
-      // editorState: Plain.deserialize(value || '')
-    });
+    this.setState({ editorState });
   }
 
   handleChange = (obj) => {

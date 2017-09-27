@@ -91,6 +91,13 @@ function addMarks(characters, tokens, offset) {
 const charactersCache = {
   lastText: null,
   lastTokens: null,
+  lastCharacters: null,
+
+  setCharacters(text) {
+    let characters = text.characters.asMutable();
+    addMarks(characters, this.lastTokens, 0); // Add marks to characters
+    this.lastCharacters = characters.asImmutable();
+  },
 
   decorate(text, block) {
     if (block.data) {
@@ -103,20 +110,13 @@ const charactersCache = {
         tokens = block.data.tokensParse;
       }
 
-      if (blockText) {
+      if (blockText && blockText !== this.lastText) {
         this.lastText = blockText;
         this.lastTokens = tokens;
+        this.setCharacters(text);
       }
     }
-
-    if (text.text !== this.lastText) {
-      this.lastText = text.text;
-      this.lastTokens = parse(text.text);
-    }
-
-    let characters = text.characters.asMutable();
-    addMarks(characters, this.lastTokens, 0); // Add marks to characters
-    return characters.asImmutable();
+    return this.lastCharacters;
   }
 };
 
