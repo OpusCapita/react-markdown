@@ -23,12 +23,13 @@ echo "Current branch is ${GIT_BRANCH}"
 # now lets setup a new repo so we can update the gh-pages branch
 git config --global user.email "$GH_EMAIL" > /dev/null 2>&1
 git config --global user.name "$GH_NAME" > /dev/null 2>&1
-git init
 
 # switch into the the gh-pages branch
 if git rev-parse --verify origin/gh-pages > /dev/null 2>&1
 then
     git checkout gh-pages
+    git pull
+
     # delete any old site as we are going to replace it
     # Note: this explodes if there aren't any, so moving it here for now
     rm -rf "./$GIT_BRANCH"
