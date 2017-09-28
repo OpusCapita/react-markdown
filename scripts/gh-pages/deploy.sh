@@ -3,6 +3,7 @@
 
 # abort the script if there is a non-zero error
 set -e
+set -x
 
 # show where we are on the machine
 pwd
@@ -16,6 +17,10 @@ then
     echo "Usage: $0 <site source dir>"
     exit 1
 fi
+
+# get current git branch name
+GIT_BRANCH=`git rev-parse --abbrev-ref HEAD`
+echo "Current branch is ${GIT_BRANCH}"
 
 # make a directory to put the gp-pages branch
 mkdir gh-pages-branch
@@ -32,13 +37,13 @@ then
     git checkout gh-pages
     # delete any old site as we are going to replace it
     # Note: this explodes if there aren't any, so moving it here for now
-    git rm -rf .
+    git rm -rf "./$GIT_BRANCH"
 else
     git checkout --orphan gh-pages
 fi
 
 # copy over or recompile the new site
-cp -a "../${siteSource}/." .
+cp -a "../${siteSource}/$GIT_BRANCH" .
 
 # stage any changes and new files
 git add -A
