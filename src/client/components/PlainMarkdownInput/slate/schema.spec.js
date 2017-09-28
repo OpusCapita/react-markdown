@@ -76,7 +76,7 @@ describe('plain editor schema', () => {
     let html;
 
     html = '# Header';
-    assert.equal(getHtml(html), '<span class="token header1"># Header</span>');
+    assert.equal(getHtml(html), '<span class="token header"># Header</span>');
 
     html = '#Header';
     assert.equal(getHtml(html), '#Header');
@@ -86,7 +86,7 @@ describe('plain editor schema', () => {
     let html;
 
     html = '## Header';
-    assert.equal(getHtml(html), '<span class="token header2">## Header</span>');
+    assert.equal(getHtml(html), '<span class="token header">## Header</span>');
 
     html = '##Header';
     assert.equal(getHtml(html), '##Header');
@@ -96,7 +96,7 @@ describe('plain editor schema', () => {
     let html;
 
     html = '### Header';
-    assert.equal(getHtml(html), '<span class="token header3">### Header</span>');
+    assert.equal(getHtml(html), '<span class="token header">### Header</span>');
 
     html = '###Header';
     assert.equal(getHtml(html), '###Header');
@@ -106,7 +106,7 @@ describe('plain editor schema', () => {
     let html;
 
     html = '#### Header';
-    assert.equal(getHtml(html), '<span class="token header4">#### Header</span>');
+    assert.equal(getHtml(html), '<span class="token header">#### Header</span>');
 
     html = '####Header';
     assert.equal(getHtml(html), '####Header');
@@ -115,7 +115,7 @@ describe('plain editor schema', () => {
   it('should highlight header5', () => {
     let html;
     html = '##### Header';
-    assert.equal(getHtml(html), '<span class="token header5">##### Header</span>');
+    assert.equal(getHtml(html), '<span class="token header">##### Header</span>');
 
     html = '#####Header';
     assert.equal(getHtml(html), '#####Header');
@@ -125,38 +125,10 @@ describe('plain editor schema', () => {
     let html;
 
     html = '###### Header';
-    assert.equal(getHtml(html), '<span class="token header6">###### Header</span>');
+    assert.equal(getHtml(html), '<span class="token header">###### Header</span>');
 
     html = '######Header';
     assert.equal(getHtml(html), '######Header');
-  });
-
-  it('should highlight header with no offset', () => {
-    let html;
-
-    html = ' # Header';
-    assert.equal(getHtml(html), '<span class="token header-no-offset"> # Header</span>');
-
-    html = ' ## Header';
-    assert.equal(getHtml(html), '<span class="token header-no-offset"> ## Header</span>');
-
-    html = ' ### Header';
-    assert.equal(getHtml(html), '<span class="token header-no-offset"> ### Header</span>');
-
-    html = ' #### Header';
-    assert.equal(getHtml(html), '<span class="token header-no-offset"> #### Header</span>');
-
-    html = ' ##### Header';
-    assert.equal(getHtml(html), '<span class="token header-no-offset"> ##### Header</span>');
-
-    html = ' ###### Header';
-    assert.equal(getHtml(html), '<span class="token header-no-offset"> ###### Header</span>');
-
-    html = '    #Header';
-    assert.equal(getHtml(html), '    #Header');
-
-    html = ' #Header';
-    assert.equal(getHtml(html), ' #Header');
   });
 
   it('should highlight hr', () => {
@@ -766,11 +738,11 @@ describe('plain editor schema', () => {
     let candidate;
 
     html = '# _text_';
-    candidate = `<span class="token header1"># <span class="token italic">_text_</span></span>`;
+    candidate = `<span class="token header"># <span class="token italic">_text_</span></span>`;
     assert.equal(getHtml(html), candidate);
 
     html = '# *text*';
-    candidate = `<span class="token header1"># <span class="token italic">*text*</span></span>`;
+    candidate = `<span class="token header"># <span class="token italic">*text*</span></span>`;
     assert.equal(getHtml(html), candidate);
   });
 
@@ -779,11 +751,11 @@ describe('plain editor schema', () => {
     let candidate;
 
     html = '# __text__';
-    candidate = `<span class="token header1"># <span class="token bold">__text__</span></span>`;
+    candidate = `<span class="token header"># <span class="token bold">__text__</span></span>`;
     assert.equal(getHtml(html), candidate);
 
     html = '# **text**';
-    candidate = `<span class="token header1"># <span class="token bold">**text**</span></span>`;
+    candidate = `<span class="token header"># <span class="token bold">**text**</span></span>`;
     assert.equal(getHtml(html), candidate);
   });
 
@@ -792,7 +764,7 @@ describe('plain editor schema', () => {
     let candidate;
 
     html = '# ~~text~~';
-    candidate = `<span class="token header1"># <span class="token strikethrough">~~text~~</span></span>`;
+    candidate = `<span class="token header"># <span class="token strikethrough">~~text~~</span></span>`;
     assert.equal(getHtml(html), candidate);
   });
 
@@ -801,11 +773,11 @@ describe('plain editor schema', () => {
     let candidate;
 
     html = '# `text`';
-    candidate = '<span class="token header1"># <span class="token code">`text`</span></span>';
+    candidate = '<span class="token header"># <span class="token code">`text`</span></span>';
     assert.equal(getHtml(html), candidate);
 
     html = '# ```text```';
-    candidate = '<span class="token header1"># <span class="token code">```text```</span></span>';
+    candidate = '<span class="token header"># <span class="token code">```text```</span></span>';
     assert.equal(getHtml(html), candidate);
   });
 
