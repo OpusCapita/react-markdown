@@ -19,7 +19,7 @@ Import it to your application
 
 `import MarkdownInput from '@opuscapita/react-markdown`
 
-See interactive example for more details: https://opuscapita.github.io/react-markdown
+See interactive example for more details: https://opuscapita.github.io/react-markdown/master
 
 > Demo powered by [React Showroom](https://github.com/OpusCapita/react-showroom-client)
 
