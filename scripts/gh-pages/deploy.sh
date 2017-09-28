@@ -44,7 +44,7 @@ fi
 
 # copy over or recompile the new site
 mkdir -p "./$GIT_BRANCH"
-mv "../${siteSource}" "./$GIT_BRANCH"
+cp -r "../${siteSource}/*" "./$GIT_BRANCH"
 
 # stage any changes and new files
 git add -A
