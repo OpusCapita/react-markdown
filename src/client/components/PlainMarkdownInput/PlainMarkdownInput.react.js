@@ -54,10 +54,6 @@ class PlainMarkdownInput extends React.Component {
   }
 
   handleChange = (obj) => {
-    if (this.props.readOnly) {
-      return;
-    }
-
     // XXX Slate "Editor.props.onChange" behavior changed
     // https://github.com/ianstormtaylor/slate/blob/master/packages/slate/Changelog.md#0220--september-5-2017
     let editorState = obj.state || obj;
