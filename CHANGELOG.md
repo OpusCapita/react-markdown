@@ -1,3 +1,14 @@
+## [v1.1.0](https://github.com/OpusCapita/react-markdown/compare/v1.0.9...v1.1.0) (Thu, 28 Sep 2017 06:55:57 GMT)
+ - Increase package minor version (Kirill Volkovich <kirill.volkovich@jcatalog.com>, 8b88dff)
+ - Remove debuging "-x" flag from gh-pages scripts (Kirill Volkovich <kirill.volkovich@jcatalog.com>, 880644f)
+ - Revert "--quiet" flag within gh-pages-deploy.sh (Kirill Volkovich <kirill.volkovich@jcatalog.com>, 2b1296c)
+ - Remove "--quiet" flag within gh-pages-deploy.sh (Kirill Volkovich <kirill.volkovich@jcatalog.com>, 82274ff)
+ - Remove "uglify" plugin from webpack configs (Kirill Volkovich <kirill.volkovich@jcatalog.com>, d6a02e0)
+ - Add debuging flag to gh-pages scripts (Kirill Volkovich <kirill.volkovich@jcatalog.com>, 863211a)
+ - Fixing CircleCI build process (Alexey Sergeev <sab@scand.com>, 33db9b4)
+ - Fix docs (Kirill Volkovich <kirill.volkovich@jcatalog.com>, f176933)
+ - Fixing CircleCI build process (Alexey Sergeev <sab@scand.com>, 0b33c04)
+
 ## [v1.0.9](Thu, 28 Sep 2017 05:32:15 GMT)
  - #50 Add "readOnly" property to MarkdownInput and PlainMarkdownInput (#51) (Kirill Volkovich <kvolkovich-sc@users.noreply.github.com>, 6e1ec83)
 
