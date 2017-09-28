@@ -1,3 +1,6 @@
+## [v1.0.9](Thu, 28 Sep 2017 05:32:15 GMT)
+ - #50 Add "readOnly" property to MarkdownInput and PlainMarkdownInput (#51) (Kirill Volkovich <kvolkovich-sc@users.noreply.github.com>, 6e1ec83)
+
 ## [v1.0.8](https://github.com/OpusCapita/react-markdown/compare/v1.0.7...v1.0.8) (Tue, 26 Sep 2017 07:52:06 GMT)
  - Remove artefactId to "jcatalog-markdown-resources" added by mistake (Kirill Volkovich <kirill.volkovich@jcatalog.com>, f6c3fe7)
 
