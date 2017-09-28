@@ -27097,7 +27097,7 @@ var FullScreenButton = function FullScreenButton(_ref) {
       ) },
     _react2.default.createElement(
       'button',
-      { className: (0, _classnames2.default)('btn btn-default'), onClick: onClick },
+      { type: 'button', className: (0, _classnames2.default)('btn btn-default'), onClick: onClick },
       _react2.default.createElement('i', { className: (0, _classnames2.default)('fa', { 'fa-expand': !fullScreen, 'fa-compress': fullScreen }) })
     )
   );
