@@ -59,14 +59,6 @@ class PlainMarkdownInput extends React.Component {
     this.setState({ editorState });
   }
 
-  setNodesToState(editorState, nodes) {
-    let editorStateMutable = editorState.asMutable();
-    editorStateMutable.document = editorStateMutable.document.asMutable();
-    editorStateMutable.document.nodes = nodes.asImmutable();
-    editorStateMutable.document = editorStateMutable.document.asImmutable();
-    return editorStateMutable.asImmutable();
-  }
-
   setDataToNode(nodes, numBlock, text) {
     const currNode = nodes.get(numBlock).asMutable();
     text = text || currNode.nodes.get(0).text; // eslint-disable-line
@@ -75,6 +67,14 @@ class PlainMarkdownInput extends React.Component {
       tokens: parse(text),
     };
     nodes.set(numBlock, currNode.asImmutable());
+  }
+
+  setNodesToState(editorState, nodes) {
+    let editorStateMutable = editorState.asMutable();
+    editorStateMutable.document = editorStateMutable.document.asMutable();
+    editorStateMutable.document.nodes = nodes.asImmutable();
+    editorStateMutable.document = editorStateMutable.document.asImmutable();
+    return editorStateMutable.asImmutable();
   }
 
   handleChange = (obj) => {

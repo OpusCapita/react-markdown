@@ -63,8 +63,12 @@ const addMarks = function addMarks(characters, tokens, offset) {
     }
 
     const { content, length, type } = token;
-    const mark = Mark.create({ type });
 
+    if (Array.isArray(content)) {
+      addMarks(characters, content, updatedOffset);
+    }
+
+    const mark = Mark.create({ type });
     for (let i = updatedOffset; i < updatedOffset + length; i++) {
       let char = characters.get(i);
       let { marks } = char;
@@ -72,10 +76,6 @@ const addMarks = function addMarks(characters, tokens, offset) {
       marks = marks.add(mark);
       char = char.set('marks', marks);
       characters.set(i, char);
-    }
-
-    if (Array.isArray(content)) {
-      addMarks(characters, content, updatedOffset);
     }
 
     updatedOffset += length;
