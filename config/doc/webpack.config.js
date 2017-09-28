@@ -19,7 +19,7 @@ module.exports = {
   ],
   context: path.resolve(__dirname),
   output: {
-    path: path.resolve(__dirname, '../../lib'),
+    path: path.resolve(__dirname, '../../.gh-pages-tmp'),
     filename: `index.js`,
     library: `${PACKAGE_NAME}`,
     libraryTarget: 'umd'
@@ -29,14 +29,7 @@ module.exports = {
       new webpack.DefinePlugin({
         'process.env.NODE_ENV': '"production"'
       }),
-      new LodashModuleReplacementPlugin(),
-      new webpack.optimize.UglifyJsPlugin({
-        compress: {
-          warnings: false,
-          screw_ie8: true
-        },
-        comments: false
-      })
+      new LodashModuleReplacementPlugin()
   ],
   externals: {
     react: {

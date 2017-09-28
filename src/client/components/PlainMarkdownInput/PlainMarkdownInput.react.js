@@ -78,6 +78,10 @@ class PlainMarkdownInput extends React.Component {
   }
 
   handleChange = (obj) => {
+    if (this.props.readOnly) {
+      return;
+    }
+
     // XXX Slate "Editor.props.onChange" behavior changed
     // https://github.com/ianstormtaylor/slate/blob/master/packages/slate/Changelog.md#0220--september-5-2017
     let editorState = obj.state || obj;
@@ -118,7 +122,7 @@ class PlainMarkdownInput extends React.Component {
 
   render() {
     const { editorState } = this.state;
-    const { children, extensions } = this.props;
+    const { children, extensions, readOnly } = this.props;
 
     const fullScreen = this.props.fullScreen;
 
@@ -127,7 +131,7 @@ class PlainMarkdownInput extends React.Component {
         <ObjectReferenceButton
           key={index}
           extension={extension}
-          disabled={false}
+          disabled={readOnly}
         />
       );
     });
@@ -141,16 +145,17 @@ class PlainMarkdownInput extends React.Component {
         plugins={[
           AutocompletePlugin({ extensions: extensions, onChange: this.handleChange })
         ]}
+        readOnly={readOnly}
       >
         <SlateToolbar>
           <SlateToolbarGroup>
-            <BoldButton/>
-            <ItalicButton/>
-            <StrikethroughButton/>
+            <BoldButton disabled={readOnly} />
+            <ItalicButton disabled={readOnly} />
+            <StrikethroughButton disabled={readOnly} />
           </SlateToolbarGroup>
 
           <SlateToolbarGroup>
-            <LinkButton/>
+            <LinkButton disabled={readOnly} />
           </SlateToolbarGroup>
 
           <SlateToolbarGroup>
@@ -158,7 +163,7 @@ class PlainMarkdownInput extends React.Component {
               <DropdownButton
                 id="oc-md--toolbar__headers-dropdown"
                 title={<i className="fa fa-header"/>}
-                disabled={hasMultiLineSelection(editorState)}
+                disabled={hasMultiLineSelection(editorState) || readOnly}
               >
                 <HeaderOneButton state={editorState} onChange={this.handleChange}/>
                 <HeaderTwoButton state={editorState} onChange={this.handleChange}/>
@@ -171,8 +176,8 @@ class PlainMarkdownInput extends React.Component {
           </SlateToolbarGroup>
 
           <SlateToolbarGroup>
-            <OrderedListButton/>
-            <UnorderedListButton/>
+            <OrderedListButton disabled={readOnly} />
+            <UnorderedListButton disabled={readOnly} />
           </SlateToolbarGroup>
 
           <SlateToolbarGroup>
@@ -180,7 +185,7 @@ class PlainMarkdownInput extends React.Component {
           </SlateToolbarGroup>
 
           <SlateToolbarGroup className="react-markdown--plain-markdown-input__fullscreen-button">
-            <FullScreenButton onClick={this.handleFullScreen} fullScreen={fullScreen} />
+            <FullScreenButton onClick={this.handleFullScreen} fullScreen={fullScreen} disabled={readOnly} />
           </SlateToolbarGroup>
 
           {children}
@@ -196,7 +201,8 @@ PlainMarkdownInput.propTypes = {
   value: Types.string,
   onChange: Types.func,
   onFullScreen: Types.func,
-  fullScreen: Types.bool
+  fullScreen: Types.bool,
+  readOnly: Types.bool
 };
 
 PlainMarkdownInput.defaultProps = {
@@ -204,7 +210,8 @@ PlainMarkdownInput.defaultProps = {
   value: '',
   fullScreen: false,
   onFullScreen: () => {},
-  onChange: () => {}
+  onChange: () => {},
+  readOnly: false
 };
 
 export default PlainMarkdownInput;

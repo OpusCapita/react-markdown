@@ -8,6 +8,7 @@ PlainMarkdownInput
 | ------------------------------ | :---------------------- | ----------------------------------------------------------- |
 | onChange                       | func                    | Callback: `(value) => {}`. Called when text is changed.     |
 | value                          | string                  | Raw markdown                                                |
+| readOnly                       | bool                    | Disables toolbar and makes markdown text not editable.      |
 
 ### Code Example
 

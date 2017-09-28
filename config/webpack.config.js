@@ -31,18 +31,6 @@ if(IS_LINK_MODE) {
   plugins.push(new WriteFilePlugin());
 }
 
-if(IS_PRODUCTION_MODE) {
-  const uglifyPlugin = new webpack.optimize.UglifyJsPlugin({
-    compress: {
-      warnings: false,
-      screw_ie8: true
-    },
-    comments: false
-  });
-
-  plugins.push(uglifyPlugin);
-}
-
 if(WEBPACK_BUNDLE_ANALYZE && IS_PRODUCTION_MODE) {
   let bundleAnalyzerPlugin = new BundleAnalyzerPlugin({
     analyzerMode: 'static',
