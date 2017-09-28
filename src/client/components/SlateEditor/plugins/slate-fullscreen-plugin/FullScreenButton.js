@@ -7,7 +7,7 @@ import Types from 'prop-types';
 const FullScreenButton = function({ onClick, fullScreen }) {
   return (
     <OverlayTrigger placement="bottom" overlay={<Tooltip id="switch-tp">Fullscreen</Tooltip>}>
-      <button className={classnames('btn btn-default')} onClick={onClick}>
+      <button type="button" className={classnames('btn btn-default')} onClick={onClick}>
         <i className={classnames('fa', { 'fa-expand': !fullScreen, 'fa-compress': fullScreen })}/>
       </button>
     </OverlayTrigger>
