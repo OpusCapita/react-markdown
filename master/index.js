@@ -17981,10 +17981,6 @@ var PlainMarkdownInput = function (_React$Component) {
       editorState: '',
       fullScreen: false
     }, _this.handleChange = function (obj) {
-      if (_this.props.readOnly) {
-        return;
-      }
-
       // XXX Slate "Editor.props.onChange" behavior changed
       // https://github.com/ianstormtaylor/slate/blob/master/packages/slate/Changelog.md#0220--september-5-2017
       var editorState = obj.state || obj;
@@ -18030,14 +18026,14 @@ var PlainMarkdownInput = function (_React$Component) {
   }, {
     key: 'render',
     value: function render() {
-      var editorState = this.state.editorState;
+      var _state = this.state,
+          editorState = _state.editorState,
+          fullScreen = _state.fullScreen;
       var _props = this.props,
           children = _props.children,
           extensions = _props.extensions,
           readOnly = _props.readOnly;
 
-
-      var fullScreen = this.props.fullScreen;
 
       var objectReferenceButtons = this.props.extensions.map(function (extension, index) {
         return _react2.default.createElement(_plugins.ObjectReferenceButton, {
@@ -18125,14 +18121,12 @@ PlainMarkdownInput.propTypes = {
   value: _propTypes2.default.string,
   onChange: _propTypes2.default.func,
   onFullScreen: _propTypes2.default.func,
-  fullScreen: _propTypes2.default.bool,
   readOnly: _propTypes2.default.bool
 };
 
 PlainMarkdownInput.defaultProps = {
   extensions: [],
   value: '',
-  fullScreen: false,
   onFullScreen: function onFullScreen() {},
   onChange: function onChange() {},
   readOnly: false
@@ -23217,19 +23211,16 @@ var MarkdownInput = (_temp2 = _class = function (_React$Component) {
       args[_key] = arguments[_key];
     }
 
-    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = MarkdownInput.__proto__ || Object.getPrototypeOf(MarkdownInput)).call.apply(_ref, [this].concat(args))), _this), _this.state = {
-      fullScreen: false
-    }, _this.handleChangeValue = function (value) {
+    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = MarkdownInput.__proto__ || Object.getPrototypeOf(MarkdownInput)).call.apply(_ref, [this].concat(args))), _this), _this.handleChangeValue = function (value) {
       _this.props.onChange(value);
     }, _this.handleFullScreen = function (fullScreen) {
-      _this.setState({ fullScreen: fullScreen });
+      _this.props.onFullScreen(fullScreen);
     }, _temp), _possibleConstructorReturn(_this, _ret);
   }
 
   _createClass(MarkdownInput, [{
     key: 'render',
     value: function render() {
-      var fullScreen = this.state.fullScreen;
       var _props = this.props,
           value = _props.value,
           extensions = _props.extensions,
@@ -23240,7 +23231,6 @@ var MarkdownInput = (_temp2 = _class = function (_React$Component) {
         value: value,
         onChange: this.handleChangeValue,
         onFullScreen: this.handleFullScreen,
-        fullScreen: fullScreen,
         extensions: extensions,
         readOnly: readOnly
       });
@@ -23251,11 +23241,13 @@ var MarkdownInput = (_temp2 = _class = function (_React$Component) {
 }(_react2.default.Component), _class.propTypes = {
   value: _propTypes2.default.string,
   onChange: _propTypes2.default.func,
+  onFullScreen: _propTypes2.default.func,
   extensions: _propTypes2.default.array,
   readOnly: _propTypes2.default.bool
 }, _class.defaultProps = {
   value: '',
   onChange: function onChange() {},
+  onFullScreen: function onFullScreen() {},
   extensions: [],
   readOnly: false
 }, _temp2);
@@ -37049,7 +37041,7 @@ module.exports = ReactPropTypesSecret;
 /* 614 */
 /***/ (function(module, exports) {
 
-module.exports = "### Synopsis\n\nMarkdownInput\n\n### Props Reference\n\n| Name               | Type            | Description                                                                                      |\n| ------------------ | :-------------- | ------------------------------------------------------------------------------------------------ |\n| onChange           | func            | Callback: `(value) => {}`                                                                        |\n| value              | string          | Raw markdown                                                                                     |\n| extensions         | array           | See \"Extension definition\" section bellow.                                                       |\n| readOnly           | bool            | Disables toolbar and makes markdown text not editable.                                           |\n\n### Extension definition\n\nConfigurable extensions with autocomplete for **products**, **terms**, etc.\n\n| Name               | Type            | Description                                                                                      |\n| ------------------ | :-------------- | ------------------------------------------------------------------------------------------------ |\n| objectClassName    | string         | Object class name displayed on buttons ('Product', 'Term', etc.)                                 |\n| specialCharacter   | string         | Is used for inserting it into plain markdown input on button ('Term', 'Product', etc.) click.   |\n| color              | string         | Color of object reference element in rich markdown input.                                       |\n| termRegex          | regex          | Is used to check if item can be inserted after caret position in plain markdown input.          |\n| searchItems        | func           | Is used to search items by input term.                                                           |\n| markdownText       | func           | Is used to get text for markdown input based on selected item.                            |\n\n### Code Example\n\n```\n<div style={{ height: '70vh' }}>\n  <MarkdownInput\n    onChange={_scope.handleValueChange}\n    value={_scope.state.markdownExample}\n    readOnly={false}\n    extensions={[\n      {\n        objectClassName: 'Product',\n        specialCharacter: '#',\n        color: '#9ed69e',\n        termRegex: /^\\#(\\w*)$/,\n        searchItems(term) {\n          const items = [\n            {_objectLabel: 'a1'},\n            {_objectLabel: 'a2'},\n            {_objectLabel: 'a23'},\n            {_objectLabel: 'b1'},\n            {_objectLabel: 'ba2'},\n            {_objectLabel: 'ba21'},\n            {_objectLabel: 'ba222'},\n            {_objectLabel: 'ba23'},\n            {_objectLabel: 'ba24'},\n            {_objectLabel: 'ba25'},\n            {_objectLabel: 'ba255'},\n            {_objectLabel: 'ba256'},\n            {_objectLabel: 'ba257'}\n          ];\n          return Promise.resolve(items.filter(({_objectLabel}) => _objectLabel.startsWith(term.substring(1))));\n        },\n        markdownText(item) {\n          return '#' + item._objectLabel;\n        }\n      },\n      {\n        objectClassName: 'Term',\n        specialCharacter: '$',\n        color: '#f396c3',\n        termRegex: /^\\$(\\w*)$/,\n        searchItems(term) {\n          const items = [\n            {_objectLabel: 'a1'},\n            {_objectLabel: 'a2'},\n            {_objectLabel: 'a23'},\n            {_objectLabel: 'b1'},\n            {_objectLabel: 'ba2'},\n            {_objectLabel: 'ba21'},\n            {_objectLabel: 'ba222'},\n            {_objectLabel: 'ba23'},\n            {_objectLabel: 'ba24'},\n            {_objectLabel: 'ba25'},\n            {_objectLabel: 'ba255'},\n            {_objectLabel: 'ba256'},\n            {_objectLabel: 'ba257'}\n          ];\n          return Promise.resolve(items.filter(({_objectLabel}) => _objectLabel.startsWith(term.substring(1))));\n        },\n        markdownText(item) {\n          return '$' + item._objectLabel;\n        }\n      }\n    ]}\n  />\n</div>\n\n```\n\n### Component Name\n\nMarkdownInput\n\n### License\n\nLicensed by © 2017 OpusCapita\n"
+module.exports = "### Synopsis\n\nMarkdownInput\n\n### Props Reference\n\n| Name               | Type            | Description                                                                                      |\n| ------------------ | :-------------- | ------------------------------------------------------------------------------------------------ |\n| onChange           | func            | Callback: `(value) => {}`                                                                        |\n| onFullScreen       | func            | Callback: `(bool isFullSceen) => {}`                                                    |\n| value              | string          | Raw markdown                                                                                     |\n| extensions         | array           | See \"Extension definition\" section bellow.                                                       |\n| readOnly           | bool            | Disables toolbar and makes markdown text not editable.                                           |\n\n### Extension definition\n\nConfigurable extensions with autocomplete for **products**, **terms**, etc.\n\n| Name               | Type            | Description                                                                                      |\n| ------------------ | :-------------- | ------------------------------------------------------------------------------------------------ |\n| objectClassName    | string         | Object class name displayed on buttons ('Product', 'Term', etc.)                                 |\n| specialCharacter   | string         | Is used for inserting it into plain markdown input on button ('Term', 'Product', etc.) click.   |\n| color              | string         | Color of object reference element in rich markdown input.                                       |\n| termRegex          | regex          | Is used to check if item can be inserted after caret position in plain markdown input.          |\n| searchItems        | func           | Is used to search items by input term.                                                           |\n| markdownText       | func           | Is used to get text for markdown input based on selected item.                            |\n\n### Code Example\n\n```\n<div style={{ height: '70vh' }}>\n  <MarkdownInput\n    onChange={_scope.handleValueChange}\n    value={_scope.state.markdownExample}\n    readOnly={false}\n    extensions={[\n      {\n        objectClassName: 'Product',\n        specialCharacter: '#',\n        color: '#9ed69e',\n        termRegex: /^\\#(\\w*)$/,\n        searchItems(term) {\n          const items = [\n            {_objectLabel: 'a1'},\n            {_objectLabel: 'a2'},\n            {_objectLabel: 'a23'},\n            {_objectLabel: 'b1'},\n            {_objectLabel: 'ba2'},\n            {_objectLabel: 'ba21'},\n            {_objectLabel: 'ba222'},\n            {_objectLabel: 'ba23'},\n            {_objectLabel: 'ba24'},\n            {_objectLabel: 'ba25'},\n            {_objectLabel: 'ba255'},\n            {_objectLabel: 'ba256'},\n            {_objectLabel: 'ba257'}\n          ];\n          return Promise.resolve(items.filter(({_objectLabel}) => _objectLabel.startsWith(term.substring(1))));\n        },\n        markdownText(item) {\n          return '#' + item._objectLabel;\n        }\n      },\n      {\n        objectClassName: 'Term',\n        specialCharacter: '$',\n        color: '#f396c3',\n        termRegex: /^\\$(\\w*)$/,\n        searchItems(term) {\n          const items = [\n            {_objectLabel: 'a1'},\n            {_objectLabel: 'a2'},\n            {_objectLabel: 'a23'},\n            {_objectLabel: 'b1'},\n            {_objectLabel: 'ba2'},\n            {_objectLabel: 'ba21'},\n            {_objectLabel: 'ba222'},\n            {_objectLabel: 'ba23'},\n            {_objectLabel: 'ba24'},\n            {_objectLabel: 'ba25'},\n            {_objectLabel: 'ba255'},\n            {_objectLabel: 'ba256'},\n            {_objectLabel: 'ba257'}\n          ];\n          return Promise.resolve(items.filter(({_objectLabel}) => _objectLabel.startsWith(term.substring(1))));\n        },\n        markdownText(item) {\n          return '$' + item._objectLabel;\n        }\n      }\n    ]}\n  />\n</div>\n\n```\n\n### Component Name\n\nMarkdownInput\n\n### License\n\nLicensed by © 2017 OpusCapita\n"
 
 /***/ }),
 /* 615 */
@@ -37061,7 +37053,7 @@ module.exports = "just a text\n**bold text**\n*italic text*\n***bold italic text
 /* 616 */
 /***/ (function(module, exports) {
 
-module.exports = "### Synopsis\n\nPlainMarkdownInput\n\n### Props Reference\n\n| Name                           | Type                    | Description                                                 |\n| ------------------------------ | :---------------------- | ----------------------------------------------------------- |\n| onChange                       | func                    | Callback: `(value) => {}`. Called when text is changed.     |\n| value                          | string                  | Raw markdown                                                |\n| readOnly                       | bool                    | Disables toolbar and makes markdown text not editable.      |\n\n### Code Example\n\n```\n<PlainMarkdownInput\n  onChange={_scope.handleValueChange}\n  value={_scope.state.value}\n/>\n```\n\n### Component Name\n\nPlainMarkdownInput\n\n### License\n\nLicensed by © 2017 OpusCapita\n"
+module.exports = "### Synopsis\n\nPlainMarkdownInput\n\n### Props Reference\n\n| Name                           | Type                    | Description                                                 |\n| ------------------------------ | :---------------------- | ----------------------------------------------------------- |\n| onChange                       | func                    | Callback: `(value) => {}`. Called when text is changed.     |\n| onFullScreen                   | func                    | Callback: `(bool isFullSceen) => {}`                        |\n| value                          | string                  | Raw markdown                                                |\n| readOnly                       | bool                    | Disables toolbar and makes markdown text not editable.      |\n\n### Code Example\n\n```\n<PlainMarkdownInput\n  onChange={_scope.handleValueChange}\n  value={_scope.state.value}\n/>\n```\n\n### Component Name\n\nPlainMarkdownInput\n\n### License\n\nLicensed by © 2017 OpusCapita\n"
 
 /***/ }),
 /* 617 */
