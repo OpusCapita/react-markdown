@@ -29,13 +29,12 @@ if git rev-parse --verify origin/gh-pages > /dev/null 2>&1
 then
     git checkout gh-pages
     git pull
-
-    # delete any old site as we are going to replace it
-    # Note: this explodes if there aren't any, so moving it here for now
-    rm -rf "./$GIT_BRANCH"
 else
     git checkout --orphan gh-pages
 fi
+
+# delete any old site as we are going to replace it
+rm -rf "./$GIT_BRANCH"
 
 # copy over or recompile the new site
 mkdir -p "./$GIT_BRANCH"
