@@ -37,7 +37,7 @@ then
     git checkout gh-pages
     # delete any old site as we are going to replace it
     # Note: this explodes if there aren't any, so moving it here for now
-    git rm -rf "./$GIT_BRANCH"
+    rm -rf "./$GIT_BRANCH"
 else
     git checkout --orphan gh-pages
 fi
