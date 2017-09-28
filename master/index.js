@@ -24172,32 +24172,8 @@ _prismjs2.default.languages.insertBefore('markdown', 'prolog', {
     pattern: /^>(?:[\t ]*>)*.*/m,
     inside: {}
   },
-  header1: {
-    pattern: /^#{1}[\s]+.*$/,
-    inside: {}
-  },
-  header2: {
-    pattern: /^#{2}[\s]+.*/,
-    inside: {}
-  },
-  header3: {
-    pattern: /^#{3}[\s]+.*/,
-    inside: {}
-  },
-  header4: {
-    pattern: /^#{4}[\s]+.*/,
-    inside: {}
-  },
-  header5: {
-    pattern: /^#{5}[\s]+.*/,
-    inside: {}
-  },
-  header6: {
-    pattern: /^#{6}[\s]+.*/,
-    inside: {}
-  },
-  'header-no-offset': {
-    pattern: /(^\s{1,3})#{1,6}[\s]+.*$/,
+  header: {
+    pattern: /^#{1,6}[\s]+.*$/,
     inside: {}
   },
   list: [{
@@ -24322,45 +24298,11 @@ _prismjs2.default.languages.markdown.bold[1].inside.url = _prismjs2.default.util
 _prismjs2.default.languages.markdown.italic[0].inside.url = _prismjs2.default.util.clone(_prismjs2.default.languages.markdown.url);
 _prismjs2.default.languages.markdown.italic[1].inside.url = _prismjs2.default.util.clone(_prismjs2.default.languages.markdown.url);
 
-_prismjs2.default.languages.markdown.header1.inside.url = _prismjs2.default.util.clone(_prismjs2.default.languages.markdown.url);
-_prismjs2.default.languages.markdown.header2.inside.url = _prismjs2.default.util.clone(_prismjs2.default.languages.markdown.url);
-_prismjs2.default.languages.markdown.header3.inside.url = _prismjs2.default.util.clone(_prismjs2.default.languages.markdown.url);
-_prismjs2.default.languages.markdown.header4.inside.url = _prismjs2.default.util.clone(_prismjs2.default.languages.markdown.url);
-_prismjs2.default.languages.markdown.header5.inside.url = _prismjs2.default.util.clone(_prismjs2.default.languages.markdown.url);
-_prismjs2.default.languages.markdown.header6.inside.url = _prismjs2.default.util.clone(_prismjs2.default.languages.markdown.url);
-_prismjs2.default.languages.markdown['header-no-offset'].inside.url = _prismjs2.default.util.clone(_prismjs2.default.languages.markdown.url);
-
-_prismjs2.default.languages.markdown.header1.inside.bold = _prismjs2.default.util.clone(_prismjs2.default.languages.markdown.bold);
-_prismjs2.default.languages.markdown.header2.inside.bold = _prismjs2.default.util.clone(_prismjs2.default.languages.markdown.bold);
-_prismjs2.default.languages.markdown.header3.inside.bold = _prismjs2.default.util.clone(_prismjs2.default.languages.markdown.bold);
-_prismjs2.default.languages.markdown.header4.inside.bold = _prismjs2.default.util.clone(_prismjs2.default.languages.markdown.bold);
-_prismjs2.default.languages.markdown.header5.inside.bold = _prismjs2.default.util.clone(_prismjs2.default.languages.markdown.bold);
-_prismjs2.default.languages.markdown.header6.inside.bold = _prismjs2.default.util.clone(_prismjs2.default.languages.markdown.bold);
-_prismjs2.default.languages.markdown['header-no-offset'].inside.bold = _prismjs2.default.util.clone(_prismjs2.default.languages.markdown.bold);
-
-_prismjs2.default.languages.markdown.header1.inside.italic = _prismjs2.default.util.clone(_prismjs2.default.languages.markdown.italic);
-_prismjs2.default.languages.markdown.header2.inside.italic = _prismjs2.default.util.clone(_prismjs2.default.languages.markdown.italic);
-_prismjs2.default.languages.markdown.header3.inside.italic = _prismjs2.default.util.clone(_prismjs2.default.languages.markdown.italic);
-_prismjs2.default.languages.markdown.header4.inside.italic = _prismjs2.default.util.clone(_prismjs2.default.languages.markdown.italic);
-_prismjs2.default.languages.markdown.header5.inside.italic = _prismjs2.default.util.clone(_prismjs2.default.languages.markdown.italic);
-_prismjs2.default.languages.markdown.header6.inside.italic = _prismjs2.default.util.clone(_prismjs2.default.languages.markdown.italic);
-_prismjs2.default.languages.markdown['header-no-offset'].inside.italic = _prismjs2.default.util.clone(_prismjs2.default.languages.markdown.italic);
-
-_prismjs2.default.languages.markdown.header1.inside.strikethrough = _prismjs2.default.util.clone(_prismjs2.default.languages.markdown.strikethrough);
-_prismjs2.default.languages.markdown.header2.inside.strikethrough = _prismjs2.default.util.clone(_prismjs2.default.languages.markdown.strikethrough);
-_prismjs2.default.languages.markdown.header3.inside.strikethrough = _prismjs2.default.util.clone(_prismjs2.default.languages.markdown.strikethrough);
-_prismjs2.default.languages.markdown.header4.inside.strikethrough = _prismjs2.default.util.clone(_prismjs2.default.languages.markdown.strikethrough);
-_prismjs2.default.languages.markdown.header5.inside.strikethrough = _prismjs2.default.util.clone(_prismjs2.default.languages.markdown.strikethrough);
-_prismjs2.default.languages.markdown.header6.inside.strikethrough = _prismjs2.default.util.clone(_prismjs2.default.languages.markdown.strikethrough);
-_prismjs2.default.languages.markdown['header-no-offset'].inside.strikethrough = _prismjs2.default.util.clone(_prismjs2.default.languages.markdown.strikethrough);
-
-_prismjs2.default.languages.markdown.header1.inside.code = _prismjs2.default.util.clone(_prismjs2.default.languages.markdown.code);
-_prismjs2.default.languages.markdown.header2.inside.code = _prismjs2.default.util.clone(_prismjs2.default.languages.markdown.code);
-_prismjs2.default.languages.markdown.header3.inside.code = _prismjs2.default.util.clone(_prismjs2.default.languages.markdown.code);
-_prismjs2.default.languages.markdown.header4.inside.code = _prismjs2.default.util.clone(_prismjs2.default.languages.markdown.code);
-_prismjs2.default.languages.markdown.header5.inside.code = _prismjs2.default.util.clone(_prismjs2.default.languages.markdown.code);
-_prismjs2.default.languages.markdown.header6.inside.code = _prismjs2.default.util.clone(_prismjs2.default.languages.markdown.code);
-_prismjs2.default.languages.markdown['header-no-offset'].inside.code = _prismjs2.default.util.clone(_prismjs2.default.languages.markdown.code);
+_prismjs2.default.languages.markdown.header.inside.url = _prismjs2.default.util.clone(_prismjs2.default.languages.markdown.url);
+_prismjs2.default.languages.markdown.header.inside.bold = _prismjs2.default.util.clone(_prismjs2.default.languages.markdown.bold);
+_prismjs2.default.languages.markdown.header.inside.italic = _prismjs2.default.util.clone(_prismjs2.default.languages.markdown.italic);
+_prismjs2.default.languages.markdown.header.inside.strikethrough = _prismjs2.default.util.clone(_prismjs2.default.languages.markdown.strikethrough);
+_prismjs2.default.languages.markdown.header.inside.code = _prismjs2.default.util.clone(_prismjs2.default.languages.markdown.code);
 
 _prismjs2.default.languages.markdown.list[0].inside.code = _prismjs2.default.util.clone(_prismjs2.default.languages.markdown.code);
 _prismjs2.default.languages.markdown.list[0].inside.bold = _prismjs2.default.util.clone(_prismjs2.default.languages.markdown.bold);
@@ -24392,36 +24334,11 @@ var rendererComponent = function rendererComponent(props) {
     );
   }
 
-  if (hasMarks && props.mark.type === 'code') {
+  if (hasMarks) {
     var className = props.mark ? 'oc-md-hl-' + props.mark.type : '';
-
-    if (typeof props.children === 'string') {
-      /* Wrap <span>children</span> - set cursor properly on mouse click inside "code" node */
-      return _react2.default.createElement(
-        'span',
-        { className: className },
-        _react2.default.createElement(
-          'span',
-          null,
-          props.children
-        ),
-        _react2.default.createElement('span', { className: 'oc-md-hl-code-background' })
-      );
-    }
-
     return _react2.default.createElement(
       'span',
       { className: className },
-      props.children,
-      _react2.default.createElement('span', { className: 'oc-md-hl-code-background' })
-    );
-  }
-
-  if (hasMarks) {
-    var _className = props.mark ? 'oc-md-hl-' + props.mark.type : '';
-    return _react2.default.createElement(
-      'span',
-      { className: _className },
       props.children
     );
   }
@@ -31634,7 +31551,7 @@ exports = module.exports = __webpack_require__(34)();
 
 
 // module
-exports.push([module.i, ".oc-md-hl-block > *:first-child {\n  margin-left: 8ch;\n}\n.oc-md-hl-header1 {\n  font-weight: bold;\n  display: inline;\n  margin-left: -2ch;\n  padding-right: 2ch;\n}\n.oc-md-hl-code .oc-md-hl-header1 + .oc-md-hl-code-background {\n  left: -2ch;\n}\n.oc-md-hl-header2 {\n  font-weight: bold;\n  display: inline;\n  margin-left: -3ch;\n  padding-right: 3ch;\n}\n.oc-md-hl-code .oc-md-hl-header2 + .oc-md-hl-code-background {\n  left: -3ch;\n}\n.oc-md-hl-header3 {\n  font-weight: bold;\n  display: inline;\n  margin-left: -4ch;\n  padding-right: 4ch;\n}\n.oc-md-hl-code .oc-md-hl-header3 + .oc-md-hl-code-background {\n  left: -4ch;\n}\n.oc-md-hl-header4 {\n  font-weight: bold;\n  display: inline;\n  margin-left: -5ch;\n  padding-right: 5ch;\n}\n.oc-md-hl-code .oc-md-hl-header4 + .oc-md-hl-code-background {\n  left: -5ch;\n}\n.oc-md-hl-header5 {\n  font-weight: bold;\n  display: inline;\n  margin-left: -6ch;\n  padding-right: 6ch;\n}\n.oc-md-hl-code .oc-md-hl-header5 + .oc-md-hl-code-background {\n  left: -6ch;\n}\n.oc-md-hl-header6 {\n  font-weight: bold;\n  display: inline;\n  margin-left: -7ch;\n  padding-right: 7ch;\n}\n.oc-md-hl-code .oc-md-hl-header6 + .oc-md-hl-code-background {\n  left: -7ch;\n}\n.oc-md-hl-header-no-offset {\n  font-weight: bold;\n  display: inline;\n}\n.oc-md-hl-code {\n  position: relative;\n  display: -webkit-inline-box;\n  display: -ms-inline-flexbox;\n  display: inline-flex;\n}\n.oc-md-hl-url {\n  display: inline;\n}\n.oc-md-hl-code-background {\n  height: 100%;\n  width: 100%;\n  background-color: #f5f5f5;\n  position: absolute;\n  top: 0;\n  left: 0;\n  pointer-events: none;\n  z-index: -1;\n}\n.oc-md-hl-list + .oc-md-hl-code-background {\n  left: -2ch;\n}\n.oc-md-hl-ordered-list + .oc-md-hl-code-background {\n  left: -3ch;\n}\n.oc-md-hl-bold {\n  font-weight: bold;\n}\n.oc-md-hl-italic {\n  font-style: italic;\n}\n.oc-md-hl-punctuation {\n  display: inline;\n  color: #777;\n}\n.oc-md-hl-blockquote {\n  display: inline;\n}\n.oc-md-hl-list {\n  display: inline;\n  margin-left: -2ch;\n  padding-right: 2ch;\n}\n.oc-md-hl-ordered-list {\n  display: inline;\n  margin-left: -3ch;\n  padding-right: 3ch;\n}\n.oc-md-hl-hr {\n  display: inline-block;\n}\n.oc-md-hl-strikethrough {\n  text-decoration: line-through;\n}\n", ""]);
+exports.push([module.i, ".oc-md-hl-header {\n  font-weight: bold;\n  display: inline;\n}\n.oc-md-hl-code {\n  position: relative;\n  display: -webkit-inline-box;\n  display: -ms-inline-flexbox;\n  display: inline-flex;\n  background-color: #f5f5f5;\n}\n.oc-md-hl-url {\n  display: inline;\n}\n.oc-md-hl-bold {\n  font-weight: bold;\n}\n.oc-md-hl-italic {\n  font-style: italic;\n}\n.oc-md-hl-punctuation {\n  display: inline;\n  color: #777;\n}\n.oc-md-hl-blockquote {\n  display: inline;\n}\n.oc-md-hl-hr {\n  display: inline-block;\n}\n.oc-md-hl-strikethrough {\n  text-decoration: line-through;\n}\n", ""]);
 
 // exports
 
