@@ -1,3 +1,11 @@
+## [v1.1.2](https://github.com/OpusCapita/react-markdown/compare/v1.1.1...v1.1.2) (Thu, 28 Sep 2017 13:45:43 GMT)
+ - Fix work in IE11 (Kirill Volkovich <kirill.volkovich@jcatalog.com>, 7f84d33)
+ - Update README.md (Kirill Volkovich <kvolkovich-sc@users.noreply.github.com>, 8b1cf50)
+ - Check deploy "gh-pages" per branch with no URI encode (Kirill Volkovich <kirill.volkovich@jcatalog.com>, 7cd0236)
+ - Check deploy "gh-pages" per branch with no URI encode (Kirill Volkovich <kirill.volkovich@jcatalog.com>, 65e663b)
+ - Check deploy "gh-pages" per branch with no URI encode (Kirill Volkovich <kirill.volkovich@jcatalog.com>, 12ffbce)
+ - Check deploy "gh-pages" per branch with no URI encode (Kirill Volkovich <kirill.volkovich@jcatalog.com>, 65d3ab4)
+
 ## [v1.1.1](https://github.com/OpusCapita/react-markdown/compare/v1.1.0...v1.1.1) (Thu, 28 Sep 2017 09:03:43 GMT)
  - Add "type=button" to "FullScreenButton" element (Kirill Volkovich <kirill.volkovich@jcatalog.com>, 3a0f463)
  - Deploy demo page to separate dir per branch on "gh-pages" (Kirill Volkovich <kirill.volkovich@jcatalog.com>, 8033cb4)
