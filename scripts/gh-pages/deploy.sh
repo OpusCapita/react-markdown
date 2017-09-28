@@ -18,8 +18,15 @@ then
 fi
 
 # get current git branch name
-GIT_BRANCH=`git rev-parse --abbrev-ref HEAD` | sh "${BASEDIR}/urlencode.sh"
-echo "Current branch is $GIT_BRANCH"
+GIT_BRANCH=`git rev-parse --abbrev-ref HEAD`
+
+# replace "/", "#", etc. in current git branch name
+urlencode() {
+  node -e "console.log(encodeURIComponent('${*}'))"
+}
+
+SAFE_GIT_BRANCH=`urlencode $GIT_BRANCH`
+echo "Current branch is $SAFE_GIT_BRANCH"
 
 # now lets setup a new repo so we can update the gh-pages branch
 git config --global user.email "$GH_EMAIL" > /dev/null 2>&1
@@ -35,10 +42,10 @@ else
 fi
 
 # delete any old site as we are going to replace it
-rm -rf "./$GIT_BRANCH"
+rm -rf "./$SAFE_GIT_BRANCH"
 
 # copy over or recompile the new site
-mv "./$SITE_SOURCE" "./$GIT_BRANCH"
+mv "./$SITE_SOURCE" "./$SAFE_GIT_BRANCH"
 
 # stage any changes and new files
 git add -A
