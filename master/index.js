@@ -22805,7 +22805,7 @@ module.exports = [
   {
     "package": "@opuscapita/react-markdown",
     "name": "MarkdownInput",
-    "version": "1.1.1",
+    "version": "1.1.2",
     "tags": "",
     "relatedFiles": [
       {
@@ -22820,7 +22820,7 @@ module.exports = [
   {
     "package": "@opuscapita/react-markdown",
     "name": "PlainMarkdownInput",
-    "version": "1.1.1",
+    "version": "1.1.2",
     "tags": "",
     "relatedFiles": [
       {
@@ -22841,7 +22841,7 @@ module.exports = [
 module.exports = [
     {
         "name": "@opuscapita/react-markdown",
-        "version": "1.1.1",
+        "version": "1.1.2",
         "description": "React markdown editor component",
         "scripts": {
             "link-mode": "cross-env NODE_ENV=link webpack --config ./config/webpack.config.js",
