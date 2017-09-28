@@ -22,9 +22,6 @@ fi
 GIT_BRANCH=`git rev-parse --abbrev-ref HEAD`
 echo "Current branch is ${GIT_BRANCH}"
 
-# make a directory to put the gp-pages branch
-mkdir gh-pages-branch
-cd gh-pages-branch
 # now lets setup a new repo so we can update the gh-pages branch
 git config --global user.email "$GH_EMAIL" > /dev/null 2>&1
 git config --global user.name "$GH_NAME" > /dev/null 2>&1
@@ -44,7 +41,7 @@ fi
 
 # copy over or recompile the new site
 mkdir -p "./$GIT_BRANCH"
-cp -r "../${siteSource}/*" "./$GIT_BRANCH"
+mv "../${siteSource}" "./$GIT_BRANCH"
 
 # stage any changes and new files
 git add -A
