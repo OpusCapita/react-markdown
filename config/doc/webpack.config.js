@@ -29,14 +29,7 @@ module.exports = {
       new webpack.DefinePlugin({
         'process.env.NODE_ENV': '"production"'
       }),
-      new LodashModuleReplacementPlugin(),
-      new webpack.optimize.UglifyJsPlugin({
-        compress: {
-          warnings: false,
-          screw_ie8: true
-        },
-        comments: false
-      })
+      new LodashModuleReplacementPlugin()
   ],
   externals: {
     react: {
