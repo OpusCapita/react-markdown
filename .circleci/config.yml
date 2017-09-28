@@ -1,9 +1,6 @@
 version: 2
 jobs:
   build:
-    branches:
-      ignore:
-        - gh-pages
     docker:
       - image: circleci/node:6
     working_directory: ~/repo
@@ -26,7 +23,7 @@ jobs:
 
       - run:
           name: lint
-          command: npm run lint
+          command: npm start lint
 
       - run:
           name: test
@@ -42,9 +39,48 @@ jobs:
 
       - store_artifacts:
           path: junit
+  update-gh-pages:
+    docker:
+      - image: circleci/node:6
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "package.json" }}
+          # fallback to using the latest cache if no exact match is found
+          - v1-dependencies-
 
-      # - deploy:
-      #     command: |
-      #       if [ "${CIRCLE_BRANCH}" == "master" ]; then
-      #         ./scripts/gh-pages/generate.sh && ./scripts/gh-pages/deploy.sh
-      #       fi
+      - run:
+          name: install-dependencies
+          command: yarn install
+
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "package.json" }}
+
+      - run:
+          name: build-gh-pages
+          command: ./scripts/gh-pages/build.sh
+
+      - run:
+          name: deploy-gh-pages
+          command: ./scripts/gh-pages/deploy.sh .gh-pages-tmp
+
+workflows:
+  version: 2
+  build-all:
+    jobs:
+      - build:
+          filters:
+            branches:
+              ignore:
+                - gh-pages
+      - update-gh-pages:
+          requires:
+            - build
+          filters:
+            branches:
+              only:
+                - master

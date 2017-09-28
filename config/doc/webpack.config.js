@@ -19,7 +19,7 @@ module.exports = {
   ],
   context: path.resolve(__dirname),
   output: {
-    path: path.resolve(__dirname, '../../lib'),
+    path: path.resolve(__dirname, '../../.gh-pages-tmp'),
     filename: `index.js`,
     library: `${PACKAGE_NAME}`,
     libraryTarget: 'umd'
