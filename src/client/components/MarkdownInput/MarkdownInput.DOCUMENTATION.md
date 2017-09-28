@@ -31,7 +31,7 @@ Configurable extensions with autocomplete for **products**, **terms**, etc.
   <MarkdownInput
     onChange={_scope.handleValueChange}
     value={_scope.state.markdownExample}
-    readOnly={true}
+    readOnly={false}
     extensions={[
       {
         objectClassName: 'Product',
