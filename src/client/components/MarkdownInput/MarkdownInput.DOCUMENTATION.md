@@ -8,7 +8,8 @@ MarkdownInput
 | ------------------ | :-------------- | ------------------------------------------------------------------------------------------------ |
 | onChange           | func            | Callback: `(value) => {}`                                                                        |
 | value              | string          | Raw markdown                                                                                     |
-| extensions         | array           | See "Extension definition" section bellow.                                 |
+| extensions         | array           | See "Extension definition" section bellow.                                                       |
+| readOnly           | bool            | Disables toolbar and makes markdown text not editable.                                           |
 
 ### Extension definition
 
@@ -30,6 +31,7 @@ Configurable extensions with autocomplete for **products**, **terms**, etc.
   <MarkdownInput
     onChange={_scope.handleValueChange}
     value={_scope.state.markdownExample}
+    readOnly={true}
     extensions={[
       {
         objectClassName: 'Product',
