@@ -77,10 +77,8 @@ class PlainMarkdownInput extends React.Component {
   }
 
   render() {
-    const { editorState } = this.state;
+    const { editorState, fullScreen } = this.state;
     const { children, extensions, readOnly } = this.props;
-
-    const fullScreen = this.props.fullScreen;
 
     let objectReferenceButtons = this.props.extensions.map((extension, index) => {
       return (
@@ -157,14 +155,12 @@ PlainMarkdownInput.propTypes = {
   value: Types.string,
   onChange: Types.func,
   onFullScreen: Types.func,
-  fullScreen: Types.bool,
   readOnly: Types.bool
 };
 
 PlainMarkdownInput.defaultProps = {
   extensions: [],
   value: '',
-  fullScreen: false,
   onFullScreen: () => {},
   onChange: () => {},
   readOnly: false
