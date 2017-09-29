@@ -6,6 +6,7 @@ class MarkdownInput extends React.Component {
   static propTypes = {
     value: Types.string,
     onChange: Types.func,
+    onFullScreen: Types.func,
     extensions: Types.array,
     readOnly: Types.bool
   };
@@ -13,12 +14,9 @@ class MarkdownInput extends React.Component {
   static defaultProps = {
     value: '',
     onChange: () => {},
+    onFullScreen: () => {},
     extensions: [],
     readOnly: false
-  };
-
-  state = {
-    fullScreen: false
   };
 
   handleChangeValue = (value) => {
@@ -26,11 +24,10 @@ class MarkdownInput extends React.Component {
   };
 
   handleFullScreen = (fullScreen) => {
-    this.setState({ fullScreen });
+    this.props.onFullScreen(fullScreen);
   };
 
   render() {
-    const { fullScreen } = this.state;
     const { value, extensions, readOnly } = this.props;
 
     return (
@@ -38,7 +35,6 @@ class MarkdownInput extends React.Component {
         value={value}
         onChange={this.handleChangeValue}
         onFullScreen={this.handleFullScreen}
-        fullScreen={fullScreen}
         extensions={extensions}
         readOnly={readOnly}
       />

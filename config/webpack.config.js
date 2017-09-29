@@ -48,13 +48,13 @@ if(WEBPACK_BUNDLE_ANALYZE && IS_PRODUCTION_MODE) {
   plugins.push(bundleAnalyzerPlugin);
 }
 
-/* TODO
-   Remove core-js string when String.prototype.startsWith and endsWith methods
-   will be replaced by ES5 compatible analogs
- */
 const entries = [
+  // IE11 - "String.prototype.startsWith" and endsWith methods (local code)
   "core-js/es6/string.js",
-  "core-js/es6/promise.js"
+  // IE11 - "Promise"s - required for autocompletes
+  "core-js/es6/promise.js",
+  // IE11 - Used in "slate-js" dependency code
+  "core-js/es7/array.js"
 ];
 
 entries.push(

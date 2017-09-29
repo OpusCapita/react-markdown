@@ -1,28 +1,4 @@
-.oc-md-hl-block > *:first-child {
-  margin-left: 8ch;
-}
-
-.oc-md-hl-header(@offset) {
-  font-weight: bold;
-  display: inline;
-  margin-left: -(@offset + 1ch);
-  padding-right: (@offset + 1ch);
-}
-
-.generate-headers-with-offset(@n, @i: 1) when (@i =< @n) {
-  .oc-md-hl-header@{i} {
-    .oc-md-hl-header(@i);
-  }
-  .oc-md-hl-code .oc-md-hl-header@{i} + .oc-md-hl-code-background {
-    left: -(@i + 1ch);
-  }
-  .generate-headers-with-offset(@n, (@i + 1));
-
-}
-
-.generate-headers-with-offset(6);
-
-.oc-md-hl-header-no-offset {
+.oc-md-hl-header {
   font-weight: bold;
   display: inline;
 }
@@ -30,35 +6,11 @@
 .oc-md-hl-code {
   position: relative;
   display: inline-flex;
+  background-color: #f5f5f5;
 }
 
 .oc-md-hl-url {
   display: inline;
-}
-
-.oc-md-hl-code-background {
-  height: 100%;
-  width: 100%;
-  background-color: #f5f5f5;
-  position: absolute;
-  top: 0;
-  left: 0;
-  pointer-events: none;
-  z-index: -1;
-}
-
-.oc-md-hl-list-with-offset(@offset) {
-  display: inline;
-  margin-left: -(@offset);
-  padding-right: (@offset);
-}
-
-.oc-md-hl-list + .oc-md-hl-code-background {
-  left: -2ch;
-}
-
-.oc-md-hl-ordered-list + .oc-md-hl-code-background {
-  left: -3ch;
 }
 
 .oc-md-hl-bold {
@@ -76,14 +28,6 @@
 
 .oc-md-hl-blockquote {
   display: inline;
-}
-
-.oc-md-hl-list {
-  .oc-md-hl-list-with-offset(2ch);
-}
-
-.oc-md-hl-ordered-list {
-  .oc-md-hl-list-with-offset(3ch);
 }
 
 .oc-md-hl-hr {
