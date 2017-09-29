@@ -50,7 +50,6 @@ class PlainMarkdownInput extends React.Component {
 
   handleNewValue(value) {
     let editorState = Plain.deserialize(value);
-    // let editorState = Plain.deserialize(value || '');
     let nodes = editorState.document.nodes.asMutable();
     let nodesSize = nodes.size;
     for (let i = 0; i < nodesSize; i++) {

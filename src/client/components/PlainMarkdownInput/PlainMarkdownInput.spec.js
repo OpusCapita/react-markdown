@@ -3,12 +3,11 @@ import { expect } from 'chai';
 import { mount } from 'enzyme';
 import PlainMarkdownInput from '.';
 import { parse } from './slate/tokenizer';
-import Plain from 'slate-plain-serializer';
 
 
 describe('<PlainMarkdownInput />', () => {
   before(() => {
-    window.getSelection = function(){
+    window.getSelection = function() {
       return { anchorNode: null };
     };
   });
