@@ -16,10 +16,8 @@ describe('<PlainMarkdownInput />', () => {
     let component = <PlainMarkdownInput />;
     expect(component.props.extensions).to.deep.equal([]);
     expect(component.props.value).to.equal('');
-    expect(component.props.fullScreen).to.equal(false);
     expect(component.props.onFullScreen).to.be.a('function');
     expect(component.props.onChange).to.be.a('function');
-    expect(component.props.readOnly).to.equal(false);
   });
 
   it('should have right props', () => {
@@ -70,27 +68,6 @@ describe('<PlainMarkdownInput />', () => {
     wrapper.setProps({ value: newNodeText });
     editorState = wrapper.state('editorState');
     currNode = editorState.document.nodes.get(0);
-    expect(currNode.data.text).to.equal(newNodeText);
-    expect(currNode.data.tokens).to.deep.equal(parse(newNodeText));
-  });
-
-  it('should have right text after changed for readOnly = true', () => {
-    const nodeText = '# Header1';
-    const newNodeText = '## Header2';
-    let component = (<PlainMarkdownInput
-      value={nodeText}
-      readOnly={true}
-    />);
-    let wrapper = mount(component);
-    let editorStateOld = wrapper.state('editorState');
-
-    wrapper.setProps({ value: newNodeText });
-
-    let wrapperInstance = wrapper.instance();
-    wrapperInstance.handleChange({ state: editorStateOld });
-
-    let editorState = wrapper.state('editorState');
-    let currNode = editorState.document.nodes.get(0);
     expect(currNode.data.text).to.equal(newNodeText);
     expect(currNode.data.tokens).to.deep.equal(parse(newNodeText));
   });
