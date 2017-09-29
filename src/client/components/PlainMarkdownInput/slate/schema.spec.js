@@ -4,11 +4,12 @@ import React from 'react';
 import schema from './schema'
 const { rules } = schema;
 const decorate = rules[0].decorate;
+const render = rules[0].render;
 import PlainMarkdownInput from '../PlainMarkdownInput.react';
 import { expect } from 'chai';
-import { mount } from 'enzyme';
+import { mount, shallow } from 'enzyme';
 import { parse } from './tokenizer';
-import { Character, Text } from 'slate';
+import { Mark, Character, Text } from 'slate';
 import { Set as ImmutableSet, List as ImmutableList } from 'immutable';
 
 function getCharacter(char) {
@@ -118,5 +119,44 @@ describe('plain editor schema', () => {
       });
     });
   });
-});
 
+  it('call rendererComponent() for props.node.type === `line`', () => {
+    const children = '**bold**';
+    const props = {
+      children,
+      node: {
+        type: 'line'
+      }
+    };
+    let component = render(props);
+    let wrapper = shallow(component);
+    expect(wrapper.hasClass('oc-md-hl-block')).to.equal(true);
+  });
+
+  it('call rendererComponent() for props.node.type !== `line`', () => {
+    const mark = Mark.create({ type: 'bold' });
+    const children = '**bold**';
+    const props = {
+      children,
+      mark,
+      node: {
+        type: 'range'
+      }
+    };
+    let component = render(props);
+    let wrapper = shallow(component);
+    expect(wrapper.hasClass('oc-md-hl-bold')).to.equal(true);
+  });
+
+  it('call rendererComponent() for props.node.type !== `line` without mark', () => {
+    const children = '**bold**';
+    const props = {
+      children,
+      node: {
+        type: 'range'
+      }
+    };
+    let component = render(props);
+    expect(component).to.equal(null);
+  });
+});

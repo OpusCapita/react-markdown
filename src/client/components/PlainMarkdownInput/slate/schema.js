@@ -60,27 +60,6 @@ let rendererComponent = props => {
     return (<div className="oc-md-hl-block">{props.children}</div>);
   }
 
-  if (hasMarks && props.mark.type === 'code') {
-    const className = props.mark ? 'oc-md-hl-' + props.mark.type : '';
-
-    if (typeof props.children === 'string') {
-      /* Wrap <span>children</span> - set cursor properly on mouse click inside "code" node */
-      return (
-        <span className={className}>
-          <span>{props.children}</span>
-          <span className="oc-md-hl-code-background"></span>
-        </span>
-      );
-    }
-
-    return (
-      <span className={className}>
-        {props.children}
-        <span className="oc-md-hl-code-background"></span>
-      </span>
-    );
-  }
-
   if (hasMarks) {
     const className = props.mark ? 'oc-md-hl-' + props.mark.type : '';
     return (
