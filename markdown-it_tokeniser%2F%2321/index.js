@@ -25558,36 +25558,11 @@ var rendererComponent = function rendererComponent(props) {
     );
   }
 
-  if (hasMarks && props.mark.type === 'code') {
+  if (hasMarks) {
     var className = props.mark ? 'oc-md-hl-' + props.mark.type : '';
-
-    if (typeof props.children === 'string') {
-      /* Wrap <span>children</span> - set cursor properly on mouse click inside "code" node */
-      return _react2.default.createElement(
-        'span',
-        { className: className },
-        _react2.default.createElement(
-          'span',
-          null,
-          props.children
-        ),
-        _react2.default.createElement('span', { className: 'oc-md-hl-code-background' })
-      );
-    }
-
     return _react2.default.createElement(
       'span',
       { className: className },
-      props.children,
-      _react2.default.createElement('span', { className: 'oc-md-hl-code-background' })
-    );
-  }
-
-  if (hasMarks) {
-    var _className = props.mark ? 'oc-md-hl-' + props.mark.type : '';
-    return _react2.default.createElement(
-      'span',
-      { className: _className },
       props.children
     );
   }
