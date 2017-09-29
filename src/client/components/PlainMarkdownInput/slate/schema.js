@@ -17,11 +17,7 @@ const addMarks = function addMarks(characters, tokens, offset) {
     }
 
     const { content, length, type } = token;
-
-    if (Array.isArray(content)) {
-      addMarks(characters, content, updatedOffset);
-    }
-
+    addMarks(characters, content, updatedOffset);
     const mark = Mark.create({ type });
     for (let i = updatedOffset; i < updatedOffset + length; i++) {
       let char = characters.get(i);
@@ -61,7 +57,7 @@ let rendererComponent = props => {
   }
 
   if (hasMarks) {
-    const className = props.mark ? 'oc-md-hl-' + props.mark.type : '';
+    const className = props.mark.type ? 'oc-md-hl-' + props.mark.type : '';
     return (
       <span className={className}>
         {props.children}

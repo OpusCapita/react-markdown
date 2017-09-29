@@ -12,22 +12,6 @@ const markdown = new MarkdownIt({
   typographer: false
 });
 
-const HEADERS = {
-  h1: 'header1',
-  h2: 'header2',
-  h3: 'header3',
-  h4: 'header4',
-  h5: 'header5',
-  h6: 'header6'
-};
-const HEADERS_STR = [
-  'header1',
-  'header2',
-  'header3',
-  'header4',
-  'header5',
-  'header6'
-];
 const EMPHASISES = {
   strong: 'bold',
   em: 'italic',
@@ -119,6 +103,8 @@ function getEmptyText() {
  */
 
 function getHeaderContent(tokens, type, markup) {
+  // TODO: Cannot read property 'type' of undefined for empty header
+
   if (tokens[1].children[0].type !== 'text') {
     tokens[1].children.unshift(getEmptyText());
   }
@@ -384,7 +370,7 @@ function parseBlock(tokens) {
 function restoreSpaces(string, tokens) {
   let result = /^[ ]+/.exec(string);
   if (result) {
-    if (HEADERS_STR.indexOf(tokens[0].type) !== -1) {
+    if (tokens[0].type === 'header') {
       tokens[0].type = 'header-no-offset'; // eslint-disable-line
     }
 
@@ -420,7 +406,7 @@ function processEmphasis(tokens) {
 
 /* eslint-disable */
 function processInline(tokens) {
-  if (tokens[0] && (HEADERS_STR.indexOf(tokens[0].type) !== -1 ||
+  if (tokens[0] && (tokens[0].type === 'header' ||
       tokens[0].type === 'list' || tokens[0].type === 'ordered-list' ||
       tokens[0].type === 'header-no-offset' || tokens[0].type === 'blockquote')) {
     tokens[0].content = processEmphasis(tokens[0].content);
@@ -461,7 +447,8 @@ function processBlockTokens(tokens) {
         return changeText(tokens[1].children);
       }
       if (firstType === 'heading_open' && lastType === 'heading_close') {
-        return [getHeaderContent(tokens, HEADERS[tokens[0].tag], tokens[0].markup)];
+        return [getHeaderContent(tokens, 'header', tokens[0].markup)];
+        // return [getHeaderContent(tokens, HEADERS[tokens[0].tag], tokens[0].markup)];
       }
     }
   }

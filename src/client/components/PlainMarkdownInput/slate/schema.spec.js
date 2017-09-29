@@ -59,14 +59,14 @@ describe('plain editor schema', () => {
     nodeTextArr.forEach((el, ind) => {
       expect(characters.get(ind).toJSON()).to.deep.equal({
         "kind": "character",
-        "marks": [{ "data": {}, "kind": "mark", "type": "header1" }],
+        "marks": [{ "data": {}, "kind": "mark", "type": "header" }],
         "text": el
       });
     });
     nodeTextArr.forEach((el, ind) => {
       expect(text.charsData.characters.get(ind).toJSON()).to.deep.equal({
         "kind": "character",
-        "marks": [{ "data": {}, "kind": "mark", "type": "header1" }],
+        "marks": [{ "data": {}, "kind": "mark", "type": "header" }],
         "text": el
       });
     });
@@ -78,14 +78,14 @@ describe('plain editor schema', () => {
     nodeTextArr.forEach((el, ind) => {
       expect(characters.get(ind).toJSON()).to.deep.equal({
         "kind": "character",
-        "marks": [{ "data": {}, "kind": "mark", "type": "header1" }],
+        "marks": [{ "data": {}, "kind": "mark", "type": "header" }],
         "text": el
       });
     });
     nodeTextArr.forEach((el, ind) => {
       expect(text.charsData.characters.get(ind).toJSON()).to.deep.equal({
         "kind": "character",
-        "marks": [{ "data": {}, "kind": "mark", "type": "header1" }],
+        "marks": [{ "data": {}, "kind": "mark", "type": "header" }],
         "text": el
       });
     });
@@ -120,6 +120,33 @@ describe('plain editor schema', () => {
     });
   });
 
+  it('call markdownDecorator for Simple text', () => {
+    const nodeText = 'Simple text';
+    let component = (<PlainMarkdownInput
+      value={nodeText}
+      fullScreen={true}
+      readOnly={true}
+    />);
+
+    let wrapper = mount(component);
+    let editorState = wrapper.state('editorState');
+
+    let nodes = editorState.document.nodes.asMutable();
+    const currNode = nodes.get(0).asMutable();
+    let nodeTextArr = nodeText.split('');
+    let charactersList = nodeTextArr.map(el => getCharacter(el));
+
+    let text = getText(charactersList, nodeText, '1');
+    let characters = decorate(text, currNode);
+    nodeTextArr.forEach((el, ind) => {
+      expect(characters.get(ind).toJSON()).to.deep.equal({
+        "kind": "character",
+        "marks": [],
+        "text": el
+      });
+    });
+  });
+
   it('call rendererComponent() for props.node.type === `line`', () => {
     const children = '**bold**';
     const props = {
@@ -131,6 +158,7 @@ describe('plain editor schema', () => {
     let component = render(props);
     let wrapper = shallow(component);
     expect(wrapper.hasClass('oc-md-hl-block')).to.equal(true);
+    expect(wrapper.html()).to.equal('<div class="oc-md-hl-block">**bold**</div>');
   });
 
   it('call rendererComponent() for props.node.type !== `line`', () => {
@@ -146,6 +174,22 @@ describe('plain editor schema', () => {
     let component = render(props);
     let wrapper = shallow(component);
     expect(wrapper.hasClass('oc-md-hl-bold')).to.equal(true);
+    expect(wrapper.html()).to.equal('<span class="oc-md-hl-bold">**bold**</span>');
+  });
+
+  it('call rendererComponent() for props.node.type !== `line`, mark = {}', () => {
+    const mark = {};
+    const children = '**bold**';
+    const props = {
+      children,
+      mark,
+      node: {
+        type: 'range'
+      }
+    };
+    let component = render(props);
+    let wrapper = shallow(component);
+    expect(wrapper.html()).to.equal('<span class="">**bold**</span>');
   });
 
   it('call rendererComponent() for props.node.type !== `line` without mark', () => {

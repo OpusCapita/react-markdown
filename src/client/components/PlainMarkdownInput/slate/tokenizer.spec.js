@@ -1284,32 +1284,32 @@ describe('plain editor tokenizer', () => {
   describe('tokenize headers', () => {
     it('simple headers', () => {
       expect(parse('# h1')).to.deep.equal([{
-        "type": "header1",
+        "type": "header",
         "content": ["# h1"],
         "length": 4
       }]);
       expect(parse('## h2')).to.deep.equal([{
-        "type": "header2",
+        "type": "header",
         "content": ["## h2"],
         "length": 5
       }]);
       expect(parse('### h3')).to.deep.equal([{
-        "type": "header3",
+        "type": "header",
         "content": ["### h3"],
         "length": 6
       }]);
       expect(parse('#### h4')).to.deep.equal([{
-        "type": "header4",
+        "type": "header",
         "content": ["#### h4"],
         "length": 7
       }]);
       expect(parse('##### h5')).to.deep.equal([{
-        "type": "header5",
+        "type": "header",
         "content": ["##### h5"],
         "length": 8
       }]);
       expect(parse('###### h6')).to.deep.equal([{
-        "type": "header6",
+        "type": "header",
         "content": ["###### h6"],
         "length": 9
       }]);
@@ -1361,42 +1361,42 @@ describe('plain editor tokenizer', () => {
 
     it('header with *italic*', () => {
       expect(parse('# header *italic*')).to.deep.equal([{
-        "type": "header1",
+        "type": "header",
         "content": ["# header ", { "type": "italic", "content": ["*italic*"], "length": 8 }],
         "length": 17
       }]);
       expect(parse('# _text_')).to.deep.equal([{
-        "type": "header1",
+        "type": "header",
         "content": ["# ", { "type": "italic", "content": ["_text_"], "length": 6 }],
         "length": 8
       }]);
       expect(parse('# *text*')).to.deep.equal([{
-        "type": "header1",
+        "type": "header",
         "content": ["# ", { "type": "italic", "content": ["*text*"], "length": 6 }],
         "length": 8
       }]);
       expect(parse('## header *italic*')).to.deep.equal([{
-        "type": "header2",
+        "type": "header",
         "content": ["## header ", { "type": "italic", "content": ["*italic*"], "length": 8 }],
         "length": 18
       }]);
       expect(parse('### header *italic*')).to.deep.equal([{
-        "type": "header3",
+        "type": "header",
         "content": ["### header ", { "type": "italic", "content": ["*italic*"], "length": 8 }],
         "length": 19
       }]);
       expect(parse('#### header *italic*')).to.deep.equal([{
-        "type": "header4",
+        "type": "header",
         "content": ["#### header ", { "type": "italic", "content": ["*italic*"], "length": 8 }],
         "length": 20
       }]);
       expect(parse('##### header *italic*')).to.deep.equal([{
-        "type": "header5",
+        "type": "header",
         "content": ["##### header ", { "type": "italic", "content": ["*italic*"], "length": 8 }],
         "length": 21
       }]);
       expect(parse('###### header *italic*')).to.deep.equal([{
-        "type": "header6",
+        "type": "header",
         "content": ["###### header ", { "type": "italic", "content": ["*italic*"], "length": 8 }],
         "length": 22
       }]);
@@ -1404,12 +1404,12 @@ describe('plain editor tokenizer', () => {
 
     it('header with **bold**', () => {
       expect(parse('# __text__')).to.deep.equal([{
-        "type": "header1",
+        "type": "header",
         "content": ["# ", { "type": "bold", "content": ["__text__"], "length": 8 }],
         "length": 10
       }]);
       expect(parse('# **text**')).to.deep.equal([{
-        "type": "header1",
+        "type": "header",
         "content": ["# ", { "type": "bold", "content": ["**text**"], "length": 8 }],
         "length": 10
       }]);
@@ -1417,32 +1417,32 @@ describe('plain editor tokenizer', () => {
 
     it('header with inline code', () => {
       expect(parse('# header `code`')).to.deep.equal([{
-        "type": "header1",
+        "type": "header",
         "content": ["# header ", { "type": "code", "content": "`code`", "length": 6 }],
         "length": 15
       }]);
       expect(parse('## header ```code```')).to.deep.equal([{
-        "type": "header2",
+        "type": "header",
         "content": ["## header ", { "type": "code", "content": ["```code```"], "length": 10 }],
         "length": 20
       }]);
       expect(parse('### header `code`')).to.deep.equal([{
-        "type": "header3",
+        "type": "header",
         "content": ["### header ", { "type": "code", "content": "`code`", "length": 6 }],
         "length": 17
       }]);
       expect(parse('#### header ```code```')).to.deep.equal([{
-        "type": "header4",
+        "type": "header",
         "content": ["#### header ", { "type": "code", "content": ["```code```"], "length": 10 }],
         "length": 22
       }]);
       expect(parse('##### header `code`')).to.deep.equal([{
-        "type": "header5",
+        "type": "header",
         "content": ["##### header ", { "type": "code", "content": "`code`", "length": 6 }],
         "length": 19
       }]);
       expect(parse('###### header ```code```')).to.deep.equal([{
-        "type": "header6",
+        "type": "header",
         "content": ["###### header ", { "type": "code", "content": ["```code```"], "length": 10 }],
         "length": 24
       }]);
@@ -1450,32 +1450,32 @@ describe('plain editor tokenizer', () => {
 
     it('header with ~~strikethrough~~', () => {
       expect(parse('# header ~~strikethrough~~')).to.deep.equal([{
-        "type": "header1",
+        "type": "header",
         "content": ["# header ", { "type": "strikethrough", "content": ["~~strikethrough~~"], "length": 17 }],
         "length": 26
       }]);
       expect(parse('## header ~~strikethrough~~')).to.deep.equal([{
-        "type": "header2",
+        "type": "header",
         "content": ["## header ", { "type": "strikethrough", "content": ["~~strikethrough~~"], "length": 17 }],
         "length": 27
       }]);
       expect(parse('### header ~~strikethrough~~')).to.deep.equal([{
-        "type": "header3",
+        "type": "header",
         "content": ["### header ", { "type": "strikethrough", "content": ["~~strikethrough~~"], "length": 17 }],
         "length": 28
       }]);
       expect(parse('#### header ~~strikethrough~~')).to.deep.equal([{
-        "type": "header4",
+        "type": "header",
         "content": ["#### header ", { "type": "strikethrough", "content": ["~~strikethrough~~"], "length": 17 }],
         "length": 29
       }]);
       expect(parse('##### header ~~strikethrough~~')).to.deep.equal([{
-        "type": "header5",
+        "type": "header",
         "content": ["##### header ", { "type": "strikethrough", "content": ["~~strikethrough~~"], "length": 17 }],
         "length": 30
       }]);
       expect(parse('###### header ~~strikethrough~~')).to.deep.equal([{
-        "type": "header6",
+        "type": "header",
         "content": ["###### header ", { "type": "strikethrough", "content": ["~~strikethrough~~"], "length": 17 }],
         "length": 31
       }]);
@@ -1483,7 +1483,7 @@ describe('plain editor tokenizer', () => {
 
     it('header with url', () => {
       expect(parse('# header [~~url~~](uefasdfs)')).to.deep.equal([{
-        "type": "header1",
+        "type": "header",
         "content": ["# header ", {
           "type": "url",
           "content": [{ "type": "punctuation", "content": "[", "length": 1 }, {
@@ -1500,7 +1500,7 @@ describe('plain editor tokenizer', () => {
         "length": 28
       }]);
       expect(parse('## header `code` **~~[**opuscapita**](https://www.opuscapita.com/)~~')).to.deep.equal([{
-        "type": "header2",
+        "type": "header",
         "content": ["## header ", {
           "type": "code",
           "content": "`code`",
@@ -1525,7 +1525,7 @@ describe('plain editor tokenizer', () => {
         "length": 68
       }]);
       expect(parse('### header [*url*](uefasdfs)')).to.deep.equal([{
-        "type": "header3",
+        "type": "header",
         "content": ["### header ", {
           "type": "url",
           "content": [{ "type": "punctuation", "content": "[", "length": 1 }, {
@@ -1542,7 +1542,7 @@ describe('plain editor tokenizer', () => {
         "length": 28
       }]);
       expect(parse('#### header ~~[opuscapita](https://www.opuscapita.com/)~~')).to.deep.equal([{
-        "type": "header4",
+        "type": "header",
         "content": ["#### header ", {
           "type": "strikethrough",
           "content": ["~~", {
@@ -1559,7 +1559,7 @@ describe('plain editor tokenizer', () => {
         "length": 57
       }]);
       expect(parse('##### header [url](uefasdfs)')).to.deep.equal([{
-        "type": "header5",
+        "type": "header",
         "content": ["##### header ", {
           "type": "url",
           "content": [{ "type": "punctuation", "content": "[", "length": 1 }, "url", {
@@ -1572,7 +1572,7 @@ describe('plain editor tokenizer', () => {
         "length": 28
       }]);
       expect(parse('###### header [*url*](uefasdfs)')).to.deep.equal([{
-        "type": "header6",
+        "type": "header",
         "content": ["###### header ", {
           "type": "url",
           "content": [{ "type": "punctuation", "content": "[", "length": 1 }, {
