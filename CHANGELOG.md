@@ -1,3 +1,8 @@
+## [v1.1.3](Fri, 29 Sep 2017 05:11:42 GMT)
+ - Minor refactor of fullscreen button behavior. (Kirill Volkovich <kirill.volkovich@jcatalog.com>, 498359c)
+ - Remove useless code (Kirill Volkovich <kirill.volkovich@jcatalog.com>, 8f95388)
+ - # 52 Remove left offset (#54) (Kirill Volkovich <kvolkovich-sc@users.noreply.github.com>, 86a635c)
+
 ## [v1.1.2](https://github.com/OpusCapita/react-markdown/compare/v1.1.1...v1.1.2) (Thu, 28 Sep 2017 13:45:43 GMT)
  - Fix work in IE11 (Kirill Volkovich <kirill.volkovich@jcatalog.com>, 7f84d33)
  - Update README.md (Kirill Volkovich <kvolkovich-sc@users.noreply.github.com>, 8b1cf50)
