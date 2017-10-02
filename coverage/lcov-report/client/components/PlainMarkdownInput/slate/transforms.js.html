@@ -1,0 +1,893 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for client/components/PlainMarkdownInput/slate/transforms.js</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="..\..\..\..\prettify.css" />
+    <link rel="stylesheet" href="..\..\..\..\base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(..\..\..\..\sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="..\..\..\..\index.html">All files</a> / <a href="index.html">client/components/PlainMarkdownInput/slate</a> transforms.js
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">95.08% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>116/122</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">90.32% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>28/31</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>15/15</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">95% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>114/120</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line high'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250
+251
+252
+253
+254
+255
+256
+257
+258
+259
+260
+261
+262
+263
+264
+265
+266
+267
+268
+269
+270
+271
+272
+273
+274
+275
+276
+277</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">148x</span>
+<span class="cline-any cline-yes">148x</span>
+<span class="cline-any cline-yes">148x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">16x</span>
+<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">24x</span>
+<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-yes">20x</span>
+<span class="cline-any cline-yes">20x</span>
+<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">66x</span>
+<span class="cline-any cline-yes">22x</span>
+<span class="cline-any cline-yes">22x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">19x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">66x</span>
+<span class="cline-any cline-yes">22x</span>
+<span class="cline-any cline-yes">22x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">19x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">66x</span>
+<span class="cline-any cline-yes">22x</span>
+<span class="cline-any cline-yes">22x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">19x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">294x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">// common reg expressions
+const olRegExp = /^[0-9]+\.\s/;
+const ulRegExp = /^\*\s/;
+const h1RegExp = /^#\s/;
+const h2RegExp = /^##\s/;
+const h3RegExp = /^###\s/;
+const h4RegExp = /^####\s/;
+const h5RegExp = /^#####\s/;
+const h6RegExp = /^######\s/;
+&nbsp;
+/**
+ * Has block selected
+ *
+ * @param regExp - match regexp
+ * @param state - editor state
+ */
+const hasBlock = function(regExp, state) {
+  const { focusText } = state;
+  const focusedText = focusText.text;
+  return regExp.test(focusedText);
+};
+&nbsp;
+/**
+ * Unwrap block
+ *
+ * @param removedLength - first length should be removed
+ * @param state - editor state
+ */
+const unwrapBlock = function(removedLength, state) {
+  const { startOffset, endOffset } = state;
+  return state.transform().
+    moveOffsetsTo(0).
+    deleteForward(removedLength).
+    moveOffsetsTo(Math.max(startOffset - removedLength, 0), Math.max(endOffset - removedLength, 0)).
+    focus().apply();
+};
+&nbsp;
+/**
+ * Wrap block
+ *
+ * @param matchRules - list of regexp
+ * @param text - marker of the block
+ * @param state - editor state
+ */
+const wrapBlock = function(matchRules, text, state) {
+  const { startOffset, endOffset, focusText } = state;
+  const focusedText = focusText.text;
+  const t = state.transform().moveOffsetsTo(0);
+  let length = 0;
+  for (let i = 0, k = matchRules.length; i &lt; k; i++) {
+    const result = matchRules[i].exec(focusedText);
+    if (result) {
+      length = result[0].length;
+      t.deleteForward(length);
+      break;
+    }
+  }
+  return t.insertText(text).
+    moveOffsetsTo(Math.max(startOffset + text.length - length, 0), Math.max(endOffset + text.length - length, 0)).
+    focus().apply();
+};
+&nbsp;
+/**
+ * Has text wrapped italic markdown tokens
+ *
+ * @param state - editor state
+ */
+export const hasItalicMarkdown = state =&gt; {
+  const { startOffset, endOffset, focusText } = state;
+  const focusedText = focusText.text;
+  if ((startOffset - 1) &gt;= 0 &amp;&amp; endOffset + 1 &lt;= focusedText.length) {
+    const text = focusedText.slice(startOffset - 1, endOffset + 1);
+    return text &amp;&amp; text.startsWith('_') &amp;&amp; text.endsWith('_');
+  } else {
+    return false;
+  }
+};
+&nbsp;
+/**
+ * Wrap text italic with markdown token
+ *
+ * @param state - editor state
+ */
+export const wrapItalicMarkdown = state =&gt; {
+  const { startOffset, endOffset } = state;
+  let t = state.transform();
+  <span class="missing-if-branch" title="if path not taken" >I</span>if (startOffset === endOffset) {
+    c</span>onst text = <span class="cstat-no" title="statement not covered" >'';
+<span class="cstat-no" title="statement not covered" >    t.insertText('_' + text + '_').</span>
+      move(-1).
+      extend(text.length * -1);
+  } else {
+    t.wrapText('_', '_');
+  }
+  return t.focus().apply();
+};
+&nbsp;
+/**
+ * Unwrap text with italic markdown token
+ *
+ * @param state - editor state
+ */
+export const unwrapItalicMarkdown = state =&gt; {
+  const { startOffset, endOffset, focusText } = state;
+  return state.transform().
+    removeTextByKey(focusText.key, endOffset, 1).
+    removeTextByKey(focusText.key, startOffset - 1, 1).
+    focus().apply();
+};
+&nbsp;
+/**
+ * Has text wrapped with bold markdown tokens
+ *
+ * @param state - editor state
+ */
+export const hasBoldMarkdown = state =&gt; {
+  const { startOffset, endOffset, focusText } = state;
+  const focusedText = focusText.text;
+  if ((startOffset - 2) &gt;= 0 &amp;&amp; endOffset + 2 &lt;= focusedText.length) {
+    const text = focusedText.slice(startOffset - 2, endOffset + 2);
+    return text &amp;&amp; text.startsWith('**') &amp;&amp; text.endsWith('**');
+  } else {
+    return false;
+  }
+};
+&nbsp;
+/**
+ * Wrap text with bold markdown tokens
+ *
+ * @param state - editor state
+ */
+export const wrapBoldMarkdown = state =&gt; {
+  const { startOffset, endOffset } = state;
+  let t = state.transform();
+  <span class="missing-if-branch" title="if path not taken" >I</span>if (startOffset === endOffset) {
+    c</span>onst text = <span class="cstat-no" title="statement not covered" >'';
+<span class="cstat-no" title="statement not covered" >    t.insertText('**' + text + '**').</span>
+      move(-2).
+      extend(text.length * -1);
+  } else {
+    t.wrapText('**', '**');
+  }
+  return t.focus().apply();
+};
+&nbsp;
+/**
+ * Unwrap text with bold markdown tokens
+ *
+ * @param state - editor state
+ */
+export const unwrapBoldMarkdown = state =&gt; {
+  const { startOffset, endOffset, focusText } = state;
+  return state.transform().
+    removeTextByKey(focusText.key, endOffset, 2).
+    removeTextByKey(focusText.key, startOffset - 2, 2).
+    focus().apply();
+};
+&nbsp;
+/**
+ * Has wrap text with strikethrough markdown tokens
+ *
+ * @param state - editor state
+ */
+export const hasStrikethroughMarkdown = state =&gt; {
+  const { startOffset, endOffset, focusText } = state;
+  const focusedText = focusText.text;
+  if ((startOffset - 2) &gt;= 0 &amp;&amp; endOffset + 2 &lt;= focusedText.length) {
+    const text = focusedText.slice(startOffset - 2, endOffset + 2);
+    return text &amp;&amp; text.startsWith('~~') &amp;&amp; text.endsWith('~~');
+  } else {
+    return false;
+  }
+};
+&nbsp;
+/**
+ * Wrap text with strikethrough markdown tokens
+ *
+ * @param state
+ */
+export const wrapStrikethroughMarkdown = state =&gt; {
+  const { startOffset, endOffset } = state;
+  let t = state.transform();
+  <span class="missing-if-branch" title="if path not taken" >I</span>if (startOffset === endOffset) {
+    c</span>onst text = <span class="cstat-no" title="statement not covered" >'';
+<span class="cstat-no" title="statement not covered" >    t.insertText('~~' + text + '~~').</span>
+      move(-2).
+      extend(text.length * -1)
+  } else {
+    t.wrapText('~~', '~~');
+  }
+  return t.focus().apply();
+};
+&nbsp;
+/**
+ * Unwrap text with strikethrought markdown tokens
+ *
+ * @param state - editor state
+ */
+export const unwrapStrikethroughMarkdown = state =&gt; {
+  const { startOffset, endOffset, focusText } = state;
+  return state.transform().
+    removeTextByKey(focusText.key, endOffset, 2).
+    removeTextByKey(focusText.key, startOffset - 2, 2).
+    focus().apply()
+};
+&nbsp;
+/**
+ * Unwrap text with OL markdown token
+ *
+ * @param state - editor state
+ */
+export const unwrapOrderedListMarkdown = state =&gt; {
+  const { focusText } = state;
+  const focusedText = focusText.text;
+  const result = olRegExp.exec(focusedText);
+  const length = result[0].length;
+  return unwrapBlock(length, state);
+};
+&nbsp;
+/**
+ * Wrap text with link markdown tokens
+ *
+ * @param state - editor state
+ */
+export const wrapLinkMarkdown = state =&gt; {
+  const { startOffset, endOffset } = state;
+  const t = state.transform();
+  const url = 'http://example.com';
+  if (startOffset === endOffset) {
+    const text = `[link text](${url})`;
+    t.insertText(text).move((text.length - 1) * -1).extend(text.length - 2);
+  } else {
+    t.wrapText('[', `](${(url)})`).moveOffsetsTo(endOffset + 3, endOffset + 3 + url.length)
+  }
+  return t.focus().apply();
+};
+&nbsp;
+/**
+ * Check is the current state selected as multi line
+ *
+ * @param startKey - start selection key in current editor state
+ * @param endKey - end selection key in current editor state
+ */
+export const hasMultiLineSelection = ({ selection: { startKey, endKey } }) =&gt; startKey !== endKey;
+&nbsp;
+export const hasUnorderedListMarkdown = hasBlock.bind(null, ulRegExp);
+export const hasOrderedListMarkdown = hasBlock.bind(null, olRegExp);
+export const hasHeaderOneMarkdown = hasBlock.bind(null, h1RegExp);
+export const hasHeaderTwoMarkdown = hasBlock.bind(null, h2RegExp);
+export const hasHeaderThreeMarkdown = hasBlock.bind(null, h3RegExp);
+export const hasHeaderFourMarkdown = hasBlock.bind(null, h4RegExp);
+export const hasHeaderFiveMarkdown = hasBlock.bind(null, h5RegExp);
+export const hasHeaderSixMarkdown = hasBlock.bind(null, h6RegExp);
+export const unwrapHeaderOneMarkdown = unwrapBlock.bind(null, '# '.length);
+export const unwrapHeaderTwoMarkdown = unwrapBlock.bind(null, '## '.length);
+export const unwrapHeaderThreeMarkdown = unwrapBlock.bind(null, '### '.length);
+export const unwrapHeaderFourMarkdown = unwrapBlock.bind(null, '#### '.length);
+export const unwrapHeaderFiveMarkdown = unwrapBlock.bind(null, '##### '.length);
+export const unwrapHeaderSixMarkdown = unwrapBlock.bind(null, '###### '.length);
+export const wrapUnorderedListMarkdown = wrapBlock.bind(null,
+  [olRegExp, h1RegExp, h2RegExp, h3RegExp, h4RegExp, h5RegExp, h6RegExp], '* ');
+export const unwrapUnorderedListMarkdown = unwrapBlock.bind(null, '* '.length);
+export const wrapOrderedListMarkdown = wrapBlock.bind(null,
+  [ulRegExp, h1RegExp, h2RegExp, h3RegExp, h4RegExp, h5RegExp, h6RegExp], '1. ');
+export const wrapHeaderOneMarkdown = wrapBlock.bind(null,
+  [olRegExp, ulRegExp, h2RegExp, h3RegExp, h4RegExp, h5RegExp, h6RegExp], '# ');
+export const wrapHeaderTwoMarkdown = wrapBlock.bind(null,
+  [olRegExp, ulRegExp, h1RegExp, h3RegExp, h4RegExp, h5RegExp, h6RegExp], '## ');
+export const wrapHeaderThreeMarkdown = wrapBlock.bind(null,
+  [olRegExp, ulRegExp, h1RegExp, h2RegExp, h4RegExp, h5RegExp, h6RegExp], '### ');
+export const wrapHeaderFourMarkdown = wrapBlock.bind(null,
+  [olRegExp, ulRegExp, h1RegExp, h2RegExp, h3RegExp, h5RegExp, h6RegExp], '#### ');
+export const wrapHeaderFiveMarkdown = wrapBlock.bind(null,
+  [olRegExp, ulRegExp, h1RegExp, h2RegExp, h3RegExp, h4RegExp, h6RegExp], '##### ');
+export const wrapHeaderSixMarkdown = wrapBlock.bind(null,
+  [olRegExp, ulRegExp, h1RegExp, h2RegExp, h3RegExp, h4RegExp, h5RegExp], '###### ');
+&nbsp;</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Mon Oct 02 2017 11:34:57 GMT+0300 (Belarus Standard Time)
+</div>
+</div>
+<script src="..\..\..\..\prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="..\..\..\..\sorter.js"></script>
+</body>
+</html>

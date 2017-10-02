@@ -1,0 +1,692 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for client/components/PlainMarkdownInput/PlainMarkdownInput.react.js</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="..\..\..\prettify.css" />
+    <link rel="stylesheet" href="..\..\..\base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(..\..\..\sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="..\..\..\index.html">All files</a> / <a href="index.html">client/components/PlainMarkdownInput</a> PlainMarkdownInput.react.js
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">96.72% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>59/61</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">85.71% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>12/14</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">66.67% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>2/3</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">96.72% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>59/61</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line high'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210</td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">11x</span>
+<span class="cline-any cline-yes">11x</span>
+<span class="cline-any cline-yes">11x</span>
+<span class="cline-any cline-yes">11x</span>
+<span class="cline-any cline-yes">11x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">11x</span>
+<span class="cline-any cline-yes">11x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">13x</span>
+<span class="cline-any cline-yes">13x</span>
+<span class="cline-any cline-yes">13x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">13x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">13x</span>
+<span class="cline-any cline-yes">13x</span>
+<span class="cline-any cline-yes">13x</span>
+<span class="cline-any cline-yes">13x</span>
+<span class="cline-any cline-yes">13x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">80x</span>
+<span class="cline-any cline-yes">16x</span>
+<span class="cline-any cline-yes">16x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">16x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">16x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import React from 'react';
+import Types from 'prop-types';
+import FullScreenButton from '../SlateEditor/plugins/slate-fullscreen-plugin/FullScreenButton';
+import DropdownButton from 'react-bootstrap/lib/DropdownButton';
+import schema from './slate/schema';
+import shortcuts from './slate/shortcuts';
+import { hasMultiLineSelection } from './slate/transforms';
+import './PlainMarkdownInput.less';
+import { parse } from './slate/tokenizer';
+&nbsp;
+import {
+  AutocompletePlugin,
+  ObjectReferenceButton
+} from '../SlateEditor/plugins';
+&nbsp;
+import {
+  BoldButton,
+  HeaderFiveButton,
+  HeaderFourButton,
+  HeaderOneButton,
+  HeaderSixButton,
+  HeaderThreeButton,
+  HeaderTwoButton,
+  ItalicButton,
+  LinkButton,
+  OrderedListButton,
+  StrikethroughButton,
+  UnorderedListButton
+} from './buttons';
+&nbsp;
+import { SlateContent, SlateEditor, SlateToolbar, SlateToolbarGroup } from '../SlateEditor';
+import Plain from 'slate-plain-serializer';
+&nbsp;
+class PlainMarkdownInput extends React.Component {
+  state = {
+    editorState: '',
+    fullScreen: false
+  };
+&nbsp;
+  componentWillMount() {
+    this.initialBodyOverflowStyle = document.body.style.overflow;
+    this.handleNewValue(this.props.value);
+  }
+&nbsp;
+  componentWillReceiveProps(nextProps) {
+    if (this.props.value !== nextProps.value) {
+      this.handleNewValue(nextProps.value);
+    }
+  }
+&nbsp;
+  handleNewValue(value) {
+    let editorState = Plain.deserialize(value);
+    let nodes = editorState.document.nodes.asMutable();
+    let nodesSize = nodes.size;
+    for (let i = 0; i &lt; nodesSize; i++) {
+      this.setDataToNode(nodes, i);
+    }
+    editorState = this.setNodesToState(editorState, nodes);
+    this.setState({ editorState });
+  }
+&nbsp;
+  setDataToNode(nodes, numBlock, text) {
+    const currNode = nodes.get(numBlock).asMutable();
+    text = text || currNode.nodes.get(0).text; // eslint-disable-line
+    currNode.data = {
+      text,
+      tokens: parse(text),
+    };
+    nodes.set(numBlock, currNode.asImmutable());
+  }
+&nbsp;
+  setNodesToState(editorState, nodes) {
+    let editorStateMutable = editorState.asMutable();
+    editorStateMutable.document = editorStateMutable.document.asMutable();
+    editorStateMutable.document.nodes = nodes.asImmutable();
+    editorStateMutable.document = editorStateMutable.document.asImmutable();
+    return editorStateMutable.asImmutable();
+  }
+&nbsp;
+  handleChange = (obj) =&gt; {
+    // XXX Slate "Editor.props.onChange" behavior changed
+    // https://github.com/ianstormtaylor/slate/blob/master/packages/slate/Changelog.md#0220--september-5-2017
+    let editorState = obj.state || obj;
+&nbsp;
+    let numBlock = -1;
+    let key = editorState.blocks.get(0).key;
+    let nodesSize = editorState.document.nodes.size;
+    for (let i = 0; i &lt; nodesSize; i++) {
+      <span class="missing-if-branch" title="else path not taken" >E</span>if (key === editorState.document.nodes.get(i).key) {
+        numBlock = i;
+        break;
+      }
+    }
+&nbsp;
+    <span class="missing-if-branch" title="else path not taken" >E</span>if (numBlock !== -1) {
+      let text = editorState.texts.get(0).text;
+      let nodes = editorState.document.nodes.asMutable();
+      this.setDataToNode(nodes, numBlock, text);
+      editorState = this.setNodesToState(editorState, nodes);
+    }
+    this.props.onChange(Plain.serialize(editorState));
+&nbsp;
+    this.setState({ editorState });
+  };
+&nbsp;
+  handleFullScreen = () =&gt; {
+    let fullScreen = !this.state.fullScreen;
+&nbsp;
+    document.body.style.overflow = fullScreen ? 'hidden' : this.initialBodyOverflowStyle;
+&nbsp;
+    this.setState({ fullScreen });
+    this.props.onFullScreen(fullScreen);
+  };
+&nbsp;
+  onKeyDown(event, data, state) {
+<span class="cstat-no" title="statement not covered" >    return shortcuts(event, data, state);</span>
+  }
+&nbsp;
+  render() {
+    const { editorState, fullScreen } = this.state;
+    const { children, extensions, readOnly } = this.props;
+&nbsp;
+    let objectReferenceButtons = this.props.extensions.map(<span class="fstat-no" title="function not covered" >(</span>extension, index) =&gt; {
+<span class="cstat-no" title="statement not covered" >      return (</span>
+        &lt;ObjectReferenceButton
+          key={index}
+          extension={extension}
+          disabled={readOnly}
+        /&gt;
+      );
+    });
+&nbsp;
+    return (
+      &lt;SlateEditor
+        state={editorState}
+        fullScreen={fullScreen}
+        schema={schema}
+        onChange={this.handleChange}
+        plugins={[
+          AutocompletePlugin({ extensions: extensions, onChange: this.handleChange })
+        ]}
+        readOnly={readOnly}
+      &gt;
+        &lt;SlateToolbar&gt;
+          &lt;SlateToolbarGroup&gt;
+            &lt;BoldButton disabled={readOnly} /&gt;
+            &lt;ItalicButton disabled={readOnly} /&gt;
+            &lt;StrikethroughButton disabled={readOnly} /&gt;
+          &lt;/SlateToolbarGroup&gt;
+&nbsp;
+          &lt;SlateToolbarGroup&gt;
+            &lt;LinkButton disabled={readOnly} /&gt;
+          &lt;/SlateToolbarGroup&gt;
+&nbsp;
+          &lt;SlateToolbarGroup&gt;
+            &lt;div title="Insert header"&gt;
+              &lt;DropdownButton
+                id="oc-md--toolbar__headers-dropdown"
+                title={&lt;i className="fa fa-header"/&gt;}
+                disabled={hasMultiLineSelection(editorState) || readOnly}
+              &gt;
+                &lt;HeaderOneButton state={editorState} onChange={this.handleChange}/&gt;
+                &lt;HeaderTwoButton state={editorState} onChange={this.handleChange}/&gt;
+                &lt;HeaderThreeButton state={editorState} onChange={this.handleChange}/&gt;
+                &lt;HeaderFourButton state={editorState} onChange={this.handleChange}/&gt;
+                &lt;HeaderFiveButton state={editorState} onChange={this.handleChange}/&gt;
+                &lt;HeaderSixButton state={editorState} onChange={this.handleChange}/&gt;
+              &lt;/DropdownButton&gt;
+            &lt;/div&gt;
+          &lt;/SlateToolbarGroup&gt;
+&nbsp;
+          &lt;SlateToolbarGroup&gt;
+            &lt;OrderedListButton disabled={readOnly} /&gt;
+            &lt;UnorderedListButton disabled={readOnly} /&gt;
+          &lt;/SlateToolbarGroup&gt;
+&nbsp;
+          &lt;SlateToolbarGroup&gt;
+            {objectReferenceButtons}
+          &lt;/SlateToolbarGroup&gt;
+&nbsp;
+          &lt;SlateToolbarGroup className="react-markdown--plain-markdown-input__fullscreen-button"&gt;
+            &lt;FullScreenButton onClick={this.handleFullScreen} fullScreen={fullScreen} disabled={readOnly} /&gt;
+          &lt;/SlateToolbarGroup&gt;
+&nbsp;
+          {children}
+        &lt;/SlateToolbar&gt;
+        &lt;SlateContent /&gt;
+      &lt;/SlateEditor&gt;
+    );
+  }
+}
+&nbsp;
+PlainMarkdownInput.propTypes = {
+  extensions: Types.array,
+  value: Types.string,
+  onChange: Types.func,
+  onFullScreen: Types.func,
+  readOnly: Types.bool
+};
+&nbsp;
+PlainMarkdownInput.defaultProps = {
+  extensions: [],
+  value: '',
+  onFullScreen: () =&gt; {},
+  onChange: () =&gt; {},
+  readOnly: false
+};
+&nbsp;
+export default PlainMarkdownInput;
+&nbsp;</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Mon Oct 02 2017 11:34:57 GMT+0300 (Belarus Standard Time)
+</div>
+</div>
+<script src="..\..\..\prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="..\..\..\sorter.js"></script>
+</body>
+</html>

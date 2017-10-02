@@ -1,0 +1,623 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for client/components/SlateEditor/plugins/slate-autocomplete-plugin/AutocompleteContainer.js</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="..\..\..\..\..\prettify.css" />
+    <link rel="stylesheet" href="..\..\..\..\..\base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(..\..\..\..\..\sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="..\..\..\..\..\index.html">All files</a> / <a href="index.html">client/components/SlateEditor/plugins/slate-autocomplete-plugin</a> AutocompleteContainer.js
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">40% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>32/80</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">25% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>13/52</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>0/2</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">40.51% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>32/79</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line low'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187</td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">17x</span>
+<span class="cline-any cline-yes">17x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">17x</span>
+<span class="cline-any cline-yes">17x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">17x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">17x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">48x</span>
+<span class="cline-any cline-yes">16x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">16x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">16x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">192x</span>
+<span class="cline-any cline-yes">24x</span>
+<span class="cline-any cline-yes">24x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">24x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import React from 'react';
+import Types from 'prop-types';
+&nbsp;
+import AutocompleteWidget from './AutocompleteWidget';
+&nbsp;
+const escapeCode = 27;
+const arrowUpCode = 38;
+const arrowDownCode = 40;
+const enterCode = 13;
+&nbsp;
+class AutocompleteContainer extends React.Component {
+  static propTypes = {
+    state: Types.object,
+    options: Types.object,
+    onChange: Types.func
+  };
+&nbsp;
+  static defaultProps = {
+    state: {},
+    options: {},
+    onChange: <span class="fstat-no" title="function not covered" >() =&gt; </span>{}
+  };
+&nbsp;
+  state = {
+    show: false,
+    selectedIndex: 0,
+    isLoading: false,
+    isMouseIndexSelected: false,
+    items: [],
+    ref: null
+  };
+&nbsp;
+  componentDidMount = () =&gt; {
+    this.searchItems(this.props);
+  };
+&nbsp;
+  componentWillReceiveProps = (nextProps) =&gt; {
+    this.searchItems(nextProps);
+    if (typeof this.state.selectedIndex !== 'undefined' &amp;&amp;
+      (this.props.state.startOffset === nextProps.state.startOffset) &amp;&amp;
+      (this.props.state.startText.text === nextProps.state.startText.text) &amp;&amp;
+      nextProps.state.startText.text) {
+      this.handleSelectItem(this.state.selectedIndex);
+    }
+  };
+&nbsp;
+  matchExtension = (extensions, token) =&gt; {
+<span class="cstat-no" title="statement not covered" >    for (let i = 0, count = extensions.length; i &lt; count; i++) {</span>
+      c</span>onst extension = <span class="cstat-no" title="statement not covered" >extensions[i];
+&nbsp;
+<span class="cstat-no" title="statement not covered" >      if (token.match(extension.termRegex)) {</span>
+<span class="cstat-no" title="statement not covered" >        return extension;</span>
+      }
+    }
+<span class="cstat-no" title="statement not covered" >    return undefined;</span>
+  };
+&nbsp;
+  getSearchToken = (state) =&gt; {
+    const text = state.focusBlock.text;
+    const { anchorOffset } = state.selection;
+&nbsp;
+    let term;
+    let offset = -1;
+&nbsp;
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (text &amp;&amp; anchorOffset &gt; 0) {
+<span class="cstat-no" title="statement not covered" >      term = text.substring(0, anchorOffset);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >      if (!term.endsWith(' ')) {</span>
+<span class="cstat-no" title="statement not covered" >        offset = term.lastIndexOf(' ');</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        if (offset !== -1) {</span>
+<span class="cstat-no" title="statement not covered" >          offset = offset + 1;</span>
+<span class="cstat-no" title="statement not covered" >          term = term.substring(offset);</span>
+        }
+      }
+    }
+&nbsp;
+    return { term, text, offset };
+  };
+&nbsp;
+  handleSelectedIndexChange = (selectedIndex) =&gt; {
+<span class="cstat-no" title="statement not covered" >    if (this.state.isMouseIndexSelected) {</span>
+<span class="cstat-no" title="statement not covered" >      this.setState({ selectedIndex });</span>
+    } else {
+<span class="cstat-no" title="statement not covered" >      this.setState({ isMouseIndexSelected: true });</span>
+    }
+  };
+&nbsp;
+  handleKeyDown = (e) =&gt; <span class="cstat-no" title="statement not covered" ></span>{
+    const { show, items, selectedIndex } = <span class="cstat-no" title="statement not covered" >this.state;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    if (show &amp;&amp; items) {</span>
+<span class="cstat-no" title="statement not covered" >      if (e.keyCode === escapeCode) {</span>
+<span class="cstat-no" title="statement not covered" >        e.preventDefault();</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        this.setState({ show: false });</span>
+      } else <span class="cstat-no" title="statement not covered" >if (e.keyCode === enterCode) {</span>
+<span class="cstat-no" title="statement not covered" >        e.preventDefault();</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        this.handleSelectItem(selectedIndex);</span>
+      } else <span class="cstat-no" title="statement not covered" >if (e.keyCode === arrowUpCode || e.keyCode === arrowDownCode) {</span>
+<span class="cstat-no" title="statement not covered" >        e.preventDefault();</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        this.setState({ isMouseIndexSelected: false });</span>
+        c</span>onst length = <span class="cstat-no" title="statement not covered" >items.length;
+<span class="cstat-no" title="statement not covered" >        if (e.keyCode === arrowDownCode &amp;&amp; selectedIndex &lt; length - 1) {</span>
+<span class="cstat-no" title="statement not covered" >          this.setState({ selectedIndex: selectedIndex + 1 });</span>
+        } else <span class="cstat-no" title="statement not covered" >if (e.keyCode === arrowUpCode &amp;&amp; selectedIndex &gt; 0) {</span>
+<span class="cstat-no" title="statement not covered" >          this.setState({ selectedIndex: selectedIndex - 1 });</span>
+        }
+      }
+    }
+  };
+&nbsp;
+  handleSelectItem = (index) =&gt; {
+    const { items } = this.state;
+    const { state, options } = this.props;
+    const { term } = this.getSearchToken(state);
+&nbsp;
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (term) {
+      c</span>onst item = <span class="cstat-no" title="statement not covered" >items[index];
+&nbsp;
+      const { extensions } = <span class="cstat-no" title="statement not covered" >options;</span>
+      c</span>onst extension = <span class="cstat-no" title="statement not covered" >this.matchExtension(extensions, term);
+&nbsp;
+<span class="cstat-no" title="statement not covered" >      if (extension) {</span>
+        l</span>et transform = <span class="cstat-no" title="statement not covered" >state.transform();
+<span class="cstat-no" title="statement not covered" >        transform.deleteBackward(term.length);</span>
+<span class="cstat-no" title="statement not covered" >        transform.insertText(extension.markdownText(item) + ' ');</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        this.props.onChange(transform.focus().apply());</span>
+      }
+    }
+&nbsp;
+    this.setState({ show: false });
+  };
+&nbsp;
+  searchItems = ({ state, options }) =&gt; {
+    let { term } = this.getSearchToken(state);
+&nbsp;
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (term) {
+      const { extensions } = <span class="cstat-no" title="statement not covered" >options;</span>
+      c</span>onst extension = <span class="cstat-no" title="statement not covered" >this.matchExtension(extensions, term);
+      const { show } = <span class="cstat-no" title="statement not covered" >this.state;</span>
+<span class="cstat-no" title="statement not covered" >      if (extension) {</span>
+<span class="cstat-no" title="statement not covered" >        this.setState({ show: true, isLoading: true });</span>
+<span class="cstat-no" title="statement not covered" >        extension.searchItems(term).then(<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(</span>items) =&gt; this.setState({ items, selectedIndex: 0, isLoading: false }));</span></span>
+      } else <span class="cstat-no" title="statement not covered" >if (show) {</span>
+<span class="cstat-no" title="statement not covered" >        this.setState({ show: false });</span>
+      }
+    } else {
+      this.setState({ show: false });
+    }
+  };
+&nbsp;
+  handleRef = (ref) =&gt; {
+    this.setState({ ref });
+  }
+&nbsp;
+  render() {
+    const { show, selectedIndex, items, isLoading, isMouseIndexSelected, ref } = this.state;
+    const { children, state } = this.props;
+&nbsp;
+    return (
+      &lt;div
+        onKeyDown={this.handleKeyDown}
+        ref={this.handleRef}
+      &gt;
+        {s</span>how &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >state.isFocused ? (
+<span class="branch-0 cbranch-no" title="branch not covered" >          &lt;AutocompleteWidget</span>
+            items={items}
+            isLoading={isLoading}
+            selectedIndex={selectedIndex}
+            onSelectItem={this.handleSelectItem}
+            onSelectedIndexChange={this.handleSelectedIndexChange}
+            isMouseIndexSelected={isMouseIndexSelected}
+            restrictorRef={ref}
+          /&gt;
+        ) : null}
+        {children}
+      &lt;/div&gt;
+    );
+  }
+}
+&nbsp;
+export default AutocompleteContainer;
+&nbsp;</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Mon Oct 02 2017 11:34:57 GMT+0300 (Belarus Standard Time)
+</div>
+</div>
+<script src="..\..\..\..\..\prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="..\..\..\..\..\sorter.js"></script>
+</body>
+</html>

@@ -1,0 +1,428 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for client/components/SlateEditor/plugins/slate-list-plugin/ListUtils.js</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="..\..\..\..\..\prettify.css" />
+    <link rel="stylesheet" href="..\..\..\..\..\base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(..\..\..\..\..\sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="..\..\..\..\..\index.html">All files</a> / <a href="index.html">client/components/SlateEditor/plugins/slate-list-plugin</a> ListUtils.js
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">26.14% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>23/88</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>0/30</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>0/27</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">35.94% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>23/64</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line low'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122</td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import filter from 'lodash/filter';
+&nbsp;
+export const <span class="fstat-no" title="function not covered" >isList = <span class="cstat-no" title="statement not covered" >s</span>tate =&gt; state.blocks.some(<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >block =&gt; block.type === 'list-item');</span></span></span>
+&nbsp;
+export const <span class="fstat-no" title="function not covered" >hasParentOfType = <span class="cstat-no" title="statement not covered" >(</span>state, type) =&gt; state.blocks.some(</span>
+<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >  block =&gt; !!state.document.getClosest(block.key, <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >parent =&gt; parent.type === type)</span></span></span></span>
+);
+export const <span class="fstat-no" title="function not covered" >isUnorderedList = <span class="cstat-no" title="statement not covered" >s</span>tate =&gt; hasParentOfType(state, 'unordered-list');</span>
+export const <span class="fstat-no" title="function not covered" >isOrderedList = <span class="cstat-no" title="statement not covered" >s</span>tate =&gt; hasParentOfType(state, 'ordered-list');</span>
+&nbsp;
+export const <span class="fstat-no" title="function not covered" >getNodeOfType = <span class="cstat-no" title="statement not covered" >(</span>state, type) =&gt; filter(state.blocks, <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >block =&gt; block.type === type).first();</span></span></span>
+export const <span class="fstat-no" title="function not covered" >getUnorderedListNode = <span class="cstat-no" title="statement not covered" >s</span>tate =&gt; getNodeOfType(state, 'unordered-list');</span>
+export const <span class="fstat-no" title="function not covered" >getOrderedListNode = <span class="cstat-no" title="statement not covered" >s</span>tate =&gt; getNodeOfType(state, 'ordered-list');</span>
+&nbsp;
+export const <span class="fstat-no" title="function not covered" >removeUnorderedList = <span class="cstat-no" title="statement not covered" >t</span>ransform =&gt; transform.</span>
+  setBlock('paragraph').
+  unwrapBlock('unordered-list').
+  focus();
+&nbsp;
+export const <span class="fstat-no" title="function not covered" >switchToOrderedList = <span class="cstat-no" title="statement not covered" >t</span>ransform =&gt; transform.</span>
+  unwrapBlock('unordered-list').
+  wrapBlock('ordered-list').
+  focus();
+&nbsp;
+export const <span class="fstat-no" title="function not covered" >removeOrderedList = <span class="cstat-no" title="statement not covered" >t</span>ransform =&gt; transform.</span>
+  setBlock('paragraph').
+  unwrapBlock('ordered-list').
+  focus();
+&nbsp;
+export const <span class="fstat-no" title="function not covered" >switchToUnorderedList = <span class="cstat-no" title="statement not covered" >t</span>ransform =&gt; transform.</span>
+  wrapBlock('unordered-list').
+  unwrapBlock('ordered-list').
+  focus();
+&nbsp;
+export const <span class="fstat-no" title="function not covered" >applyList = <span class="cstat-no" title="statement not covered" >(</span>transform, type) =&gt; transform.</span>
+  setBlock('list-item').
+  wrapBlock(type).
+  focus();
+&nbsp;
+export const <span class="fstat-no" title="function not covered" >onlyRemove = <span class="cstat-no" title="statement not covered" >(</span>state, type) =&gt; state.transform().unwrapBlock(type).focus();</span>
+export const <span class="fstat-no" title="function not covered" >onlyRemoveUnorderedList = <span class="cstat-no" title="statement not covered" >s</span>tate =&gt; onlyRemove(state, 'unordered-list');</span>
+export const <span class="fstat-no" title="function not covered" >onlyRemoveOrderedList = <span class="cstat-no" title="statement not covered" >s</span>tate =&gt; onlyRemove(state, 'ordered-list');</span>
+&nbsp;
+export const <span class="fstat-no" title="function not covered" >applyUnorderedList = <span class="cstat-no" title="statement not covered" >s</span>tate =&gt; applyList(state.transform(), 'unordered-list');</span>
+export const <span class="fstat-no" title="function not covered" >applyOrderedList = <span class="cstat-no" title="statement not covered" >s</span>tate =&gt; applyList(state.transform(), 'ordered-list');</span>
+&nbsp;
+const <span class="fstat-no" title="function not covered" >deepRemoveList = s</span>tate =&gt; {
+  const { document } = <span class="cstat-no" title="statement not covered" >state;</span>
+  c</span>onst node = <span class="cstat-no" title="statement not covered" >getNodeOfType(state, 'list-item');
+  c</span>onst depth = <span class="cstat-no" title="statement not covered" >document.getDepth(node.key);
+&nbsp;
+  l</span>et transform = <span class="cstat-no" title="statement not covered" >state.transform();
+<span class="cstat-no" title="statement not covered" >  Array(depth).fill('.').forEach(<span class="fstat-no" title="function not covered" >() =&gt; </span>{</span>
+    c</span>onst parent = <span class="cstat-no" title="statement not covered" >document.getParent(node.key);
+<span class="cstat-no" title="statement not covered" >    if (parent.type === 'unordered-list') {</span>
+<span class="cstat-no" title="statement not covered" >      removeUnorderedList(transform);</span>
+    } else {
+<span class="cstat-no" title="statement not covered" >      removeOrderedList(transform);</span>
+    }
+  });
+<span class="cstat-no" title="statement not covered" >  return transform</span>
+};
+&nbsp;
+export const <span class="fstat-no" title="function not covered" >unorderedList = s</span>tate =&gt; {
+  l</span>et transform = <span class="cstat-no" title="statement not covered" >state.transform();
+<span class="cstat-no" title="statement not covered" >  if (!isList(state)) {<span class="cstat-no" title="statement not covered" >return applyList(transform, 'unordered-list').apply();}</span></span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >  if (isUnorderedList(state)) {<span class="cstat-no" title="statement not covered" >return deepRemoveList(state).apply();}</span></span>
+<span class="cstat-no" title="statement not covered" >  if (isOrderedList(state)) {<span class="cstat-no" title="statement not covered" >return switchToUnorderedList(transform).apply();}</span></span>
+<span class="cstat-no" title="statement not covered" >  console.info('[SlateJS][ListPlugin] It is a different type of list.');</span>
+<span class="cstat-no" title="statement not covered" >  return state</span>
+};
+&nbsp;
+export const <span class="fstat-no" title="function not covered" >orderedList = s</span>tate =&gt; {
+  c</span>onst transform = <span class="cstat-no" title="statement not covered" >state.transform();
+&nbsp;
+  // If it is not a list yet, transform it!
+<span class="cstat-no" title="statement not covered" >  if (!isList(state)) {<span class="cstat-no" title="statement not covered" >return applyList(transform, 'ordered-list').apply();}</span></span>
+&nbsp;
+  // If it is already a list, handle it!
+<span class="cstat-no" title="statement not covered" >  if (isOrderedList(state)) {</span>
+<span class="cstat-no" title="statement not covered" >    return deepRemoveList(state).apply();</span>
+  } else <span class="cstat-no" title="statement not covered" >if (isUnorderedList(state)) {</span>
+<span class="cstat-no" title="statement not covered" >    return switchToOrderedList(transform).apply();</span>
+  } else {
+<span class="cstat-no" title="statement not covered" >    console.info('[SlateJS][ListPlugin] It is a different type of list.');</span>
+  }
+<span class="cstat-no" title="statement not covered" >  return state;</span>
+};
+&nbsp;
+export const <span class="fstat-no" title="function not covered" >increaseListDepthStrategy = s</span>tate =&gt; {
+  // If it is not a list, kill the action immediately.
+<span class="cstat-no" title="statement not covered" >  if (!isList(state)) {</span>
+<span class="cstat-no" title="statement not covered" >    return state;</span>
+  }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >  if (isUnorderedList(state)) {</span>
+<span class="cstat-no" title="statement not covered" >    return applyUnorderedList(state).apply();</span>
+  }
+<span class="cstat-no" title="statement not covered" >  if (isOrderedList(state)) {</span>
+<span class="cstat-no" title="statement not covered" >    return applyOrderedList(state).apply();</span>
+  }
+<span class="cstat-no" title="statement not covered" >  return state;</span>
+};
+&nbsp;
+export const <span class="fstat-no" title="function not covered" >decreaseListDepthStrategy = s</span>tate =&gt; {
+  // If it is not a list, kill the action immediately.
+<span class="cstat-no" title="statement not covered" >  if (!isList(state)) {</span>
+<span class="cstat-no" title="statement not covered" >    return state;</span>
+  }
+&nbsp;
+  c</span>onst node = <span class="cstat-no" title="statement not covered" >getNodeOfType(state, 'list-item');
+  c</span>onst depth = <span class="cstat-no" title="statement not covered" >state.document.getDepth(node.key);
+<span class="cstat-no" title="statement not covered" >  if (isUnorderedList(state) &amp;&amp; depth &gt; 2) {</span>
+<span class="cstat-no" title="statement not covered" >    return onlyRemoveUnorderedList(state).apply();</span>
+  }
+<span class="cstat-no" title="statement not covered" >  if (isOrderedList(state) &amp;&amp; depth &gt; 2) {</span>
+<span class="cstat-no" title="statement not covered" >    return onlyRemoveOrderedList(state).apply();</span>
+  }
+<span class="cstat-no" title="statement not covered" >  return state;</span>
+};
+&nbsp;</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Mon Oct 02 2017 11:34:57 GMT+0300 (Belarus Standard Time)
+</div>
+</div>
+<script src="..\..\..\..\..\prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="..\..\..\..\..\sorter.js"></script>
+</body>
+</html>
