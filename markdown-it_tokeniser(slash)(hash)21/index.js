@@ -25808,6 +25808,16 @@ function getHeaderContent(tokens, type, markup) {
   };
 }
 
+/**
+ * getBlockContent - Function returns block content
+ *
+ * @param tokens
+ * @param type
+ * @param markup
+ * @param start
+ * @returns {{type: *, content, markup: *}}
+ */
+
 function getBlockContent(tokens, type, markup) {
   var start = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
 
