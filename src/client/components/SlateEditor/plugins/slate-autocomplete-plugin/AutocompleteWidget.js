@@ -59,7 +59,7 @@ class AutocompleteWidget extends React.Component {
 
   componentWillUnmount = () => {
     this.cancelAdjustPosition();
-  }
+  };
 
   adjustPosition = () => {
     let selection = window.getSelection();
@@ -68,12 +68,16 @@ class AutocompleteWidget extends React.Component {
       return;
     }
 
+    let editorWidth = selection.anchorNode.parentNode.closest('.react-markdown--slate-content__editor').offsetWidth;
+    let autocompleteWidth = this["items-ref"].offsetWidth;
+
     let selectionRect = selection.getRangeAt(0).getBoundingClientRect();
     let restrictorRect = this.props.restrictorRef.getBoundingClientRect();
     let lineHeight = selectionRect.bottom - selectionRect.top;
     let left = selectionRect.left - restrictorRect.left;
+    left = editorWidth >= left + autocompleteWidth ? left : left - autocompleteWidth;
+    left = left < 0 ? 0 : left;
     let top = selectionRect.top - restrictorRect.top + lineHeight + 4;
-
     let showToTop = (top + maxHeight) > restrictorRect.bottom;
 
     let position = {
@@ -95,7 +99,7 @@ class AutocompleteWidget extends React.Component {
     if (this._animationFrame) {
       cancelAnimationFrame(this._animationFrame);
     }
-  }
+  };
 
   handleSelectItem = (index, e) => {
     this.props.onSelectItem(index);
