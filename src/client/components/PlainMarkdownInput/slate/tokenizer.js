@@ -116,6 +116,16 @@ function getHeaderContent(tokens, type, markup) {
   };
 }
 
+/**
+ * getBlockContent - Function returns block content
+ *
+ * @param tokens
+ * @param type
+ * @param markup
+ * @param start
+ * @returns {{type: *, content, markup: *}}
+ */
+
 function getBlockContent(tokens, type, markup, start = false) {
   const content = {
     type,
