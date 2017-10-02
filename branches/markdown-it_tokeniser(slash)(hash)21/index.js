@@ -25509,7 +25509,6 @@ var addMarks = function addMarks(characters, tokens, offset) {
         length = token.length,
         type = token.type;
 
-    addMarks(characters, content, updatedOffset);
     var mark = _slate.Mark.create({ type: type });
     for (var _i = updatedOffset; _i < updatedOffset + length; _i++) {
       var char = characters.get(_i);
@@ -25521,6 +25520,8 @@ var addMarks = function addMarks(characters, tokens, offset) {
       char = char.set('marks', marks);
       characters.set(_i, char);
     }
+
+    addMarks(characters, content, updatedOffset);
 
     updatedOffset += length;
   }
