@@ -46,7 +46,7 @@ rm -rf "./branches/$SAFE_GIT_BRANCH"
 mkdir -p "./branches/$SAFE_GIT_BRANCH"
 
 # copy over or recompile the new site
-mv "./$SITE_SOURCE" "./branches/$SAFE_GIT_BRANCH"
+cp -r ./$SITE_SOURCE/* "./branches/$SAFE_GIT_BRANCH"
 
 # stage any changes and new files
 git add -A
