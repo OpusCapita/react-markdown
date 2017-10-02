@@ -22,6 +22,7 @@ const defaultProps = {
 };
 
 const maxHeight = 240;
+const maxItemLength = 15;
 
 class AutocompleteWidget extends React.Component {
   constructor(props) {
@@ -123,6 +124,8 @@ class AutocompleteWidget extends React.Component {
           }}
         >
           {items.map((item, index) => {
+            const itemLabel = item._objectLabel;
+            const itemLength = itemLabel.length;
             return (
               <div
                 key={index}
@@ -133,8 +136,9 @@ class AutocompleteWidget extends React.Component {
                   react-markdown--autocomplete-widget__item
                   ${selectedIndex === index ? 'react-markdown--autocomplete-widget__item--active' : ''}
                 `}
+                title={itemLength > maxItemLength ? itemLabel : ''}
               >
-                {item._objectLabel}
+                {itemLength > maxItemLength ? `${itemLabel.substr(0, maxItemLength - 3)}...` : itemLabel}
               </div>
             );
           })}
