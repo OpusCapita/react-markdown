@@ -26071,7 +26071,12 @@ function parseBlock(tokens) {
  */
 
 function restoreSpaces(string, tokens) {
-  var result = /^[ ]+/.exec(string);
+  var result = /^\s+$/.exec(string);
+  if (result) {
+    return [result[0]];
+  }
+
+  result = /^[ ]+/.exec(string);
   if (result) {
     if (tokens[0].type === 'header') {
       tokens[0].type = 'header-no-offset'; // eslint-disable-line
@@ -26086,6 +26091,8 @@ function restoreSpaces(string, tokens) {
     } else {
       tokens = [result[0], tokens]; // eslint-disable-line
     }
+
+    return tokens;
   }
 
   result = /[ ]+$/.exec(string);
