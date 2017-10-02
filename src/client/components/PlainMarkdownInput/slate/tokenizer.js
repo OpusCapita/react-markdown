@@ -103,9 +103,9 @@ function getEmptyText() {
  */
 
 function getHeaderContent(tokens, type, markup) {
-  // TODO: Cannot read property 'type' of undefined for empty header
-
-  if (tokens[1].children[0].type !== 'text') {
+  if (tokens[1].children.length === 0) {
+    tokens[1].children.push(getEmptyText());
+  } else if (tokens[1].children[0].type !== 'text') {
     tokens[1].children.unshift(getEmptyText());
   }
   let content = changeText(tokens[1].children, markup);
