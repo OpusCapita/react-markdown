@@ -38,7 +38,7 @@ rm -rf "./branches/$GIT_BRANCH"
 mkdir -p "./branches/$GIT_BRANCH"
 
 # copy over or recompile the new site
-cp -r "./$SITE_SOURCE" "./branches/$GIT_BRANCH"
+cp -r "./$SITE_SOURCE/*" "./branches/$GIT_BRANCH"
 
 # stage any changes and new files
 git add -A
