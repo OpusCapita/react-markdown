@@ -25509,11 +25509,7 @@ var addMarks = function addMarks(characters, tokens, offset) {
         length = token.length,
         type = token.type;
 
-
-    if (Array.isArray(content)) {
-      addMarks(characters, content, updatedOffset);
-    }
-
+    addMarks(characters, content, updatedOffset);
     var mark = _slate.Mark.create({ type: type });
     for (var _i = updatedOffset; _i < updatedOffset + length; _i++) {
       var char = characters.get(_i);
@@ -25559,7 +25555,7 @@ var rendererComponent = function rendererComponent(props) {
   }
 
   if (hasMarks) {
-    var className = props.mark ? 'oc-md-hl-' + props.mark.type : '';
+    var className = props.mark.type ? 'oc-md-hl-' + props.mark.type : '';
     return _react2.default.createElement(
       'span',
       { className: className },
@@ -25712,15 +25708,6 @@ var markdown = new _markdownIt2.default({
   typographer: false
 });
 
-var HEADERS = {
-  h1: 'header1',
-  h2: 'header2',
-  h3: 'header3',
-  h4: 'header4',
-  h5: 'header5',
-  h6: 'header6'
-};
-var HEADERS_STR = ['header1', 'header2', 'header3', 'header4', 'header5', 'header6'];
 var EMPHASISES = {
   strong: 'bold',
   em: 'italic',
@@ -25808,7 +25795,9 @@ function getEmptyText() {
  */
 
 function getHeaderContent(tokens, type, markup) {
-  if (tokens[1].children[0].type !== 'text') {
+  if (tokens[1].children.length === 0) {
+    tokens[1].children.push(getEmptyText());
+  } else if (tokens[1].children[0].type !== 'text') {
     tokens[1].children.unshift(getEmptyText());
   }
   var content = changeText(tokens[1].children, markup);
@@ -26074,7 +26063,7 @@ function parseBlock(tokens) {
 function restoreSpaces(string, tokens) {
   var result = /^[ ]+/.exec(string);
   if (result) {
-    if (HEADERS_STR.indexOf(tokens[0].type) !== -1) {
+    if (tokens[0].type === 'header') {
       tokens[0].type = 'header-no-offset'; // eslint-disable-line
     }
 
@@ -26109,7 +26098,7 @@ function processEmphasis(tokens) {
 
 /* eslint-disable */
 function processInline(tokens) {
-  if (tokens[0] && (HEADERS_STR.indexOf(tokens[0].type) !== -1 || tokens[0].type === 'list' || tokens[0].type === 'ordered-list' || tokens[0].type === 'header-no-offset' || tokens[0].type === 'blockquote')) {
+  if (tokens[0] && (tokens[0].type === 'header' || tokens[0].type === 'list' || tokens[0].type === 'ordered-list' || tokens[0].type === 'header-no-offset' || tokens[0].type === 'blockquote')) {
     tokens[0].content = processEmphasis(tokens[0].content);
     tokens[0].length = getTokensLength(tokens[0].content);
     delete tokens[0].markup;
@@ -26148,7 +26137,8 @@ function processBlockTokens(tokens) {
         return changeText(tokens[1].children);
       }
       if (firstType === 'heading_open' && lastType === 'heading_close') {
-        return [getHeaderContent(tokens, HEADERS[tokens[0].tag], tokens[0].markup)];
+        return [getHeaderContent(tokens, 'header', tokens[0].markup)];
+        // return [getHeaderContent(tokens, HEADERS[tokens[0].tag], tokens[0].markup)];
       }
     }
   }
