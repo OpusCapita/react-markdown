@@ -18,7 +18,7 @@ const addMarks = function addMarks(characters, tokens, offset) {
 
     const { content, length, type } = token;
     const mark = Mark.create({ type });
-    for (let i = updatedOffset; i < updatedOffset + length; i++) {
+    for (let i = updatedOffset; i < updatedOffset + length && i < characters.size; i++) {
       let char = characters.get(i);
       let { marks } = char;
 
