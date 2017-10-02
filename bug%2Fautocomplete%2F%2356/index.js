@@ -25230,6 +25230,7 @@ var defaultProps = {
 };
 
 var maxHeight = 240;
+var maxItemLength = 15;
 
 var AutocompleteWidget = function (_React$Component) {
   _inherits(AutocompleteWidget, _React$Component);
@@ -25354,6 +25355,8 @@ var AutocompleteWidget = function (_React$Component) {
             }, this.props.style)
           },
           items.map(function (item, index) {
+            var itemLabel = item._objectLabel;
+            var itemLength = itemLabel.length;
             return _react2.default.createElement(
               'div',
               {
@@ -25367,9 +25370,10 @@ var AutocompleteWidget = function (_React$Component) {
                 onMouseMove: function onMouseMove() {
                   return onSelectedIndexChange(index);
                 },
-                className: '\n                  react-markdown--autocomplete-widget__item\n                  ' + (selectedIndex === index ? 'react-markdown--autocomplete-widget__item--active' : '') + '\n                '
+                className: '\n                  react-markdown--autocomplete-widget__item\n                  ' + (selectedIndex === index ? 'react-markdown--autocomplete-widget__item--active' : '') + '\n                ',
+                title: itemLength > maxItemLength ? itemLabel : ''
               },
-              item._objectLabel
+              itemLength > maxItemLength ? itemLabel.substr(0, maxItemLength - 3) + '...' : itemLabel
             );
           }),
           !items.length ? _react2.default.createElement(
