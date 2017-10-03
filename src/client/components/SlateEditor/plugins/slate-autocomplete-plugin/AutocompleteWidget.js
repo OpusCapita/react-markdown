@@ -22,6 +22,7 @@ const defaultProps = {
 };
 
 const maxHeight = 240;
+const maxItemLength = 15;
 
 class AutocompleteWidget extends React.Component {
   constructor(props) {
@@ -59,7 +60,7 @@ class AutocompleteWidget extends React.Component {
 
   componentWillUnmount = () => {
     this.cancelAdjustPosition();
-  }
+  };
 
   adjustPosition = () => {
     let selection = window.getSelection();
@@ -67,13 +68,15 @@ class AutocompleteWidget extends React.Component {
     if (!selection.anchorNode) {
       return;
     }
-
+    let editorWidth = this.props.restrictorRef.offsetWidth;
+    let autocompleteWidth = this['items-ref'].offsetWidth;
     let selectionRect = selection.getRangeAt(0).getBoundingClientRect();
     let restrictorRect = this.props.restrictorRef.getBoundingClientRect();
     let lineHeight = selectionRect.bottom - selectionRect.top;
     let left = selectionRect.left - restrictorRect.left;
+    left = editorWidth >= left + autocompleteWidth ? left : left - autocompleteWidth;
+    left = left < 0 ? 0 : left;
     let top = selectionRect.top - restrictorRect.top + lineHeight + 4;
-
     let showToTop = (top + maxHeight) > restrictorRect.bottom;
 
     let position = {
@@ -95,7 +98,7 @@ class AutocompleteWidget extends React.Component {
     if (this._animationFrame) {
       cancelAnimationFrame(this._animationFrame);
     }
-  }
+  };
 
   handleSelectItem = (index, e) => {
     this.props.onSelectItem(index);
@@ -119,6 +122,8 @@ class AutocompleteWidget extends React.Component {
           }}
         >
           {items.map((item, index) => {
+            const itemLabel = item._objectLabel;
+            const itemLength = itemLabel.length;
             return (
               <div
                 key={index}
@@ -129,8 +134,9 @@ class AutocompleteWidget extends React.Component {
                   react-markdown--autocomplete-widget__item
                   ${selectedIndex === index ? 'react-markdown--autocomplete-widget__item--active' : ''}
                 `}
+                title={itemLength > maxItemLength ? itemLabel : ''}
               >
-                {item._objectLabel}
+                {itemLength > maxItemLength ? `${itemLabel.substr(0, maxItemLength)}…` : itemLabel}
               </div>
             );
           })}
