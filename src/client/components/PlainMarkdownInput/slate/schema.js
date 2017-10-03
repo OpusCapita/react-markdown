@@ -17,17 +17,22 @@ const addMarks = function addMarks(characters, tokens, offset) {
     }
 
     const { content, length, type } = token;
-    const mark = Mark.create({ type });
-    for (let i = updatedOffset; i < updatedOffset + length && i < characters.size; i++) {
-      let char = characters.get(i);
-      let { marks } = char;
 
-      marks = marks.add(mark);
-      char = char.set('marks', marks);
-      characters.set(i, char);
+    if (type) {
+      const mark = Mark.create({ type });
+      for (let i = updatedOffset; i < updatedOffset + length && i < characters.size; i++) {
+        let char = characters.get(i);
+        let { marks } = char;
+
+        marks = marks.add(mark);
+        char = char.set('marks', marks);
+        characters.set(i, char);
+      }
     }
 
-    addMarks(characters, content, updatedOffset);
+    if (Array.isArray(content)) {
+      addMarks(characters, content, updatedOffset);
+    }
 
     updatedOffset += length;
   }
