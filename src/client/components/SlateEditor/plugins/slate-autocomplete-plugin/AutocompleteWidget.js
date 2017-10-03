@@ -39,7 +39,7 @@ const defaultProps = {
 };
 
 const maxHeight = 240;
-const maxItemLength = 20;
+const maxItemLength = 15;
 
 class AutocompleteWidget extends React.Component {
   constructor(props) {
