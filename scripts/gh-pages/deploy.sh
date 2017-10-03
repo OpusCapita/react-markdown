@@ -22,7 +22,7 @@ GIT_BRANCH=`git rev-parse --abbrev-ref HEAD`
 
 # replace "/", "#", etc. in current git branch name
 urlencode() {
-  node -e "console.log(encodeURIComponent('${*}'))"
+  node -e "console.log('${*}'.replace('/', '(slash)').replace('#', '(hash)'))"
 }
 
 SAFE_GIT_BRANCH=`urlencode $GIT_BRANCH`
@@ -42,10 +42,11 @@ else
 fi
 
 # delete any old site as we are going to replace it
-rm -rf "./$SAFE_GIT_BRANCH"
+rm -rf "./branches/$SAFE_GIT_BRANCH"
+mkdir -p "./branches/$SAFE_GIT_BRANCH"
 
 # copy over or recompile the new site
-mv "./$SITE_SOURCE" "./$SAFE_GIT_BRANCH"
+cp -r ./$SITE_SOURCE/* "./branches/$SAFE_GIT_BRANCH"
 
 # stage any changes and new files
 git add -A
