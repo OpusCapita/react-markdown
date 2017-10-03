@@ -25210,6 +25210,23 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+function getClosestElemFromClass(elem, className) {
+  if (!elem.parentElement) {
+    return null;
+  }
+  if (elem.parentElement.classList.contains(className)) {
+    return elem.parentElement;
+  }
+  return getClosestElemFromClass(elem.parentElement, className);
+}
+
+function getSlateEditor(selection) {
+  if (selection.anchorNode.parentNode && selection.anchorNode.parentNode.closest) {
+    return selection.anchorNode.parentNode.closest('.react-markdown--slate-content__editor');
+  }
+  return getClosestElemFromClass(selection.anchorNode.parentNode, 'react-markdown--slate-content__editor');
+}
+
 var propTypes = {
   isMouseIndexSelected: _propTypes2.default.bool,
   onSelectedIndexChange: _propTypes2.default.func,
@@ -25230,7 +25247,7 @@ var defaultProps = {
 };
 
 var maxHeight = 240;
-var maxItemLength = 15;
+var maxItemLength = 20;
 
 var AutocompleteWidget = function (_React$Component) {
   _inherits(AutocompleteWidget, _React$Component);
@@ -25276,10 +25293,9 @@ var AutocompleteWidget = function (_React$Component) {
       if (!selection.anchorNode) {
         return;
       }
-
-      var editorWidth = selection.anchorNode.parentNode.closest('.react-markdown--slate-content__editor').offsetWidth;
-      var autocompleteWidth = _this["items-ref"].offsetWidth;
-
+      var slateEditor = getSlateEditor(selection);
+      var editorWidth = slateEditor.offsetWidth;
+      var autocompleteWidth = _this['items-ref'].offsetWidth;
       var selectionRect = selection.getRangeAt(0).getBoundingClientRect();
       var restrictorRect = _this.props.restrictorRef.getBoundingClientRect();
       var lineHeight = selectionRect.bottom - selectionRect.top;
@@ -25373,7 +25389,7 @@ var AutocompleteWidget = function (_React$Component) {
                 className: '\n                  react-markdown--autocomplete-widget__item\n                  ' + (selectedIndex === index ? 'react-markdown--autocomplete-widget__item--active' : '') + '\n                ',
                 title: itemLength > maxItemLength ? itemLabel : ''
               },
-              itemLength > maxItemLength ? itemLabel.substr(0, maxItemLength - 3) + '...' : itemLabel
+              itemLength > maxItemLength ? itemLabel.substr(0, maxItemLength) + '\u2026' : itemLabel
             );
           }),
           !items.length ? _react2.default.createElement(
