@@ -2,23 +2,6 @@ import React from 'react';
 import './Autocomplete.less';
 import Types from 'prop-types';
 
-function getClosestElemFromClass(elem, className) {
-  if (!elem.parentElement) {
-    return null;
-  }
-  if (elem.parentElement.classList.contains(className)) {
-    return elem.parentElement;
-  }
-  return getClosestElemFromClass(elem.parentElement, className)
-}
-
-function getSlateEditor(selection) {
-  if (selection.anchorNode.parentNode && selection.anchorNode.parentNode.closest) {
-    return selection.anchorNode.parentNode.closest('.react-markdown--slate-content__editor');
-  }
-  return getClosestElemFromClass(selection.anchorNode.parentNode, 'react-markdown--slate-content__editor');
-}
-
 const propTypes = {
   isMouseIndexSelected: Types.bool,
   onSelectedIndexChange: Types.func,
@@ -85,8 +68,7 @@ class AutocompleteWidget extends React.Component {
     if (!selection.anchorNode) {
       return;
     }
-    const slateEditor = getSlateEditor(selection);
-    let editorWidth = slateEditor.offsetWidth;
+    let editorWidth = this.props.restrictorRef.offsetWidth;
     let autocompleteWidth = this['items-ref'].offsetWidth;
     let selectionRect = selection.getRangeAt(0).getBoundingClientRect();
     let restrictorRect = this.props.restrictorRef.getBoundingClientRect();
