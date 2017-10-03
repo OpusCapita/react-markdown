@@ -1,3 +1,26 @@
+## [v1.1.4](https://github.com/OpusCapita/react-markdown/compare/v1.1.3...v1.1.4) (Tue, 03 Oct 2017 14:39:31 GMT)
+ - Fix bug Autocomplete widget position#56 (#57)
+    
+    * Move autocomplete widget to left side if it left beyond the right border
+    
+    * Replacement of long item on short with dots (...)
+    
+    * Fix bug in ie-11
+    
+    * Change item's size
+    
+    * Refactoring (Aleksandr Baliunov <abaliunov-sc@users.noreply.github.com>, 3a1de9f)
+ - #53 Fix per branch demo page generation (Kirill Volkovich <kirill.volkovich@jcatalog.com>, 7b6afd7)
+ - #53 Fix per branch demo page generation (Kirill Volkovich <kirill.volkovich@jcatalog.com>, d630458)
+ - #53 Fix per branch demo page generation (Kirill Volkovich <kirill.volkovich@jcatalog.com>, f04a8a9)
+ - #53 Fix per branch demo page generation (Kirill Volkovich <kirill.volkovich@jcatalog.com>, 04e1f29)
+ - #53 Fix per branch demo page generation (Kirill Volkovich <kirill.volkovich@jcatalog.com>, 45cf048)
+ - #53 Fix per branch demo page generation (Kirill Volkovich <kirill.volkovich@jcatalog.com>, 8fde11a)
+ - #53 Fix per branch demo page generation (Kirill Volkovich <kirill.volkovich@jcatalog.com>, c4d8801)
+ - #53 Fix per branch demo page generation (Kirill Volkovich <kirill.volkovich@jcatalog.com>, 81963fb)
+ - #53 Fix per branch demo page generation (Kirill Volkovich <kirill.volkovich@jcatalog.com>, 65e985d)
+ - #53 Fix per branch demo page generation (Kirill Volkovich <kirill.volkovich@jcatalog.com>, fb4e670)
+
 ## [v1.1.3](Fri, 29 Sep 2017 05:11:42 GMT)
  - Minor refactor of fullscreen button behavior. (Kirill Volkovich <kirill.volkovich@jcatalog.com>, 498359c)
  - Remove useless code (Kirill Volkovich <kirill.volkovich@jcatalog.com>, 8f95388)
