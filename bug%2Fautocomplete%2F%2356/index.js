@@ -25247,7 +25247,7 @@ var defaultProps = {
 };
 
 var maxHeight = 240;
-var maxItemLength = 20;
+var maxItemLength = 15;
 
 var AutocompleteWidget = function (_React$Component) {
   _inherits(AutocompleteWidget, _React$Component);
