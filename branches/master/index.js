@@ -25230,6 +25230,7 @@ var defaultProps = {
 };
 
 var maxHeight = 240;
+var maxItemLength = 15;
 
 var AutocompleteWidget = function (_React$Component) {
   _inherits(AutocompleteWidget, _React$Component);
@@ -25275,13 +25276,15 @@ var AutocompleteWidget = function (_React$Component) {
       if (!selection.anchorNode) {
         return;
       }
-
+      var editorWidth = _this.props.restrictorRef.offsetWidth;
+      var autocompleteWidth = _this['items-ref'].offsetWidth;
       var selectionRect = selection.getRangeAt(0).getBoundingClientRect();
       var restrictorRect = _this.props.restrictorRef.getBoundingClientRect();
       var lineHeight = selectionRect.bottom - selectionRect.top;
       var left = selectionRect.left - restrictorRect.left;
+      left = editorWidth >= left + autocompleteWidth ? left : left - autocompleteWidth;
+      left = left < 0 ? 0 : left;
       var top = selectionRect.top - restrictorRect.top + lineHeight + 4;
-
       var showToTop = top + maxHeight > restrictorRect.bottom;
 
       var position = {
@@ -25350,6 +25353,8 @@ var AutocompleteWidget = function (_React$Component) {
             }, this.props.style)
           },
           items.map(function (item, index) {
+            var itemLabel = item._objectLabel;
+            var itemLength = itemLabel.length;
             return _react2.default.createElement(
               'div',
               {
@@ -25363,9 +25368,10 @@ var AutocompleteWidget = function (_React$Component) {
                 onMouseMove: function onMouseMove() {
                   return onSelectedIndexChange(index);
                 },
-                className: '\n                  react-markdown--autocomplete-widget__item\n                  ' + (selectedIndex === index ? 'react-markdown--autocomplete-widget__item--active' : '') + '\n                '
+                className: '\n                  react-markdown--autocomplete-widget__item\n                  ' + (selectedIndex === index ? 'react-markdown--autocomplete-widget__item--active' : '') + '\n                ',
+                title: itemLength > maxItemLength ? itemLabel : ''
               },
-              item._objectLabel
+              itemLength > maxItemLength ? itemLabel.substr(0, maxItemLength) + '\u2026' : itemLabel
             );
           }),
           !items.length ? _react2.default.createElement(
@@ -25421,7 +25427,7 @@ var AutocompletePlugin = function AutocompletePlugin(options) {
         {
           state: state,
           options: options,
-          onChange: options.onChange
+          onChange: options.onChange // eslint-disable-line
         },
         children
       );
