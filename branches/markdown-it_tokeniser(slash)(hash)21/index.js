@@ -25509,19 +25509,24 @@ var addMarks = function addMarks(characters, tokens, offset) {
         length = token.length,
         type = token.type;
 
-    var mark = _slate.Mark.create({ type: type });
-    for (var _i = updatedOffset; _i < updatedOffset + length && _i < characters.size; _i++) {
-      var char = characters.get(_i);
-      var _char = char,
-          marks = _char.marks;
+
+    if (type) {
+      var mark = _slate.Mark.create({ type: type });
+      for (var _i = updatedOffset; _i < updatedOffset + length && _i < characters.size; _i++) {
+        var char = characters.get(_i);
+        var _char = char,
+            marks = _char.marks;
 
 
-      marks = marks.add(mark);
-      char = char.set('marks', marks);
-      characters.set(_i, char);
+        marks = marks.add(mark);
+        char = char.set('marks', marks);
+        characters.set(_i, char);
+      }
     }
 
-    addMarks(characters, content, updatedOffset);
+    if (Array.isArray(content)) {
+      addMarks(characters, content, updatedOffset);
+    }
 
     updatedOffset += length;
   }
