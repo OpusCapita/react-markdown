@@ -1,6 +1,7 @@
 import React from 'react';
 import Types from 'prop-types';
 import { Mark } from 'slate';
+import { parse } from './tokenizer';
 
 /**
  * Define a decorator for markdown styles.
@@ -37,6 +38,11 @@ function markdownDecorator(text, block) {
     return text.charsData.characters;
   }
   if (block.data) {
+    if (block.data.text !== text.text) {
+      block.data.text = text.text;
+      block.data.tokens = parse(text.text);
+    }
+
     let characters = text.characters.asMutable();
     addMarks(characters, block.data.tokens, 0); // Add marks to characters
     text.charsData = { // eslint-disable-line
