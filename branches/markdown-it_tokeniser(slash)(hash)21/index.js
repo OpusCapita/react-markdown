@@ -24259,7 +24259,7 @@ module.exports = [
   {
     "package": "@opuscapita/react-markdown",
     "name": "MarkdownInput",
-    "version": "1.1.4",
+    "version": "1.1.5",
     "tags": "",
     "relatedFiles": [
       {
@@ -24274,7 +24274,7 @@ module.exports = [
   {
     "package": "@opuscapita/react-markdown",
     "name": "PlainMarkdownInput",
-    "version": "1.1.4",
+    "version": "1.1.5",
     "tags": "",
     "relatedFiles": [
       {
@@ -24295,7 +24295,7 @@ module.exports = [
 module.exports = [
     {
         "name": "@opuscapita/react-markdown",
-        "version": "1.1.4",
+        "version": "1.1.5",
         "description": "React markdown editor component",
         "scripts": {
             "link-mode": "cross-env NODE_ENV=link webpack --config ./config/webpack.config.js",
@@ -25509,23 +25509,17 @@ var addMarks = function addMarks(characters, tokens, offset) {
         length = token.length,
         type = token.type;
 
+    addMarks(characters, content, updatedOffset);
+    var mark = _slate.Mark.create({ type: type });
+    for (var pos = updatedOffset; pos < updatedOffset + length && pos < characters.size; pos++) {
+      var char = characters.get(pos);
+      var _char = char,
+          marks = _char.marks;
 
-    if (type) {
-      var mark = _slate.Mark.create({ type: type });
-      for (var _i = updatedOffset; _i < updatedOffset + length && _i < characters.size; _i++) {
-        var char = characters.get(_i);
-        var _char = char,
-            marks = _char.marks;
 
-
-        marks = marks.add(mark);
-        char = char.set('marks', marks);
-        characters.set(_i, char);
-      }
-    }
-
-    if (Array.isArray(content)) {
-      addMarks(characters, content, updatedOffset);
+      marks = marks.add(mark);
+      char = char.set('marks', marks);
+      characters.set(pos, char);
     }
 
     updatedOffset += length;
@@ -25702,6 +25696,8 @@ var _markdownIt = __webpack_require__(638);
 var _markdownIt2 = _interopRequireDefault(_markdownIt);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
 var markdown = new _markdownIt2.default({
   html: false, // Enable HTML tags in source
@@ -25950,22 +25946,26 @@ function getUrlToken(_ref) {
 
   var urlContent = '(' + getAttr(tokens[num].attrs, 'href') + ')';
   var urlLength = urlContent.length;
+  var punctuation1 = {
+    type: "punctuation",
+    content: "[",
+    length: 1
+  };
+  var punctuation2 = {
+    type: "punctuation",
+    content: "]",
+    length: 1
+  };
+  var urlContentObj = {
+    type: "punctuation",
+    content: urlContent,
+    length: urlLength
+  };
+  var content = Array.isArray(intEmphasis) ? [punctuation1].concat(_toConsumableArray(intEmphasis), [punctuation2, urlContentObj]) : [punctuation1, intEmphasis, punctuation2, urlContentObj];
   return {
     type: "url",
-    content: [{
-      type: "punctuation",
-      content: "[",
-      length: 1
-    }, intEmphasis, {
-      type: "punctuation",
-      content: "]",
-      length: 1
-    }, {
-      type: "punctuation",
-      content: urlContent,
-      length: urlLength
-    }],
-    length: 1 + intEmphasis.length + 1 + urlLength
+    content: content,
+    length: Array.isArray(intEmphasis) ? getTokensLength(content) : 1 + intEmphasis.length + 1 + urlLength
   };
 }
 
@@ -26910,6 +26910,7 @@ var defaultProps = {
 };
 
 var maxHeight = 240;
+var maxItemLength = 15;
 
 var AutocompleteWidget = function (_React$Component) {
   _inherits(AutocompleteWidget, _React$Component);
@@ -26955,13 +26956,15 @@ var AutocompleteWidget = function (_React$Component) {
       if (!selection.anchorNode) {
         return;
       }
-
+      var editorWidth = _this.props.restrictorRef.offsetWidth;
+      var autocompleteWidth = _this['items-ref'].offsetWidth;
       var selectionRect = selection.getRangeAt(0).getBoundingClientRect();
       var restrictorRect = _this.props.restrictorRef.getBoundingClientRect();
       var lineHeight = selectionRect.bottom - selectionRect.top;
       var left = selectionRect.left - restrictorRect.left;
+      left = editorWidth >= left + autocompleteWidth ? left : left - autocompleteWidth;
+      left = left < 0 ? 0 : left;
       var top = selectionRect.top - restrictorRect.top + lineHeight + 4;
-
       var showToTop = top + maxHeight > restrictorRect.bottom;
 
       var position = {
@@ -27030,6 +27033,8 @@ var AutocompleteWidget = function (_React$Component) {
             }, this.props.style)
           },
           items.map(function (item, index) {
+            var itemLabel = item._objectLabel;
+            var itemLength = itemLabel.length;
             return _react2.default.createElement(
               'div',
               {
@@ -27043,9 +27048,10 @@ var AutocompleteWidget = function (_React$Component) {
                 onMouseMove: function onMouseMove() {
                   return onSelectedIndexChange(index);
                 },
-                className: '\n                  react-markdown--autocomplete-widget__item\n                  ' + (selectedIndex === index ? 'react-markdown--autocomplete-widget__item--active' : '') + '\n                '
+                className: '\n                  react-markdown--autocomplete-widget__item\n                  ' + (selectedIndex === index ? 'react-markdown--autocomplete-widget__item--active' : '') + '\n                ',
+                title: itemLength > maxItemLength ? itemLabel : ''
               },
-              item._objectLabel
+              itemLength > maxItemLength ? itemLabel.substr(0, maxItemLength) + '\u2026' : itemLabel
             );
           }),
           !items.length ? _react2.default.createElement(
