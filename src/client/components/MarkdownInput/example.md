@@ -56,6 +56,7 @@ text ```inline code``` text
 [opuscapita](https://www.opuscapita.com/)
 **[opuscapita](https://www.opuscapita.com/)**
 [**opuscapita**](https://www.opuscapita.com/)
+[**opuscapita*](https://www.opuscapita.com/)
 *[**opuscapita**](https://www.opuscapita.com/)*
 ~~[**opuscapita**](https://www.opuscapita.com/)~~
 **~~[**opuscapita**](https://www.opuscapita.com/)~~
