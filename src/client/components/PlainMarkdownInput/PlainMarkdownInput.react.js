@@ -6,6 +6,7 @@ import schema from './slate/schema';
 import shortcuts from './slate/shortcuts';
 import { hasMultiLineSelection } from './slate/transforms';
 import './PlainMarkdownInput.less';
+import { parse } from './slate/tokenizer';
 
 import {
   AutocompletePlugin,
@@ -48,9 +49,32 @@ class PlainMarkdownInput extends React.Component {
   }
 
   handleNewValue(value) {
-    this.setState({
-      editorState: Plain.deserialize(value || '')
-    });
+    let editorState = Plain.deserialize(value);
+    let nodes = editorState.document.nodes.asMutable();
+    let nodesSize = nodes.size;
+    for (let i = 0; i < nodesSize; i++) {
+      this.setDataToNode(nodes, i);
+    }
+    editorState = this.setNodesToState(editorState, nodes);
+    this.setState({ editorState });
+  }
+
+  setDataToNode(nodes, numBlock, text) {
+    const currNode = nodes.get(numBlock).asMutable();
+    text = text || currNode.nodes.get(0).text; // eslint-disable-line
+    currNode.data = {
+      text,
+      tokens: parse(text),
+    };
+    nodes.set(numBlock, currNode.asImmutable());
+  }
+
+  setNodesToState(editorState, nodes) {
+    let editorStateMutable = editorState.asMutable();
+    editorStateMutable.document = editorStateMutable.document.asMutable();
+    editorStateMutable.document.nodes = nodes.asImmutable();
+    editorStateMutable.document = editorStateMutable.document.asImmutable();
+    return editorStateMutable.asImmutable();
   }
 
   handleChange = (obj) => {
@@ -58,6 +82,22 @@ class PlainMarkdownInput extends React.Component {
     // https://github.com/ianstormtaylor/slate/blob/master/packages/slate/Changelog.md#0220--september-5-2017
     let editorState = obj.state || obj;
 
+    let numBlock = -1;
+    let key = editorState.blocks.get(0).key;
+    let nodesSize = editorState.document.nodes.size;
+    for (let i = 0; i < nodesSize; i++) {
+      if (key === editorState.document.nodes.get(i).key) {
+        numBlock = i;
+        break;
+      }
+    }
+
+    if (numBlock !== -1) {
+      let text = editorState.texts.get(0).text;
+      let nodes = editorState.document.nodes.asMutable();
+      this.setDataToNode(nodes, numBlock, text);
+      editorState = this.setNodesToState(editorState, nodes);
+    }
     this.props.onChange(Plain.serialize(editorState));
 
     this.setState({ editorState });
