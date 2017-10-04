@@ -1331,39 +1331,6 @@ describe('plain editor tokenizer', () => {
       }]);
     });
 
-    it('header-no-offset', () => {
-      expect(parse(' # h1')).to.deep.equal([{
-        "type": "header-no-offset",
-        "content": [" # h1"],
-        "length": 5
-      }]);
-      expect(parse(' ## h2')).to.deep.equal([{
-        "type": "header-no-offset",
-        "content": [" ## h2"],
-        "length": 6
-      }]);
-      expect(parse(' ### h3')).to.deep.equal([{
-        "type": "header-no-offset",
-        "content": [" ### h3"],
-        "length": 7
-      }]);
-      expect(parse(' #### h4')).to.deep.equal([{
-        "type": "header-no-offset",
-        "content": [" #### h4"],
-        "length": 8
-      }]);
-      expect(parse(' ##### h5')).to.deep.equal([{
-        "type": "header-no-offset",
-        "content": [" ##### h5"],
-        "length": 9
-      }]);
-      expect(parse(' ###### h6')).to.deep.equal([{
-        "type": "header-no-offset",
-        "content": [" ###### h6"],
-        "length": 10
-      }]);
-    });
-
     it('not headers', () => {
       expect(parse('#Header')).to.deep.equal(["#Header"]);
       expect(parse('##Header')).to.deep.equal(["##Header"]);

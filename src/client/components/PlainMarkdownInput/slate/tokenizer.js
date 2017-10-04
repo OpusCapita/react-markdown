@@ -386,10 +386,6 @@ function restoreSpaces(string, tokens) {
 
   result = /^[ ]+/.exec(string);
   if (result) {
-    if (tokens[0].type === 'header') {
-      tokens[0].type = 'header-no-offset'; // eslint-disable-line
-    }
-
     if (Array.isArray(tokens) && tokens[0] && tokens[0].content &&
       Array.isArray(tokens[0].content) && typeof tokens[0].content[0] === 'string') {
       tokens[0].content[0] = result[0] + tokens[0].content[0]; // eslint-disable-line
@@ -426,7 +422,7 @@ function processEmphasis(tokens) {
 function processInline(tokens) {
   if (tokens[0] && (tokens[0].type === 'header' ||
       tokens[0].type === 'list' || tokens[0].type === 'ordered-list' ||
-      tokens[0].type === 'header-no-offset' || tokens[0].type === 'blockquote')) {
+      tokens[0].type === 'blockquote')) {
     tokens[0].content = processEmphasis(tokens[0].content);
     tokens[0].length = getTokensLength(tokens[0].content);
     delete tokens[0].markup;
