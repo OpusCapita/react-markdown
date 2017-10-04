@@ -41,8 +41,6 @@ describe('<PlainMarkdownInput />', () => {
     const currNode = nodes.get(0).asMutable();
     expect(currNode.data.text).to.equal(nodeText);
     expect(currNode.data.tokens).to.deep.equal(parse(nodeText));
-
-    // let wrapperInstance = wrapper.instance();
   });
 
   it('should have right props after receive props', () => {
