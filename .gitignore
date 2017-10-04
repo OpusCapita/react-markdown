@@ -18,3 +18,4 @@ yarn-debug.log
 yarn-error.log
 test-results.xml
 /coverage/
+/.nyc_output
