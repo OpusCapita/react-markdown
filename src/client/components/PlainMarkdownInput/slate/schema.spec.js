@@ -147,6 +147,203 @@ describe('plain editor schema', () => {
     });
   });
 
+  it('call markdownDecorator for emphasis in url text #1)', () => {
+    const nodeText = '[*url*](uefasdfs)';
+    let component = (<PlainMarkdownInput
+      value={nodeText}
+      fullScreen={true}
+      readOnly={true}
+    />);
+
+    let wrapper = mount(component);
+    let editorState = wrapper.state('editorState');
+
+    let nodes = editorState.document.nodes.asMutable();
+    const currNode = nodes.get(0).asMutable();
+    let nodeTextArr = nodeText.split('');
+    let charactersList = nodeTextArr.map(el => getCharacter(el));
+
+    let text = getText(charactersList, nodeText, '1');
+    let characters = decorate(text, currNode);
+    let marks = [
+      [ // [
+        { "data": {}, "kind": "mark", "type": "punctuation" },
+        { "data": {}, "kind": "mark", "type": "url" },
+      ],
+      [ // *
+        { "data": {}, "kind": "mark", "type": "italic" },
+        { "data": {}, "kind": "mark", "type": "url" },
+      ],
+      [ // u
+        { "data": {}, "kind": "mark", "type": "italic" },
+        { "data": {}, "kind": "mark", "type": "url" },
+      ],
+      [ // r
+        { "data": {}, "kind": "mark", "type": "italic" },
+        { "data": {}, "kind": "mark", "type": "url" },
+      ],
+      [ // l
+        { "data": {}, "kind": "mark", "type": "italic" },
+        { "data": {}, "kind": "mark", "type": "url" },
+      ],
+      [ // *
+        { "data": {}, "kind": "mark", "type": "italic" },
+        { "data": {}, "kind": "mark", "type": "url" },
+      ],
+      [ // ]
+        { "data": {}, "kind": "mark", "type": "punctuation" },
+        { "data": {}, "kind": "mark", "type": "url" },
+      ],
+      [ // (
+        { "data": {}, "kind": "mark", "type": "punctuation" },
+        { "data": {}, "kind": "mark", "type": "url" },
+      ],
+      [ // u
+        { "data": {}, "kind": "mark", "type": "punctuation" },
+        { "data": {}, "kind": "mark", "type": "url" },
+      ],
+      [ // e
+        { "data": {}, "kind": "mark", "type": "punctuation" },
+        { "data": {}, "kind": "mark", "type": "url" },
+      ],
+      [ // f
+        { "data": {}, "kind": "mark", "type": "punctuation" },
+        { "data": {}, "kind": "mark", "type": "url" },
+      ],
+      [ // a
+        { "data": {}, "kind": "mark", "type": "punctuation" },
+        { "data": {}, "kind": "mark", "type": "url" },
+      ],
+      [ // s
+        { "data": {}, "kind": "mark", "type": "punctuation" },
+        { "data": {}, "kind": "mark", "type": "url" },
+      ],
+      [ // d
+        { "data": {}, "kind": "mark", "type": "punctuation" },
+        { "data": {}, "kind": "mark", "type": "url" },
+      ],
+      [ // f
+        { "data": {}, "kind": "mark", "type": "punctuation" },
+        { "data": {}, "kind": "mark", "type": "url" },
+      ],
+      [ // s
+        { "data": {}, "kind": "mark", "type": "punctuation" },
+        { "data": {}, "kind": "mark", "type": "url" },
+      ],
+      [ // )
+        { "data": {}, "kind": "mark", "type": "punctuation" },
+        { "data": {}, "kind": "mark", "type": "url" },
+      ],
+    ];
+    nodeTextArr.forEach((el, ind) => {
+      expect(characters.get(ind).toJSON()).to.deep.equal({
+        "kind": "character",
+        "marks": marks[ind],
+        "text": el
+      });
+    });
+  });
+
+  it('call markdownDecorator for emphasis in url text #2)', () => {
+    const nodeText = '[**url*](uefasdfs)';
+    let component = (<PlainMarkdownInput
+      value={nodeText}
+      fullScreen={true}
+      readOnly={true}
+    />);
+
+    let wrapper = mount(component);
+    let editorState = wrapper.state('editorState');
+
+    let nodes = editorState.document.nodes.asMutable();
+    const currNode = nodes.get(0).asMutable();
+    let nodeTextArr = nodeText.split('');
+    let charactersList = nodeTextArr.map(el => getCharacter(el));
+
+    let text = getText(charactersList, nodeText, '1');
+    let characters = decorate(text, currNode);
+    let marks = [
+      [ // [
+        { "data": {}, "kind": "mark", "type": "punctuation" },
+        { "data": {}, "kind": "mark", "type": "url" },
+      ],
+      [ // *
+        { "data": {}, "kind": "mark", "type": "url" },
+      ],
+      [ // *
+        { "data": {}, "kind": "mark", "type": "italic" },
+        { "data": {}, "kind": "mark", "type": "url" },
+      ],
+      [ // u
+        { "data": {}, "kind": "mark", "type": "italic" },
+        { "data": {}, "kind": "mark", "type": "url" },
+      ],
+      [ // r
+        { "data": {}, "kind": "mark", "type": "italic" },
+        { "data": {}, "kind": "mark", "type": "url" },
+      ],
+      [ // l
+        { "data": {}, "kind": "mark", "type": "italic" },
+        { "data": {}, "kind": "mark", "type": "url" },
+      ],
+      [ // *
+        { "data": {}, "kind": "mark", "type": "italic" },
+        { "data": {}, "kind": "mark", "type": "url" },
+      ],
+      [ // ]
+        { "data": {}, "kind": "mark", "type": "punctuation" },
+        { "data": {}, "kind": "mark", "type": "url" },
+      ],
+      [ // (
+        { "data": {}, "kind": "mark", "type": "punctuation" },
+        { "data": {}, "kind": "mark", "type": "url" },
+      ],
+      [ // u
+        { "data": {}, "kind": "mark", "type": "punctuation" },
+        { "data": {}, "kind": "mark", "type": "url" },
+      ],
+      [ // e
+        { "data": {}, "kind": "mark", "type": "punctuation" },
+        { "data": {}, "kind": "mark", "type": "url" },
+      ],
+      [ // f
+        { "data": {}, "kind": "mark", "type": "punctuation" },
+        { "data": {}, "kind": "mark", "type": "url" },
+      ],
+      [ // a
+        { "data": {}, "kind": "mark", "type": "punctuation" },
+        { "data": {}, "kind": "mark", "type": "url" },
+      ],
+      [ // s
+        { "data": {}, "kind": "mark", "type": "punctuation" },
+        { "data": {}, "kind": "mark", "type": "url" },
+      ],
+      [ // d
+        { "data": {}, "kind": "mark", "type": "punctuation" },
+        { "data": {}, "kind": "mark", "type": "url" },
+      ],
+      [ // f
+        { "data": {}, "kind": "mark", "type": "punctuation" },
+        { "data": {}, "kind": "mark", "type": "url" },
+      ],
+      [ // s
+        { "data": {}, "kind": "mark", "type": "punctuation" },
+        { "data": {}, "kind": "mark", "type": "url" },
+      ],
+      [ // )
+        { "data": {}, "kind": "mark", "type": "punctuation" },
+        { "data": {}, "kind": "mark", "type": "url" },
+      ],
+    ];
+    nodeTextArr.forEach((el, ind) => {
+      expect(characters.get(ind).toJSON()).to.deep.equal({
+        "kind": "character",
+        "marks": marks[ind],
+        "text": el
+      });
+    });
+  });
+
   it('call rendererComponent() for props.node.type === `line`', () => {
     const children = '**bold**';
     const props = {

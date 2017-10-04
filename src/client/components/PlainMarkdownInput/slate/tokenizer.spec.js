@@ -1111,6 +1111,22 @@ describe('plain editor tokenizer', () => {
       }]);
     });
 
+    it('[**opuscapita*](https://www.opuscapita.com/)', () => {
+      expect(parse('[**opuscapita*](https://www.opuscapita.com/)')).to.deep.equal([{
+        "type": "url",
+        "content": [{ "type": "punctuation", "content": "[", "length": 1 }, '*', {
+          "type": "italic",
+          "content": ["*opuscapita*"],
+          "length": 12
+        }, { "type": "punctuation", "content": "]", "length": 1 }, {
+          "type": "punctuation",
+          "content": "(https://www.opuscapita.com/)",
+          "length": 29
+        }],
+        "length": 44
+      }]);
+    });
+
     it('[__opuscapita__](https://www.opuscapita.com/)', () => {
       expect(parse('[__opuscapita__](https://www.opuscapita.com/)')).to.deep.equal([{
         "type": "url",

@@ -246,27 +246,28 @@ function getOneEmphasis(tokens, startPos, closePos) {
 function getUrlToken({ tokens, intEmphasis, num }) {
   let urlContent = `(${getAttr(tokens[num].attrs, 'href')})`;
   const urlLength = urlContent.length;
+  const punctuation1 = {
+    type: "punctuation",
+    content: "[",
+    length: 1
+  };
+  const punctuation2 = {
+    type: "punctuation",
+    content: "]",
+    length: 1
+  };
+  const urlContentObj = {
+    type: "punctuation",
+    content: urlContent,
+    length: urlLength
+  };
+  let content = Array.isArray(intEmphasis) ?
+    [punctuation1, ...intEmphasis, punctuation2, urlContentObj] :
+    [punctuation1, intEmphasis, punctuation2, urlContentObj];
   return {
     type: "url",
-    content: [
-      {
-        type: "punctuation",
-        content: "[",
-        length: 1
-      },
-      intEmphasis,
-      {
-        type: "punctuation",
-        content: "]",
-        length: 1
-      },
-      {
-        type: "punctuation",
-        content: urlContent,
-        length: urlLength
-      }
-    ],
-    length: 1 + intEmphasis.length + 1 + urlLength
+    content,
+    length: Array.isArray(intEmphasis) ? getTokensLength(content) : 1 + intEmphasis.length + 1 + urlLength
   };
 }
 
