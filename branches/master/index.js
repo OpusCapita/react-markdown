@@ -18640,6 +18640,32 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+function getCopyText(state) {
+  var startKey = state.startKey,
+      startOffset = state.startOffset,
+      endKey = state.endKey,
+      endOffset = state.endOffset,
+      texts = state.texts;
+
+  var resText = void 0;
+
+  if (startKey === endKey) {
+    resText = texts.get(0).text.slice(startOffset, endOffset);
+  } else {
+    var resTextArr = texts.map(function (el, ind) {
+      if (ind === 0) {
+        return el.text.slice(startOffset);
+      } else if (ind === texts.size - 1) {
+        return el.text.slice(0, endOffset);
+      } else {
+        return el.text;
+      }
+    });
+    resText = resTextArr.join('\n');
+  }
+  return resText;
+}
+
 var PlainMarkdownInput = function (_React$Component) {
   _inherits(PlainMarkdownInput, _React$Component);
 
@@ -18742,6 +18768,20 @@ var PlainMarkdownInput = function (_React$Component) {
       return (0, _shortcuts2.default)(event, data, state);
     }
   }, {
+    key: 'handleCopy',
+    value: function handleCopy(event, data, change) {
+      event.preventDefault();
+      var state = change.state;
+
+      var resText = getCopyText(state);
+      if (window.clipboardData) {
+        window.clipboardData.setData("Text", resText);
+      } else {
+        event.clipboardData.setData('text/plain', resText);
+      }
+      return change;
+    }
+  }, {
     key: 'render',
     value: function render() {
       var _state = this.state,
@@ -18768,6 +18808,7 @@ var PlainMarkdownInput = function (_React$Component) {
           fullScreen: fullScreen,
           schema: _schema2.default,
           onChange: this.handleChange,
+          onCopy: this.handleCopy,
           plugins: [(0, _plugins.AutocompletePlugin)({ extensions: extensions, onChange: this.handleChange })],
           readOnly: readOnly
         },
@@ -19292,20 +19333,6 @@ function processEmphasis(tokens) {
   return parseEmphasis(joinArrString(tokens));
 }
 
-/* eslint-disable */
-function processInline(tokens) {
-  if (tokens[0] && (tokens[0].type === 'header' || tokens[0].type === 'list' || tokens[0].type === 'ordered-list' || tokens[0].type === 'blockquote')) {
-    tokens[0].content = processEmphasis(tokens[0].content);
-    tokens[0].length = getTokensLength(tokens[0].content);
-    delete tokens[0].markup;
-  } else if (Array.isArray(tokens)) {
-    tokens = processEmphasis(tokens);
-  }
-
-  return tokens;
-}
-/* eslint-enable */
-
 function processBlockTokens(tokens) {
   var tokensLen = tokens.length;
 
@@ -19341,6 +19368,20 @@ function processBlockTokens(tokens) {
 
   return tokens;
 }
+
+/* eslint-disable */
+function processInline(tokens) {
+  if (tokens[0] && (tokens[0].type === 'header' || tokens[0].type === 'list' || tokens[0].type === 'ordered-list' || tokens[0].type === 'blockquote')) {
+    tokens[0].content = processEmphasis(tokens[0].content);
+    tokens[0].length = getTokensLength(tokens[0].content);
+    delete tokens[0].markup;
+  } else if (Array.isArray(tokens)) {
+    tokens = processEmphasis(tokens);
+  }
+
+  return tokens;
+}
+/* eslint-enable */
 
 var parse = exports.parse = function parse(string) {
   var tokens = markdown.parse(string, {});
@@ -26223,6 +26264,7 @@ var SlateEditor = function (_React$Component) {
           state = _props.state,
           schema = _props.schema,
           onChange = _props.onChange,
+          onCopy = _props.onCopy,
           fullScreen = _props.fullScreen,
           readOnly = _props.readOnly;
 
@@ -26231,7 +26273,7 @@ var SlateEditor = function (_React$Component) {
         {
           className: (0, _classnames2.default)('react-markdown--slate-editor', { 'react-markdown--slate-editor--fulscreen': fullScreen })
         },
-        _Utils2.default.cloneElement(children, { plugins: plugins, state: state, schema: schema, onChange: onChange, readOnly: readOnly })
+        _Utils2.default.cloneElement(children, { plugins: plugins, state: state, schema: schema, onChange: onChange, onCopy: onCopy, readOnly: readOnly })
       );
     }
   }]);
@@ -26244,6 +26286,7 @@ SlateEditor.propTypes = {
   state: _propTypes2.default.any,
   schema: _propTypes2.default.object,
   onChange: _propTypes2.default.func,
+  onCopy: _propTypes2.default.func,
   fullScreen: _propTypes2.default.bool,
   readOnly: _propTypes2.default.bool
 };
