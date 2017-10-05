@@ -8,6 +8,7 @@ import { hasMultiLineSelection } from './slate/transforms';
 import './PlainMarkdownInput.less';
 import { parse } from './slate/tokenizer';
 
+
 import {
   AutocompletePlugin,
   ObjectReferenceButton

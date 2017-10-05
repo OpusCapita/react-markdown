@@ -9,22 +9,33 @@ import {
   wrapStrikethroughMarkdown,
   unwrapStrikethroughMarkdown,
 } from './transforms';
+import { getSlateEditor } from '../../SlateEditor/Utils';
 
-import hasUnorderedListMarkdown from './transforms';
-import hasOrderedListMarkdown from './transforms';
+// this code will use in tomorrow
+// import hasUnorderedListMarkdown from './transforms';
+// import hasOrderedListMarkdown from './transforms';
 
-const emptyListItem = /^[0-9]+\.\s$/;
-const numbersFromListItem = /^[0-9]+/;
+// const emptyListItem = /^[0-9]+\.\s$/;
+// const numbersFromListItem = /^[0-9]+/;
+
+const scrollAmount = 40;
 
 /**
  * Create new list item block, when the cursor move to a next line
  */
-const splitListBlocksAutoHandler = (event, data, state, editor) => {
+// const enterKeyDownHandler = (event, data, state, editor) => {
+const enterKeyDownHandler = (event) => {
   if (event.keyCode === 13) {
+    let selection = window.getSelection();
+    let offsetTop = selection.anchorNode.parentNode.offsetTop;
 
+    let editor = getSlateEditor(selection);
 
-    console.log(event);
+    if (editor.scrollTop + editor.offsetHeight < offsetTop + scrollAmount) {
+      editor.scrollTop = offsetTop - editor.offsetHeight + scrollAmount;
+    }
 
+    // this code will use in tomorrow
     // if (hasUnorderedListMarkdown(state)) {
     //   event.preventDefault();
     //
@@ -57,8 +68,10 @@ const splitListBlocksAutoHandler = (event, data, state, editor) => {
   return undefined;
 };
 
-export default (event, data, state, editor) => {
-  const result = splitListBlocksAutoHandler(event, data, state, editor);
+// export default (event, data, state, editor) => { // eslint-disable-line
+export default (event, data, state) => { // eslint-disable-line
+  // const result = enterKeyDownHandler(event, data, state, editor);
+  const result = enterKeyDownHandler(event);
 
   if (result) {
     return result;
