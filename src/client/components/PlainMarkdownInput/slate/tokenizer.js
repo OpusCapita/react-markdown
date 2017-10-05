@@ -418,22 +418,6 @@ function processEmphasis(tokens) {
   return parseEmphasis(joinArrString(tokens));
 }
 
-/* eslint-disable */
-function processInline(tokens) {
-  if (tokens[0] && (tokens[0].type === 'header' ||
-      tokens[0].type === 'list' || tokens[0].type === 'ordered-list' ||
-      tokens[0].type === 'blockquote')) {
-    tokens[0].content = processEmphasis(tokens[0].content);
-    tokens[0].length = getTokensLength(tokens[0].content);
-    delete tokens[0].markup;
-  } else if (Array.isArray(tokens)) {
-    tokens = processEmphasis(tokens);
-  }
-
-  return tokens;
-}
-/* eslint-enable */
-
 function processBlockTokens(tokens) {
   let tokensLen = tokens.length;
 
@@ -469,6 +453,22 @@ function processBlockTokens(tokens) {
 
   return tokens;
 }
+
+/* eslint-disable */
+function processInline(tokens) {
+  if (tokens[0] && (tokens[0].type === 'header' ||
+      tokens[0].type === 'list' || tokens[0].type === 'ordered-list' ||
+      tokens[0].type === 'blockquote')) {
+    tokens[0].content = processEmphasis(tokens[0].content);
+    tokens[0].length = getTokensLength(tokens[0].content);
+    delete tokens[0].markup;
+  } else if (Array.isArray(tokens)) {
+    tokens = processEmphasis(tokens);
+  }
+
+  return tokens;
+}
+/* eslint-enable */
 
 export const parse = function(string) {
   let tokens = markdown.parse(string, {});
