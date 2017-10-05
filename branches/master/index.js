@@ -33192,7 +33192,7 @@ exports = module.exports = __webpack_require__(34)();
 
 
 // module
-exports.push([module.i, ".oc-md-hl-header {\n  font-weight: bold;\n  display: inline;\n}\n.oc-md-hl-code {\n  position: relative;\n  display: -webkit-inline-box;\n  display: -ms-inline-flexbox;\n  display: inline-flex;\n  background-color: #f5f5f5;\n}\n.oc-md-hl-url {\n  display: inline;\n}\n.oc-md-hl-bold {\n  font-weight: bold;\n}\n.oc-md-hl-italic {\n  font-style: italic;\n}\n.oc-md-hl-punctuation {\n  display: inline;\n  color: #777;\n}\n.oc-md-hl-blockquote {\n  display: inline;\n}\n.oc-md-hl-hr {\n  display: inline-block;\n}\n.oc-md-hl-strikethrough {\n  text-decoration: line-through;\n}\n", ""]);
+exports.push([module.i, ".oc-md-hl-header {\n  font-weight: bold;\n}\n.oc-md-hl-code {\n  background-color: #f5f5f5;\n}\n.oc-md-hl-bold {\n  font-weight: bold;\n}\n.oc-md-hl-italic {\n  font-style: italic;\n}\n.oc-md-hl-punctuation {\n  color: #777;\n}\n.oc-md-hl-strikethrough {\n  text-decoration: line-through;\n}\n", ""]);
 
 // exports
 
