@@ -116,6 +116,31 @@ class PlainMarkdownInput extends React.Component {
     return shortcuts(event, data, state);
   }
 
+  handleCopy(event, data, change) {
+    event.preventDefault();
+    const { state } = change;
+    const { startKey, startOffset, endKey, endOffset, texts } = state;
+    let resText;
+
+    if (startKey === endKey) {
+      resText = texts.get(0).text.slice(startOffset, endOffset);
+    } else {
+      let resTextArr = texts.map((el, ind) => {
+        if (ind === 0) {
+          return el.text.slice(startOffset);
+        } else if (ind === texts.size - 1) {
+          return el.text.slice(0, endOffset);
+        } else {
+          return el.text;
+        }
+      })/*.map(el => JSON.stringify(el).slice(1, -1))*/;
+      resText = resTextArr.join('');
+    }
+    event.clipboardData.setData('text/plain', resText);
+    console.log(resText);
+    return change;
+  }
+
   render() {
     const { editorState, fullScreen } = this.state;
     const { children, extensions, readOnly } = this.props;
@@ -136,6 +161,7 @@ class PlainMarkdownInput extends React.Component {
         fullScreen={fullScreen}
         schema={schema}
         onChange={this.handleChange}
+        onCopy={this.handleCopy}
         plugins={[
           AutocompletePlugin({ extensions: extensions, onChange: this.handleChange })
         ]}

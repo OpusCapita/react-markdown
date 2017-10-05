@@ -38,9 +38,9 @@ function markdownDecorator(text, block) {
     return text.charsData.characters;
   }
   if (block.data) {
-    if (block.data.text !== text.text) {
-      block.data.text = text.text;
-      block.data.tokens = parse(text.text);
+    if (block.data.text !== text.text) { // when several lines are inserted
+      block.data.text = text.text; // eslint-disable-line
+      block.data.tokens = parse(text.text); // eslint-disable-line
     }
 
     let characters = text.characters.asMutable();
