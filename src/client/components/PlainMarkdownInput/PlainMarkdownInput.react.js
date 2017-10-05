@@ -133,8 +133,8 @@ class PlainMarkdownInput extends React.Component {
     this.props.onFullScreen(fullScreen);
   };
 
-  onKeyDown(event, data, state) {
-    return shortcuts(event, data, state);
+  handleKeyDown(event, data, state, editor) {
+    return shortcuts(event, data, state, editor);
   }
 
   handleCopy(event, data, change) {
@@ -170,6 +170,7 @@ class PlainMarkdownInput extends React.Component {
         schema={schema}
         onChange={this.handleChange}
         onCopy={this.handleCopy}
+        onKeyDown={this.handleKeyDown}
         plugins={[
           AutocompletePlugin({ extensions: extensions, onChange: this.handleChange })
         ]}
