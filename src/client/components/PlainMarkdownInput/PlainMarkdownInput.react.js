@@ -133,11 +133,10 @@ class PlainMarkdownInput extends React.Component {
         } else {
           return el.text;
         }
-      })/*.map(el => JSON.stringify(el).slice(1, -1))*/;
-      resText = resTextArr.join('');
+      });
+      resText = resTextArr.join('\n');
     }
     event.clipboardData.setData('text/plain', resText);
-    console.log(resText);
     return change;
   }
 
