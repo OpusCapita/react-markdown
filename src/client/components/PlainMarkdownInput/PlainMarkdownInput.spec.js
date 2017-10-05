@@ -1,11 +1,30 @@
 import React from 'react';
 import { expect } from 'chai';
 import { mount } from 'enzyme';
+import sinon from 'sinon';
 import PlainMarkdownInput from '.';
 import { parse } from './slate/tokenizer';
+import { List } from 'immutable';
 
 
 describe('<PlainMarkdownInput />', () => {
+  const nodeText = `###### h6
+
+ # h1
+ ## h2
+ ### h3
+ #### h4
+ ##### h5
+ ###### h6
+
+# header *italic*
+## header *italic*
+### header *italic*
+#### header *italic*
+##### header *italic*
+###### header *italic*
+`;
+
   before(() => {
     window.getSelection = function() {
       return { anchorNode: null };
@@ -124,5 +143,160 @@ describe('<PlainMarkdownInput />', () => {
     wrapperInstance.handleFullScreen();
     fullScreen = wrapper.state('fullScreen');
     expect(fullScreen).to.equal(false);
+  });
+
+  describe.skip('_getCopyText(state)', () => {
+    it('singleline text', () => {
+      let component = (<PlainMarkdownInput
+        value={nodeText}
+      />);
+      let wrapper = mount(component);
+      let wrapperInstance = wrapper.instance();
+      const state = {
+        startKey: '018',
+        endKey: '018',
+        startOffset: 0,
+        endOffset: 17,
+        texts: List([{ text: '# header *italic*' }])
+      };
+      const resText = wrapperInstance._getCopyText(state);
+      const pattern = `# header *italic*`;
+      expect(resText).to.equal(pattern);
+    });
+
+    it('line`s part', () => {
+      let component = (<PlainMarkdownInput
+        value={nodeText}
+      />);
+      let wrapper = mount(component);
+      let wrapperInstance = wrapper.instance();
+      const state = {
+        startKey: '018',
+        endKey: '018',
+        startOffset: 2,
+        endOffset: 10,
+        texts: List([{ text: '# header *italic*' }])
+      };
+      const resText = wrapperInstance._getCopyText(state);
+      const pattern = `header *`;
+      expect(resText).to.equal(pattern);
+    });
+
+    it('multiline text', () => {
+      let component = (<PlainMarkdownInput
+        value={nodeText}
+      />);
+      let wrapper = mount(component);
+      let wrapperInstance = wrapper.instance();
+      const state = {
+        startKey: '018',
+        endKey: '028',
+        startOffset: 2,
+        endOffset: 6,
+        texts: List([
+          { text: '# header *italic*' },
+          { text: '## header *italic*' },
+          { text: '### header *italic*' },
+          { text: '#### header *italic*' },
+          { text: '##### header *italic*' },
+          { text: '###### header *italic*' }
+        ])
+      };
+      const resText = wrapperInstance._getCopyText(state);
+      const pattern = `header *italic*
+## header *italic*
+### header *italic*
+#### header *italic*
+##### header *italic*
+######`;
+      expect(resText).to.equal(pattern);
+    });
+  });
+
+  describe('handleCopy(event, data, change)', () => {
+    let event;
+    beforeEach(() => {
+      event = {
+        preventDefault() {},
+        clipboardData: {
+          setData: sinon.spy()
+        }
+      }
+    });
+
+    it('line`s part', () => {
+      let component = (<PlainMarkdownInput
+        value={nodeText}
+      />);
+      let wrapper = mount(component);
+      let wrapperInstance = wrapper.instance();
+      const state = {
+        startKey: '018',
+        endKey: '018',
+        startOffset: 2,
+        endOffset: 10,
+        texts: List([{ text: '# header *italic*' }])
+      };
+      const change = wrapperInstance.handleCopy(event, {}, { state });
+      const changePattern = { state };
+      const pattern = `header *`;
+      expect(change).to.deep.equal(changePattern);
+      expect(event.clipboardData.setData.callCount).to.equal(1);
+      expect(event.clipboardData.setData.calledWith('text/plain', pattern)).to.equal(true);
+    });
+
+    it('single line', () => {
+      let component = (<PlainMarkdownInput
+        value={nodeText}
+      />);
+      let wrapper = mount(component);
+      let wrapperInstance = wrapper.instance();
+      const state = {
+        startKey: '018',
+        endKey: '018',
+        startOffset: 0,
+        endOffset: 17,
+        texts: List([{ text: '# header *italic*' }])
+      };
+      const change = wrapperInstance.handleCopy(event, {}, { state });
+      const changePattern = { state };
+      const pattern = `# header *italic*`;
+      expect(change).to.deep.equal(changePattern);
+      expect(event.clipboardData.setData.callCount).to.equal(1);
+      expect(event.clipboardData.setData.calledWith('text/plain', pattern)).to.equal(true);
+    });
+
+    it('multiline text', () => {
+      let component = (<PlainMarkdownInput
+        value={nodeText}
+      />);
+      let wrapper = mount(component);
+      let wrapperInstance = wrapper.instance();
+      const state = {
+        startKey: '018',
+        endKey: '028',
+        startOffset: 2,
+        endOffset: 6,
+        texts: List([
+          { text: '# header *italic*' },
+          { text: '## header *italic*' },
+          { text: '### header *italic*' },
+          { text: '#### header *italic*' },
+          { text: '##### header *italic*' },
+          { text: '###### header *italic*' }
+        ])
+      };
+      const change = wrapperInstance.handleCopy(event, {}, { state });
+      const changePattern = { state };
+      const pattern = `header *italic*
+## header *italic*
+### header *italic*
+#### header *italic*
+##### header *italic*
+######`;
+      expect(change).to.deep.equal(changePattern);
+      expect(event.clipboardData.setData.callCount).to.equal(1);
+      expect(event.clipboardData.setData.calledWith('text/plain', pattern)).to.equal(true);
+    });
   });
 });

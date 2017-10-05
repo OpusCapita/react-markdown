@@ -91,7 +91,7 @@ describe('plain editor schema', () => {
     });
   });
 
-  it('call markdownDecorator for block without data.text', () => {
+  it('call markdownDecorator for block without data.text #1', () => {
     const nodeText = '# Header1';
     let component = (<PlainMarkdownInput
       value={nodeText}
@@ -115,6 +115,38 @@ describe('plain editor schema', () => {
       expect(characters.get(ind).toJSON()).to.deep.equal({
         "kind": "character",
         "marks": [],
+        "text": el
+      });
+    });
+  });
+
+  it('call markdownDecorator for block without data.text #2 (use after paste multiline text', () => {
+    const nodeText = '# Header1';
+    let component = (<PlainMarkdownInput
+      value={nodeText}
+      fullScreen={true}
+      readOnly={true}
+    />);
+
+    let wrapper = mount(component);
+    let editorState = wrapper.state('editorState');
+
+    let nodes = editorState.document.nodes.asMutable();
+    const currNode = nodes.get(0).asMutable();
+    currNode.data = {
+      text: '',
+      tokens: []
+    };
+
+    let nodeTextArr = nodeText.split('');
+    let charactersList = nodeTextArr.map(el => getCharacter(el));
+
+    let text = getText(charactersList, nodeText, '1');
+    let characters = decorate(text, currNode);
+    nodeTextArr.forEach((el, ind) => {
+      expect(characters.get(ind).toJSON()).to.deep.equal({
+        "kind": "character",
+        "marks": [{ "data": {}, "kind": "mark", "type": "header" }],
         "text": el
       });
     });
