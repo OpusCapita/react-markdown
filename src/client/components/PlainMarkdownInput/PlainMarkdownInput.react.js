@@ -31,6 +31,27 @@ import {
 import { SlateContent, SlateEditor, SlateToolbar, SlateToolbarGroup } from '../SlateEditor';
 import Plain from 'slate-plain-serializer';
 
+function getCopyText(state) {
+  const { startKey, startOffset, endKey, endOffset, texts } = state;
+  let resText;
+
+  if (startKey === endKey) {
+    resText = texts.get(0).text.slice(startOffset, endOffset);
+  } else {
+    let resTextArr = texts.map((el, ind) => {
+      if (ind === 0) {
+        return el.text.slice(startOffset);
+      } else if (ind === texts.size - 1) {
+        return el.text.slice(0, endOffset);
+      } else {
+        return el.text;
+      }
+    });
+    resText = resTextArr.join('\n');
+  }
+  return resText;
+}
+
 class PlainMarkdownInput extends React.Component {
   state = {
     editorState: '',
@@ -116,32 +137,15 @@ class PlainMarkdownInput extends React.Component {
     return shortcuts(event, data, state);
   }
 
-  _getCopyText(state) {
-    const { startKey, startOffset, endKey, endOffset, texts } = state;
-    let resText;
-
-    if (startKey === endKey) {
-      resText = texts.get(0).text.slice(startOffset, endOffset);
-    } else {
-      let resTextArr = texts.map((el, ind) => {
-        if (ind === 0) {
-          return el.text.slice(startOffset);
-        } else if (ind === texts.size - 1) {
-          return el.text.slice(0, endOffset);
-        } else {
-          return el.text;
-        }
-      });
-      resText = resTextArr.join('\n');
-    }
-    return resText;
-  }
-
   handleCopy(event, data, change) {
     event.preventDefault();
     const { state } = change;
-    const resText = this._getCopyText(state);
-    event.clipboardData.setData('text/plain', resText);
+    const resText = getCopyText(state);
+    if (window.clipboardData) {
+      window.clipboardData.setData("Text", resText);
+    } else {
+      event.clipboardData.setData('text/plain', resText);
+    }
     return change;
   }
 
