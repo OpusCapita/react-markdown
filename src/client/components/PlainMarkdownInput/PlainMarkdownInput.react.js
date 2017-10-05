@@ -116,9 +116,7 @@ class PlainMarkdownInput extends React.Component {
     return shortcuts(event, data, state);
   }
 
-  handleCopy(event, data, change) {
-    event.preventDefault();
-    const { state } = change;
+  _getCopyText(state) {
     const { startKey, startOffset, endKey, endOffset, texts } = state;
     let resText;
 
@@ -136,6 +134,13 @@ class PlainMarkdownInput extends React.Component {
       });
       resText = resTextArr.join('\n');
     }
+    return resText;
+  }
+
+  handleCopy(event, data, change) {
+    event.preventDefault();
+    const { state } = change;
+    const resText = this._getCopyText(state);
     event.clipboardData.setData('text/plain', resText);
     return change;
   }
