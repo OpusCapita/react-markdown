@@ -2,6 +2,7 @@ import React from 'react';
 import Types from 'prop-types';
 
 import AutocompleteWidget from './AutocompleteWidget';
+import { getSlateEditor } from '../../../PlainMarkdownInput/Utils';
 
 const escapeCode = 27;
 const arrowUpCode = 38;
@@ -155,11 +156,19 @@ class AutocompleteContainer extends React.Component {
 
   handleRef = (ref) => {
     this.setState({ ref });
-  }
+  };
 
   render() {
     const { show, selectedIndex, items, isLoading, isMouseIndexSelected, ref } = this.state;
     const { children, state } = this.props;
+
+    let selection = window.getSelection();
+    if (selection.anchorNode) {
+      let slateEditor = getSlateEditor(selection);
+      if (slateEditor && !show) {
+        slateEditor.style.overflow = 'auto';
+      }
+    }
 
     return (
       <div
