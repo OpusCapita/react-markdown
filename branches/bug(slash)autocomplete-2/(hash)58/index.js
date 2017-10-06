@@ -26974,11 +26974,13 @@ var AutocompleteWidget = function (_React$Component) {
       slateEditor.style.overflow = 'hidden';
 
       var showToTop = slateEditor.scrollTop + slateEditor.offsetHeight < offsetTop + autocompleteHeight;
-
+      if (showToTop) {
+        top -= autocompleteHeight + lineHeight;
+        top = top < 0 ? 0 : top;
+      }
       var position = {
         left: left + 'px',
-        top: (showToTop ? top - lineHeight : top) + 'px',
-        transform: '' + (showToTop ? 'translateY(-100%)' : '')
+        top: top + 'px'
       };
 
       var positionChanged = _this.state.left !== position.left || _this.state.top !== position.top;
