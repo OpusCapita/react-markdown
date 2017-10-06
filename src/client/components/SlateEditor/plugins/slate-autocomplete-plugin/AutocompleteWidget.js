@@ -88,11 +88,13 @@ class AutocompleteWidget extends React.Component {
     slateEditor.style.overflow = 'hidden';
 
     let showToTop = slateEditor.scrollTop + slateEditor.offsetHeight < offsetTop + autocompleteHeight;
-
+    if (showToTop) {
+      top -= autocompleteHeight + lineHeight;
+      top = top < 0 ? 0 : top;
+    }
     let position = {
       left: `${left}px`,
-      top: `${showToTop ? top - lineHeight : top}px`,
-      transform: `${showToTop ? 'translateY(-100%)' : ''}`
+      top: `${top}px`
     };
 
     let positionChanged = (this.state.left !== position.left) || (this.state.top !== position.top);
