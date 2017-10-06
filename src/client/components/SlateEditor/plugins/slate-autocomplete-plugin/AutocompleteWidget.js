@@ -69,7 +69,9 @@ class AutocompleteWidget extends React.Component {
       return;
     }
     let editorWidth = this.props.restrictorRef.offsetWidth;
+    let editorHeight = this.props.restrictorRef.offsetHeight;
     let autocompleteWidth = this['items-ref'].offsetWidth;
+    let autocompleteHeight = this['items-ref'].offsetHeight;
     let selectionRect = selection.getRangeAt(0).getBoundingClientRect();
     let restrictorRect = this.props.restrictorRef.getBoundingClientRect();
     let lineHeight = selectionRect.bottom - selectionRect.top;
@@ -77,11 +79,16 @@ class AutocompleteWidget extends React.Component {
     left = editorWidth >= left + autocompleteWidth ? left : left - autocompleteWidth;
     left = left < 0 ? 0 : left;
     let top = selectionRect.top - restrictorRect.top + lineHeight + 4;
+    // top = editorHeight >= top + autocompleteHeight ? top : top - autocompleteHeight - 20;
+    // top = top < 0 ? 0 : top;
+
+
     let showToTop = (top + maxHeight) > restrictorRect.bottom;
 
     let position = {
       left: `${left}px`,
-      top: `${showToTop ? top - lineHeight : top}px`,
+      top: `${top}px`,
+      // top: `${showToTop ? top - lineHeight : top}px`,
       transform: `${showToTop ? 'translateY(-100%)' : ''}`
     };
 
