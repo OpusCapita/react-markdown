@@ -9,25 +9,8 @@ import {
   wrapStrikethroughMarkdown,
   unwrapStrikethroughMarkdown,
 } from './transforms';
-import { autoScrollToTop } from '../Utils';
-
-/**
- * Create new list item block, when the cursor move to a next line
- */
-const enterKeyDownHandler = (event) => {
-  if (event.keyCode === 13) {
-    autoScrollToTop();
-  }
-
-  return undefined;
-};
 
 export default (event, data, state) => {
-  const result = enterKeyDownHandler(event);
-
-  if (result) {
-    return result;
-  }
   // is ctrl
   if (data.isMod) {
     if (data.key === 'b') {

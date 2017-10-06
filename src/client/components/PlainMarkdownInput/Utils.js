@@ -1,4 +1,4 @@
-const scrollAmount = 40;
+const scrollAmount = 20;
 
 export const getClosestElemFromClass = (elem, className) => {
   if (!elem.parentElement) {

@@ -16,7 +16,6 @@ class SlateEditor extends React.Component {
       onCopy,
       onCut,
       onKeyDown,
-      // onPaste,
       fullScreen,
       readOnly
     } = this.props;
@@ -35,7 +34,6 @@ class SlateEditor extends React.Component {
           onCopy,
           onCut,
           onKeyDown,
-          // onPaste,
           readOnly
         })}
       </div>
@@ -51,7 +49,6 @@ SlateEditor.propTypes = {
   onCopy: Types.func,
   onCut: Types.func,
   onKeyDown: Types.func,
-  // onPaste: Types.func,
   fullScreen: Types.bool,
   readOnly: Types.bool
 };

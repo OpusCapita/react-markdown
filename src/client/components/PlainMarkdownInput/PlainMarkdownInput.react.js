@@ -9,7 +9,6 @@ import './PlainMarkdownInput.less';
 import { parse } from './slate/tokenizer';
 import { autoScrollToTop } from './Utils';
 
-
 import {
   AutocompletePlugin,
   ObjectReferenceButton
@@ -135,6 +134,10 @@ class PlainMarkdownInput extends React.Component {
     this.props.onChange(Plain.serialize(editorState));
 
     this.setState({ editorState });
+
+    setTimeout(() => {
+      autoScrollToTop();
+    }, 0);
   };
 
   handleFullScreen = () => {
@@ -155,19 +158,11 @@ class PlainMarkdownInput extends React.Component {
     return change;
   }
 
-  handleCut(event, data, change, editor) {
+  handleCut(event, data, change) {
     copySelectionToClipboard(event, change);
     let { state } = change;
     let { selection } = state;
     change.deleteAtRange(selection);
-    return change;
-  }
-
-  handlePaste(event, data, change) {
-    setTimeout(() => {
-      autoScrollToTop();
-    }, 500);
-
     return change;
   }
 
@@ -193,7 +188,6 @@ class PlainMarkdownInput extends React.Component {
         onChange={this.handleChange}
         onCopy={this.handleCopy}
         onCut={this.handleCut}
-        // onPaste={this.handlePaste}
         onKeyDown={this.handleKeyDown}
         plugins={[
           AutocompletePlugin({ extensions: extensions, onChange: this.handleChange })
