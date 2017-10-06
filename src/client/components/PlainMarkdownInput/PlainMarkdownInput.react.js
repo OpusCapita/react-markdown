@@ -7,6 +7,7 @@ import shortcuts from './slate/shortcuts';
 import { hasMultiLineSelection } from './slate/transforms';
 import './PlainMarkdownInput.less';
 import { parse } from './slate/tokenizer';
+import { autoScrollToTop } from './Utils';
 
 import {
   AutocompletePlugin,
@@ -50,6 +51,17 @@ function getCopyText(state) {
     resText = resTextArr.join('\n');
   }
   return resText;
+}
+
+function copySelectionToClipboard(event, change) {
+  event.preventDefault();
+  const { state } = change;
+  const resText = getCopyText(state);
+  if (window.clipboardData) {
+    window.clipboardData.setData("Text", resText);
+  } else {
+    event.clipboardData.setData('text/plain', resText);
+  }
 }
 
 class PlainMarkdownInput extends React.Component {
@@ -122,6 +134,10 @@ class PlainMarkdownInput extends React.Component {
     this.props.onChange(Plain.serialize(editorState));
 
     this.setState({ editorState });
+
+    setTimeout(() => {
+      autoScrollToTop();
+    }, 0);
   };
 
   handleFullScreen = () => {
@@ -133,19 +149,20 @@ class PlainMarkdownInput extends React.Component {
     this.props.onFullScreen(fullScreen);
   };
 
-  onKeyDown(event, data, state) {
-    return shortcuts(event, data, state);
+  handleKeyDown(event, data, state, editor) {
+    return shortcuts(event, data, state, editor);
   }
 
   handleCopy(event, data, change) {
-    event.preventDefault();
-    const { state } = change;
-    const resText = getCopyText(state);
-    if (window.clipboardData) {
-      window.clipboardData.setData("Text", resText);
-    } else {
-      event.clipboardData.setData('text/plain', resText);
-    }
+    copySelectionToClipboard(event, change);
+    return change;
+  }
+
+  handleCut(event, data, change) {
+    copySelectionToClipboard(event, change);
+    let { state } = change;
+    let { selection } = state;
+    change.deleteAtRange(selection);
     return change;
   }
 
@@ -170,6 +187,8 @@ class PlainMarkdownInput extends React.Component {
         schema={schema}
         onChange={this.handleChange}
         onCopy={this.handleCopy}
+        onCut={this.handleCut}
+        onKeyDown={this.handleKeyDown}
         plugins={[
           AutocompletePlugin({ extensions: extensions, onChange: this.handleChange })
         ]}
