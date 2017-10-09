@@ -1,3 +1,99 @@
+## [v1.1.5](https://github.com/OpusCapita/react-markdown/compare/v1.1.4...v1.1.5) (Mon, 09 Oct 2017 10:38:31 GMT)
+ - Bug/new line/#62 (#63)
+    
+    * tmp commit
+    
+    * Fix bug Autoscroll to top for new line in a page bottom
+    
+    * Refactoring
+    
+    * Fix bug with cut several lines from text
+    
+    * Fix bug Autoscroll after insert several lines to text (Aleksandr Baliunov <abaliunov-sc@users.noreply.github.com>, b7c70d1)
+ - Merge branch 'master' of opuscapita.github.com:OpusCapita/react-markdown (d25648a 20534a8, 4a70b45)
+ - Clean-up styles. Fix IE11 bug with getting resize handles
+    
+    See more: https://stackoverflow.com/questions/3603050/remove-resize-handles-and-border-from-elements-with-contenteditable (Kirill Volkovich <kirill.volkovich@jcatalog.com>, d25648a)
+ - Bug/copy paste/#46 (#60)
+    
+    * Fix bug paste
+    
+    * Fix bug paste
+    
+    * Fix bug copy
+    
+    * Extract _getCopyText(state)
+    
+    * Fix bug with IE11
+    
+    * Add tests for multiline copy/paste events (Aleksandr Baliunov <abaliunov-sc@users.noreply.github.com>, 20534a8)
+ - Fix bug paste (#59) (Aleksandr Baliunov <abaliunov-sc@users.noreply.github.com>, d833974)
+ - Add "/.nyc_output" to .gitignore (Kirill Volkovich <kirill.volkovich@jcatalog.com>, f6290dc)
+ - Remove "header-no-offset" markdown token usage (Kirill Volkovich <kirill.volkovich@jcatalog.com>, 4d91280)
+ - Merge pull request #55 from OpusCapita/markdown-it_tokeniser/#21
+    
+    PlainMarkdownEditor highlighting (a4f2066 d536765, fb7b95c)
+ - Remove old code (baliunov <baliunov@scand.com>, d536765)
+ - Change example.md (baliunov <baliunov@scand.com>, e1953d2)
+ - Fix bug with link text (baliunov <baliunov@scand.com>, 29f6adb)
+ - Merge branch 'master' into markdown-it_tokeniser/#21 (b2eb3fc a4f2066, 199febe)
+ - Fix bug with link text (baliunov <baliunov@scand.com>, b2eb3fc)
+ - Fixing bug of the line begins with a space (baliunov <baliunov@scand.com>, 1d7f4f6)
+ - Merge remote-tracking branch 'origin/markdown-it_tokeniser/#21' into markdown-it_tokeniser/#21 (538b51c 241e466, 79ed6bd)
+ - Fixing bug of the line begins with a space - change addMarks() (baliunov <baliunov@scand.com>, 538b51c)
+ - Merge branch 'markdown-it_tokeniser/#21' of opuscapita.github.com:OpusCapita/react-markdown into markdown-it_tokeniser/#21 (42fcdd1 6c0a2ff, 241e466)
+ - Merge branch 'master' into markdown-it_tokeniser/#21 (e824d47 7b6afd7, 42fcdd1)
+ - Merge branch 'master' into markdown-it_tokeniser/#21 (324939c d630458, e824d47)
+ - Merge remote-tracking branch 'origin/markdown-it_tokeniser/#21' into markdown-it_tokeniser/#21 (2840840 324939c, 6c0a2ff)
+ - Fixing bug of the line begins with a space (baliunov <baliunov@scand.com>, 2840840)
+ - Merge branch 'master' into markdown-it_tokeniser/#21 (2bdb3a3 f04a8a9, 324939c)
+ - #53 Fix per branch demo page generation (Kirill Volkovich <kirill.volkovich@jcatalog.com>, 2bdb3a3)
+ - Merge branch 'master' into markdown-it_tokeniser/#21 (c8b6fce 04e1f29, eb7f198)
+ - Merge remote-tracking branch 'origin/markdown-it_tokeniser/#21' into markdown-it_tokeniser/#21 (cdc228e af9518d, c8b6fce)
+ - Add commentaries (baliunov <baliunov@scand.com>, cdc228e)
+ - Merge branch 'master' into markdown-it_tokeniser/#21 (04025e6 fb4e670, af9518d)
+ - Fixing bug of headers with empty content (baliunov <baliunov@scand.com>, 04025e6)
+ - Change header1-header6 on header (baliunov <baliunov@scand.com>, 01278aa)
+ - schema.spec.js, tests for rendererComponent() (baliunov <baliunov@scand.com>, 6e59611)
+ - Remove old tests (baliunov <baliunov@scand.com>, db37d7e)
+ - Merge branch 'master' into markdown-it_tokeniser/#21
+    
+    > Conflicts:
+    > src/client/components/PlainMarkdownInput/slate/schema.js
+    > src/client/components/PlainMarkdownInput/slate/schema.spec.js (7310d97 b53d213, ebfd98e)
+ - schema.spec.js, tests for markdownDecorator() (baliunov <baliunov@scand.com>, 7310d97)
+ - tests for PlainMarkdownInput.react.js (baliunov <baliunov@scand.com>, a75f17f)
+ - Merge branch 'master' into markdown-it_tokeniser/#21
+    
+    > Conflicts:
+    > package.json (4f69be7 760ac7f, a2d0029)
+ - Refactoring (baliunov <baliunov@scand.com>, 4f69be7)
+ - markdownDecorator() is pure function (baliunov <baliunov@scand.com>, 6daacff)
+ - Remove old code (baliunov <baliunov@scand.com>, d0f7cdc)
+ - Refactoring (baliunov <baliunov@scand.com>, faa6377)
+ - Caching characters (baliunov <baliunov@scand.com>, a5ffedb)
+ - Reload state after load new value (baliunov <baliunov@scand.com>, 0ad4c14)
+ - Merge branch 'master' into markdown-it_tokeniser/#21
+    
+    > Conflicts:
+    > src/client/components/PlainMarkdownInput/PlainMarkdownInput.react.js (7c54b0e a60206d, 537eff7)
+ - Save tokenizing result to state (baliunov <baliunov@scand.com>, 7c54b0e)
+ - Refactoring getHeaderContent() (baliunov <baliunov@scand.com>, 0de44a7)
+ - tokenizer.js tests (baliunov <baliunov@scand.com>, d1823db)
+ - Refactoring tokenizer.js (baliunov <baliunov@scand.com>, bfbbcb0)
+ - Remove old code (baliunov <baliunov@scand.com>, 0a21ef4)
+ - tokenizer.js tests (baliunov <baliunov@scand.com>, a1c6474)
+ - Process ordered list (baliunov <baliunov@scand.com>, ef42dcb)
+ - process header-no-offset token (baliunov <baliunov@scand.com>, 27c04b7)
+ - process header-no-offset token (baliunov <baliunov@scand.com>, eb6666c)
+ - tokenizer.js tests (emphasis) (baliunov <baliunov@scand.com>, 32e0eff)
+ - Extract tokenizer.js (baliunov <baliunov@scand.com>, 1d22f0e)
+ - Refactoring (alex <albalyu@gmail.com>, e13a40c)
+ - Processing of the list when the line begins with spaces (alex <albalyu@gmail.com>, c26f89a)
+ - Calculate elements' positions within list (baliunov <baliunov@scand.com>, 84f6f79)
+ - Calculate elements' positions within headers line (baliunov <baliunov@scand.com>, 13bd578)
+ - code, blockquote, emphasis and calculate elements' positions (baliunov <baliunov@scand.com>, 342d459)
+
 ## [v1.1.4](https://github.com/OpusCapita/react-markdown/compare/v1.1.3...v1.1.4) (Tue, 03 Oct 2017 14:39:31 GMT)
  - Fix bug Autocomplete widget position#56 (#57)
     
