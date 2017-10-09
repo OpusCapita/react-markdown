@@ -22,17 +22,33 @@ class AutocompleteContainer extends React.Component {
     onChange: () => {}
   };
 
-  state = {
-    show: false,
-    selectedIndex: 0,
-    isLoading: false,
-    isMouseIndexSelected: false,
-    items: [],
-    ref: null
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      show: false,
+      selectedIndex: 0,
+      isLoading: false,
+      isMouseIndexSelected: false,
+      items: [],
+      ref: null
+    };
+    this.itemIsSelected = false;
+    this.handleMouseDown = this.handleMouseDown.bind(this);
+  }
 
   componentDidMount = () => {
     this.searchItems(this.props);
+  };
+
+  // shouldComponentUpdate = (nextProps, nextState) => {
+  //   this.itemIsSelected = false;
+  //   const isUpdate = this.state.show && this.itemIsSelected || !this.state.show;
+  //   this.itemIsSelected = false;
+  //   return isUpdate;
+  // };
+
+  isHiding = () => {
+    return this.state.show && this.itemIsSelected;
   };
 
   componentWillReceiveProps = (nextProps) => {
@@ -98,6 +114,7 @@ class AutocompleteContainer extends React.Component {
       } else if (e.keyCode === enterCode) {
         e.preventDefault();
 
+        this.itemIsSelected = true;
         this.handleSelectItem(selectedIndex);
       } else if (e.keyCode === arrowUpCode || e.keyCode === arrowDownCode) {
         e.preventDefault();
@@ -133,6 +150,17 @@ class AutocompleteContainer extends React.Component {
       }
     }
 
+    this.hideWidgetWithCheck();
+  };
+
+  hideWidgetWithCheck = () => {
+    if (this.isHiding()) {
+      this.hideWidget();
+    }
+  };
+
+  hideWidget = () => {
+    this.itemIsSelected = false;
     this.setState({ show: false });
   };
 
@@ -142,20 +170,26 @@ class AutocompleteContainer extends React.Component {
     if (term) {
       const { extensions } = options;
       const extension = this.matchExtension(extensions, term);
-      const { show } = this.state;
       if (extension) {
         this.setState({ show: true, isLoading: true });
         extension.searchItems(term).then((items) => this.setState({ items, selectedIndex: 0, isLoading: false }));
-      } else if (show) {
-        this.setState({ show: false });
+        return;
       }
-    } else {
-      this.setState({ show: false });
+    }
+
+    const { show } = this.state;
+    if (show) {
+      this.hideWidget();
     }
   };
 
   handleRef = (ref) => {
     this.setState({ ref });
+  };
+
+  handleMouseDown = event => {
+    console.log('AutocompleteContainer.handleMouseDown');
+    this.itemIsSelected = true;
   };
 
   render() {
@@ -180,6 +214,7 @@ class AutocompleteContainer extends React.Component {
             items={items}
             isLoading={isLoading}
             selectedIndex={selectedIndex}
+            onMouseDown={this.handleMouseDown}
             onSelectItem={this.handleSelectItem}
             onSelectedIndexChange={this.handleSelectedIndexChange}
             isMouseIndexSelected={isMouseIndexSelected}
