@@ -50328,7 +50328,7 @@ var _initialiseProps = function _initialiseProps() {
   };
 
   this.handleDocumentKeyDown = function (e) {
-    if (_this2.props.keyboard && e.key === 'Escape' && _this2.isTopModal()) {
+    if (_this2.props.keyboard && e.keyCode === 27 && _this2.isTopModal()) {
       if (_this2.props.onEscapeKeyDown) {
         _this2.props.onEscapeKeyDown(e);
       }
@@ -50338,7 +50338,7 @@ var _initialiseProps = function _initialiseProps() {
   };
 
   this.handleDocumentKeyUp = function (e) {
-    if (_this2.props.keyboard && e.key === 'Escape' && _this2.isTopModal()) {
+    if (_this2.props.keyboard && e.keyCode === 27 && _this2.isTopModal()) {
       if (_this2.props.onEscapeKeyUp) {
         _this2.props.onEscapeKeyUp(e);
       }
