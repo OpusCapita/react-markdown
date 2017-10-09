@@ -1,3 +1,5 @@
+## [v1.1.6](https://github.com/OpusCapita/react-markdown/compare/v1.1.5...v1.1.6) (Mon, 09 Oct 2017 10:43:19 GMT)
+
 ## [v1.1.5](https://github.com/OpusCapita/react-markdown/compare/v1.1.4...v1.1.5) (Mon, 09 Oct 2017 10:38:31 GMT)
  - Bug/new line/#62 (#63)
     
