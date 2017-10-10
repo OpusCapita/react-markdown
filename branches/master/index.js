@@ -21029,7 +21029,7 @@ module.exports = (function (status) {
 			};
 		}
 	} else {
-		fn = function self (obj, prototype) {
+		fn = function self(obj, prototype) {
 			var isNullBase;
 			validate(obj, prototype);
 			isNullBase = objIsPrototypOf.call(self.nullPolyfill, obj);
@@ -25234,12 +25234,14 @@ var getSlateEditor = exports.getSlateEditor = function getSlateEditor(selection)
 
 var autoScrollToTop = exports.autoScrollToTop = function autoScrollToTop() {
   var selection = window.getSelection();
-  var offsetTop = selection.anchorNode.parentNode.offsetTop;
 
-  var editor = getSlateEditor(selection);
+  if (selection.anchorNode) {
+    var offsetTop = selection.anchorNode.parentNode.offsetTop;
+    var editor = getSlateEditor(selection);
 
-  if (editor.scrollTop + editor.offsetHeight < offsetTop + scrollAmount) {
-    editor.scrollTop = offsetTop - editor.offsetHeight + scrollAmount;
+    if (editor && editor.scrollTop + editor.offsetHeight < offsetTop + scrollAmount) {
+      editor.scrollTop = offsetTop - editor.offsetHeight + scrollAmount;
+    }
   }
 };
 
