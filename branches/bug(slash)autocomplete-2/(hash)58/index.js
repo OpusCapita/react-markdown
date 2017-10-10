@@ -13541,12 +13541,14 @@ var getSlateEditor = exports.getSlateEditor = function getSlateEditor(selection)
 
 var autoScrollToTop = exports.autoScrollToTop = function autoScrollToTop() {
   var selection = window.getSelection();
-  var offsetTop = selection.anchorNode.parentNode.offsetTop;
 
-  var editor = getSlateEditor(selection);
+  if (selection.anchorNode) {
+    var offsetTop = selection.anchorNode.parentNode.offsetTop;
+    var editor = getSlateEditor(selection);
 
-  if (editor.scrollTop + editor.offsetHeight < offsetTop + scrollAmount) {
-    editor.scrollTop = offsetTop - editor.offsetHeight + scrollAmount;
+    if (editor && editor.scrollTop + editor.offsetHeight < offsetTop + scrollAmount) {
+      editor.scrollTop = offsetTop - editor.offsetHeight + scrollAmount;
+    }
   }
 };
 
@@ -18723,21 +18725,16 @@ function copySelectionToClipboard(event, change) {
 var PlainMarkdownInput = function (_React$Component) {
   _inherits(PlainMarkdownInput, _React$Component);
 
-  function PlainMarkdownInput() {
-    var _ref;
-
-    var _temp, _this, _ret;
-
+  function PlainMarkdownInput(props) {
     _classCallCheck(this, PlainMarkdownInput);
 
-    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-      args[_key] = arguments[_key];
-    }
+    var _this = _possibleConstructorReturn(this, (PlainMarkdownInput.__proto__ || Object.getPrototypeOf(PlainMarkdownInput)).call(this, props));
 
-    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = PlainMarkdownInput.__proto__ || Object.getPrototypeOf(PlainMarkdownInput)).call.apply(_ref, [this].concat(args))), _this), _this.state = {
-      editorState: '',
-      fullScreen: false
-    }, _this.handleChange = function (obj) {
+    _this.shouldComponentUpdate = function (nextProps, nextState) {
+      return _this.state.editorState.endKey !== nextState.editorState.endKey || _this.state.editorState.endOffset !== nextState.editorState.endOffset || _this.state.editorState.startKey !== nextState.editorState.startKey || _this.state.editorState.startOffset !== nextState.editorState.startOffset;
+    };
+
+    _this.handleChange = function (obj) {
       // XXX Slate "Editor.props.onChange" behavior changed
       // https://github.com/ianstormtaylor/slate/blob/master/packages/slate/Changelog.md#0220--september-5-2017
       var editorState = obj.state || obj;
@@ -18765,14 +18762,27 @@ var PlainMarkdownInput = function (_React$Component) {
       setTimeout(function () {
         (0, _Utils.autoScrollToTop)();
       }, 0);
-    }, _this.handleFullScreen = function () {
+    };
+
+    _this.handleMouseDown = function () {
+      _this.forceUpdate();
+    };
+
+    _this.handleFullScreen = function () {
       var fullScreen = !_this.state.fullScreen;
 
       document.body.style.overflow = fullScreen ? 'hidden' : _this.initialBodyOverflowStyle;
 
       _this.setState({ fullScreen: fullScreen });
       _this.props.onFullScreen(fullScreen);
-    }, _temp), _possibleConstructorReturn(_this, _ret);
+    };
+
+    _this.state = {
+      editorState: '',
+      fullScreen: false
+    };
+    _this.handleMouseDown = _this.handleMouseDown.bind(_this);
+    return _this;
   }
 
   _createClass(PlainMarkdownInput, [{
@@ -18871,7 +18881,7 @@ var PlainMarkdownInput = function (_React$Component) {
           onCopy: this.handleCopy,
           onCut: this.handleCut,
           onKeyDown: this.handleKeyDown,
-          plugins: [(0, _plugins.AutocompletePlugin)({ extensions: extensions, onChange: this.handleChange })],
+          plugins: [(0, _plugins.AutocompletePlugin)({ extensions: extensions, onChange: this.handleChange, onMouseDown: this.handleMouseDown })],
           readOnly: readOnly
         },
         _react2.default.createElement(
@@ -21069,7 +21079,7 @@ module.exports = (function (status) {
 			};
 		}
 	} else {
-		fn = function self (obj, prototype) {
+		fn = function self(obj, prototype) {
 			var isNullBase;
 			validate(obj, prototype);
 			isNullBase = objIsPrototypOf.call(self.nullPolyfill, obj);
@@ -26622,7 +26632,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _class, _temp2;
+var _class, _temp;
 
 var _react = __webpack_require__(1);
 
@@ -26651,35 +26661,26 @@ var arrowUpCode = 38;
 var arrowDownCode = 40;
 var enterCode = 13;
 
-var AutocompleteContainer = (_temp2 = _class = function (_React$Component) {
+var AutocompleteContainer = (_temp = _class = function (_React$Component) {
   _inherits(AutocompleteContainer, _React$Component);
 
-  function AutocompleteContainer() {
-    var _ref;
-
-    var _temp, _this, _ret;
-
+  function AutocompleteContainer(props) {
     _classCallCheck(this, AutocompleteContainer);
 
-    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-      args[_key] = arguments[_key];
-    }
+    var _this = _possibleConstructorReturn(this, (AutocompleteContainer.__proto__ || Object.getPrototypeOf(AutocompleteContainer)).call(this, props));
 
-    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = AutocompleteContainer.__proto__ || Object.getPrototypeOf(AutocompleteContainer)).call.apply(_ref, [this].concat(args))), _this), _this.state = {
-      show: false,
-      selectedIndex: 0,
-      isLoading: false,
-      isMouseIndexSelected: false,
-      items: [],
-      ref: null
-    }, _this.componentDidMount = function () {
+    _this.componentDidMount = function () {
       _this.searchItems(_this.props);
-    }, _this.componentWillReceiveProps = function (nextProps) {
+    };
+
+    _this.componentWillReceiveProps = function (nextProps) {
       _this.searchItems(nextProps);
       if (typeof _this.state.selectedIndex !== 'undefined' && _this.props.state.startOffset === nextProps.state.startOffset && _this.props.state.startText.text === nextProps.state.startText.text && nextProps.state.startText.text) {
         _this.handleSelectItem(_this.state.selectedIndex);
       }
-    }, _this.matchExtension = function (extensions, token) {
+    };
+
+    _this.matchExtension = function (extensions, token) {
       for (var i = 0, count = extensions.length; i < count; i++) {
         var extension = extensions[i];
 
@@ -26688,7 +26689,9 @@ var AutocompleteContainer = (_temp2 = _class = function (_React$Component) {
         }
       }
       return undefined;
-    }, _this.getSearchToken = function (state) {
+    };
+
+    _this.getSearchToken = function (state) {
       var text = state.focusBlock.text;
       var anchorOffset = state.selection.anchorOffset;
 
@@ -26710,13 +26713,17 @@ var AutocompleteContainer = (_temp2 = _class = function (_React$Component) {
       }
 
       return { term: term, text: text, offset: offset };
-    }, _this.handleSelectedIndexChange = function (selectedIndex) {
+    };
+
+    _this.handleSelectedIndexChange = function (selectedIndex) {
       if (_this.state.isMouseIndexSelected) {
         _this.setState({ selectedIndex: selectedIndex });
       } else {
         _this.setState({ isMouseIndexSelected: true });
       }
-    }, _this.handleKeyDown = function (e) {
+    };
+
+    _this.handleKeyDown = function (e) {
       var _this$state = _this.state,
           show = _this$state.show,
           items = _this$state.items,
@@ -26726,6 +26733,7 @@ var AutocompleteContainer = (_temp2 = _class = function (_React$Component) {
       if (show && items) {
         if (e.keyCode === escapeCode) {
           e.preventDefault();
+          e.stopPropagation();
 
           _this.setState({ show: false });
         } else if (e.keyCode === enterCode) {
@@ -26744,7 +26752,13 @@ var AutocompleteContainer = (_temp2 = _class = function (_React$Component) {
           }
         }
       }
-    }, _this.handleSelectItem = function (index) {
+    };
+
+    _this.handleScroll = function () {
+      _this.state.ref.getElementsByClassName('react-markdown--slate-content__editor')[0].focus();
+    };
+
+    _this.handleSelectItem = function (index) {
       var items = _this.state.items;
       var _this$props = _this.props,
           state = _this$props.state,
@@ -26770,9 +26784,11 @@ var AutocompleteContainer = (_temp2 = _class = function (_React$Component) {
       }
 
       _this.setState({ show: false });
-    }, _this.searchItems = function (_ref2) {
-      var state = _ref2.state,
-          options = _ref2.options;
+    };
+
+    _this.searchItems = function (_ref) {
+      var state = _ref.state,
+          options = _ref.options;
 
       var _this$getSearchToken2 = _this.getSearchToken(state),
           term = _this$getSearchToken2.term;
@@ -26781,22 +26797,35 @@ var AutocompleteContainer = (_temp2 = _class = function (_React$Component) {
         var extensions = options.extensions;
 
         var extension = _this.matchExtension(extensions, term);
-        var show = _this.state.show;
-
         if (extension) {
           _this.setState({ show: true, isLoading: true });
           extension.searchItems(term).then(function (items) {
             return _this.setState({ items: items, selectedIndex: 0, isLoading: false });
           });
-        } else if (show) {
-          _this.setState({ show: false });
+          return;
         }
-      } else {
+      }
+
+      var show = _this.state.show;
+
+      if (show) {
         _this.setState({ show: false });
       }
-    }, _this.handleRef = function (ref) {
+    };
+
+    _this.handleRef = function (ref) {
       _this.setState({ ref: ref });
-    }, _temp), _possibleConstructorReturn(_this, _ret);
+    };
+
+    _this.state = {
+      show: false,
+      selectedIndex: 0,
+      isLoading: false,
+      isMouseIndexSelected: false,
+      items: [],
+      ref: null
+    };
+    return _this;
   }
 
   _createClass(AutocompleteContainer, [{
@@ -26832,6 +26861,8 @@ var AutocompleteContainer = (_temp2 = _class = function (_React$Component) {
           items: items,
           isLoading: isLoading,
           selectedIndex: selectedIndex,
+          onMouseDown: this.props.onMouseDown,
+          onScroll: this.handleScroll.bind(this),
           onSelectItem: this.handleSelectItem,
           onSelectedIndexChange: this.handleSelectedIndexChange,
           isMouseIndexSelected: isMouseIndexSelected,
@@ -26846,12 +26877,14 @@ var AutocompleteContainer = (_temp2 = _class = function (_React$Component) {
 }(_react2.default.Component), _class.propTypes = {
   state: _propTypes2.default.object,
   options: _propTypes2.default.object,
-  onChange: _propTypes2.default.func
+  onChange: _propTypes2.default.func,
+  onMouseDown: _propTypes2.default.func
 }, _class.defaultProps = {
   state: {},
   options: {},
-  onChange: function onChange() {}
-}, _temp2);
+  onChange: function onChange() {},
+  onMouseDown: function onMouseDown() {}
+}, _temp);
 exports.default = AutocompleteContainer;
 
 /***/ }),
@@ -26893,6 +26926,8 @@ var propTypes = {
   isMouseIndexSelected: _propTypes2.default.bool,
   onSelectedIndexChange: _propTypes2.default.func,
   items: _propTypes2.default.array,
+  onMouseDown: _propTypes2.default.func,
+  onScroll: _propTypes2.default.func,
   onSelectItem: _propTypes2.default.func,
   selectedIndex: _propTypes2.default.number,
   style: _propTypes2.default.object,
@@ -26903,6 +26938,7 @@ var defaultProps = {
   isMouseIndexSelected: false,
   onSelectedIndexChange: function onSelectedIndexChange() {},
   items: [],
+  onScroll: function onScroll() {},
   onSelectItem: function onSelectItem() {},
   style: {},
   restrictorRef: null
@@ -26921,6 +26957,7 @@ var AutocompleteWidget = function (_React$Component) {
 
     _this.componentDidMount = function () {
       _this.adjustPosition();
+      _this['items-ref'].addEventListener('scroll', _this.props.onScroll, false);
     };
 
     _this.componentWillReceiveProps = function (nextProps) {
@@ -27055,6 +27092,7 @@ var AutocompleteWidget = function (_React$Component) {
                 onClick: function onClick() {
                   return _this2.handleSelectItem(index);
                 },
+                onMouseDown: _this2.props.onMouseDown,
                 onMouseMove: function onMouseMove() {
                   return onSelectedIndexChange(index);
                 },
@@ -27118,6 +27156,7 @@ var AutocompletePlugin = function AutocompletePlugin(options) {
           state: state,
           options: options,
           onChange: options.onChange // eslint-disable-line
+          , onMouseDown: options.onMouseDown // eslint-disable-line
         },
         children
       );
@@ -50351,7 +50390,7 @@ var _initialiseProps = function _initialiseProps() {
   };
 
   this.handleDocumentKeyDown = function (e) {
-    if (_this2.props.keyboard && e.key === 'Escape' && _this2.isTopModal()) {
+    if (_this2.props.keyboard && e.keyCode === 27 && _this2.isTopModal()) {
       if (_this2.props.onEscapeKeyDown) {
         _this2.props.onEscapeKeyDown(e);
       }
@@ -50361,7 +50400,7 @@ var _initialiseProps = function _initialiseProps() {
   };
 
   this.handleDocumentKeyUp = function (e) {
-    if (_this2.props.keyboard && e.key === 'Escape' && _this2.isTopModal()) {
+    if (_this2.props.keyboard && e.keyCode === 27 && _this2.isTopModal()) {
       if (_this2.props.onEscapeKeyUp) {
         _this2.props.onEscapeKeyUp(e);
       }
