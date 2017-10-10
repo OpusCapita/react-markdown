@@ -15,13 +15,15 @@ class AutocompleteContainer extends React.Component {
     options: Types.object,
     onChange: Types.func,
     onMouseDown: Types.func,
+    onScroll: Types.func,
   };
 
   static defaultProps = {
     state: {},
     options: {},
     onChange: () => {},
-    onMouseDown: () => {}
+    onMouseDown: () => {},
+    onScroll: () => {}
   };
 
   constructor(props) {
@@ -119,9 +121,9 @@ class AutocompleteContainer extends React.Component {
     }
   };
 
-  handleScroll = () => {
-    this.state.ref.getElementsByClassName('react-markdown--slate-content__editor')[0].focus();
-  };
+  // handleScroll = () => {
+  //   this.state.ref.getElementsByClassName('react-markdown--slate-content__editor')[0].focus();
+  // };
 
   handleSelectItem = (index) => {
     const { items } = this.state;
@@ -192,7 +194,8 @@ class AutocompleteContainer extends React.Component {
             isLoading={isLoading}
             selectedIndex={selectedIndex}
             onMouseDown={this.props.onMouseDown}
-            onScroll={this.handleScroll.bind(this)}
+            onScroll={this.props.onScroll}
+            // onScroll={this.handleScroll.bind(this)}
             onSelectItem={this.handleSelectItem}
             onSelectedIndexChange={this.handleSelectedIndexChange}
             isMouseIndexSelected={isMouseIndexSelected}

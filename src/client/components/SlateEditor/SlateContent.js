@@ -9,6 +9,7 @@ const SlateContent = ({
   schema,
   onChange,
   readOnly,
+  onRef,
   children,
   ...rest
 }) => {
@@ -22,6 +23,7 @@ const SlateContent = ({
         onChange={onChange}
         readOnly={readOnly}
         className={`react-markdown--slate-content__editor`}
+        ref={onRef}
         {...rest}
       />
       {children}
@@ -34,11 +36,13 @@ SlateContent.propTypes = {
   schema: Types.object,
   state: Types.any,
   onChange: Types.func,
+  onRef: Types.func,
   readOnly: Types.bool
 };
 
 SlateContent.defaultProps = {
   onChange: () => {},
+  onRef: () => {},
   readOnly: false
 };
 

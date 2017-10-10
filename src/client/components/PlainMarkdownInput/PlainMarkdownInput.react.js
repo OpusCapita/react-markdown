@@ -72,6 +72,8 @@ class PlainMarkdownInput extends React.Component {
       fullScreen: false
     };
     this.handleMouseDown = this.handleMouseDown.bind(this);
+    this.handleRef = this.handleRef.bind(this)
+    this.handleScroll = this.handleScroll.bind(this);
   }
 
   componentWillMount() {
@@ -181,6 +183,14 @@ class PlainMarkdownInput extends React.Component {
     return change;
   }
 
+  handleRef(ref) {
+    this.slateContentRef = ref;
+  }
+
+  handleScroll() {
+    this.slateContentRef.focus();
+  }
+
   render() {
     const { editorState, fullScreen } = this.state;
     const { children, extensions, readOnly } = this.props;
@@ -205,7 +215,12 @@ class PlainMarkdownInput extends React.Component {
         onCut={this.handleCut}
         onKeyDown={this.handleKeyDown}
         plugins={[
-          AutocompletePlugin({ extensions: extensions, onChange: this.handleChange, onMouseDown: this.handleMouseDown })
+          AutocompletePlugin({
+            extensions: extensions,
+            onChange: this.handleChange,
+            onMouseDown: this.handleMouseDown,
+            onScroll: this.handleScroll
+          })
         ]}
         readOnly={readOnly}
       >
@@ -252,7 +267,7 @@ class PlainMarkdownInput extends React.Component {
 
           {children}
         </SlateToolbar>
-        <SlateContent />
+        <SlateContent onRef={this.handleRef} />
       </SlateEditor>
     );
   }
