@@ -19,11 +19,13 @@ export const getSlateEditor = selection => {
 
 export const autoScrollToTop = () => {
   let selection = window.getSelection();
-  let offsetTop = selection.anchorNode.parentNode.offsetTop;
 
-  let editor = getSlateEditor(selection);
+  if (selection.anchorNode) {
+    let offsetTop = selection.anchorNode.parentNode.offsetTop;
+    let editor = getSlateEditor(selection);
 
-  if (editor.scrollTop + editor.offsetHeight < offsetTop + scrollAmount) {
-    editor.scrollTop = offsetTop - editor.offsetHeight + scrollAmount;
+    if (editor && editor.scrollTop + editor.offsetHeight < offsetTop + scrollAmount) {
+      editor.scrollTop = offsetTop - editor.offsetHeight + scrollAmount;
+    }
   }
 };
