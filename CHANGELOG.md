@@ -1,3 +1,6 @@
+## [v1.1.7](https://github.com/OpusCapita/react-markdown/compare/v1.1.6...v1.1.7) (Tue, 10 Oct 2017 14:10:42 GMT)
+ - Fix bug with autoScrollToTop() (#65) (Aleksandr Baliunov <abaliunov-sc@users.noreply.github.com>, 184f30b)
+
 ## [v1.1.6](https://github.com/OpusCapita/react-markdown/compare/v1.1.5...v1.1.6) (Mon, 09 Oct 2017 10:43:19 GMT)
 
 ## [v1.1.5](https://github.com/OpusCapita/react-markdown/compare/v1.1.4...v1.1.5) (Mon, 09 Oct 2017 10:38:31 GMT)
