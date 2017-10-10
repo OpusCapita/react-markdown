@@ -65,10 +65,14 @@ function copySelectionToClipboard(event, change) {
 }
 
 class PlainMarkdownInput extends React.Component {
-  state = {
-    editorState: '',
-    fullScreen: false
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      editorState: '',
+      fullScreen: false
+    };
+    this.handleMouseDown = this.handleMouseDown.bind(this);
+  }
 
   componentWillMount() {
     this.initialBodyOverflowStyle = document.body.style.overflow;
@@ -80,6 +84,13 @@ class PlainMarkdownInput extends React.Component {
       this.handleNewValue(nextProps.value);
     }
   }
+
+  shouldComponentUpdate =(nextProps, nextState) => {
+    return this.state.editorState.endKey !== nextState.editorState.endKey ||
+      this.state.editorState.endOffset !== nextState.editorState.endOffset ||
+      this.state.editorState.startKey !== nextState.editorState.startKey ||
+      this.state.editorState.startOffset !== nextState.editorState.startOffset;
+  };
 
   handleNewValue(value) {
     let editorState = Plain.deserialize(value);
@@ -140,6 +151,10 @@ class PlainMarkdownInput extends React.Component {
     }, 0);
   };
 
+  handleMouseDown = () => {
+    this.forceUpdate();
+  };
+
   handleFullScreen = () => {
     let fullScreen = !this.state.fullScreen;
 
@@ -190,7 +205,7 @@ class PlainMarkdownInput extends React.Component {
         onCut={this.handleCut}
         onKeyDown={this.handleKeyDown}
         plugins={[
-          AutocompletePlugin({ extensions: extensions, onChange: this.handleChange })
+          AutocompletePlugin({ extensions: extensions, onChange: this.handleChange, onMouseDown: this.handleMouseDown })
         ]}
         readOnly={readOnly}
       >

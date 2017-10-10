@@ -8,6 +8,7 @@ const propTypes = {
   onSelectedIndexChange: Types.func,
   items: Types.array,
   onMouseDown: Types.func,
+  onScroll: Types.func,
   onSelectItem: Types.func,
   selectedIndex: Types.number,
   style: Types.object,
@@ -18,6 +19,7 @@ const defaultProps = {
   isMouseIndexSelected: false,
   onSelectedIndexChange: () => {},
   items: [],
+  onScroll: () => {},
   onSelectItem: () => {},
   style: {},
   restrictorRef: null
@@ -38,6 +40,7 @@ class AutocompleteWidget extends React.Component {
 
   componentDidMount = () => {
     this.adjustPosition();
+    this['items-ref'].addEventListener('scroll', this.props.onScroll, false);
   };
 
   componentWillReceiveProps = (nextProps) => {
@@ -117,11 +120,6 @@ class AutocompleteWidget extends React.Component {
     this.props.onSelectItem(index);
   };
 
-  handleMouseDown = event => {
-    console.log('AutocompleteWidget.handleMouseDown');
-    this.props.onMouseDown(event);
-  };
-
   render() {
     const { left, top, transform } = this.state;
     const { items, selectedIndex, onSelectedIndexChange } = this.props;
@@ -147,7 +145,7 @@ class AutocompleteWidget extends React.Component {
                 key={index}
                 ref={ref => (this[`item-ref-${index}`] = ref)}
                 onClick={() => this.handleSelectItem(index)}
-                onMouseDown={this.handleMouseDown}
+                onMouseDown={this.props.onMouseDown}
                 onMouseMove={() => onSelectedIndexChange(index)}
                 className={`
                   react-markdown--autocomplete-widget__item

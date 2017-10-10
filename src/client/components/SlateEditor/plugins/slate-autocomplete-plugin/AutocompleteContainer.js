@@ -13,13 +13,15 @@ class AutocompleteContainer extends React.Component {
   static propTypes = {
     state: Types.object,
     options: Types.object,
-    onChange: Types.func
+    onChange: Types.func,
+    onMouseDown: Types.func,
   };
 
   static defaultProps = {
     state: {},
     options: {},
-    onChange: () => {}
+    onChange: () => {},
+    onMouseDown: () => {}
   };
 
   constructor(props) {
@@ -32,23 +34,10 @@ class AutocompleteContainer extends React.Component {
       items: [],
       ref: null
     };
-    this.itemIsSelected = false;
-    this.handleMouseDown = this.handleMouseDown.bind(this);
   }
 
   componentDidMount = () => {
     this.searchItems(this.props);
-  };
-
-  // shouldComponentUpdate = (nextProps, nextState) => {
-  //   this.itemIsSelected = false;
-  //   const isUpdate = this.state.show && this.itemIsSelected || !this.state.show;
-  //   this.itemIsSelected = false;
-  //   return isUpdate;
-  // };
-
-  isHiding = () => {
-    return this.state.show && this.itemIsSelected;
   };
 
   componentWillReceiveProps = (nextProps) => {
@@ -109,12 +98,12 @@ class AutocompleteContainer extends React.Component {
     if (show && items) {
       if (e.keyCode === escapeCode) {
         e.preventDefault();
+        e.stopPropagation();
 
         this.setState({ show: false });
       } else if (e.keyCode === enterCode) {
         e.preventDefault();
 
-        this.itemIsSelected = true;
         this.handleSelectItem(selectedIndex);
       } else if (e.keyCode === arrowUpCode || e.keyCode === arrowDownCode) {
         e.preventDefault();
@@ -128,6 +117,10 @@ class AutocompleteContainer extends React.Component {
         }
       }
     }
+  };
+
+  handleScroll = () => {
+    this.state.ref.getElementsByClassName('react-markdown--slate-content__editor')[0].focus();
   };
 
   handleSelectItem = (index) => {
@@ -150,17 +143,6 @@ class AutocompleteContainer extends React.Component {
       }
     }
 
-    this.hideWidgetWithCheck();
-  };
-
-  hideWidgetWithCheck = () => {
-    if (this.isHiding()) {
-      this.hideWidget();
-    }
-  };
-
-  hideWidget = () => {
-    this.itemIsSelected = false;
     this.setState({ show: false });
   };
 
@@ -179,17 +161,12 @@ class AutocompleteContainer extends React.Component {
 
     const { show } = this.state;
     if (show) {
-      this.hideWidget();
+      this.setState({ show: false });
     }
   };
 
   handleRef = (ref) => {
     this.setState({ ref });
-  };
-
-  handleMouseDown = event => {
-    console.log('AutocompleteContainer.handleMouseDown');
-    this.itemIsSelected = true;
   };
 
   render() {
@@ -214,7 +191,8 @@ class AutocompleteContainer extends React.Component {
             items={items}
             isLoading={isLoading}
             selectedIndex={selectedIndex}
-            onMouseDown={this.handleMouseDown}
+            onMouseDown={this.props.onMouseDown}
+            onScroll={this.handleScroll.bind(this)}
             onSelectItem={this.handleSelectItem}
             onSelectedIndexChange={this.handleSelectedIndexChange}
             isMouseIndexSelected={isMouseIndexSelected}
