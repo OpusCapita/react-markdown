@@ -73,8 +73,9 @@ class PlainMarkdownInput extends React.Component {
       fullScreen: false
     };
     this.handleMouseDown = this.handleMouseDown.bind(this);
-    this.handleRef = this.handleRef.bind(this)
+    this.handleRef = this.handleRef.bind(this);
     this.handleScroll = this.handleScroll.bind(this);
+    this.isChange = false;
   }
 
   componentWillMount() {
@@ -89,10 +90,12 @@ class PlainMarkdownInput extends React.Component {
   }
 
   shouldComponentUpdate =(nextProps, nextState) => {
-    return this.state.editorState.endKey !== nextState.editorState.endKey ||
+    let condition = this.state.editorState.endKey !== nextState.editorState.endKey ||
       this.state.editorState.endOffset !== nextState.editorState.endOffset ||
       this.state.editorState.startKey !== nextState.editorState.startKey ||
-      this.state.editorState.startOffset !== nextState.editorState.startOffset;
+      this.state.editorState.startOffset !== nextState.editorState.startOffset || this.isChange;
+    this.isChange = false;
+    return condition;
   };
 
   handleNewValue(value) {
@@ -163,6 +166,7 @@ class PlainMarkdownInput extends React.Component {
 
     document.body.style.overflow = fullScreen ? 'hidden' : this.initialBodyOverflowStyle;
 
+    this.isChange = true;
     this.setState({ fullScreen });
     this.props.onFullScreen(fullScreen);
   };
