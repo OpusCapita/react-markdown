@@ -1,4 +1,5 @@
 import React from 'react';
+import { findDOMNode } from 'react-dom';
 import Types from 'prop-types';
 import FullScreenButton from '../SlateEditor/plugins/slate-fullscreen-plugin/FullScreenButton';
 import DropdownButton from 'react-bootstrap/lib/DropdownButton';
@@ -188,7 +189,12 @@ class PlainMarkdownInput extends React.Component {
   }
 
   handleScroll() {
-    this.slateContentRef.focus();
+    if (navigator.userAgent.match(/msie/i) || navigator.userAgent.match(/trident/i)) {
+      this.slateContentRef.focus();
+    } else {
+      let refEl = findDOMNode(this.slateContentRef);
+      refEl.getElementsByClassName('react-markdown--slate-content__editor')[0].focus();
+    }
   }
 
   render() {
