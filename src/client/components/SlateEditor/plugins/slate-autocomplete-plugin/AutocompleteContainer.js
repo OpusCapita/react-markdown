@@ -2,6 +2,7 @@ import React from 'react';
 import Types from 'prop-types';
 
 import AutocompleteWidget from './AutocompleteWidget';
+import { getSlateEditor } from '../../../PlainMarkdownInput/Utils';
 
 const escapeCode = 27;
 const arrowUpCode = 38;
@@ -12,23 +13,30 @@ class AutocompleteContainer extends React.Component {
   static propTypes = {
     state: Types.object,
     options: Types.object,
-    onChange: Types.func
+    onChange: Types.func,
+    onMouseDown: Types.func,
+    onScroll: Types.func,
   };
 
   static defaultProps = {
     state: {},
     options: {},
-    onChange: () => {}
+    onChange: () => {},
+    onMouseDown: () => {},
+    onScroll: () => {}
   };
 
-  state = {
-    show: false,
-    selectedIndex: 0,
-    isLoading: false,
-    isMouseIndexSelected: false,
-    items: [],
-    ref: null
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      show: false,
+      selectedIndex: 0,
+      isLoading: false,
+      isMouseIndexSelected: false,
+      items: [],
+      ref: null
+    };
+  }
 
   componentDidMount = () => {
     this.searchItems(this.props);
@@ -92,6 +100,7 @@ class AutocompleteContainer extends React.Component {
     if (show && items) {
       if (e.keyCode === escapeCode) {
         e.preventDefault();
+        e.stopPropagation();
 
         this.setState({ show: false });
       } else if (e.keyCode === enterCode) {
@@ -141,25 +150,34 @@ class AutocompleteContainer extends React.Component {
     if (term) {
       const { extensions } = options;
       const extension = this.matchExtension(extensions, term);
-      const { show } = this.state;
       if (extension) {
         this.setState({ show: true, isLoading: true });
         extension.searchItems(term).then((items) => this.setState({ items, selectedIndex: 0, isLoading: false }));
-      } else if (show) {
-        this.setState({ show: false });
+        return;
       }
-    } else {
+    }
+
+    const { show } = this.state;
+    if (show) {
       this.setState({ show: false });
     }
   };
 
   handleRef = (ref) => {
     this.setState({ ref });
-  }
+  };
 
   render() {
     const { show, selectedIndex, items, isLoading, isMouseIndexSelected, ref } = this.state;
     const { children, state } = this.props;
+
+    let selection = window.getSelection();
+    if (selection.anchorNode) {
+      let slateEditor = getSlateEditor(selection);
+      if (slateEditor && !show) {
+        slateEditor.style.overflow = 'auto';
+      }
+    }
 
     return (
       <div
@@ -171,6 +189,8 @@ class AutocompleteContainer extends React.Component {
             items={items}
             isLoading={isLoading}
             selectedIndex={selectedIndex}
+            onMouseDown={this.props.onMouseDown}
+            onScroll={this.props.onScroll}
             onSelectItem={this.handleSelectItem}
             onSelectedIndexChange={this.handleSelectedIndexChange}
             isMouseIndexSelected={isMouseIndexSelected}

@@ -1,11 +1,14 @@
 import React from 'react';
 import './Autocomplete.less';
 import Types from 'prop-types';
+import { getSlateEditor } from '../../../PlainMarkdownInput/Utils';
 
 const propTypes = {
   isMouseIndexSelected: Types.bool,
   onSelectedIndexChange: Types.func,
   items: Types.array,
+  onMouseDown: Types.func,
+  onScroll: Types.func,
   onSelectItem: Types.func,
   selectedIndex: Types.number,
   style: Types.object,
@@ -16,6 +19,7 @@ const defaultProps = {
   isMouseIndexSelected: false,
   onSelectedIndexChange: () => {},
   items: [],
+  onScroll: () => {},
   onSelectItem: () => {},
   style: {},
   restrictorRef: null
@@ -36,6 +40,7 @@ class AutocompleteWidget extends React.Component {
 
   componentDidMount = () => {
     this.adjustPosition();
+    this['items-ref'].addEventListener('scroll', this.props.onScroll, false);
   };
 
   componentWillReceiveProps = (nextProps) => {
@@ -68,21 +73,32 @@ class AutocompleteWidget extends React.Component {
     if (!selection.anchorNode) {
       return;
     }
+
     let editorWidth = this.props.restrictorRef.offsetWidth;
     let autocompleteWidth = this['items-ref'].offsetWidth;
-    let selectionRect = selection.getRangeAt(0).getBoundingClientRect();
+    let autocompleteHeight = this['items-ref'].offsetHeight;
+    let selectionRect = selection.getRangeAt(0).getBoundingClientRect(); // element with cursor
     let restrictorRect = this.props.restrictorRef.getBoundingClientRect();
     let lineHeight = selectionRect.bottom - selectionRect.top;
+
     let left = selectionRect.left - restrictorRect.left;
     left = editorWidth >= left + autocompleteWidth ? left : left - autocompleteWidth;
     left = left < 0 ? 0 : left;
-    let top = selectionRect.top - restrictorRect.top + lineHeight + 4;
-    let showToTop = (top + maxHeight) > restrictorRect.bottom;
 
+    let top = selectionRect.top - restrictorRect.top + lineHeight + 4;
+    let offsetTop = selection.anchorNode.parentNode.offsetTop;
+    let slateEditor = getSlateEditor(selection);
+
+    slateEditor.style.overflow = 'hidden';
+
+    let showToTop = slateEditor.scrollTop + slateEditor.offsetHeight < offsetTop + autocompleteHeight;
+    if (showToTop) {
+      top -= autocompleteHeight + lineHeight;
+      top = top < 0 ? 0 : top;
+    }
     let position = {
       left: `${left}px`,
-      top: `${showToTop ? top - lineHeight : top}px`,
-      transform: `${showToTop ? 'translateY(-100%)' : ''}`
+      top: `${top}px`
     };
 
     let positionChanged = (this.state.left !== position.left) || (this.state.top !== position.top);
@@ -129,6 +145,7 @@ class AutocompleteWidget extends React.Component {
                 key={index}
                 ref={ref => (this[`item-ref-${index}`] = ref)}
                 onClick={() => this.handleSelectItem(index)}
+                onMouseDown={this.props.onMouseDown}
                 onMouseMove={() => onSelectedIndexChange(index)}
                 className={`
                   react-markdown--autocomplete-widget__item

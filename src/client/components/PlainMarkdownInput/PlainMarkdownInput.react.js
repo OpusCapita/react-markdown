@@ -1,4 +1,5 @@
 import React from 'react';
+import { findDOMNode } from 'react-dom';
 import Types from 'prop-types';
 import FullScreenButton from '../SlateEditor/plugins/slate-fullscreen-plugin/FullScreenButton';
 import DropdownButton from 'react-bootstrap/lib/DropdownButton';
@@ -65,10 +66,16 @@ function copySelectionToClipboard(event, change) {
 }
 
 class PlainMarkdownInput extends React.Component {
-  state = {
-    editorState: '',
-    fullScreen: false
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      editorState: '',
+      fullScreen: false
+    };
+    this.handleMouseDown = this.handleMouseDown.bind(this);
+    this.handleRef = this.handleRef.bind(this)
+    this.handleScroll = this.handleScroll.bind(this);
+  }
 
   componentWillMount() {
     this.initialBodyOverflowStyle = document.body.style.overflow;
@@ -80,6 +87,13 @@ class PlainMarkdownInput extends React.Component {
       this.handleNewValue(nextProps.value);
     }
   }
+
+  shouldComponentUpdate =(nextProps, nextState) => {
+    return this.state.editorState.endKey !== nextState.editorState.endKey ||
+      this.state.editorState.endOffset !== nextState.editorState.endOffset ||
+      this.state.editorState.startKey !== nextState.editorState.startKey ||
+      this.state.editorState.startOffset !== nextState.editorState.startOffset;
+  };
 
   handleNewValue(value) {
     let editorState = Plain.deserialize(value);
@@ -140,6 +154,10 @@ class PlainMarkdownInput extends React.Component {
     }, 0);
   };
 
+  handleMouseDown = () => {
+    this.forceUpdate();
+  };
+
   handleFullScreen = () => {
     let fullScreen = !this.state.fullScreen;
 
@@ -166,6 +184,22 @@ class PlainMarkdownInput extends React.Component {
     return change;
   }
 
+  handleRef(ref) {
+    this.slateContentRef = ref;
+  }
+
+  handleScroll() {
+    if (navigator.userAgent.match(/msie/i) || navigator.userAgent.match(/trident/i)) {
+      // Works in the modal mode only in IE
+      // In other browsers interception of focus does not work in the modal mode
+      this.slateContentRef.focus();
+    } else {
+      // This code in case of execution in IE as a ghost effect scrolls the content of the block to the top
+      let refEl = findDOMNode(this.slateContentRef);
+      refEl.getElementsByClassName('react-markdown--slate-content__editor')[0].focus();
+    }
+  }
+
   render() {
     const { editorState, fullScreen } = this.state;
     const { children, extensions, readOnly } = this.props;
@@ -190,7 +224,12 @@ class PlainMarkdownInput extends React.Component {
         onCut={this.handleCut}
         onKeyDown={this.handleKeyDown}
         plugins={[
-          AutocompletePlugin({ extensions: extensions, onChange: this.handleChange })
+          AutocompletePlugin({
+            extensions: extensions,
+            onChange: this.handleChange,
+            onMouseDown: this.handleMouseDown,
+            onScroll: this.handleScroll
+          })
         ]}
         readOnly={readOnly}
       >
@@ -237,7 +276,7 @@ class PlainMarkdownInput extends React.Component {
 
           {children}
         </SlateToolbar>
-        <SlateContent />
+        <SlateContent onRef={this.handleRef} />
       </SlateEditor>
     );
   }
