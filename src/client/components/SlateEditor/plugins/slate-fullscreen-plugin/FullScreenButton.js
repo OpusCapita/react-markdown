@@ -4,7 +4,7 @@ import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
 import Types from 'prop-types';
 
-import "./FullScreenStyles.css";
+import './FullScreenStyles.css';
 
 const FullScreenButton = function({ onClick, fullScreen }) {
   return (
