@@ -9,6 +9,7 @@ MarkdownInput
 | onChange           | func            | Callback: `(value) => {}`                                                                        |
 | onFullScreen       | func            | Callback: `(bool isFullSceen) => {}`                                                    |
 | value              | string          | Raw markdown                                                                                     |
+| locale             | string          | Locale                                                                                           |
 | extensions         | array           | See "Extension definition" section bellow.                                                       |
 | readOnly           | bool            | Disables toolbar and makes markdown text not editable.                                           |
 
