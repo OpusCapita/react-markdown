@@ -8,7 +8,9 @@ const translations = {
     italic: 'Italic (Ctrl + I)',
     strikethrough: 'Strikethrough (Ctrl + S)',
     noMatchesFound: 'No matches found',
-    fullscreen: 'Fullscreen'
+    fullscreen: 'Fullscreen',
+    Product: 'Product',
+    Term: 'Term'
   },
   de: {
     insertHeader: 'Kopfzeile einfügen',
@@ -19,7 +21,9 @@ const translations = {
     italic: 'Kursiv (Strg + I)',
     strikethrough: 'Durchgestrichen (Strg + S)',
     noMatchesFound: 'Keine Treffer gefunden',
-    fullscreen: 'Vollbild'
+    fullscreen: 'Vollbild',
+    Product: 'Product',
+    Term: 'Term'
   }
 };
 

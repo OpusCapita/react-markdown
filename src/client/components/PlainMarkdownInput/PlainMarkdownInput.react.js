@@ -220,6 +220,7 @@ class PlainMarkdownInput extends React.Component {
           key={index}
           extension={extension}
           disabled={readOnly}
+          locale={locale}
         />
       );
     });
