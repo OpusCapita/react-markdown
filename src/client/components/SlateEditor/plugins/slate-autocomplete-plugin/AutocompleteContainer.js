@@ -12,6 +12,7 @@ const enterCode = 13;
 class AutocompleteContainer extends React.Component {
   static propTypes = {
     state: Types.object,
+    locale: Types.string,
     options: Types.object,
     onChange: Types.func,
     onMouseDown: Types.func,
@@ -20,6 +21,7 @@ class AutocompleteContainer extends React.Component {
 
   static defaultProps = {
     state: {},
+    locale: 'en-GB',
     options: {},
     onChange: () => {},
     onMouseDown: () => {},
@@ -169,7 +171,7 @@ class AutocompleteContainer extends React.Component {
 
   render() {
     const { show, selectedIndex, items, isLoading, isMouseIndexSelected, ref } = this.state;
-    const { children, state } = this.props;
+    const { children, state, locale } = this.props;
 
     let selection = window.getSelection();
     if (selection.anchorNode) {
@@ -189,6 +191,7 @@ class AutocompleteContainer extends React.Component {
             items={items}
             isLoading={isLoading}
             selectedIndex={selectedIndex}
+            locale={locale}
             onMouseDown={this.props.onMouseDown}
             onScroll={this.props.onScroll}
             onSelectItem={this.handleSelectItem}

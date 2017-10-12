@@ -1,15 +1,16 @@
 import React from 'react';
 import Types from 'prop-types';
+import getMessage from '../../translations';
 
 import { wrapLinkMarkdown, hasMultiLineSelection } from '../slate/transforms';
 
-const MarkdownLinkButton = ({ state, onChange, disabled }) => (
+const MarkdownLinkButton = ({ state, onChange, disabled, locale }) => (
   <button
     className="btn btn-default"
     disabled={disabled || hasMultiLineSelection(state)}
     onClick={e => onChange(wrapLinkMarkdown(state))}
     type="button"
-    title="Insert link"
+    title={getMessage(locale, 'insertLink')}
   >
     <i className="fa fa-link"/>
   </button>
@@ -18,7 +19,12 @@ const MarkdownLinkButton = ({ state, onChange, disabled }) => (
 MarkdownLinkButton.propTypes = {
   disabled: Types.bool,
   state: Types.object,
-  onChange: Types.func
+  onChange: Types.func,
+  locale: Types.string
+};
+
+MarkdownLinkButton.defaultProps = {
+  locale: 'en-GB'
 };
 
 export default MarkdownLinkButton;

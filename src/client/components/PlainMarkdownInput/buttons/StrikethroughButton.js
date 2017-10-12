@@ -1,6 +1,7 @@
 import React from 'react';
 import Types from 'prop-types';
 import classnames from 'classnames';
+import getMessage from '../../translations';
 
 import {
   wrapStrikethroughMarkdown,
@@ -9,7 +10,7 @@ import {
   hasMultiLineSelection,
 } from '../slate/transforms';
 
-const MarkdownStrikethroughButton = ({ state, onChange, disabled }) => {
+const MarkdownStrikethroughButton = ({ state, onChange, disabled, locale }) => {
   const active = hasStrikethroughMarkdown(state);
   return (
     <button
@@ -17,7 +18,7 @@ const MarkdownStrikethroughButton = ({ state, onChange, disabled }) => {
       disabled={disabled || hasMultiLineSelection(state)}
       onClick={e => onChange(active ? unwrapStrikethroughMarkdown(state) : wrapStrikethroughMarkdown(state))}
       type="button"
-      title="Strikethrough (Ctrl + S)"
+      title={getMessage(locale, 'strikethrough')}
     >
       <i className="fa fa-strikethrough"/>
     </button>
@@ -27,7 +28,12 @@ const MarkdownStrikethroughButton = ({ state, onChange, disabled }) => {
 MarkdownStrikethroughButton.propTypes = {
   disabled: Types.bool,
   state: Types.object,
-  onChange: Types.func
+  onChange: Types.func,
+  locale: Types.string
+};
+
+MarkdownStrikethroughButton.defaultProps = {
+  locale: 'en-GB'
 };
 
 export default MarkdownStrikethroughButton;

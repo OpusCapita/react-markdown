@@ -33,6 +33,7 @@ Configurable extensions with autocomplete for **products**, **terms**, etc.
     onChange={_scope.handleValueChange}
     value={_scope.state.markdownExample}
     readOnly={false}
+    locale='de'
     extensions={[
       {
         objectClassName: 'Product',

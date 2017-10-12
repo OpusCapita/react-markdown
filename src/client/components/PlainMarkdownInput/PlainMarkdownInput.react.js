@@ -9,6 +9,7 @@ import { hasMultiLineSelection } from './slate/transforms';
 import './PlainMarkdownInput.less';
 import { parse } from './slate/tokenizer';
 import { autoScrollToTop } from '../utils';
+import getMessage from '../translations';
 
 import {
   AutocompletePlugin,
@@ -100,6 +101,7 @@ class PlainMarkdownInput extends React.Component {
       this.props.readOnly !== nextProps.readOnly ||
       this.props.value !== nextProps.value ||
       this.props.onFullScreen !== nextProps.onFullScreen ||
+      this.props.locale !== nextProps.locale ||
       this.props.onChange !== nextProps.onChange;
   };
 
@@ -210,7 +212,7 @@ class PlainMarkdownInput extends React.Component {
 
   render() {
     const { editorState, fullScreen } = this.state;
-    const { children, extensions, readOnly } = this.props;
+    const { children, extensions, readOnly, locale } = this.props;
 
     let objectReferenceButtons = this.props.extensions.map((extension, index) => {
       return (
@@ -234,6 +236,7 @@ class PlainMarkdownInput extends React.Component {
         plugins={[
           AutocompletePlugin({
             extensions: extensions,
+            locale: locale,
             onChange: this.handleChange,
             onMouseDown: this.handleMouseDown,
             onScroll: this.handleScroll
@@ -243,35 +246,35 @@ class PlainMarkdownInput extends React.Component {
       >
         <SlateToolbar>
           <SlateToolbarGroup>
-            <BoldButton disabled={readOnly} />
-            <ItalicButton disabled={readOnly} />
-            <StrikethroughButton disabled={readOnly} />
+            <BoldButton disabled={readOnly} locale={locale} />
+            <ItalicButton disabled={readOnly} locale={locale} />
+            <StrikethroughButton disabled={readOnly} locale={locale} />
           </SlateToolbarGroup>
 
           <SlateToolbarGroup>
-            <LinkButton disabled={readOnly} />
+            <LinkButton disabled={readOnly} locale={locale} />
           </SlateToolbarGroup>
 
           <SlateToolbarGroup>
-            <div title="Insert header">
+            <div title={getMessage(locale, 'insertHeader')}>
               <DropdownButton
                 id="oc-md--toolbar__headers-dropdown"
                 title={<i className="fa fa-header"/>}
                 disabled={hasMultiLineSelection(editorState) || readOnly}
               >
-                <HeaderOneButton state={editorState} onChange={this.handleChange}/>
-                <HeaderTwoButton state={editorState} onChange={this.handleChange}/>
-                <HeaderThreeButton state={editorState} onChange={this.handleChange}/>
-                <HeaderFourButton state={editorState} onChange={this.handleChange}/>
-                <HeaderFiveButton state={editorState} onChange={this.handleChange}/>
-                <HeaderSixButton state={editorState} onChange={this.handleChange}/>
+                <HeaderOneButton state={editorState} onChange={this.handleChange} />
+                <HeaderTwoButton state={editorState} onChange={this.handleChange} />
+                <HeaderThreeButton state={editorState} onChange={this.handleChange} />
+                <HeaderFourButton state={editorState} onChange={this.handleChange} />
+                <HeaderFiveButton state={editorState} onChange={this.handleChange} />
+                <HeaderSixButton state={editorState} onChange={this.handleChange} />
               </DropdownButton>
             </div>
           </SlateToolbarGroup>
 
           <SlateToolbarGroup>
-            <OrderedListButton disabled={readOnly} />
-            <UnorderedListButton disabled={readOnly} />
+            <OrderedListButton disabled={readOnly} locale={locale} />
+            <UnorderedListButton disabled={readOnly} locale={locale} />
           </SlateToolbarGroup>
 
           <SlateToolbarGroup>
@@ -279,7 +282,12 @@ class PlainMarkdownInput extends React.Component {
           </SlateToolbarGroup>
 
           <SlateToolbarGroup className="react-markdown--plain-markdown-input__fullscreen-button">
-            <FullScreenButton onClick={this.handleFullScreen} fullScreen={fullScreen} disabled={readOnly} />
+            <FullScreenButton
+              onClick={this.handleFullScreen}
+              locale={locale}
+              fullScreen={fullScreen}
+              disabled={readOnly}
+            />
           </SlateToolbarGroup>
 
           {children}
@@ -295,7 +303,8 @@ PlainMarkdownInput.propTypes = {
   value: Types.string,
   onChange: Types.func,
   onFullScreen: Types.func,
-  readOnly: Types.bool
+  readOnly: Types.bool,
+  locale: Types.string
 };
 
 PlainMarkdownInput.defaultProps = {
@@ -303,7 +312,8 @@ PlainMarkdownInput.defaultProps = {
   value: '',
   onFullScreen: () => {},
   onChange: () => {},
-  readOnly: false
+  readOnly: false,
+  locale: 'en-GB'
 };
 
 export default PlainMarkdownInput;

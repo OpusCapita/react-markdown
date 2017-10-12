@@ -2,11 +2,13 @@ import React from 'react';
 import './Autocomplete.less';
 import Types from 'prop-types';
 import { getSlateEditor } from '../../../utils';
+import getMessage from '../../../translations';
 
 const propTypes = {
   isMouseIndexSelected: Types.bool,
   onSelectedIndexChange: Types.func,
   items: Types.array,
+  locale: Types.string,
   onMouseDown: Types.func,
   onScroll: Types.func,
   onSelectItem: Types.func,
@@ -19,6 +21,7 @@ const defaultProps = {
   isMouseIndexSelected: false,
   onSelectedIndexChange: () => {},
   items: [],
+  locale: 'en-GB',
   onScroll: () => {},
   onSelectItem: () => {},
   style: {},
@@ -122,7 +125,7 @@ class AutocompleteWidget extends React.Component {
 
   render() {
     const { left, top, transform } = this.state;
-    const { items, selectedIndex, onSelectedIndexChange } = this.props;
+    const { items, locale, selectedIndex, onSelectedIndexChange } = this.props;
 
     if (items) {
       return (
@@ -159,7 +162,8 @@ class AutocompleteWidget extends React.Component {
           })}
 
           {!items.length ? (
-            <div className="react-markdown--autocomplete-widget__item">No matches found</div>
+            <div className="react-markdown--autocomplete-widget__item">{getMessage(locale, 'noMatchesFound')}</div>
+            // <div className="react-markdown--autocomplete-widget__item">No matches found</div>
           ) : null}
         </div>
       );
