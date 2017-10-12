@@ -28,7 +28,7 @@ MarkdownBoldButton.propTypes = {
 };
 
 MarkdownBoldButton.defaultProps = {
-  locale: 'en-GB'
+  locale: 'en'
 };
 
 export default MarkdownBoldButton;

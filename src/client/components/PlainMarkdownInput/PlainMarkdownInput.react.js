@@ -316,7 +316,7 @@ PlainMarkdownInput.defaultProps = {
   onFullScreen: () => {},
   onChange: () => {},
   readOnly: false,
-  locale: 'en-GB'
+  locale: 'en'
 };
 
 export default PlainMarkdownInput;

@@ -18,7 +18,7 @@ class MarkdownInput extends React.Component {
     onFullScreen: () => {},
     extensions: [],
     readOnly: false,
-    locale: 'en-GB'
+    locale: 'en'
   };
 
   handleChangeValue = (value) => {

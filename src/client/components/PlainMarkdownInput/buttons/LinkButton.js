@@ -24,7 +24,7 @@ MarkdownLinkButton.propTypes = {
 };
 
 MarkdownLinkButton.defaultProps = {
-  locale: 'en-GB'
+  locale: 'en'
 };
 
 export default MarkdownLinkButton;

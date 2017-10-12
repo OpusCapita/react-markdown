@@ -33,7 +33,7 @@ MarkdownItalicButton.propTypes = {
 };
 
 MarkdownItalicButton.defaultProps = {
-  locale: 'en-GB'
+  locale: 'en'
 };
 
 export default MarkdownItalicButton;

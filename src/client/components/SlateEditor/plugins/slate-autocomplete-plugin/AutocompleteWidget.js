@@ -21,7 +21,7 @@ const defaultProps = {
   isMouseIndexSelected: false,
   onSelectedIndexChange: () => {},
   items: [],
-  locale: 'en-GB',
+  locale: 'en',
   onScroll: () => {},
   onSelectItem: () => {},
   style: {},

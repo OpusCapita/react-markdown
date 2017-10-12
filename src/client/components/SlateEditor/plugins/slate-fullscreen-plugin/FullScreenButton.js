@@ -27,7 +27,7 @@ FullScreenButton.propTypes = {
 FullScreenButton.defaultProps = {
   onClick: () => {},
   fullScreen: false,
-  locale: 'en-GB'
+  locale: 'en'
 };
 
 export default FullScreenButton;

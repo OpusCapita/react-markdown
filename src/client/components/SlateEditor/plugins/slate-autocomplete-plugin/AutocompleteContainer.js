@@ -21,7 +21,7 @@ class AutocompleteContainer extends React.Component {
 
   static defaultProps = {
     state: {},
-    locale: 'en-GB',
+    locale: 'en',
     options: {},
     onChange: () => {},
     onMouseDown: () => {},

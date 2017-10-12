@@ -33,7 +33,7 @@ MarkdownUnorderedListButton.propTypes = {
 };
 
 MarkdownUnorderedListButton.defaultProps = {
-  locale: 'en-GB'
+  locale: 'en'
 };
 
 export default MarkdownUnorderedListButton;

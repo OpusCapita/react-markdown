@@ -33,7 +33,7 @@ MarkdownStrikethroughButton.propTypes = {
 };
 
 MarkdownStrikethroughButton.defaultProps = {
-  locale: 'en-GB'
+  locale: 'en'
 };
 
 export default MarkdownStrikethroughButton;
