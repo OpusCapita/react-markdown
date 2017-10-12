@@ -1,6 +1,7 @@
 import React from 'react';
 import Types from 'prop-types';
 import classnames from 'classnames';
+import getMessage from '../../translations';
 
 import {
   wrapOrderedListMarkdown,
@@ -9,7 +10,7 @@ import {
   hasMultiLineSelection,
 } from '../slate/transforms';
 
-const MarkdownOrderedListButton = ({ state, onChange, disabled }) => {
+const MarkdownOrderedListButton = ({ state, onChange, disabled, locale }) => {
   const active = hasOrderedListMarkdown(state);
   return (
     <button
@@ -17,7 +18,7 @@ const MarkdownOrderedListButton = ({ state, onChange, disabled }) => {
       disabled={disabled || hasMultiLineSelection(state)}
       onClick={e => onChange(active ? unwrapOrderedListMarkdown(state) : wrapOrderedListMarkdown(state))}
       type="button"
-      title="Numbered list"
+      title={getMessage(locale, 'numberedList')}
     >
       <i className="fa fa-list-ol"/>
     </button>
@@ -27,7 +28,12 @@ const MarkdownOrderedListButton = ({ state, onChange, disabled }) => {
 MarkdownOrderedListButton.propTypes = {
   disabled: Types.bool,
   state: Types.object,
-  onChange: Types.func
+  onChange: Types.func,
+  locale: Types.string
+};
+
+MarkdownOrderedListButton.defaultProps = {
+  locale: 'en'
 };
 
 export default MarkdownOrderedListButton;

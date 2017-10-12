@@ -10,6 +10,7 @@ const AutocompletePlugin = options => ({
       <AutocompleteContainer
         state={state}
         options={options}
+        locale={options.locale}
         onChange={options.onChange} // eslint-disable-line
         onMouseDown={options.onMouseDown} // eslint-disable-line
         onScroll={options.onScroll} // eslint-disable-line

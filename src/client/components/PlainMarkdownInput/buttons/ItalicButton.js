@@ -1,6 +1,7 @@
 import React from 'react';
 import Types from 'prop-types';
 import classnames from 'classnames';
+import getMessage from '../../translations';
 
 import {
   wrapItalicMarkdown,
@@ -9,7 +10,7 @@ import {
   hasMultiLineSelection
 } from '../slate/transforms';
 
-const MarkdownItalicButton = ({ state, onChange, disabled }) => {
+const MarkdownItalicButton = ({ state, onChange, disabled, locale }) => {
   const active = hasItalicMarkdown(state);
   return (
     <button
@@ -17,7 +18,7 @@ const MarkdownItalicButton = ({ state, onChange, disabled }) => {
       disabled={disabled || hasMultiLineSelection(state)}
       onClick={e => onChange(active ? unwrapItalicMarkdown(state) : wrapItalicMarkdown(state))}
       type="button"
-      title="Italic (Ctrl + I)"
+      title={getMessage(locale, 'italic')}
     >
       <i className="fa fa-italic"/>
     </button>
@@ -27,7 +28,12 @@ const MarkdownItalicButton = ({ state, onChange, disabled }) => {
 MarkdownItalicButton.propTypes = {
   disabled: Types.bool,
   state: Types.object,
-  onChange: Types.func
+  onChange: Types.func,
+  locale: Types.string
+};
+
+MarkdownItalicButton.defaultProps = {
+  locale: 'en'
 };
 
 export default MarkdownItalicButton;

@@ -9,6 +9,7 @@ MarkdownInputModal
 | onChange           | func            | Callback: `(value) => {}`                                                                        |
 | onFullScreen       | func            | Callback: `(bool isFullSceen) => {}`                                                    |
 | value              | string          | Raw markdown                                                                                     |
+| locale             | string          | Locale                                                                                           |
 | extensions         | array           | See "Extension definition" section bellow.                                                       |
 | readOnly           | bool            | Disables toolbar and makes markdown text not editable.                                           |
 
@@ -33,6 +34,7 @@ Configurable extensions with autocomplete for **products**, **terms**, etc.
     onChange={_scope.handleValueChange}
     value={_scope.state.markdownExample}
     readOnly={false}
+    locale='de'
     extensions={[
       {
         objectClassName: 'Product',

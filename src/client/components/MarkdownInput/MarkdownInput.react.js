@@ -8,7 +8,8 @@ class MarkdownInput extends React.Component {
     onChange: Types.func,
     onFullScreen: Types.func,
     extensions: Types.array,
-    readOnly: Types.bool
+    readOnly: Types.bool,
+    locale: Types.string
   };
 
   static defaultProps = {
@@ -16,7 +17,8 @@ class MarkdownInput extends React.Component {
     onChange: () => {},
     onFullScreen: () => {},
     extensions: [],
-    readOnly: false
+    readOnly: false,
+    locale: 'en'
   };
 
   handleChangeValue = (value) => {
@@ -28,7 +30,7 @@ class MarkdownInput extends React.Component {
   };
 
   render() {
-    const { value, extensions, readOnly } = this.props;
+    const { value, extensions, readOnly, locale } = this.props;
 
     return (
       <PlainMarkdownInput
@@ -37,6 +39,7 @@ class MarkdownInput extends React.Component {
         onFullScreen={this.handleFullScreen}
         extensions={extensions}
         readOnly={readOnly}
+        locale={locale}
       />
     );
   }

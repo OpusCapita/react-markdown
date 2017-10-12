@@ -1,6 +1,7 @@
 import React from 'react';
 import Types from 'prop-types';
 import classnames from 'classnames';
+import getMessage from '../../translations';
 
 import {
   wrapUnorderedListMarkdown,
@@ -9,7 +10,7 @@ import {
   hasMultiLineSelection,
 } from '../slate/transforms';
 
-const MarkdownUnorderedListButton = ({ state, onChange, disabled }) => {
+const MarkdownUnorderedListButton = ({ state, onChange, disabled, locale }) => {
   const active = hasUnorderedListMarkdown(state);
   return (
     <button
@@ -17,7 +18,7 @@ const MarkdownUnorderedListButton = ({ state, onChange, disabled }) => {
       disabled={disabled || hasMultiLineSelection(state)}
       onClick={e => onChange(active ? unwrapUnorderedListMarkdown(state) : wrapUnorderedListMarkdown(state))}
       type="button"
-      title="Bulleted list"
+      title={getMessage(locale, 'bulletedList')}
     >
       <i className="fa fa-list-ul"/>
     </button>
@@ -27,7 +28,12 @@ const MarkdownUnorderedListButton = ({ state, onChange, disabled }) => {
 MarkdownUnorderedListButton.propTypes = {
   disabled: Types.bool,
   state: Types.object,
-  onChange: Types.func
+  onChange: Types.func,
+  locale: Types.string
+};
+
+MarkdownUnorderedListButton.defaultProps = {
+  locale: 'en'
 };
 
 export default MarkdownUnorderedListButton;
