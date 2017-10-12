@@ -8,7 +8,7 @@ import shortcuts from './slate/shortcuts';
 import { hasMultiLineSelection } from './slate/transforms';
 import './PlainMarkdownInput.less';
 import { parse } from './slate/tokenizer';
-import { autoScrollToTop } from './Utils';
+import { autoScrollToTop } from '../utils';
 
 import {
   AutocompletePlugin,
@@ -75,7 +75,6 @@ class PlainMarkdownInput extends React.Component {
     this.handleMouseDown = this.handleMouseDown.bind(this);
     this.handleRef = this.handleRef.bind(this);
     this.handleScroll = this.handleScroll.bind(this);
-    this.isChange = false;
   }
 
   componentWillMount() {
@@ -90,12 +89,18 @@ class PlainMarkdownInput extends React.Component {
   }
 
   shouldComponentUpdate =(nextProps, nextState) => {
-    let condition = this.state.editorState.endKey !== nextState.editorState.endKey ||
+    // XXX
+    // for only modal mode
+    return this.state.editorState.endKey !== nextState.editorState.endKey ||
       this.state.editorState.endOffset !== nextState.editorState.endOffset ||
       this.state.editorState.startKey !== nextState.editorState.startKey ||
-      this.state.editorState.startOffset !== nextState.editorState.startOffset || this.isChange;
-    this.isChange = false;
-    return condition;
+      this.state.editorState.startOffset !== nextState.editorState.startOffset ||
+      this.state.fullScreen !== nextState.fullScreen ||
+      this.state.editorState.texts.get(0).text !== nextState.editorState.texts.get(0).text ||
+      this.props.readOnly !== nextProps.readOnly ||
+      this.props.value !== nextProps.value ||
+      this.props.onFullScreen !== nextProps.onFullScreen ||
+      this.props.onChange !== nextProps.onChange;
   };
 
   handleNewValue(value) {
@@ -166,7 +171,6 @@ class PlainMarkdownInput extends React.Component {
 
     document.body.style.overflow = fullScreen ? 'hidden' : this.initialBodyOverflowStyle;
 
-    this.isChange = true;
     this.setState({ fullScreen });
     this.props.onFullScreen(fullScreen);
   };
