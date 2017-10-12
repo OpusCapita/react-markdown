@@ -31,7 +31,8 @@ class MarkdownInputModalScope extends React.Component {
         <Button bsStyle='primary' onClick={this.handleShowModal}>
           Show
         </Button>
-        <Modal show={this.state.show}
+        <Modal
+          show={this.state.show}
           onHide={this.handleHideModal}
         >
           <Modal.Header closeButton={true}>

@@ -1,4 +1,5 @@
 import React from 'react';
+import _ from 'lodash';
 import { findDOMNode } from 'react-dom';
 import Types from 'prop-types';
 import FullScreenButton from '../SlateEditor/plugins/slate-fullscreen-plugin/FullScreenButton';
@@ -102,7 +103,8 @@ class PlainMarkdownInput extends React.Component {
       this.props.value !== nextProps.value ||
       this.props.onFullScreen !== nextProps.onFullScreen ||
       this.props.locale !== nextProps.locale ||
-      this.props.onChange !== nextProps.onChange;
+      this.props.onChange !== nextProps.onChange ||
+      !_.isEqual(this.props.extensions, nextProps.extensions);
   };
 
   handleNewValue(value) {
