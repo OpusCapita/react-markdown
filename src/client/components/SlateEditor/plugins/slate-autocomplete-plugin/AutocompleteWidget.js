@@ -1,7 +1,7 @@
 import React from 'react';
 import './Autocomplete.less';
 import Types from 'prop-types';
-import { getSlateEditor } from '../../../PlainMarkdownInput/Utils';
+import { getSlateEditor } from '../../../utils';
 
 const propTypes = {
   isMouseIndexSelected: Types.bool,

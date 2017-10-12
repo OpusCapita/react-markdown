@@ -2,7 +2,7 @@ import React from 'react';
 import Types from 'prop-types';
 
 import AutocompleteWidget from './AutocompleteWidget';
-import { getSlateEditor } from '../../../PlainMarkdownInput/Utils';
+import { getSlateEditor } from '../../../utils';
 
 const escapeCode = 27;
 const arrowUpCode = 38;
