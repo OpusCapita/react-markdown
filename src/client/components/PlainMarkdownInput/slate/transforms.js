@@ -60,6 +60,7 @@ const wrapBlock = function(matchRules, text, state) {
     focus().apply();
 };
 
+
 /**
  * Has text wrapped italic markdown tokens
  *
@@ -274,3 +275,96 @@ export const wrapHeaderFiveMarkdown = wrapBlock.bind(null,
   [olRegExp, ulRegExp, h1RegExp, h2RegExp, h3RegExp, h4RegExp, h6RegExp], '##### ');
 export const wrapHeaderSixMarkdown = wrapBlock.bind(null,
   [olRegExp, ulRegExp, h1RegExp, h2RegExp, h3RegExp, h4RegExp, h5RegExp], '###### ');
+
+const activities = {
+  has: {
+    bold: hasBoldMarkdown,
+    italic: hasItalicMarkdown,
+    strikethrough: hasStrikethroughMarkdown,
+    header: [
+      null,
+      hasHeaderOneMarkdown,
+      hasHeaderTwoMarkdown,
+      hasHeaderThreeMarkdown,
+      hasHeaderFourMarkdown,
+      hasHeaderFiveMarkdown,
+      hasHeaderSixMarkdown
+    ]
+  },
+  wrap: {
+    bold: wrapBoldMarkdown,
+    italic: wrapItalicMarkdown,
+    strikethrough: wrapStrikethroughMarkdown,
+    header: [
+      null,
+      wrapHeaderOneMarkdown,
+      wrapHeaderTwoMarkdown,
+      wrapHeaderThreeMarkdown,
+      wrapHeaderFourMarkdown,
+      wrapHeaderFiveMarkdown,
+      wrapHeaderSixMarkdown
+    ]
+  },
+  unwrap: {
+    bold: unwrapBoldMarkdown,
+    italic: unwrapItalicMarkdown,
+    strikethrough: unwrapStrikethroughMarkdown,
+    header: [
+      null,
+      unwrapHeaderOneMarkdown,
+      unwrapHeaderTwoMarkdown,
+      unwrapHeaderThreeMarkdown,
+      unwrapHeaderFourMarkdown,
+      unwrapHeaderFiveMarkdown,
+      unwrapHeaderSixMarkdown
+    ]
+  }
+};
+
+export const hasEmphasis = (state, type) => {
+  if (activities.has[type]) {
+    return activities.has[type](state);
+  }
+
+  return false;
+};
+
+export const wrapEmphasis = (state, type) => {
+  if (activities.wrap[type]) {
+    return activities.wrap[type](state);
+  }
+
+  return state;
+};
+
+export const unwrapEmphasis = (state, type) => {
+  if (activities.unwrap[type]) {
+    return activities.unwrap[type](state);
+  }
+
+  return state;
+};
+
+export const hasHeader = (state, level) => {
+  if (activities.has.header[level]) {
+    return activities.has.header[level](state);
+  }
+
+  return false;
+};
+
+export const wrapHeader = (state, level) => {
+  if (activities.wrap.header[level]) {
+    return activities.wrap.header[level](state);
+  }
+
+  return state;
+};
+
+export const unwrapHeader = (state, level) => {
+  if (activities.unwrap.header[level]) {
+    return activities.unwrap.header[level](state);
+  }
+
+  return state;
+};

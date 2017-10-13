@@ -2,7 +2,13 @@ import React from 'react';
 import Types from 'prop-types';
 import classnames from 'classnames';
 import getMessage from '../../translations';
-import { wrapBoldMarkdown, unwrapBoldMarkdown, hasBoldMarkdown, hasMultiLineSelection } from '../slate/transforms';
+
+import {
+  wrapBoldMarkdown,
+  unwrapBoldMarkdown,
+  hasBoldMarkdown,
+  hasMultiLineSelection
+} from '../slate/transforms';
 
 const MarkdownBoldButton = ({ state, onChange, disabled, locale }) => {
   const active = hasBoldMarkdown(state);

@@ -18,21 +18,14 @@ import {
 } from '../SlateEditor/plugins';
 
 import {
-  BoldButton,
-  HeaderFiveButton,
-  HeaderFourButton,
-  HeaderOneButton,
-  HeaderSixButton,
-  HeaderThreeButton,
-  HeaderTwoButton,
-  ItalicButton,
+  EmphasisButton,
+  HeaderButton,
   LinkButton,
   OrderedListButton,
-  StrikethroughButton,
   UnorderedListButton
 } from './buttons';
 
-import { SlateContent, SlateEditor, SlateToolbar, SlateToolbarGroup } from '../SlateEditor';
+import { SlateContent, SlateEditor } from '../SlateEditor';
 import Plain from 'slate-plain-serializer';
 
 function getCopyText(state) {
@@ -219,6 +212,8 @@ class PlainMarkdownInput extends React.Component {
     let objectReferenceButtons = this.props.extensions.map((extension, index) => {
       return (
         <ObjectReferenceButton
+          state={editorState}
+          onChange={this.handleChange}
           key={index}
           extension={extension}
           disabled={readOnly}
@@ -247,54 +242,56 @@ class PlainMarkdownInput extends React.Component {
         ]}
         readOnly={readOnly}
       >
-        <SlateToolbar>
-          <SlateToolbarGroup>
-            <BoldButton disabled={readOnly} locale={locale} />
-            <ItalicButton disabled={readOnly} locale={locale} />
-            <StrikethroughButton disabled={readOnly} locale={locale} />
-          </SlateToolbarGroup>
+        <div className="react-markdown--toolbar">
+          <div className="btn-group">
+            {['bold', 'italic', 'strikethrough'].map(accent => (
+              <EmphasisButton
+                key={accent}
+                state={editorState}
+                onChange={this.handleChange}
+                disabled={readOnly}
+                locale={locale}
+                accent={accent}
+              />
+            ))}
+          </div>
 
-          <SlateToolbarGroup>
-            <LinkButton disabled={readOnly} locale={locale} />
-          </SlateToolbarGroup>
+          <div className="btn-group">
+            <LinkButton state={editorState} onChange={this.handleChange} disabled={readOnly} locale={locale} />
+          </div>
 
-          <SlateToolbarGroup>
-            <div title={getMessage(locale, 'insertHeader')}>
-              <DropdownButton
-                id="oc-md--toolbar__headers-dropdown"
-                title={<i className="fa fa-header"/>}
-                disabled={hasMultiLineSelection(editorState) || readOnly}
-              >
-                <HeaderOneButton state={editorState} onChange={this.handleChange} />
-                <HeaderTwoButton state={editorState} onChange={this.handleChange} />
-                <HeaderThreeButton state={editorState} onChange={this.handleChange} />
-                <HeaderFourButton state={editorState} onChange={this.handleChange} />
-                <HeaderFiveButton state={editorState} onChange={this.handleChange} />
-                <HeaderSixButton state={editorState} onChange={this.handleChange} />
-              </DropdownButton>
-            </div>
-          </SlateToolbarGroup>
+          <div className="btn-group" title={getMessage(locale, 'insertHeader')}>
+            <DropdownButton
+              id="oc-md--toolbar__headers-dropdown"
+              title={<i className="fa fa-header"/>}
+              disabled={hasMultiLineSelection(editorState) || readOnly}
+            >
+              {[1, 2, 3, 4, 5, 6].map(level => (
+                <HeaderButton key={level} state={editorState} onChange={this.handleChange} level={level} />
+              ))}
+            </DropdownButton>
+          </div>
 
-          <SlateToolbarGroup>
-            <OrderedListButton disabled={readOnly} locale={locale} />
-            <UnorderedListButton disabled={readOnly} locale={locale} />
-          </SlateToolbarGroup>
+          <div className="btn-group">
+            <OrderedListButton state={editorState} onChange={this.handleChange} disabled={readOnly} locale={locale} />
+            <UnorderedListButton state={editorState} onChange={this.handleChange} disabled={readOnly} locale={locale} />
+          </div>
 
-          <SlateToolbarGroup>
+          <div className="btn-group">
             {objectReferenceButtons}
-          </SlateToolbarGroup>
+          </div>
 
-          <SlateToolbarGroup className="react-markdown--plain-markdown-input__fullscreen-button">
+          <div className="btn-group react-markdown--plain-markdown-input__fullscreen-button">
             <FullScreenButton
               onClick={this.handleFullScreen}
               locale={locale}
               fullScreen={fullScreen}
               disabled={readOnly}
             />
-          </SlateToolbarGroup>
+          </div>
 
           {children}
-        </SlateToolbar>
+        </div>
         <SlateContent onRef={this.handleRef} />
       </SlateEditor>
     );

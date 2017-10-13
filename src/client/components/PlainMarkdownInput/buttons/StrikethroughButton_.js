@@ -12,6 +12,7 @@ import {
 
 const MarkdownStrikethroughButton = ({ state, onChange, disabled, locale }) => {
   const active = hasStrikethroughMarkdown(state);
+
   return (
     <button
       className={classnames('btn btn-default', { active })}
