@@ -5,7 +5,6 @@ import Types from 'prop-types';
 import DropdownButton from 'react-bootstrap/lib/DropdownButton';
 import schema from './slate/schema';
 import shortcuts from './slate/shortcuts';
-// import { hasMultiLineSelection } from './slate/transforms';
 import './PlainMarkdownInput.less';
 import { parse } from './slate/tokenizer';
 import { autoScrollToTop } from '../utils';
@@ -27,6 +26,10 @@ import {
   hasAccent,
   wrapAccent,
   unwrapAccent,
+  hasHeader,
+  wrapHeader,
+  unwrapHeader,
+  wrapLinkMarkdown,
   hasMultiLineSelection
 } from './slate/transforms';
 
@@ -75,7 +78,7 @@ class PlainMarkdownInput extends React.Component {
     this.handleMouseDown = this.handleMouseDown.bind(this);
     this.handleRef = this.handleRef.bind(this);
     this.handleScroll = this.handleScroll.bind(this);
-    this.handleClickButton = this.handleClickButton.bind(this);
+    this.handleClickActionButton = this.handleClickActionButton.bind(this);
   }
 
   componentWillMount() {
@@ -211,16 +214,27 @@ class PlainMarkdownInput extends React.Component {
     }
   }
 
-  handleClickButton(accent) {
+  handleClickActionButton(accent) {
     const state = this.state.editorState;
     const active = hasAccent(state, accent);
-
     return this.handleChange(active ? unwrapAccent(state, accent) : wrapAccent(state, accent));
+  }
+
+  handleClickHeaderButton(level) {
+    const state = this.state.editorState;
+    const active = hasHeader(state, level);
+    return this.handleChange(active ? unwrapHeader(state, level) : wrapHeader(state, level));
+  }
+
+  handleClickLinkButton() {
+    const state = this.state.editorState;
+    return this.handleChange(wrapLinkMarkdown(state));
   }
 
   render() {
     const { editorState, fullScreen } = this.state;
     const { children, extensions, readOnly, locale } = this.props;
+    const disabled = readOnly || hasMultiLineSelection(editorState);
 
     let objectReferenceButtons = this.props.extensions.map((extension, index) => {
       return (
@@ -260,10 +274,8 @@ class PlainMarkdownInput extends React.Component {
             {['bold', 'italic', 'strikethrough'].map(accent => (
               <ActionButton
                 key={accent}
-                // state={editorState}
-                // onChange={this.handleChange}
-                onClick={this.handleClickButton}
-                disabled={readOnly || hasMultiLineSelection(editorState)}
+                onClick={this.handleClickActionButton}
+                disabled={disabled}
                 locale={locale}
                 accent={accent}
                 active={hasAccent(editorState, accent)}
@@ -272,17 +284,25 @@ class PlainMarkdownInput extends React.Component {
           </div>
 
           <div className="btn-group">
-            <LinkButton state={editorState} onChange={this.handleChange} disabled={readOnly} locale={locale} />
+            <LinkButton
+              onClick={this.handleClickLinkButton.bind(this)}
+              disabled={disabled}
+              locale={locale}
+            />
           </div>
 
           <div className="btn-group" title={getMessage(locale, 'insertHeader')}>
             <DropdownButton
               id="oc-md--toolbar__headers-dropdown"
               title={<i className="fa fa-header"/>}
-              disabled={hasMultiLineSelection(editorState) || readOnly}
+              disabled={disabled}
             >
               {[1, 2, 3, 4, 5, 6].map(level => (
-                <HeaderButton key={level} state={editorState} onChange={this.handleChange} level={level} />
+                <HeaderButton
+                  key={level}
+                  onClick={this.handleClickHeaderButton.bind(this)}
+                  level={level}
+                />
               ))}
             </DropdownButton>
           </div>
@@ -290,15 +310,9 @@ class PlainMarkdownInput extends React.Component {
           <div className="btn-group">
             {['ol', 'ul'].map(accent => (
               <ActionButton
-                // key={accent}
-                // state={editorState}
-                // onChange={this.handleChange}
-                // disabled={readOnly}
-                // locale={locale}
-                // accent={accent}
                 key={accent}
-                onClick={this.handleClickButton}
-                disabled={readOnly || hasMultiLineSelection(editorState)}
+                onClick={this.handleClickActionButton}
+                disabled={disabled}
                 locale={locale}
                 accent={accent}
                 active={hasAccent(editorState, accent)}

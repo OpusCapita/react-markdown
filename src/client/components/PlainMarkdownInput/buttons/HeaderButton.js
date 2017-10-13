@@ -2,12 +2,6 @@ import React from 'react';
 import Types from 'prop-types';
 import MenuItem from 'react-bootstrap/lib/MenuItem';
 
-import {
-  hasHeader,
-  wrapHeader,
-  unwrapHeader,
-} from '../slate/transforms';
-
 const titles = [
   '',
   'Header 1',
@@ -19,11 +13,10 @@ const titles = [
 ];
 
 
-const HeaderButton = ({ state, onChange, level }) => {
-  const active = hasHeader(state, level);
+const HeaderButton = ({ onClick, level }) => {
   return (
     <MenuItem
-      onClick={e => onChange(active ? unwrapHeader(state, level) : wrapHeader(state, level))}
+      onClick={e => onClick(level)}
     >
       <strong>{titles[level]}</strong>
     </MenuItem>
@@ -31,8 +24,7 @@ const HeaderButton = ({ state, onChange, level }) => {
 };
 
 HeaderButton.propTypes = {
-  state: Types.object,
-  onChange: Types.func,
+  onClick: Types.func,
   level: Types.number
 };
 

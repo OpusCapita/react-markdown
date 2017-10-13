@@ -4,7 +4,7 @@ import { expect } from 'chai';
 import Plain from 'slate-plain-serializer';
 import LinkButton from '../LinkButton';
 
-describe('<LinkButton/>', () => {
+describe.skip('<LinkButton/>', () => {
   it('check insert link into selected text', () => {
     let state = Plain.deserialize("some text").
     // selected 'text' in state
