@@ -244,86 +244,54 @@ export const wrapLinkMarkdown = state => {
  */
 export const hasMultiLineSelection = ({ selection: { startKey, endKey } }) => startKey !== endKey;
 
-export const hasUnorderedListMarkdown = hasBlock.bind(null, ulRegExp);
-export const hasOrderedListMarkdown = hasBlock.bind(null, olRegExp);
-export const hasHeaderOneMarkdown = hasBlock.bind(null, h1RegExp);
-export const hasHeaderTwoMarkdown = hasBlock.bind(null, h2RegExp);
-export const hasHeaderThreeMarkdown = hasBlock.bind(null, h3RegExp);
-export const hasHeaderFourMarkdown = hasBlock.bind(null, h4RegExp);
-export const hasHeaderFiveMarkdown = hasBlock.bind(null, h5RegExp);
-export const hasHeaderSixMarkdown = hasBlock.bind(null, h6RegExp);
-export const unwrapHeaderOneMarkdown = unwrapBlock.bind(null, '# '.length);
-export const unwrapHeaderTwoMarkdown = unwrapBlock.bind(null, '## '.length);
-export const unwrapHeaderThreeMarkdown = unwrapBlock.bind(null, '### '.length);
-export const unwrapHeaderFourMarkdown = unwrapBlock.bind(null, '#### '.length);
-export const unwrapHeaderFiveMarkdown = unwrapBlock.bind(null, '##### '.length);
-export const unwrapHeaderSixMarkdown = unwrapBlock.bind(null, '###### '.length);
-export const wrapUnorderedListMarkdown = wrapBlock.bind(null,
-  [olRegExp, h1RegExp, h2RegExp, h3RegExp, h4RegExp, h5RegExp, h6RegExp], '* ');
-export const unwrapUnorderedListMarkdown = unwrapBlock.bind(null, '* '.length);
-export const wrapOrderedListMarkdown = wrapBlock.bind(null,
-  [ulRegExp, h1RegExp, h2RegExp, h3RegExp, h4RegExp, h5RegExp, h6RegExp], '1. ');
-export const wrapHeaderOneMarkdown = wrapBlock.bind(null,
-  [olRegExp, ulRegExp, h2RegExp, h3RegExp, h4RegExp, h5RegExp, h6RegExp], '# ');
-export const wrapHeaderTwoMarkdown = wrapBlock.bind(null,
-  [olRegExp, ulRegExp, h1RegExp, h3RegExp, h4RegExp, h5RegExp, h6RegExp], '## ');
-export const wrapHeaderThreeMarkdown = wrapBlock.bind(null,
-  [olRegExp, ulRegExp, h1RegExp, h2RegExp, h4RegExp, h5RegExp, h6RegExp], '### ');
-export const wrapHeaderFourMarkdown = wrapBlock.bind(null,
-  [olRegExp, ulRegExp, h1RegExp, h2RegExp, h3RegExp, h5RegExp, h6RegExp], '#### ');
-export const wrapHeaderFiveMarkdown = wrapBlock.bind(null,
-  [olRegExp, ulRegExp, h1RegExp, h2RegExp, h3RegExp, h4RegExp, h6RegExp], '##### ');
-export const wrapHeaderSixMarkdown = wrapBlock.bind(null,
-  [olRegExp, ulRegExp, h1RegExp, h2RegExp, h3RegExp, h4RegExp, h5RegExp], '###### ');
-
 const activities = {
   has: {
     bold: hasBoldMarkdown,
     italic: hasItalicMarkdown,
     strikethrough: hasStrikethroughMarkdown,
+    ul: hasBlock.bind(null, ulRegExp),
+    ol: hasBlock.bind(null, olRegExp),
     header: [
       null,
-      hasHeaderOneMarkdown,
-      hasHeaderTwoMarkdown,
-      hasHeaderThreeMarkdown,
-      hasHeaderFourMarkdown,
-      hasHeaderFiveMarkdown,
-      hasHeaderSixMarkdown
-    ],
-    ul: hasUnorderedListMarkdown,
-    ol: hasOrderedListMarkdown
-  },
-  wrap: {
-    bold: wrapBoldMarkdown,
-    italic: wrapItalicMarkdown,
-    strikethrough: wrapStrikethroughMarkdown,
-    header: [
-      null,
-      wrapHeaderOneMarkdown,
-      wrapHeaderTwoMarkdown,
-      wrapHeaderThreeMarkdown,
-      wrapHeaderFourMarkdown,
-      wrapHeaderFiveMarkdown,
-      wrapHeaderSixMarkdown
-    ],
-    ul: wrapUnorderedListMarkdown,
-    ol: wrapOrderedListMarkdown
+      hasBlock.bind(null, h1RegExp),
+      hasBlock.bind(null, h2RegExp),
+      hasBlock.bind(null, h3RegExp),
+      hasBlock.bind(null, h4RegExp),
+      hasBlock.bind(null, h5RegExp),
+      hasBlock.bind(null, h6RegExp)
+    ]
   },
   unwrap: {
     bold: unwrapBoldMarkdown,
     italic: unwrapItalicMarkdown,
     strikethrough: unwrapStrikethroughMarkdown,
+    ul: unwrapBlock.bind(null, '* '.length),
+    ol: unwrapOrderedListMarkdown,
     header: [
       null,
-      unwrapHeaderOneMarkdown,
-      unwrapHeaderTwoMarkdown,
-      unwrapHeaderThreeMarkdown,
-      unwrapHeaderFourMarkdown,
-      unwrapHeaderFiveMarkdown,
-      unwrapHeaderSixMarkdown
-    ],
-    ul: unwrapUnorderedListMarkdown,
-    ol: unwrapOrderedListMarkdown
+      unwrapBlock.bind(null, '# '.length),
+      unwrapBlock.bind(null, '## '.length),
+      unwrapBlock.bind(null, '### '.length),
+      unwrapBlock.bind(null, '#### '.length),
+      unwrapBlock.bind(null, '##### '.length),
+      unwrapBlock.bind(null, '###### '.length)
+    ]
+  },
+  wrap: {
+    bold: wrapBoldMarkdown,
+    italic: wrapItalicMarkdown,
+    strikethrough: wrapStrikethroughMarkdown,
+    ul: wrapBlock.bind(null, [olRegExp, h1RegExp, h2RegExp, h3RegExp, h4RegExp, h5RegExp, h6RegExp], '* '),
+    ol: wrapBlock.bind(null, [ulRegExp, h1RegExp, h2RegExp, h3RegExp, h4RegExp, h5RegExp, h6RegExp], '1. '),
+    header: [
+      null,
+      wrapBlock.bind(null, [olRegExp, ulRegExp, h2RegExp, h3RegExp, h4RegExp, h5RegExp, h6RegExp], '# '),
+      wrapBlock.bind(null, [olRegExp, ulRegExp, h1RegExp, h3RegExp, h4RegExp, h5RegExp, h6RegExp], '## '),
+      wrapBlock.bind(null, [olRegExp, ulRegExp, h1RegExp, h2RegExp, h4RegExp, h5RegExp, h6RegExp], '### '),
+      wrapBlock.bind(null, [olRegExp, ulRegExp, h1RegExp, h2RegExp, h3RegExp, h5RegExp, h6RegExp], '#### '),
+      wrapBlock.bind(null, [olRegExp, ulRegExp, h1RegExp, h2RegExp, h3RegExp, h4RegExp, h6RegExp], '##### '),
+      wrapBlock.bind(null, [olRegExp, ulRegExp, h1RegExp, h2RegExp, h3RegExp, h4RegExp, h5RegExp], '###### ')
+    ]
   }
 };
 
