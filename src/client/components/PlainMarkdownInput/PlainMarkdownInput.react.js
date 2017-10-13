@@ -18,11 +18,9 @@ import {
 } from '../SlateEditor/plugins';
 
 import {
-  EmphasisButton,
+  ActionButton,
   HeaderButton,
   LinkButton,
-  OrderedListButton,
-  UnorderedListButton
 } from './buttons';
 
 import { SlateContent, SlateEditor } from '../SlateEditor';
@@ -245,7 +243,7 @@ class PlainMarkdownInput extends React.Component {
         <div className="react-markdown--toolbar">
           <div className="btn-group">
             {['bold', 'italic', 'strikethrough'].map(accent => (
-              <EmphasisButton
+              <ActionButton
                 key={accent}
                 state={editorState}
                 onChange={this.handleChange}
@@ -273,8 +271,16 @@ class PlainMarkdownInput extends React.Component {
           </div>
 
           <div className="btn-group">
-            <OrderedListButton state={editorState} onChange={this.handleChange} disabled={readOnly} locale={locale} />
-            <UnorderedListButton state={editorState} onChange={this.handleChange} disabled={readOnly} locale={locale} />
+            {['ol', 'ul'].map(accent => (
+              <ActionButton
+                key={accent}
+                state={editorState}
+                onChange={this.handleChange}
+                disabled={readOnly}
+                locale={locale}
+                accent={accent}
+              />
+            ))}
           </div>
 
           <div className="btn-group">

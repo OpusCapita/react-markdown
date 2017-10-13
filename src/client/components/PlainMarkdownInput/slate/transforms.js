@@ -289,7 +289,9 @@ const activities = {
       hasHeaderFourMarkdown,
       hasHeaderFiveMarkdown,
       hasHeaderSixMarkdown
-    ]
+    ],
+    ul: hasUnorderedListMarkdown,
+    ol: hasOrderedListMarkdown
   },
   wrap: {
     bold: wrapBoldMarkdown,
@@ -303,7 +305,9 @@ const activities = {
       wrapHeaderFourMarkdown,
       wrapHeaderFiveMarkdown,
       wrapHeaderSixMarkdown
-    ]
+    ],
+    ul: wrapUnorderedListMarkdown,
+    ol: wrapOrderedListMarkdown
   },
   unwrap: {
     bold: unwrapBoldMarkdown,
@@ -317,29 +321,31 @@ const activities = {
       unwrapHeaderFourMarkdown,
       unwrapHeaderFiveMarkdown,
       unwrapHeaderSixMarkdown
-    ]
+    ],
+    ul: unwrapUnorderedListMarkdown,
+    ol: unwrapOrderedListMarkdown
   }
 };
 
-export const hasEmphasis = (state, type) => {
-  if (activities.has[type]) {
-    return activities.has[type](state);
+export const hasAccent = (state, accent) => {
+  if (activities.has[accent]) {
+    return activities.has[accent](state);
   }
 
   return false;
 };
 
-export const wrapEmphasis = (state, type) => {
-  if (activities.wrap[type]) {
-    return activities.wrap[type](state);
+export const wrapAccent = (state, accent) => {
+  if (activities.wrap[accent]) {
+    return activities.wrap[accent](state);
   }
 
   return state;
 };
 
-export const unwrapEmphasis = (state, type) => {
-  if (activities.unwrap[type]) {
-    return activities.unwrap[type](state);
+export const unwrapAccent = (state, accent) => {
+  if (activities.unwrap[accent]) {
+    return activities.unwrap[accent](state);
   }
 
   return state;
