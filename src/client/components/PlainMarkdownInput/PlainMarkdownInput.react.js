@@ -5,7 +5,7 @@ import Types from 'prop-types';
 import DropdownButton from 'react-bootstrap/lib/DropdownButton';
 import schema from './slate/schema';
 import shortcuts from './slate/shortcuts';
-import { hasMultiLineSelection } from './slate/transforms';
+// import { hasMultiLineSelection } from './slate/transforms';
 import './PlainMarkdownInput.less';
 import { parse } from './slate/tokenizer';
 import { autoScrollToTop } from '../utils';
@@ -22,6 +22,13 @@ import {
   HeaderButton,
   LinkButton,
 } from './buttons';
+
+import {
+  hasAccent,
+  wrapAccent,
+  unwrapAccent,
+  hasMultiLineSelection
+} from './slate/transforms';
 
 import { SlateContent, SlateEditor } from '../SlateEditor';
 import Plain from 'slate-plain-serializer';
@@ -68,6 +75,7 @@ class PlainMarkdownInput extends React.Component {
     this.handleMouseDown = this.handleMouseDown.bind(this);
     this.handleRef = this.handleRef.bind(this);
     this.handleScroll = this.handleScroll.bind(this);
+    this.handleClickButton = this.handleClickButton.bind(this);
   }
 
   componentWillMount() {
@@ -203,6 +211,13 @@ class PlainMarkdownInput extends React.Component {
     }
   }
 
+  handleClickButton(accent) {
+    const state = this.state.editorState;
+    const active = hasAccent(state, accent);
+
+    return this.handleChange(active ? unwrapAccent(state, accent) : wrapAccent(state, accent));
+  }
+
   render() {
     const { editorState, fullScreen } = this.state;
     const { children, extensions, readOnly, locale } = this.props;
@@ -245,11 +260,13 @@ class PlainMarkdownInput extends React.Component {
             {['bold', 'italic', 'strikethrough'].map(accent => (
               <ActionButton
                 key={accent}
-                state={editorState}
-                onChange={this.handleChange}
-                disabled={readOnly}
+                // state={editorState}
+                // onChange={this.handleChange}
+                onClick={this.handleClickButton}
+                disabled={readOnly || hasMultiLineSelection(editorState)}
                 locale={locale}
                 accent={accent}
+                active={hasAccent(editorState, accent)}
               />
             ))}
           </div>
@@ -273,12 +290,18 @@ class PlainMarkdownInput extends React.Component {
           <div className="btn-group">
             {['ol', 'ul'].map(accent => (
               <ActionButton
+                // key={accent}
+                // state={editorState}
+                // onChange={this.handleChange}
+                // disabled={readOnly}
+                // locale={locale}
+                // accent={accent}
                 key={accent}
-                state={editorState}
-                onChange={this.handleChange}
-                disabled={readOnly}
+                onClick={this.handleClickButton}
+                disabled={readOnly || hasMultiLineSelection(editorState)}
                 locale={locale}
                 accent={accent}
+                active={hasAccent(editorState, accent)}
               />
             ))}
           </div>

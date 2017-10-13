@@ -17,26 +17,3 @@ export const addSpecialCharacter = (specialCharacter, state) => {
       focus().
       apply();
 };
-
-
-export const addObjectReference = (text, extension, state) => {
-  if (text === '') {
-    return state
-  }
-  return state.transform().insertText(text).extend(0 - text.length).wrapInline({
-    type: 'objectReference',
-    data: { extension }
-  }).collapseToEnd().focus().apply();
-};
-export const removeObjectReference = (node, state) => {
-  return state.transform().removeNodeByKey(node.key).focus().apply();
-};
-export const updateObjectReferenceText = (text, extension, node, state) => {
-  if (text === '') {
-    return removeObjectReference(node, state);
-  }
-  return state.transform().removeNodeByKey(node.key).insertText(text).extend(0 - text.length).wrapInline({
-    type: 'objectReference',
-    data: { extension }
-  }).collapseToEnd().focus().apply();
-};

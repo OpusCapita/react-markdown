@@ -3,12 +3,12 @@ import Types from 'prop-types';
 import classnames from 'classnames';
 import getMessage from '../../translations';
 
-import {
-  hasAccent,
-  wrapAccent,
-  unwrapAccent,
-  hasMultiLineSelection
-} from '../slate/transforms';
+// import {
+//   hasAccent,
+//   wrapAccent,
+//   unwrapAccent,
+//   hasMultiLineSelection
+// } from '../slate/transforms';
 
 const TITLES = {
   ul: 'bulletedList',
@@ -19,14 +19,12 @@ const CLASSNAMES = {
   ol: 'list-ol',
 };
 
-const ActionButton = ({ state, onChange, disabled, locale, accent }) => {
-  const active = hasAccent(state, accent);
-
+const ActionButton = ({ onClick, disabled, locale, accent, active }) => {
   return (
     <button
       className={classnames('btn btn-default', { active })}
-      disabled={disabled || hasMultiLineSelection(state)}
-      onClick={e => onChange(active ? unwrapAccent(state, accent) : wrapAccent(state, accent))}
+      disabled={disabled}
+      onClick={e => onClick(accent)}
       type="button"
       title={getMessage(locale, TITLES[accent] ? TITLES[accent] : accent)}
     >
@@ -34,11 +32,28 @@ const ActionButton = ({ state, onChange, disabled, locale, accent }) => {
     </button>
   );
 };
+// const ActionButton = ({ state, onChange, disabled, locale, accent }) => {
+//   const active = hasAccent(state, accent);
+//
+//   return (
+//     <button
+//       className={classnames('btn btn-default', { active })}
+//       disabled={disabled || hasMultiLineSelection(state)}
+//       onClick={e => onChange(active ? unwrapAccent(state, accent) : wrapAccent(state, accent))}
+//       type="button"
+//       title={getMessage(locale, TITLES[accent] ? TITLES[accent] : accent)}
+//     >
+//       <i className={`fa fa-${CLASSNAMES[accent] ? CLASSNAMES[accent] : accent}`}/>
+//     </button>
+//   );
+// };
 
 ActionButton.propTypes = {
+  active: Types.bool,
   disabled: Types.bool,
-  state: Types.object,
-  onChange: Types.func,
+  // state: Types.object,
+  onClick: Types.func,
+  // onChange: Types.func,
   locale: Types.string,
   accent: Types.string
 };
