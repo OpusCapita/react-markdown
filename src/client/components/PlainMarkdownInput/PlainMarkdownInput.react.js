@@ -2,7 +2,7 @@ import React from 'react';
 import _ from 'lodash';
 import { findDOMNode } from 'react-dom';
 import Types from 'prop-types';
-import FullScreenButton from '../SlateEditor/plugins/slate-fullscreen-plugin/FullScreenButton';
+// import FullScreenButton from '../SlateEditor/plugins/slate-fullscreen-plugin/FullScreenButton';
 import DropdownButton from 'react-bootstrap/lib/DropdownButton';
 import schema from './slate/schema';
 import shortcuts from './slate/shortcuts';
@@ -14,7 +14,8 @@ import getMessage from '../translations';
 
 import {
   AutocompletePlugin,
-  ObjectReferenceButton
+  ObjectReferenceButton,
+  FullScreenButton
 } from '../SlateEditor/plugins';
 
 import {
