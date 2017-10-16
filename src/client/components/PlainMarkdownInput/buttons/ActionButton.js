@@ -27,7 +27,7 @@ const ActionButton = ({ onClick, disabled, locale, accent, active }) => {
 };
 
 ActionButton.propTypes = {
-  accent: Types.bool,
+  accent: Types.string,
   active: Types.bool,
   disabled: Types.bool,
   locale: Types.string,

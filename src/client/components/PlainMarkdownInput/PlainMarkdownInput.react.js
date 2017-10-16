@@ -37,7 +37,7 @@ import {
 
 import Plain from 'slate-plain-serializer';
 
-function getCopyText(state) {
+export const getCopyText = state => {
   const { startKey, startOffset, endKey, endOffset, texts } = state;
   let resText;
 
@@ -56,7 +56,7 @@ function getCopyText(state) {
     resText = resTextArr.join('\n');
   }
   return resText;
-}
+};
 
 function copySelectionToClipboard(event, change) {
   event.preventDefault();
