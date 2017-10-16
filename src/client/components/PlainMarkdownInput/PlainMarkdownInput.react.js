@@ -4,6 +4,7 @@ import { findDOMNode } from 'react-dom';
 import Types from 'prop-types';
 import classnames from 'classnames';
 import DropdownButton from 'react-bootstrap/lib/DropdownButton';
+import { Editor } from 'slate-react';
 import schema from './slate/schema';
 import shortcuts from './slate/shortcuts';
 import './PlainMarkdownInput.less';
@@ -34,8 +35,7 @@ import {
   hasMultiLineSelection
 } from './slate/transforms';
 
-import { SlateContent } from '../SlateEditor';
-// import { SlateContent, SlateEditor } from '../SlateEditor';
+// import { SlateContent } from '../SlateEditor';
 import Plain from 'slate-plain-serializer';
 
 function getCopyText(state) {
@@ -258,9 +258,6 @@ class PlainMarkdownInput extends React.Component {
           { 'react-markdown--slate-editor--fulscreen': fullScreen }
         )}
       >
-      {/*<SlateEditor*/}
-        {/*fullScreen={fullScreen}*/}
-      {/*>*/}
         <div className="react-markdown--toolbar">
           <div className="btn-group">
             {['bold', 'italic', 'strikethrough'].map(accent => (
@@ -325,29 +322,55 @@ class PlainMarkdownInput extends React.Component {
             />
           </div>
 
-          {children}
+          {/*{children}*/}
         </div>
-        <SlateContent
-          state={editorState}
-          fullScreen={fullScreen}
-          schema={schema}
-          onChange={this.handleChange}
-          onCopy={this.handleCopy}
-          onCut={this.handleCut}
-          onKeyDown={this.handleKeyDown}
-          plugins={[
-            AutocompletePlugin({
-              extensions: extensions,
-              locale: locale,
-              onChange: this.handleChange,
-              onMouseDown: this.handleMouseDown,
-              onScroll: this.handleScroll
-            })
-          ]}
-          readOnly={readOnly}
-          onRef={this.handleRef}
-        />
-      {/*</SlateEditor>*/}
+        {/*<SlateContent*/}
+          {/*state={editorState}*/}
+          {/*fullScreen={fullScreen}*/}
+          {/*schema={schema}*/}
+          {/*onChange={this.handleChange}*/}
+          {/*onCopy={this.handleCopy}*/}
+          {/*onCut={this.handleCut}*/}
+          {/*onKeyDown={this.handleKeyDown}*/}
+          {/*plugins={[*/}
+            {/*AutocompletePlugin({*/}
+              {/*extensions: extensions,*/}
+              {/*locale: locale,*/}
+              {/*onChange: this.handleChange,*/}
+              {/*onMouseDown: this.handleMouseDown,*/}
+              {/*onScroll: this.handleScroll*/}
+            {/*})*/}
+          {/*]}*/}
+          {/*readOnly={readOnly}*/}
+          {/*onRef={this.handleRef}*/}
+        {/*/>*/}
+        <div className={'react-markdown--slate-content'}>
+          <Editor
+            spellCheck={false}
+            state={editorState}
+            fullScreen={fullScreen}
+            schema={schema}
+            onChange={this.handleChange}
+            onCopy={this.handleCopy}
+            onCut={this.handleCut}
+            onKeyDown={this.handleKeyDown}
+            plugins={[
+              AutocompletePlugin({
+                extensions: extensions,
+                locale: locale,
+                onChange: this.handleChange,
+                onMouseDown: this.handleMouseDown,
+                onScroll: this.handleScroll
+              })
+            ]}
+            readOnly={readOnly}
+            className={`react-markdown--slate-content__editor`}
+            ref={this.handleRef}
+          >
+            {children}
+          </Editor>
+        </div>
+
       </div>
     );
   }
