@@ -2,6 +2,7 @@ import React from 'react';
 import _ from 'lodash';
 import { findDOMNode } from 'react-dom';
 import Types from 'prop-types';
+import classnames from 'classnames';
 import DropdownButton from 'react-bootstrap/lib/DropdownButton';
 import schema from './slate/schema';
 import shortcuts from './slate/shortcuts';
@@ -33,7 +34,8 @@ import {
   hasMultiLineSelection
 } from './slate/transforms';
 
-import { SlateContent, SlateEditor } from '../SlateEditor';
+import { SlateContent } from '../SlateEditor';
+// import { SlateContent, SlateEditor } from '../SlateEditor';
 import Plain from 'slate-plain-serializer';
 
 function getCopyText(state) {
@@ -250,25 +252,15 @@ class PlainMarkdownInput extends React.Component {
     });
 
     return (
-      <SlateEditor
-        // state={editorState}
-        fullScreen={fullScreen}
-        // schema={schema}
-        // onChange={this.handleChange}
-        // onCopy={this.handleCopy}
-        // onCut={this.handleCut}
-        // onKeyDown={this.handleKeyDown}
-        // plugins={[
-        //   AutocompletePlugin({
-        //     extensions: extensions,
-        //     locale: locale,
-        //     onChange: this.handleChange,
-        //     onMouseDown: this.handleMouseDown,
-        //     onScroll: this.handleScroll
-        //   })
-        // ]}
-        // readOnly={readOnly}
+      <div
+        className={classnames(
+          'react-markdown--slate-editor',
+          { 'react-markdown--slate-editor--fulscreen': fullScreen }
+        )}
       >
+      {/*<SlateEditor*/}
+        {/*fullScreen={fullScreen}*/}
+      {/*>*/}
         <div className="react-markdown--toolbar">
           <div className="btn-group">
             {['bold', 'italic', 'strikethrough'].map(accent => (
@@ -355,7 +347,8 @@ class PlainMarkdownInput extends React.Component {
           readOnly={readOnly}
           onRef={this.handleRef}
         />
-      </SlateEditor>
+      {/*</SlateEditor>*/}
+      </div>
     );
   }
 }
