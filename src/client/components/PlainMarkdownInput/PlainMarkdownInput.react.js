@@ -16,7 +16,7 @@ import {
   AutocompletePlugin,
   FullScreenButton,
   ObjectReferenceButton
-} from '../SlateEditor/plugins';
+} from './plugins';
 
 import {
   ActionButton,
@@ -35,7 +35,6 @@ import {
   hasMultiLineSelection
 } from './slate/transforms';
 
-// import { SlateContent } from '../SlateEditor';
 import Plain from 'slate-plain-serializer';
 
 function getCopyText(state) {
@@ -321,29 +320,7 @@ class PlainMarkdownInput extends React.Component {
               disabled={readOnly}
             />
           </div>
-
-          {/*{children}*/}
         </div>
-        {/*<SlateContent*/}
-          {/*state={editorState}*/}
-          {/*fullScreen={fullScreen}*/}
-          {/*schema={schema}*/}
-          {/*onChange={this.handleChange}*/}
-          {/*onCopy={this.handleCopy}*/}
-          {/*onCut={this.handleCut}*/}
-          {/*onKeyDown={this.handleKeyDown}*/}
-          {/*plugins={[*/}
-            {/*AutocompletePlugin({*/}
-              {/*extensions: extensions,*/}
-              {/*locale: locale,*/}
-              {/*onChange: this.handleChange,*/}
-              {/*onMouseDown: this.handleMouseDown,*/}
-              {/*onScroll: this.handleScroll*/}
-            {/*})*/}
-          {/*]}*/}
-          {/*readOnly={readOnly}*/}
-          {/*onRef={this.handleRef}*/}
-        {/*/>*/}
         <div className={'react-markdown--slate-content'}>
           <Editor
             spellCheck={false}
@@ -370,7 +347,6 @@ class PlainMarkdownInput extends React.Component {
             {children}
           </Editor>
         </div>
-
       </div>
     );
   }
