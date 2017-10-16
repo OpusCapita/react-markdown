@@ -92,7 +92,7 @@ class PlainMarkdownInput extends React.Component {
     }
   }
 
-  shouldComponentUpdate =(nextProps, nextState) => {
+  shouldComponentUpdate = (nextProps, nextState) => {
     // XXX
     // for only modal mode
     return this.state.editorState.endKey !== nextState.editorState.endKey ||
@@ -251,23 +251,23 @@ class PlainMarkdownInput extends React.Component {
 
     return (
       <SlateEditor
-        state={editorState}
+        // state={editorState}
         fullScreen={fullScreen}
-        schema={schema}
-        onChange={this.handleChange}
-        onCopy={this.handleCopy}
-        onCut={this.handleCut}
-        onKeyDown={this.handleKeyDown}
-        plugins={[
-          AutocompletePlugin({
-            extensions: extensions,
-            locale: locale,
-            onChange: this.handleChange,
-            onMouseDown: this.handleMouseDown,
-            onScroll: this.handleScroll
-          })
-        ]}
-        readOnly={readOnly}
+        // schema={schema}
+        // onChange={this.handleChange}
+        // onCopy={this.handleCopy}
+        // onCut={this.handleCut}
+        // onKeyDown={this.handleKeyDown}
+        // plugins={[
+        //   AutocompletePlugin({
+        //     extensions: extensions,
+        //     locale: locale,
+        //     onChange: this.handleChange,
+        //     onMouseDown: this.handleMouseDown,
+        //     onScroll: this.handleScroll
+        //   })
+        // ]}
+        // readOnly={readOnly}
       >
         <div className="react-markdown--toolbar">
           <div className="btn-group">
@@ -335,7 +335,26 @@ class PlainMarkdownInput extends React.Component {
 
           {children}
         </div>
-        <SlateContent onRef={this.handleRef} />
+        <SlateContent
+          state={editorState}
+          fullScreen={fullScreen}
+          schema={schema}
+          onChange={this.handleChange}
+          onCopy={this.handleCopy}
+          onCut={this.handleCut}
+          onKeyDown={this.handleKeyDown}
+          plugins={[
+            AutocompletePlugin({
+              extensions: extensions,
+              locale: locale,
+              onChange: this.handleChange,
+              onMouseDown: this.handleMouseDown,
+              onScroll: this.handleScroll
+            })
+          ]}
+          readOnly={readOnly}
+          onRef={this.handleRef}
+        />
       </SlateEditor>
     );
   }
