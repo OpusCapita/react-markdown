@@ -6,7 +6,7 @@ import classnames from 'classnames';
 import DropdownButton from 'react-bootstrap/lib/DropdownButton';
 import { Editor } from 'slate-react';
 import schema from './slate/schema';
-import shortcuts from './slate/shortcuts';
+// import shortcuts from './slate/shortcuts';
 import './PlainMarkdownInput.less';
 import { parse } from './slate/tokenizer';
 import { autoScrollToTop } from '../utils';
@@ -36,6 +36,12 @@ import {
 } from './slate/transforms';
 
 import Plain from 'slate-plain-serializer';
+
+const ACCENTS = {
+  b: 'bold',
+  i: 'italic',
+  s: 'strikethrough'
+};
 
 export const getCopyText = state => {
   const { startKey, startOffset, endKey, endOffset, texts } = state;
@@ -182,10 +188,6 @@ class PlainMarkdownInput extends React.Component {
     this.props.onFullScreen(fullScreen);
   };
 
-  handleKeyDown(event, data, state, editor) {
-    return shortcuts(event, data, state, editor);
-  }
-
   handleCopy(event, data, change) {
     copySelectionToClipboard(event, change);
     return change;
@@ -215,10 +217,36 @@ class PlainMarkdownInput extends React.Component {
     }
   }
 
-  handleClickActionButton(accent) {
-    const state = this.state.editorState;
+  _toggleAccent(state, accent) {
     const active = hasAccent(state, accent);
     return this.handleChange(active ? unwrapAccent(state, accent) : wrapAccent(state, accent));
+  }
+
+  handleKeyDown(event, data, change) {
+    if (data.isMod) {
+      if (ACCENTS[data.key]) {
+        if (data.key === 's') {
+          event.preventDefault();
+        }
+        // const state = change.state;
+        // const accent = ACCENTS[data.key];
+        return this._toggleAccent(change.state, ACCENTS[data.key]);
+
+        // const active = hasAccent(state, accent);
+        // return this.handleChange(
+        //   active ? unwrapAccent(state, accent) : wrapAccent(state, accent)
+        // );
+      }
+    }
+
+    return undefined;
+  }
+
+  handleClickActionButton(accent) {
+    const state = this.state.editorState;
+    return this._toggleAccent(state, accent);
+    // const active = hasAccent(state, accent);
+    // return this.handleChange(active ? unwrapAccent(state, accent) : wrapAccent(state, accent));
   }
 
   handleClickHeaderButton(level) {
@@ -330,7 +358,7 @@ class PlainMarkdownInput extends React.Component {
             onChange={this.handleChange}
             onCopy={this.handleCopy}
             onCut={this.handleCut}
-            onKeyDown={this.handleKeyDown}
+            onKeyDown={this.handleKeyDown.bind(this)}
             plugins={[
               AutocompletePlugin({
                 extensions: extensions,

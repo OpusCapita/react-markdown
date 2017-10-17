@@ -1,14 +1,15 @@
 /* eslint-disable max-len */
 
 import React from 'react';
-import { assert, expect } from 'chai';
+import { expect } from 'chai';
+// import { assert, expect } from 'chai';
 // import { mount, shallow } from 'enzyme';
-import { mount } from 'enzyme';
+import { shallow } from 'enzyme';
 import Plain from 'slate-plain-serializer';
 import PlainMarkdownInput from '../../PlainMarkdownInput.react';
 import {
   hasAccent,
-  // wrapAccent,
+  wrapAccent,
   // unwrapAccent,
   hasHeader,
   // wrapHeader,
@@ -17,7 +18,7 @@ import {
 } from '../transforms';
 
 describe('plain editor transform', () => {
-  describe('Lists', () => {
+  describe('Has Lists', () => {
     it('Unordered', () => {
       const nodeText = '* List item 1';
       let component = (<PlainMarkdownInput
@@ -26,7 +27,7 @@ describe('plain editor transform', () => {
         readOnly={true}
       />);
 
-      let wrapper = mount(component);
+      let wrapper = shallow(component);
       let editorState = wrapper.state('editorState');
       let change = editorState.change();
       change.moveOffsetsTo(0, nodeText.length);
@@ -50,7 +51,7 @@ describe('plain editor transform', () => {
         readOnly={true}
       />);
 
-      let wrapper = mount(component);
+      let wrapper = shallow(component);
       let editorState = wrapper.state('editorState');
       let change = editorState.change();
       change.moveOffsetsTo(0, nodeText.length);
@@ -67,7 +68,7 @@ describe('plain editor transform', () => {
     });
   });
 
-  describe('Headers', () => {
+  describe('Has Headers', () => {
     it('# Header1', () => {
       const nodeText = '# Header1';
       let component = (<PlainMarkdownInput
@@ -76,7 +77,7 @@ describe('plain editor transform', () => {
         readOnly={true}
       />);
 
-      let wrapper = mount(component);
+      let wrapper = shallow(component);
       let editorState = wrapper.state('editorState');
       let change = editorState.change();
       change.moveOffsetsTo(0, nodeText.length);
@@ -100,7 +101,7 @@ describe('plain editor transform', () => {
         readOnly={true}
       />);
 
-      let wrapper = mount(component);
+      let wrapper = shallow(component);
       let editorState = wrapper.state('editorState');
       let change = editorState.change();
       change.moveOffsetsTo(0, nodeText.length);
@@ -124,7 +125,7 @@ describe('plain editor transform', () => {
         readOnly={true}
       />);
 
-      let wrapper = mount(component);
+      let wrapper = shallow(component);
       let editorState = wrapper.state('editorState');
       let change = editorState.change();
       change.moveOffsetsTo(0, nodeText.length);
@@ -148,7 +149,7 @@ describe('plain editor transform', () => {
         readOnly={true}
       />);
 
-      let wrapper = mount(component);
+      let wrapper = shallow(component);
       let editorState = wrapper.state('editorState');
       let change = editorState.change();
       change.moveOffsetsTo(0, nodeText.length);
@@ -172,7 +173,7 @@ describe('plain editor transform', () => {
         readOnly={true}
       />);
 
-      let wrapper = mount(component);
+      let wrapper = shallow(component);
       let editorState = wrapper.state('editorState');
       let change = editorState.change();
       change.moveOffsetsTo(0, nodeText.length);
@@ -196,7 +197,7 @@ describe('plain editor transform', () => {
         readOnly={true}
       />);
 
-      let wrapper = mount(component);
+      let wrapper = shallow(component);
       let editorState = wrapper.state('editorState');
       let change = editorState.change();
       change.moveOffsetsTo(0, nodeText.length);
@@ -222,7 +223,7 @@ describe('plain editor transform', () => {
         readOnly={true}
       />);
 
-      let wrapper = mount(component);
+      let wrapper = shallow(component);
       let editorState = wrapper.state('editorState');
 
       let change = editorState.change();
@@ -282,7 +283,7 @@ describe('plain editor transform', () => {
         readOnly={true}
       />);
 
-      let wrapper = mount(component);
+      let wrapper = shallow(component);
       let editorState = wrapper.state('editorState');
       let change = editorState.change();
       change.moveOffsetsTo(1, nodeText.length - 1);
@@ -296,404 +297,440 @@ describe('plain editor transform', () => {
       expect(hasAccent(newState, 'italic')).to.equal(false);
       expect(hasAccent(newState, 'bold')).to.equal(false);
       expect(hasAccent(newState, 'strikethrough')).to.equal(false);
+
+      change.moveOffsetsTo(5, 5);
+      newState = change.state;
+      expect(hasAccent(newState, 'italic')).to.equal(false);
     });
 
-    it.skip('*italic text*', () => {
-      let state = createCustomCharacters(deserialize('*italic text* ').
-      transform().moveOffsetsTo(5, 5).apply());
-      assert.isTrue(hasItalicMarkdown(state));
-      state = createCustomCharacters(state.transform().moveOffsetsTo(1, 1).apply());
-      assert.isTrue(hasItalicMarkdown(state));
-      state = createCustomCharacters(state.transform().moveOffsetsTo(12, 12).apply());
-      assert.isTrue(hasItalicMarkdown(state));
-      state = createCustomCharacters(state.transform().moveOffsetsTo(0, 0).apply());
-      assert.isFalse(hasItalicMarkdown(state));
-      state = createCustomCharacters(state.transform().moveOffsetsTo(13, 13).apply());
-      assert.isFalse(hasItalicMarkdown(state));
+    it('**bold**', () => {
+      const nodeText = '**bold**';
+      let component = (<PlainMarkdownInput
+        value={nodeText}
+        fullScreen={true}
+        readOnly={true}
+      />);
+
+      let wrapper = shallow(component);
+      let editorState = wrapper.state('editorState');
+      let change = editorState.change();
+      change.moveOffsetsTo(2, nodeText.length - 2);
+      let newState = change.state;
+      expect(hasAccent(newState, 'italic')).to.equal(false);
+      expect(hasAccent(newState, 'bold')).to.equal(true);
+      expect(hasAccent(newState, 'strikethrough')).to.equal(false);
+
+      change.moveOffsetsTo(0, nodeText.length);
+      newState = change.state;
+      expect(hasAccent(newState, 'italic')).to.equal(false);
+      expect(hasAccent(newState, 'bold')).to.equal(false);
+      expect(hasAccent(newState, 'strikethrough')).to.equal(false);
+
+      change.moveOffsetsTo(5, 5);
+      newState = change.state;
+      expect(hasAccent(newState, 'bold')).to.equal(false);
     });
 
-    it.skip('_italic text_', () => {
-      let state = createCustomCharacters(deserialize('_italic text_ ').
-      transform().moveOffsetsTo(5, 5).apply());
-      assert.isTrue(hasItalicMarkdown(state));
-      state = createCustomCharacters(state.transform().moveOffsetsTo(1, 1).apply());
-      assert.isTrue(hasItalicMarkdown(state));
-      state = createCustomCharacters(state.transform().moveOffsetsTo(12, 12).apply());
-      assert.isTrue(hasItalicMarkdown(state));
-      state = createCustomCharacters(state.transform().moveOffsetsTo(0, 0).apply());
-      assert.isFalse(hasItalicMarkdown(state));
-      state = createCustomCharacters(state.transform().moveOffsetsTo(13, 13).apply());
-      assert.isFalse(hasItalicMarkdown(state));
+    it('~~strikethrough~~', () => {
+      const nodeText = '~~strikethrough~~';
+      let component = (<PlainMarkdownInput
+        value={nodeText}
+        fullScreen={true}
+        readOnly={true}
+      />);
+
+      let wrapper = shallow(component);
+      let editorState = wrapper.state('editorState');
+      let change = editorState.change();
+      change.moveOffsetsTo(2, nodeText.length - 2);
+      let newState = change.state;
+      expect(hasAccent(newState, 'italic')).to.equal(false);
+      expect(hasAccent(newState, 'bold')).to.equal(false);
+      expect(hasAccent(newState, 'strikethrough')).to.equal(true);
+
+      change.moveOffsetsTo(0, nodeText.length);
+      newState = change.state;
+      expect(hasAccent(newState, 'italic')).to.equal(false);
+      expect(hasAccent(newState, 'bold')).to.equal(false);
+      expect(hasAccent(newState, 'strikethrough')).to.equal(false);
+
+      change.moveOffsetsTo(5, 5);
+      newState = change.state;
+      expect(hasAccent(newState, 'strikethrough')).to.equal(false);
     });
 
-    it.skip('**bold text**', () => {
-      let state = createCustomCharacters(deserialize('**bold text**').
-      transform().moveOffsetsTo(5, 5).apply());
-      assert.isTrue(hasBoldMarkdown(state));
-      state = createCustomCharacters(state.transform().moveOffsetsTo(1, 1).apply());
-      assert.isTrue(hasBoldMarkdown(state));
-      state = createCustomCharacters(state.transform().moveOffsetsTo(2, 2).apply());
-      assert.isTrue(hasBoldMarkdown(state));
-      state = createCustomCharacters(state.transform().moveOffsetsTo(11, 11).apply());
-      assert.isTrue(hasBoldMarkdown(state));
-      state = createCustomCharacters(state.transform().moveOffsetsTo(12, 12).apply());
-      assert.isTrue(hasBoldMarkdown(state));
+    it('_**bold italic**_', () => {
+      const nodeText = '_**bold italic**_';
+      let component = (<PlainMarkdownInput
+        value={nodeText}
+        fullScreen={true}
+        readOnly={true}
+      />);
+
+      let wrapper = shallow(component);
+      let editorState = wrapper.state('editorState');
+      let change = editorState.change();
+      change.moveOffsetsTo(1, nodeText.length - 1);
+      let newState = change.state;
+      expect(hasAccent(newState, 'italic')).to.equal(true);
+      expect(hasAccent(newState, 'bold')).to.equal(false);
+      expect(hasAccent(newState, 'strikethrough')).to.equal(false);
+
+      change.moveOffsetsTo(3, nodeText.length - 3);
+      newState = change.state;
+      expect(hasAccent(newState, 'italic')).to.equal(false);
+      expect(hasAccent(newState, 'bold')).to.equal(true);
+      expect(hasAccent(newState, 'strikethrough')).to.equal(false);
+
+      change.moveOffsetsTo(0, nodeText.length);
+      newState = change.state;
+      expect(hasAccent(newState, 'italic')).to.equal(false);
+      expect(hasAccent(newState, 'bold')).to.equal(false);
+      expect(hasAccent(newState, 'strikethrough')).to.equal(false);
+
+      change.moveOffsetsTo(5, 5);
+      newState = change.state;
+      expect(hasAccent(newState, 'italic')).to.equal(false);
+      expect(hasAccent(newState, 'bold')).to.equal(false);
+      expect(hasAccent(newState, 'strikethrough')).to.equal(false);
     });
 
-    it.skip('__bold text__', () => {
-      let state = createCustomCharacters(deserialize('__bold text__').
-      transform().moveOffsetsTo(5, 5).apply());
-      assert.isTrue(hasBoldMarkdown(state));
-      state = createCustomCharacters(state.transform().moveOffsetsTo(1, 1).apply());
-      assert.isTrue(hasBoldMarkdown(state));
-      state = createCustomCharacters(state.transform().moveOffsetsTo(2, 2).apply());
-      assert.isTrue(hasBoldMarkdown(state));
-      state = createCustomCharacters(state.transform().moveOffsetsTo(11, 11).apply());
-      assert.isTrue(hasBoldMarkdown(state));
-      state = createCustomCharacters(state.transform().moveOffsetsTo(12, 12).apply());
-      assert.isTrue(hasBoldMarkdown(state));
+    it('**_bold italic_**', () => {
+      const nodeText = '**_bold italic_**';
+      let component = (<PlainMarkdownInput
+        value={nodeText}
+        fullScreen={true}
+        readOnly={true}
+      />);
+
+      let wrapper = shallow(component);
+      let editorState = wrapper.state('editorState');
+      let change = editorState.change();
+      change.moveOffsetsTo(2, nodeText.length - 2);
+      let newState = change.state;
+      expect(hasAccent(newState, 'italic')).to.equal(false);
+      expect(hasAccent(newState, 'bold')).to.equal(true);
+      expect(hasAccent(newState, 'strikethrough')).to.equal(false);
+
+      change.moveOffsetsTo(3, nodeText.length - 3);
+      newState = change.state;
+      expect(hasAccent(newState, 'italic')).to.equal(true);
+      expect(hasAccent(newState, 'bold')).to.equal(false);
+      expect(hasAccent(newState, 'strikethrough')).to.equal(false);
+
+      change.moveOffsetsTo(0, nodeText.length);
+      newState = change.state;
+      expect(hasAccent(newState, 'italic')).to.equal(false);
+      expect(hasAccent(newState, 'bold')).to.equal(false);
+      expect(hasAccent(newState, 'strikethrough')).to.equal(false);
+
+      change.moveOffsetsTo(5, 5);
+      newState = change.state;
+      expect(hasAccent(newState, 'italic')).to.equal(false);
+      expect(hasAccent(newState, 'bold')).to.equal(false);
+      expect(hasAccent(newState, 'strikethrough')).to.equal(false);
     });
 
-    it.skip('____ __bold text__', () => {
-      let state = createCustomCharacters(deserialize('____ __bold text__ ').
-      transform().moveOffsetsTo(0, 0).apply());
-      assert.isFalse(hasBoldMarkdown(state));
-      state = createCustomCharacters(state.transform().moveOffsetsTo(1, 1).apply());
-      assert.isTrue(hasBoldMarkdown(state));
-      state = createCustomCharacters(state.transform().moveOffsetsTo(2, 2).apply());
-      assert.isTrue(hasBoldMarkdown(state));
-      state = createCustomCharacters(state.transform().moveOffsetsTo(3, 3).apply());
-      assert.isTrue(hasBoldMarkdown(state));
-      state = createCustomCharacters(state.transform().moveOffsetsTo(6, 6).apply());
-      assert.isTrue(hasBoldMarkdown(state));
-      state = createCustomCharacters(state.transform().moveOffsetsTo(7, 7).apply());
-      assert.isTrue(hasBoldMarkdown(state));
-      state = createCustomCharacters(state.transform().moveOffsetsTo(16, 16).apply());
-      assert.isTrue(hasBoldMarkdown(state));
-      state = createCustomCharacters(state.transform().moveOffsetsTo(17, 17).apply());
-      assert.isTrue(hasBoldMarkdown(state));
+    it('_~~strikethrough italic~~_', () => {
+      const nodeText = '_~~strikethrough italic~~_';
+      let component = (<PlainMarkdownInput
+        value={nodeText}
+        fullScreen={true}
+        readOnly={true}
+      />);
+
+      let wrapper = shallow(component);
+      let editorState = wrapper.state('editorState');
+      let change = editorState.change();
+      change.moveOffsetsTo(1, nodeText.length - 1);
+      let newState = change.state;
+      expect(hasAccent(newState, 'italic')).to.equal(true);
+      expect(hasAccent(newState, 'bold')).to.equal(false);
+      expect(hasAccent(newState, 'strikethrough')).to.equal(false);
+
+      change.moveOffsetsTo(3, nodeText.length - 3);
+      newState = change.state;
+      expect(hasAccent(newState, 'italic')).to.equal(false);
+      expect(hasAccent(newState, 'bold')).to.equal(false);
+      expect(hasAccent(newState, 'strikethrough')).to.equal(true);
+
+      change.moveOffsetsTo(0, nodeText.length);
+      newState = change.state;
+      expect(hasAccent(newState, 'italic')).to.equal(false);
+      expect(hasAccent(newState, 'bold')).to.equal(false);
+      expect(hasAccent(newState, 'strikethrough')).to.equal(false);
+
+      change.moveOffsetsTo(5, 5);
+      newState = change.state;
+      expect(hasAccent(newState, 'italic')).to.equal(false);
+      expect(hasAccent(newState, 'bold')).to.equal(false);
+      expect(hasAccent(newState, 'strikethrough')).to.equal(false);
     });
 
-    it.skip('***bold italic text***', () => {
-      let state = createCustomCharacters(deserialize('***bold italic text*** ').
-      transform().moveOffsetsTo(0, 0).apply());
-      assert.isFalse(hasBoldMarkdown(state));
-      assert.isFalse(hasItalicMarkdown(state));
-      state = createCustomCharacters(state.transform().moveOffsetsTo(1, 1).apply());
-      assert.isTrue(hasBoldMarkdown(state));
-      assert.isFalse(hasItalicMarkdown(state));
-      state = createCustomCharacters(state.transform().moveOffsetsTo(2, 2).apply());
-      assert.isTrue(hasBoldMarkdown(state));
-      assert.isFalse(hasItalicMarkdown(state));
-      state = createCustomCharacters(state.transform().moveOffsetsTo(3, 3).apply());
-      assert.isTrue(hasBoldMarkdown(state));
-      assert.isTrue(hasItalicMarkdown(state));
-      state = createCustomCharacters(state.transform().moveOffsetsTo(7, 7).apply());
-      assert.isTrue(hasBoldMarkdown(state));
-      assert.isTrue(hasItalicMarkdown(state));
-      state = createCustomCharacters(state.transform().moveOffsetsTo(19, 19).apply());
-      assert.isTrue(hasBoldMarkdown(state));
-      assert.isTrue(hasItalicMarkdown(state));
-      state = createCustomCharacters(state.transform().moveOffsetsTo(20, 20).apply());
-      assert.isTrue(hasBoldMarkdown(state));
-      assert.isFalse(hasItalicMarkdown(state));
-      state = createCustomCharacters(state.transform().moveOffsetsTo(21, 21).apply());
-      assert.isTrue(hasBoldMarkdown(state));
-      assert.isFalse(hasItalicMarkdown(state));
-      state = createCustomCharacters(state.transform().moveOffsetsTo(22, 22).apply());
-      assert.isFalse(hasBoldMarkdown(state));
-      assert.isFalse(hasItalicMarkdown(state));
+    it('~~_strikethrough italic_~~', () => {
+      const nodeText = '~~_strikethrough italic_~~';
+      let component = (<PlainMarkdownInput
+        value={nodeText}
+        fullScreen={true}
+        readOnly={true}
+      />);
+
+      let wrapper = shallow(component);
+      let editorState = wrapper.state('editorState');
+      let change = editorState.change();
+      change.moveOffsetsTo(2, nodeText.length - 2);
+      let newState = change.state;
+      expect(hasAccent(newState, 'italic')).to.equal(false);
+      expect(hasAccent(newState, 'bold')).to.equal(false);
+      expect(hasAccent(newState, 'strikethrough')).to.equal(true);
+
+      change.moveOffsetsTo(3, nodeText.length - 3);
+      newState = change.state;
+      expect(hasAccent(newState, 'italic')).to.equal(true);
+      expect(hasAccent(newState, 'bold')).to.equal(false);
+      expect(hasAccent(newState, 'strikethrough')).to.equal(false);
+
+      change.moveOffsetsTo(0, nodeText.length);
+      newState = change.state;
+      expect(hasAccent(newState, 'italic')).to.equal(false);
+      expect(hasAccent(newState, 'bold')).to.equal(false);
+      expect(hasAccent(newState, 'strikethrough')).to.equal(false);
+
+      change.moveOffsetsTo(5, 5);
+      newState = change.state;
+      expect(hasAccent(newState, 'italic')).to.equal(false);
+      expect(hasAccent(newState, 'bold')).to.equal(false);
+      expect(hasAccent(newState, 'strikethrough')).to.equal(false);
     });
 
-    it.skip('___bold italic text___', () => {
-      let state = createCustomCharacters(deserialize('___bold italic text___ ').
-      transform().moveOffsetsTo(0, 0).apply());
-      assert.isFalse(hasBoldMarkdown(state));
-      assert.isFalse(hasItalicMarkdown(state));
-      state = createCustomCharacters(state.transform().moveOffsetsTo(1, 1).apply());
-      assert.isFalse(hasBoldMarkdown(state));
-      assert.isTrue(hasItalicMarkdown(state));
-      state = createCustomCharacters(state.transform().moveOffsetsTo(2, 2).apply());
-      assert.isTrue(hasBoldMarkdown(state));
-      assert.isTrue(hasItalicMarkdown(state));
-      state = createCustomCharacters(state.transform().moveOffsetsTo(3, 3).apply());
-      assert.isTrue(hasBoldMarkdown(state));
-      assert.isTrue(hasItalicMarkdown(state));
-      state = createCustomCharacters(state.transform().moveOffsetsTo(7, 7).apply());
-      assert.isTrue(hasBoldMarkdown(state));
-      assert.isTrue(hasItalicMarkdown(state));
-      state = createCustomCharacters(state.transform().moveOffsetsTo(19, 19).apply());
-      assert.isTrue(hasBoldMarkdown(state));
-      assert.isTrue(hasItalicMarkdown(state));
-      state = createCustomCharacters(state.transform().moveOffsetsTo(20, 20).apply());
-      assert.isTrue(hasBoldMarkdown(state));
-      assert.isTrue(hasItalicMarkdown(state));
-      state = createCustomCharacters(state.transform().moveOffsetsTo(21, 21).apply());
-      assert.isFalse(hasBoldMarkdown(state));
-      assert.isTrue(hasItalicMarkdown(state));
-      state = createCustomCharacters(state.transform().moveOffsetsTo(22, 22).apply());
-      assert.isFalse(hasBoldMarkdown(state));
-      assert.isFalse(hasItalicMarkdown(state));
+    it('**~~strikethrough bold~~**', () => {
+      const nodeText = '**~~strikethrough bold~~**';
+      let component = (<PlainMarkdownInput
+        value={nodeText}
+        fullScreen={true}
+        readOnly={true}
+      />);
+
+      let wrapper = shallow(component);
+      let editorState = wrapper.state('editorState');
+      let change = editorState.change();
+      change.moveOffsetsTo(2, nodeText.length - 2);
+      let newState = change.state;
+      expect(hasAccent(newState, 'italic')).to.equal(false);
+      expect(hasAccent(newState, 'bold')).to.equal(true);
+      expect(hasAccent(newState, 'strikethrough')).to.equal(false);
+
+      change.moveOffsetsTo(4, nodeText.length - 4);
+      newState = change.state;
+      expect(hasAccent(newState, 'italic')).to.equal(false);
+      expect(hasAccent(newState, 'bold')).to.equal(false);
+      expect(hasAccent(newState, 'strikethrough')).to.equal(true);
+
+      change.moveOffsetsTo(0, nodeText.length);
+      newState = change.state;
+      expect(hasAccent(newState, 'italic')).to.equal(false);
+      expect(hasAccent(newState, 'bold')).to.equal(false);
+      expect(hasAccent(newState, 'strikethrough')).to.equal(false);
+
+      change.moveOffsetsTo(5, 5);
+      newState = change.state;
+      expect(hasAccent(newState, 'italic')).to.equal(false);
+      expect(hasAccent(newState, 'bold')).to.equal(false);
+      expect(hasAccent(newState, 'strikethrough')).to.equal(false);
     });
 
-    it.skip('***bold and** italic text*', () => {
-      let state = createCustomCharacters(deserialize('***bold and** italic text* ').
-      transform().moveOffsetsTo(5, 5).apply());
-      assert.isTrue(hasItalicMarkdown(state));
-      state = createCustomCharacters(state.transform().moveOffsetsTo(1).apply());
-      assert.isTrue(hasItalicMarkdown(state));
-      state = createCustomCharacters(state.transform().moveOffsetsTo(2).apply());
-      assert.isTrue(hasItalicMarkdown(state));
-      state = createCustomCharacters(state.transform().moveOffsetsTo(3, 3).apply());
-      assert.isTrue(hasItalicMarkdown(state));
-      state = createCustomCharacters(state.transform().moveOffsetsTo(11).apply());
-      assert.isTrue(hasItalicMarkdown(state));
-      state = createCustomCharacters(state.transform().moveOffsetsTo(12).apply());
-      assert.isTrue(hasItalicMarkdown(state));
-      state = createCustomCharacters(state.transform().moveOffsetsTo(3, 3).apply());
-      assert.isTrue(hasItalicMarkdown(state));
-      state = createCustomCharacters(state.transform().moveOffsetsTo(25).apply());
-      assert.isTrue(hasItalicMarkdown(state));
-      state = createCustomCharacters(state.transform().moveOffsetsTo(0).apply());
-      assert.isFalse(hasItalicMarkdown(state));
-      state = createCustomCharacters(state.transform().moveOffsetsTo(26).apply());
-      assert.isFalse(hasItalicMarkdown(state));
+    it('~~**strikethrough bold**~~', () => {
+      const nodeText = '~~**strikethrough bold**~~';
+      let component = (<PlainMarkdownInput
+        value={nodeText}
+        fullScreen={true}
+        readOnly={true}
+      />);
+
+      let wrapper = shallow(component);
+      let editorState = wrapper.state('editorState');
+      let change = editorState.change();
+      change.moveOffsetsTo(2, nodeText.length - 2);
+      let newState = change.state;
+      expect(hasAccent(newState, 'italic')).to.equal(false);
+      expect(hasAccent(newState, 'bold')).to.equal(false);
+      expect(hasAccent(newState, 'strikethrough')).to.equal(true);
+
+      change.moveOffsetsTo(4, nodeText.length - 4);
+      newState = change.state;
+      expect(hasAccent(newState, 'italic')).to.equal(false);
+      expect(hasAccent(newState, 'bold')).to.equal(true);
+      expect(hasAccent(newState, 'strikethrough')).to.equal(false);
+
+      change.moveOffsetsTo(0, nodeText.length);
+      newState = change.state;
+      expect(hasAccent(newState, 'italic')).to.equal(false);
+      expect(hasAccent(newState, 'bold')).to.equal(false);
+      expect(hasAccent(newState, 'strikethrough')).to.equal(false);
+
+      change.moveOffsetsTo(5, 5);
+      newState = change.state;
+      expect(hasAccent(newState, 'italic')).to.equal(false);
+      expect(hasAccent(newState, 'bold')).to.equal(false);
+      expect(hasAccent(newState, 'strikethrough')).to.equal(false);
     });
 
-    it.skip('***italic and* bold text**', () => {
-      let state = createCustomCharacters(deserialize('***italic and* bold text** ').
-      transform().moveOffsetsTo(5).apply());
-      assert.isTrue(hasItalicMarkdown(state));
-      state = createCustomCharacters(state.transform().moveOffsetsTo(1).apply());
-      assert.isFalse(hasItalicMarkdown(state));
-      state = createCustomCharacters(state.transform().moveOffsetsTo(2).apply());
-      assert.isFalse(hasItalicMarkdown(state));
-      state = createCustomCharacters(state.transform().moveOffsetsTo(3).apply());
-      assert.isTrue(hasItalicMarkdown(state));
-      state = createCustomCharacters(state.transform().moveOffsetsTo(13).apply());
-      assert.isTrue(hasItalicMarkdown(state));
-      state = createCustomCharacters(state.transform().moveOffsetsTo(14).apply());
-      assert.isFalse(hasItalicMarkdown(state));
-      state = createCustomCharacters(state.transform().moveOffsetsTo(24).apply());
-      assert.isFalse(hasItalicMarkdown(state));
-      state = createCustomCharacters(state.transform().moveOffsetsTo(25).apply());
-      assert.isFalse(hasItalicMarkdown(state));
-      state = createCustomCharacters(state.transform().moveOffsetsTo(0).apply());
-      assert.isFalse(hasItalicMarkdown(state));
-      state = createCustomCharacters(state.transform().moveOffsetsTo(26).apply());
-      assert.isFalse(hasItalicMarkdown(state));
-    });
+    it('_~~**italic strikethrough bold**~~_', () => {
+      const nodeText = '_~~**italic strikethrough bold**~~_';
+      let component = (<PlainMarkdownInput
+        value={nodeText}
+        fullScreen={true}
+        readOnly={true}
+      />);
 
-    // this case is not realized
-    it.skip('___bold and__ italic text_', () => {
-      let state = createCustomCharacters(deserialize('___bold and__ italic text_ ').
-      transform().moveOffsetsTo(5).apply());
-      assert.isTrue(hasItalicMarkdown(state));
-      state = createCustomCharacters(state.transform().moveOffsetsTo(1).apply());
-      assert.isTrue(hasItalicMarkdown(state));
-      state = createCustomCharacters(state.transform().moveOffsetsTo(2).apply());
-      assert.isTrue(hasItalicMarkdown(state));
-      state = createCustomCharacters(state.transform().moveOffsetsTo(3).apply());
-      assert.isTrue(hasItalicMarkdown(state));
-      state = createCustomCharacters(state.transform().moveOffsetsTo(11).apply());
-      assert.isTrue(hasItalicMarkdown(state));
-      state = createCustomCharacters(state.transform().moveOffsetsTo(12).apply());
-      assert.isTrue(hasItalicMarkdown(state));
-      state = createCustomCharacters(state.transform().moveOffsetsTo(13).apply());
-      assert.isTrue(hasItalicMarkdown(state));
-      state = createCustomCharacters(state.transform().moveOffsetsTo(25).apply());
-      assert.isTrue(hasItalicMarkdown(state));
-      state = createCustomCharacters(state.transform().moveOffsetsTo(0).apply());
-      assert.isFalse(hasItalicMarkdown(state));
-      state = createCustomCharacters(state.transform().moveOffsetsTo(26).apply());
-      assert.isFalse(hasItalicMarkdown(state));
-    });
+      let wrapper = shallow(component);
+      let editorState = wrapper.state('editorState');
+      let change = editorState.change();
+      change.moveOffsetsTo(1, nodeText.length - 1);
+      let newState = change.state;
+      expect(hasAccent(newState, 'italic')).to.equal(true);
+      expect(hasAccent(newState, 'bold')).to.equal(false);
+      expect(hasAccent(newState, 'strikethrough')).to.equal(false);
 
-    it.skip('___italic and_ bold text__', () => {
-      let state = createCustomCharacters(deserialize('___italic and_ bold text__ ').
-      transform().moveOffsetsTo(5).apply());
-      assert.isTrue(hasItalicMarkdown(state));
-      state = createCustomCharacters(state.transform().moveOffsetsTo(1).apply());
-      assert.isFalse(hasItalicMarkdown(state));
-      state = createCustomCharacters(state.transform().moveOffsetsTo(2).apply());
-      assert.isFalse(hasItalicMarkdown(state));
-      state = createCustomCharacters(state.transform().moveOffsetsTo(3).apply());
-      assert.isTrue(hasItalicMarkdown(state));
-      state = createCustomCharacters(state.transform().moveOffsetsTo(13).apply());
-      assert.isTrue(hasItalicMarkdown(state));
-      state = createCustomCharacters(state.transform().moveOffsetsTo(14).apply());
-      assert.isFalse(hasItalicMarkdown(state));
-      state = createCustomCharacters(state.transform().moveOffsetsTo(24).apply());
-      assert.isFalse(hasItalicMarkdown(state));
-      state = createCustomCharacters(state.transform().moveOffsetsTo(25).apply());
-      assert.isFalse(hasItalicMarkdown(state));
-      state = createCustomCharacters(state.transform().moveOffsetsTo(0).apply());
-      assert.isFalse(hasItalicMarkdown(state));
-      state = createCustomCharacters(state.transform().moveOffsetsTo(26).apply());
-      assert.isFalse(hasItalicMarkdown(state));
-    });
+      change.moveOffsetsTo(3, nodeText.length - 3);
+      newState = change.state;
+      expect(hasAccent(newState, 'italic')).to.equal(false);
+      expect(hasAccent(newState, 'bold')).to.equal(false);
+      expect(hasAccent(newState, 'strikethrough')).to.equal(true);
 
-    it.skip('~~strike-through text~~', () => {
-      let state = createCustomCharacters(deserialize('~~strike-through text~~ ').
-      transform().moveOffsetsTo(0).apply());
-      assert.isFalse(hasStrikethroughMarkdown(state));
-      state = createCustomCharacters(state.transform().moveOffsetsTo(1).apply());
-      assert.isTrue(hasStrikethroughMarkdown(state));
-      state = createCustomCharacters(state.transform().moveOffsetsTo(2).apply());
-      assert.isTrue(hasStrikethroughMarkdown(state));
-      state = createCustomCharacters(state.transform().moveOffsetsTo(3).apply());
-      assert.isTrue(hasStrikethroughMarkdown(state));
-      state = createCustomCharacters(state.transform().moveOffsetsTo(21).apply());
-      assert.isTrue(hasStrikethroughMarkdown(state));
-      state = createCustomCharacters(state.transform().moveOffsetsTo(22).apply());
-      assert.isTrue(hasStrikethroughMarkdown(state));
-      state = createCustomCharacters(state.transform().moveOffsetsTo(23).apply());
-      assert.isFalse(hasStrikethroughMarkdown(state));
-    });
+      change.moveOffsetsTo(5, nodeText.length - 5);
+      newState = change.state;
+      expect(hasAccent(newState, 'italic')).to.equal(false);
+      expect(hasAccent(newState, 'bold')).to.equal(true);
+      expect(hasAccent(newState, 'strikethrough')).to.equal(false);
 
-    it.skip('**bold _not italic** text_', () => {
-      let state = createCustomCharacters(deserialize('**bold _not italic** text_').
-      transform().moveOffsetsTo('**bold _not'.length, '**bold _not italic'.length).apply());
-      assert.isFalse(hasItalicMarkdown(state));
-      assert.isTrue(hasBoldMarkdown(state));
+      change.moveOffsetsTo(0, nodeText.length);
+      newState = change.state;
+      expect(hasAccent(newState, 'italic')).to.equal(false);
+      expect(hasAccent(newState, 'bold')).to.equal(false);
+      expect(hasAccent(newState, 'strikethrough')).to.equal(false);
 
-      state = createCustomCharacters(deserialize('**bold _not italic** text_').
-      transform().moveOffsetsTo(2, '**bold _not italic'.length).apply());
-      assert.isTrue(hasBoldMarkdown(state));
-    });
-  });
-
-  describe.skip('Has Marks of a selected text', () => {
-    it('*italic text*', () => {
-      let state = createCustomCharacters(deserialize('*italic text*').
-      transform().moveOffsetsTo(1, '*italic text'.length).apply());
-      assert.isTrue(hasItalicMarkdown(state));
-
-      state = createCustomCharacters(deserialize('*italic text*').
-      transform().moveOffsetsTo(0, '*italic text*'.length).apply());
-      assert.isTrue(hasItalicMarkdown(state));
-    });
-
-    it('**bold text**', () => {
-      let state = createCustomCharacters(deserialize('**bold text**').
-      transform().moveOffsetsTo(2, '**bold text'.length).apply());
-      assert.isTrue(hasBoldMarkdown(state));
-
-      state = createCustomCharacters(deserialize('**bold text**').
-      transform().moveOffsetsTo(0, '**bold text**'.length).apply());
-      assert.isTrue(hasBoldMarkdown(state));
-    });
-
-    it('~~strike-through text~~', () => {
-      let state = createCustomCharacters(deserialize('~~strike-through text~~').
-      transform().moveOffsetsTo(2, '~~strike-through text'.length).apply());
-      assert.isTrue(hasStrikethroughMarkdown(state));
-
-      state = createCustomCharacters(deserialize('~~strike-through text~~').
-      transform().moveOffsetsTo(0, '~~strike-through text~~'.length).apply());
-      assert.isTrue(hasStrikethroughMarkdown(state));
-    });
-
-    it('***bold and italic text***', () => {
-      let state = createCustomCharacters(deserialize('***bold and italic text***').
-      transform().moveOffsetsTo(3, '***bold and italic text'.length).apply());
-      assert.isTrue(hasBoldMarkdown(state));
-      assert.isTrue(hasItalicMarkdown(state));
-
-      state = createCustomCharacters(deserialize('***bold and italic text***').
-      transform().moveOffsetsTo(2, '***bold and italic text*'.length).apply());
-      assert.isTrue(hasBoldMarkdown(state));
-      assert.isTrue(hasItalicMarkdown(state));
-
-      state = createCustomCharacters(deserialize('***bold and italic text***').
-      transform().moveOffsetsTo(1, '***bold and italic text**'.length).apply());
-      assert.isTrue(hasBoldMarkdown(state));
-      assert.isFalse(hasItalicMarkdown(state));
-
-      state = createCustomCharacters(deserialize('***bold and italic text*** ').
-      transform().moveOffsetsTo(0, '***bold and italic text***'.length).apply());
-      assert.isTrue(hasBoldMarkdown(state));
-      assert.isFalse(hasItalicMarkdown(state));
-    });
-
-    it('***bold italic text*bold**', () => {
-      let state = createCustomCharacters(deserialize('***bold italic text*bold**').
-      transform().moveOffsetsTo(3, '***bold italic text'.length).apply());
-      assert.isTrue(hasBoldMarkdown(state));
-      assert.isTrue(hasItalicMarkdown(state));
-
-      state = createCustomCharacters(deserialize('***bold italic text*bold**').
-      transform().moveOffsetsTo(2, '***bold italic text*'.length).apply());
-      assert.isTrue(hasBoldMarkdown(state));
-      assert.isTrue(hasItalicMarkdown(state));
-
-      state = createCustomCharacters(deserialize('***bold italic text*bold**').
-      transform().moveOffsetsTo(1, '***bold italic text*bold*'.length).apply());
-      assert.isTrue(hasBoldMarkdown(state));
-      assert.isFalse(hasItalicMarkdown(state));
-
-      state = createCustomCharacters(deserialize('***bold italic text*bold**').
-      transform().moveOffsetsTo(0, '***bold italic text*bold**'.length).apply());
-      assert.isTrue(hasBoldMarkdown(state));
-      assert.isFalse(hasItalicMarkdown(state));
-
-      state = createCustomCharacters(deserialize('***bold italic text*bold**').
-      transform().moveOffsetsTo('***bold'.length, '***bold italic text*bo'.length).apply());
-      assert.isTrue(hasBoldMarkdown(state));
-      assert.isFalse(hasItalicMarkdown(state));
+      change.moveOffsetsTo(7, 7);
+      newState = change.state;
+      expect(hasAccent(newState, 'italic')).to.equal(false);
+      expect(hasAccent(newState, 'bold')).to.equal(false);
+      expect(hasAccent(newState, 'strikethrough')).to.equal(false);
     });
   });
 
-  describe.skip('Wrap marks', () => {
+  describe('multiline selection', () => {
+    it('Has multiline selection', () => {
+      const nodeText = 'some **text**\nnext line';
+      let component = (<PlainMarkdownInput
+        value={nodeText}
+        fullScreen={true}
+        readOnly={true}
+      />);
+
+      let wrapper = shallow(component);
+      let editorState = wrapper.state('editorState');
+      let change = editorState.change();
+      change.selectAll();
+      expect(hasMultiLineSelection(change.state)).to.equal(true);
+
+      change.moveOffsetsTo('some'.length, 'some **text**\n'.length);
+      expect(hasMultiLineSelection(change.state)).to.equal(true);
+
+      change.moveOffsetsTo('some **text**'.length, 'some **text**\n'.length);
+      expect(hasMultiLineSelection(change.state)).to.equal(true);
+    });
+
+    it('Has not multiline selection', () => {
+      const nodeText = 'some **text**\nnext line';
+      let component = (<PlainMarkdownInput
+        value={nodeText}
+        fullScreen={true}
+        readOnly={true}
+      />);
+
+      let wrapper = shallow(component);
+      let editorState = wrapper.state('editorState');
+      let change = editorState.change();
+      change.moveOffsetsTo('some'.length, 'some **text**'.length);
+      expect(hasMultiLineSelection(change.state)).to.equal(false);
+
+      change.moveOffsetsTo('some **text**\n'.length, 'some **text**\nnext line'.length);
+      expect(hasMultiLineSelection(change.state)).to.equal(false);
+    });
+  });
+
+  describe('Wrap accents', () => {
     it('Wrap bold', () => {
-      let state = deserialize('bold text').
-      transform().moveOffsetsTo(5, 5).apply();
-      state = wrapBoldMarkdown(state);
-      expect(Plain.serialize(state)).to.equal('bold ****text');
+      const nodeText = 'bold text';
+      let component = (<PlainMarkdownInput
+        value={nodeText}
+        fullScreen={true}
+        readOnly={true}
+      />);
 
-      state = deserialize('bold text').
-      transform().moveOffsetsTo(0, 'bold'.length).apply();
-      state = wrapBoldMarkdown(state);
-      expect(Plain.serialize(state)).to.equal('**bold** text');
+      let wrapper = shallow(component);
+      let editorState = wrapper.state('editorState');
+      let change = editorState.change();
+      change.moveOffsetsTo(5, 5);
+      let newState = wrapAccent(change.state, 'bold');
+      expect(Plain.serialize(newState)).to.equal('bold ****text');
 
-      state = deserialize('bold text').
-      transform().moveOffsetsTo(0, 'bold text'.length).apply();
-      state = wrapBoldMarkdown(state);
-      expect(Plain.serialize(state)).to.equal('**bold text**');
+      change.moveOffsetsTo(0, 'bold'.length);
+      newState = wrapAccent(change.state, 'bold');
+      expect(Plain.serialize(newState)).to.equal('**bold** text');
+
+      change.moveOffsetsTo(0, 'bold text'.length);
+      newState = wrapAccent(change.state, 'bold');
+      expect(Plain.serialize(newState)).to.equal('**bold text**');
     });
 
     it('Wrap italic', () => {
-      let state = deserialize('italic text').
-      transform().moveOffsetsTo(7, 7).apply();
-      state = wrapItalicMarkdown(state);
-      expect(Plain.serialize(state)).to.equal('italic __text');
+      const nodeText = 'italic text';
+      let component = (<PlainMarkdownInput
+        value={nodeText}
+        fullScreen={true}
+        readOnly={true}
+      />);
 
-      state = deserialize('italic text').
-      transform().moveOffsetsTo(0, 'italic'.length).apply();
-      state = wrapItalicMarkdown(state);
-      expect(Plain.serialize(state)).to.equal('_italic_ text');
+      let wrapper = shallow(component);
+      let editorState = wrapper.state('editorState');
+      let change = editorState.change();
 
-      state = deserialize('italic text').
-      transform().moveOffsetsTo(0, 'italic text'.length).apply();
-      state = wrapItalicMarkdown(state);
-      expect(Plain.serialize(state)).to.equal('_italic text_');
+      change.moveOffsetsTo(7, 7);
+      let newState = wrapAccent(change.state, 'italic');
+      expect(Plain.serialize(newState)).to.equal('italic __text');
+
+      change.moveOffsetsTo(0, 'italic'.length);
+      newState = wrapAccent(change.state, 'italic');
+      expect(Plain.serialize(newState)).to.equal('_italic_ text');
+
+      change.moveOffsetsTo(0, 'italic text'.length);
+      newState = wrapAccent(change.state, 'italic');
+      expect(Plain.serialize(newState)).to.equal('_italic text_');
     });
 
-    it('Wrap strike-through', () => {
-      let state = deserialize('strike-through text').
-      transform().moveOffsetsTo('strike-through'.length, 'strike-through'.length).apply();
-      state = wrapStrikethroughMarkdown(state);
-      expect(Plain.serialize(state)).to.equal('strike-through~~~~ text');
+    it('Wrap strikethrough', () => {
+      const nodeText = 'strikethrough text';
+      let component = (<PlainMarkdownInput
+        value={nodeText}
+        fullScreen={true}
+        readOnly={true}
+      />);
 
-      state = deserialize('strike-through text').
-      transform().moveOffsetsTo(0, 'strike-through'.length).apply();
-      state = wrapStrikethroughMarkdown(state);
-      expect(Plain.serialize(state)).to.equal('~~strike-through~~ text');
+      let wrapper = shallow(component);
+      let editorState = wrapper.state('editorState');
+      let change = editorState.change();
+      change.moveOffsetsTo('strikethrough'.length, 'strikethrough'.length);
+      let newState = wrapAccent(change.state, 'strikethrough');
+      expect(Plain.serialize(newState)).to.equal('strikethrough~~~~ text');
 
-      state = deserialize('strike-through text').
-      transform().moveOffsetsTo(0, 'strike-through text'.length).apply();
-      state = wrapStrikethroughMarkdown(state);
-      expect(Plain.serialize(state)).to.equal('~~strike-through text~~');
+      change.moveOffsetsTo(0, 'strikethrough'.length);
+      newState = wrapAccent(change.state, 'strikethrough');
+      expect(Plain.serialize(newState)).to.equal('~~strikethrough~~ text');
+
+      change.moveOffsetsTo(0, 'strikethrough text'.length);
+      newState = wrapAccent(change.state, 'strikethrough');
+      expect(Plain.serialize(newState)).to.equal('~~strikethrough text~~');
     });
   });
 
@@ -921,32 +958,6 @@ describe('plain editor transform', () => {
       expect(Plain.serialize(state)).to.equal('*bold italic text*');
       state = unwrapItalicMarkdown(state);
       expect(Plain.serialize(state)).to.equal('bold italic text');
-    });
-  });
-
-  describe.skip('multiline selection', () => {
-    it('Has multiline selection', () => {
-      let state = deserialize('some **text**\nnext line').
-      transform().selectAll().apply();
-      assert.isTrue(hasMultiLineSelection(state));
-
-      state = deserialize('some **text**\nnext line').transform().
-      moveOffsetsTo('some'.length, 'some **text**\n'.length).apply();
-      assert.isTrue(hasMultiLineSelection(state));
-
-      state = deserialize('some **text**\nnext line').transform().
-      moveOffsetsTo('some **text**'.length, 'some **text**\n'.length).apply();
-      assert.isTrue(hasMultiLineSelection(state));
-    });
-
-    it('Has not multiline selection', () => {
-      let state = deserialize('some **text**\nnext line').
-      transform().moveOffsetsTo(0, 'some **text**'.length).apply();
-      assert.isFalse(hasMultiLineSelection(state));
-
-      state = deserialize('some **text**\nnext line').transform().
-      moveOffsetsTo('some **text**\n'.length, 'some **text**\nnext line'.length).apply();
-      assert.isFalse(hasMultiLineSelection(state));
     });
   });
 });

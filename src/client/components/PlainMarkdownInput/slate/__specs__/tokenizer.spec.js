@@ -1,4 +1,4 @@
-import { parse } from './tokenizer';
+import { parse } from '../tokenizer';
 import { expect } from 'chai';
 
 describe('plain editor tokenizer', () => {

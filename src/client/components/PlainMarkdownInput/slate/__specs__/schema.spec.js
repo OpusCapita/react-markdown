@@ -1,14 +1,14 @@
 /* eslint-disable max-len */
 
 import React from 'react';
-import schema from './schema'
+import schema from '../schema'
 const { rules } = schema;
 const decorate = rules[0].decorate;
 const render = rules[0].render;
-import PlainMarkdownInput from '../PlainMarkdownInput.react';
+import PlainMarkdownInput from '../../PlainMarkdownInput.react';
 import { expect } from 'chai';
 import { mount, shallow } from 'enzyme';
-import { parse } from './tokenizer';
+import { parse } from '../tokenizer';
 import { Mark, Character, Text } from 'slate';
 import { Set as ImmutableSet, List as ImmutableList } from 'immutable';
 

@@ -64,52 +64,22 @@ const wrapBlock = function(matchRules, text, state) {
 };
 
 /**
- * Has text wrapped italic markdown tokens
+ * Has text wrapped of accent at characters
  *
+ * @param mark
  * @param state - editor state
  */
-export const hasItalicMarkdown = state => {
+function hasAccentAtLetters(mark, state) {
   const { startOffset, endOffset, focusText } = state;
   const focusedText = focusText.text;
-  if ((startOffset - 1) >= 0 && endOffset + 1 <= focusedText.length) {
-    const text = focusedText.slice(startOffset - 1, endOffset + 1);
-    return text && text.startsWith('_') && text.endsWith('_');
+  const markLength = mark.length;
+  if ((startOffset - markLength) >= 0 && endOffset + markLength <= focusedText.length) {
+    const text = focusedText.slice(startOffset - markLength, endOffset + markLength);
+    return text && text.startsWith(mark) && text.endsWith(mark);
   } else {
     return false;
   }
-};
-
-/**
- * Has text wrapped with bold markdown tokens
- *
- * @param state - editor state
- */
-export const hasBoldMarkdown = state => {
-  const { startOffset, endOffset, focusText } = state;
-  const focusedText = focusText.text;
-  if ((startOffset - 2) >= 0 && endOffset + 2 <= focusedText.length) {
-    const text = focusedText.slice(startOffset - 2, endOffset + 2);
-    return text && text.startsWith('**') && text.endsWith('**');
-  } else {
-    return false;
-  }
-};
-
-/**
- * Has wrap text with strikethrough markdown tokens
- *
- * @param state - editor state
- */
-export const hasStrikethroughMarkdown = state => {
-  const { startOffset, endOffset, focusText } = state;
-  const focusedText = focusText.text;
-  if ((startOffset - 2) >= 0 && endOffset + 2 <= focusedText.length) {
-    const text = focusedText.slice(startOffset - 2, endOffset + 2);
-    return text && text.startsWith('~~') && text.endsWith('~~');
-  } else {
-    return false;
-  }
-};
+}
 
 /**
  * Wrap text with mark
@@ -147,6 +117,109 @@ function unwrapLetters(count, state) {
   removeTextByKey(focusKey, startOffset - count, count).focus();
   return change.state;
 }
+
+/**
+ * XXX for shortcuts
+ * Wrap text italic with markdown token
+ *
+ * @param state - editor state
+ */
+export const wrapItalicMarkdown = state => {
+  const { startOffset, endOffset } = state;
+  let t = state.transform();
+  if (startOffset === endOffset) {
+    const text = '';
+    t.insertText('_' + text + '_').
+      move(-1).
+      extend(text.length * -1);
+  } else {
+    t.wrapText('_', '_');
+  }
+  return t.focus().apply();
+};
+
+/**
+ * XXX for shortcuts
+ * Unwrap text with italic markdown token
+ *
+ * @param state - editor state
+ */
+export const unwrapItalicMarkdown = state => {
+  const { startOffset, endOffset, focusText } = state;
+  return state.transform().
+    removeTextByKey(focusText.key, endOffset, 1).
+    removeTextByKey(focusText.key, startOffset - 1, 1).
+    focus().apply();
+};
+
+/**
+ * XXX for shortcuts
+ * Wrap text with bold markdown tokens
+ *
+ * @param state - editor state
+ */
+export const wrapBoldMarkdown = state => {
+  const { startOffset, endOffset } = state;
+  let t = state.transform();
+  if (startOffset === endOffset) {
+    const text = '';
+    t.insertText('**' + text + '**').
+    move(-2).
+    extend(text.length * -1);
+  } else {
+    t.wrapText('**', '**');
+  }
+  return t.focus().apply();
+};
+
+/**
+ * XXX for shortcuts
+ * Unwrap text with bold markdown tokens
+ *
+ * @param state - editor state
+ */
+export const unwrapBoldMarkdown = state => {
+  const { startOffset, endOffset, focusText } = state;
+  return state.transform().
+  removeTextByKey(focusText.key, endOffset, 2).
+  removeTextByKey(focusText.key, startOffset - 2, 2).
+  focus().apply();
+};
+
+/**
+ * XXX for shortcuts
+ * Wrap text with strikethrough markdown tokens
+ *
+ * @param state
+ */
+export const wrapStrikethroughMarkdown = state => {
+  const { startOffset, endOffset } = state;
+  let t = state.transform();
+  if (startOffset === endOffset) {
+    const text = '';
+    t.insertText('~~' + text + '~~').
+    move(-2).
+    extend(text.length * -1)
+  } else {
+    t.wrapText('~~', '~~');
+  }
+  return t.focus().apply();
+};
+
+/**
+ * XXX for shortcuts
+ * Unwrap text with strikethrought markdown tokens
+ *
+ * @param state - editor state
+ */
+export const unwrapStrikethroughMarkdown = state => {
+  const { startOffset, endOffset, focusText } = state;
+  return state.transform().
+  removeTextByKey(focusText.key, endOffset, 2).
+  removeTextByKey(focusText.key, startOffset - 2, 2).
+  focus().apply()
+};
+
 
 /**
  * Unwrap text with OL markdown token
@@ -189,9 +262,9 @@ export const hasMultiLineSelection = ({ selection: { startKey, endKey } }) => st
 
 const activities = {
   has: {
-    bold: hasBoldMarkdown,
-    italic: hasItalicMarkdown,
-    strikethrough: hasStrikethroughMarkdown,
+    bold: hasAccentAtLetters.bind(null, '**'),
+    italic: hasAccentAtLetters.bind(null, '_'),
+    strikethrough: hasAccentAtLetters.bind(null, '~~'),
     ul: hasBlock.bind(null, ulRegExp),
     ol: hasBlock.bind(null, olRegExp),
     header: [
