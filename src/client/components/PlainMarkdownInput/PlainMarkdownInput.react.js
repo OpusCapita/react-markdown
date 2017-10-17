@@ -6,7 +6,6 @@ import classnames from 'classnames';
 import DropdownButton from 'react-bootstrap/lib/DropdownButton';
 import { Editor } from 'slate-react';
 import schema from './slate/schema';
-// import shortcuts from './slate/shortcuts';
 import './PlainMarkdownInput.less';
 import { parse } from './slate/tokenizer';
 import { autoScrollToTop } from '../utils';
@@ -228,14 +227,7 @@ class PlainMarkdownInput extends React.Component {
         if (data.key === 's') {
           event.preventDefault();
         }
-        // const state = change.state;
-        // const accent = ACCENTS[data.key];
         return this._toggleAccent(change.state, ACCENTS[data.key]);
-
-        // const active = hasAccent(state, accent);
-        // return this.handleChange(
-        //   active ? unwrapAccent(state, accent) : wrapAccent(state, accent)
-        // );
       }
     }
 
@@ -245,8 +237,6 @@ class PlainMarkdownInput extends React.Component {
   handleClickActionButton(accent) {
     const state = this.state.editorState;
     return this._toggleAccent(state, accent);
-    // const active = hasAccent(state, accent);
-    // return this.handleChange(active ? unwrapAccent(state, accent) : wrapAccent(state, accent));
   }
 
   handleClickHeaderButton(level) {

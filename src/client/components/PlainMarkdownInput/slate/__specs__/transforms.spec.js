@@ -2,8 +2,6 @@
 
 import React from 'react';
 import { expect } from 'chai';
-// import { assert, expect } from 'chai';
-// import { mount, shallow } from 'enzyme';
 import { shallow } from 'enzyme';
 import Plain from 'slate-plain-serializer';
 import PlainMarkdownInput from '../../PlainMarkdownInput.react';
