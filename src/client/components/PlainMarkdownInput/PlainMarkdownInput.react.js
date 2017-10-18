@@ -1,15 +1,20 @@
 import React from 'react';
-import _ from 'lodash';
 import { findDOMNode } from 'react-dom';
 import Types from 'prop-types';
 import classnames from 'classnames';
 import DropdownButton from 'react-bootstrap/lib/DropdownButton';
 import { Editor } from 'slate-react';
+import Plain from 'slate-plain-serializer';
+import _ from 'lodash';
 import schema from './slate/schema';
 import './PlainMarkdownInput.less';
 import { parse } from './slate/tokenizer';
-import { autoScrollToTop, addSpecialCharacter } from './utils';
 import getMessage from '../translations';
+
+import {
+  autoScrollToTop,
+  addSpecialCharacter
+} from './utils';
 
 import {
   AutocompletePlugin,
@@ -33,8 +38,6 @@ import {
   wrapLinkMarkdown,
   hasMultiLineSelection
 } from './slate/transforms';
-
-import Plain from 'slate-plain-serializer';
 
 const ACCENTS = {
   b: 'bold',
@@ -266,14 +269,6 @@ class PlainMarkdownInput extends React.Component {
           extension={extension}
           disabled={readOnly}
         />
-        // <ObjectReferenceButton
-        //   state={editorState}
-        //   onChange={this.handleChange}
-        //   key={index}
-        //   extension={extension}
-        //   disabled={readOnly}
-        //   locale={locale}
-        // />
       );
     });
 
