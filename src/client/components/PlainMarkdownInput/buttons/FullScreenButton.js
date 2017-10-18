@@ -3,9 +3,9 @@ import classnames from 'classnames';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
 import Types from 'prop-types';
-import getMessage from '../../../translations';
+import getMessage from '../../translations';
 
-import './FullScreenStyles.css';
+// import '../plugins/slate-fullscreen-plugin/FullScreenStyles.css';
 
 const FullScreenButton = function({ onClick, fullScreen, locale }) {
   const tooltip = <Tooltip id="switch-tp" className="fullscreen-tp">{getMessage(locale, 'fullscreen')}</Tooltip>;

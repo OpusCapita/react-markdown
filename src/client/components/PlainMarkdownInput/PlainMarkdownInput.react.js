@@ -18,14 +18,15 @@ import {
 
 import {
   AutocompletePlugin,
-  FullScreenButton
+  // FullScreenButton
 } from './plugins';
 
 import {
   ActionButton,
   HeaderButton,
   LinkButton,
-  ObjectReferenceButton
+  ObjectReferenceButton,
+  FullScreenButton
 } from './buttons';
 
 import {
