@@ -5,8 +5,6 @@ import Tooltip from 'react-bootstrap/lib/Tooltip';
 import Types from 'prop-types';
 import getMessage from '../../translations';
 
-// import '../plugins/slate-fullscreen-plugin/FullScreenStyles.css';
-
 const FullScreenButton = function({ onClick, fullScreen, locale }) {
   const tooltip = <Tooltip id="switch-tp" className="fullscreen-tp">{getMessage(locale, 'fullscreen')}</Tooltip>;
   return (

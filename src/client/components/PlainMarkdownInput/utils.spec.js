@@ -109,7 +109,7 @@ describe('plain editor utils', () => {
     let wrapper = shallow(component);
     let editorState = wrapper.state('editorState');
     let change = editorState.change();
-    change.moveOffsetsTo(nodeText.length-1, nodeText.length-1);
+    change.moveOffsetsTo(nodeText.length - 1, nodeText.length - 1);
     let newState = addSpecialCharacter(specialCharacter, change.state);
     expect(Plain.serialize(newState)).to.equal('Simple #text');
 

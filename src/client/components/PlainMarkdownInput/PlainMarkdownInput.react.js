@@ -17,9 +17,7 @@ import {
 } from './utils';
 
 import {
-  AutocompletePlugin,
-  // FullScreenButton
-} from './plugins';
+  AutocompletePlugin } from './plugins';
 
 import {
   ActionButton,
