@@ -8,19 +8,19 @@ import { Editor } from 'slate-react';
 import schema from './slate/schema';
 import './PlainMarkdownInput.less';
 import { parse } from './slate/tokenizer';
-import { autoScrollToTop } from './utils';
+import { autoScrollToTop, addSpecialCharacter } from './utils';
 import getMessage from '../translations';
 
 import {
   AutocompletePlugin,
-  FullScreenButton,
-  ObjectReferenceButton
+  FullScreenButton
 } from './plugins';
 
 import {
   ActionButton,
   HeaderButton,
   LinkButton,
+  ObjectReferenceButton
 } from './buttons';
 
 import {
@@ -203,22 +203,6 @@ class PlainMarkdownInput extends React.Component {
     return undefined;
   }
 
-  handleClickActionButton(accent) {
-    const state = this.state.editorState;
-    return this._toggleAccent(state, accent);
-  }
-
-  handleClickHeaderButton(level) {
-    const state = this.state.editorState;
-    const active = hasHeader(state, level);
-    return this.handleChange(active ? unwrapHeader(state, level) : wrapHeader(state, level));
-  }
-
-  handleClickLinkButton() {
-    const state = this.state.editorState;
-    return this.handleChange(wrapLinkMarkdown(state));
-  }
-
   handleCopy(event, data, change) {
     copySelectionToClipboard(event, change);
     return change;
@@ -248,21 +232,48 @@ class PlainMarkdownInput extends React.Component {
     }
   }
 
+  handleClickActionButton(accent) {
+    const state = this.state.editorState;
+    return this._toggleAccent(state, accent);
+  }
+
+  handleClickHeaderButton(level) {
+    const state = this.state.editorState;
+    const active = hasHeader(state, level);
+    return this.handleChange(active ? unwrapHeader(state, level) : wrapHeader(state, level));
+  }
+
+  handleClickLinkButton() {
+    const state = this.state.editorState;
+    return this.handleChange(wrapLinkMarkdown(state));
+  }
+
+  handleClickObjectReferenceButton(extension) {
+    const state = this.state.editorState;
+    return this.handleChange(addSpecialCharacter(extension.specialCharacter, state));
+  }
+
   render() {
     const { editorState, fullScreen } = this.state;
     const { children, extensions, readOnly, locale } = this.props;
     const disabled = readOnly || hasMultiLineSelection(editorState);
 
-    let objectReferenceButtons = this.props.extensions.map((extension, index) => {
+    let objectReferenceButtons = this.props.extensions.map((extension, ind) => {
       return (
         <ObjectReferenceButton
-          state={editorState}
-          onChange={this.handleChange}
-          key={index}
+          key={ind}
+          onClick={this.handleClickObjectReferenceButton.bind(this)}
           extension={extension}
           disabled={readOnly}
-          locale={locale}
         />
+        // <ObjectReferenceButton
+        //   state={editorState}
+        //   onChange={this.handleChange}
+        //   key={index}
+        //   extension={extension}
+        //   disabled={readOnly}
+        //   locale={locale}
+        // />
       );
     });
 
@@ -275,9 +286,9 @@ class PlainMarkdownInput extends React.Component {
       >
         <div className="react-markdown--toolbar">
           <div className="btn-group">
-            {['bold', 'italic', 'strikethrough'].map(accent => (
+            {['bold', 'italic', 'strikethrough'].map((accent, ind) => (
               <ActionButton
-                key={accent}
+                key={ind}
                 onClick={this.handleClickActionButton}
                 disabled={disabled}
                 locale={locale}
@@ -301,9 +312,9 @@ class PlainMarkdownInput extends React.Component {
               title={<i className="fa fa-header"/>}
               disabled={disabled}
             >
-              {[1, 2, 3, 4, 5, 6].map(level => (
+              {[1, 2, 3, 4, 5, 6].map((level, ind) => (
                 <HeaderButton
-                  key={level}
+                  key={ind}
                   onClick={this.handleClickHeaderButton.bind(this)}
                   level={level}
                 />
@@ -312,9 +323,9 @@ class PlainMarkdownInput extends React.Component {
           </div>
 
           <div className="btn-group">
-            {['ol', 'ul'].map(accent => (
+            {['ol', 'ul'].map((accent, ind) => (
               <ActionButton
-                key={accent}
+                key={ind}
                 onClick={this.handleClickActionButton}
                 disabled={disabled}
                 locale={locale}

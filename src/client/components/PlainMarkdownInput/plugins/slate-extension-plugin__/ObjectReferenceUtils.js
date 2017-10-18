@@ -1,4 +1,4 @@
-export const addSpecialCharacter = (specialCharacter, state) => {
+const addSpecialCharacter = (specialCharacter, state) => {
   let text = state.startBlock.text;
   let newOffset = 0;
   let insertedText = '';
@@ -13,4 +13,8 @@ export const addSpecialCharacter = (specialCharacter, state) => {
   change.moveOffsetsTo(newOffset).wrapText(insertedText, '').
   moveOffsetsTo(state.endOffset + insertedText.length).focus();
   return change.state;
+};
+
+export default {
+  addSpecialCharacter
 };
