@@ -119,109 +119,6 @@ function unwrapLetters(count, state) {
 }
 
 /**
- * XXX for shortcuts
- * Wrap text italic with markdown token
- *
- * @param state - editor state
- */
-export const wrapItalicMarkdown = state => {
-  const { startOffset, endOffset } = state;
-  let t = state.transform();
-  if (startOffset === endOffset) {
-    const text = '';
-    t.insertText('_' + text + '_').
-      move(-1).
-      extend(text.length * -1);
-  } else {
-    t.wrapText('_', '_');
-  }
-  return t.focus().apply();
-};
-
-/**
- * XXX for shortcuts
- * Unwrap text with italic markdown token
- *
- * @param state - editor state
- */
-export const unwrapItalicMarkdown = state => {
-  const { startOffset, endOffset, focusText } = state;
-  return state.transform().
-    removeTextByKey(focusText.key, endOffset, 1).
-    removeTextByKey(focusText.key, startOffset - 1, 1).
-    focus().apply();
-};
-
-/**
- * XXX for shortcuts
- * Wrap text with bold markdown tokens
- *
- * @param state - editor state
- */
-export const wrapBoldMarkdown = state => {
-  const { startOffset, endOffset } = state;
-  let t = state.transform();
-  if (startOffset === endOffset) {
-    const text = '';
-    t.insertText('**' + text + '**').
-    move(-2).
-    extend(text.length * -1);
-  } else {
-    t.wrapText('**', '**');
-  }
-  return t.focus().apply();
-};
-
-/**
- * XXX for shortcuts
- * Unwrap text with bold markdown tokens
- *
- * @param state - editor state
- */
-export const unwrapBoldMarkdown = state => {
-  const { startOffset, endOffset, focusText } = state;
-  return state.transform().
-  removeTextByKey(focusText.key, endOffset, 2).
-  removeTextByKey(focusText.key, startOffset - 2, 2).
-  focus().apply();
-};
-
-/**
- * XXX for shortcuts
- * Wrap text with strikethrough markdown tokens
- *
- * @param state
- */
-export const wrapStrikethroughMarkdown = state => {
-  const { startOffset, endOffset } = state;
-  let t = state.transform();
-  if (startOffset === endOffset) {
-    const text = '';
-    t.insertText('~~' + text + '~~').
-    move(-2).
-    extend(text.length * -1)
-  } else {
-    t.wrapText('~~', '~~');
-  }
-  return t.focus().apply();
-};
-
-/**
- * XXX for shortcuts
- * Unwrap text with strikethrought markdown tokens
- *
- * @param state - editor state
- */
-export const unwrapStrikethroughMarkdown = state => {
-  const { startOffset, endOffset, focusText } = state;
-  return state.transform().
-  removeTextByKey(focusText.key, endOffset, 2).
-  removeTextByKey(focusText.key, startOffset - 2, 2).
-  focus().apply()
-};
-
-
-/**
  * Unwrap text with OL markdown token
  *
  * @param state - editor state
@@ -241,15 +138,16 @@ export const unwrapOrderedListMarkdown = state => {
  */
 export const wrapLinkMarkdown = state => {
   const { startOffset, endOffset } = state;
-  const t = state.transform();
+  const change = state.change();
   const url = 'http://example.com';
   if (startOffset === endOffset) {
     const text = `[link text](${url})`;
-    t.insertText(text).move((text.length - 1) * -1).extend(text.length - 2);
+    change.insertText(text).move((text.length - 1) * -1).extend(text.length - 2);
   } else {
-    t.wrapText('[', `](${(url)})`).moveOffsetsTo(endOffset + 3, endOffset + 3 + url.length)
+    change.wrapText('[', `](${(url)})`).moveOffsetsTo(endOffset + 3, endOffset + 3 + url.length)
   }
-  return t.focus().apply();
+  change.focus();
+  return change.state;
 };
 
 /**

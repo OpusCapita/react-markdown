@@ -7,8 +7,16 @@ describe('plain editor tokenizer', () => {
       expect(parse('')).to.deep.equal([]);
     });
 
+    it('space', () => {
+      expect(parse(' ')).to.deep.equal([' ']);
+    });
+
     it('just a text', () => {
       expect(parse('just a text')).to.deep.equal(['just a text']);
+    });
+
+    it('just a text with space', () => {
+      expect(parse('just a text ')).to.deep.equal(['just a text ']);
     });
 
     it('_~~_test2_~~', () => {

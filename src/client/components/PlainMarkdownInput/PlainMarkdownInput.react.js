@@ -8,7 +8,7 @@ import { Editor } from 'slate-react';
 import schema from './slate/schema';
 import './PlainMarkdownInput.less';
 import { parse } from './slate/tokenizer';
-import { autoScrollToTop } from '../utils';
+import { autoScrollToTop } from './utils';
 import getMessage from '../translations';
 
 import {
@@ -187,6 +187,38 @@ class PlainMarkdownInput extends React.Component {
     this.props.onFullScreen(fullScreen);
   };
 
+  _toggleAccent(state, accent) {
+    const active = hasAccent(state, accent);
+    return this.handleChange(active ? unwrapAccent(state, accent) : wrapAccent(state, accent));
+  }
+
+  handleKeyDown(event, data, change) {
+    if (data.isMod && ACCENTS[data.key]) {
+      if (data.key === 's') {
+        event.preventDefault();
+      }
+      return this._toggleAccent(change.state, ACCENTS[data.key]);
+    }
+
+    return undefined;
+  }
+
+  handleClickActionButton(accent) {
+    const state = this.state.editorState;
+    return this._toggleAccent(state, accent);
+  }
+
+  handleClickHeaderButton(level) {
+    const state = this.state.editorState;
+    const active = hasHeader(state, level);
+    return this.handleChange(active ? unwrapHeader(state, level) : wrapHeader(state, level));
+  }
+
+  handleClickLinkButton() {
+    const state = this.state.editorState;
+    return this.handleChange(wrapLinkMarkdown(state));
+  }
+
   handleCopy(event, data, change) {
     copySelectionToClipboard(event, change);
     return change;
@@ -214,40 +246,6 @@ class PlainMarkdownInput extends React.Component {
       let refEl = findDOMNode(this.slateContentRef);
       refEl.getElementsByClassName('react-markdown--slate-content__editor')[0].focus();
     }
-  }
-
-  _toggleAccent(state, accent) {
-    const active = hasAccent(state, accent);
-    return this.handleChange(active ? unwrapAccent(state, accent) : wrapAccent(state, accent));
-  }
-
-  handleKeyDown(event, data, change) {
-    if (data.isMod) {
-      if (ACCENTS[data.key]) {
-        if (data.key === 's') {
-          event.preventDefault();
-        }
-        return this._toggleAccent(change.state, ACCENTS[data.key]);
-      }
-    }
-
-    return undefined;
-  }
-
-  handleClickActionButton(accent) {
-    const state = this.state.editorState;
-    return this._toggleAccent(state, accent);
-  }
-
-  handleClickHeaderButton(level) {
-    const state = this.state.editorState;
-    const active = hasHeader(state, level);
-    return this.handleChange(active ? unwrapHeader(state, level) : wrapHeader(state, level));
-  }
-
-  handleClickLinkButton() {
-    const state = this.state.editorState;
-    return this.handleChange(wrapLinkMarkdown(state));
   }
 
   render() {

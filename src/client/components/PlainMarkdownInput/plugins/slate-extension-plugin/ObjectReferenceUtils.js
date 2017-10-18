@@ -9,11 +9,8 @@ export const addSpecialCharacter = (specialCharacter, state) => {
     insertedText = specialCharacter;
     newOffset = text.substring(0, state.startOffset).lastIndexOf(' ') + 1;
   }
-  return state.
-    transform().
-      moveOffsetsTo(newOffset).
-      wrapText(insertedText, '').
-      moveOffsetsTo(state.endOffset + insertedText.length).
-      focus().
-      apply();
+  const change = state.change();
+  change.moveOffsetsTo(newOffset).wrapText(insertedText, '').
+  moveOffsetsTo(state.endOffset + insertedText.length).focus();
+  return change.state;
 };

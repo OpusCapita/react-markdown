@@ -446,7 +446,6 @@ function processBlockTokens(tokens) {
       }
       if (firstType === 'heading_open' && lastType === 'heading_close') {
         return [getHeaderContent(tokens, 'header', tokens[0].markup)];
-        // return [getHeaderContent(tokens, HEADERS[tokens[0].tag], tokens[0].markup)];
       }
     }
   }

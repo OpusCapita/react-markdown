@@ -2,7 +2,7 @@ import React from 'react';
 import Types from 'prop-types';
 import getMessage from '../../translations';
 
-const MarkdownLinkButton = ({ onClick, disabled, locale }) => (
+const LinkButton = ({ onClick, disabled, locale }) => (
   <button
     className="btn btn-default"
     disabled={disabled}
@@ -14,14 +14,16 @@ const MarkdownLinkButton = ({ onClick, disabled, locale }) => (
   </button>
 );
 
-MarkdownLinkButton.propTypes = {
+LinkButton.propTypes = {
   disabled: Types.bool,
   onClick: Types.func,
   locale: Types.string
 };
 
-MarkdownLinkButton.defaultProps = {
+LinkButton.defaultProps = {
+  active: false,
+  disabled: false,
   locale: 'en'
 };
 
-export default MarkdownLinkButton;
+export default LinkButton;

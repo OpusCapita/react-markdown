@@ -35,6 +35,8 @@ ActionButton.propTypes = {
 };
 
 ActionButton.defaultProps = {
+  active: false,
+  disabled: false,
   locale: 'en'
 };
 

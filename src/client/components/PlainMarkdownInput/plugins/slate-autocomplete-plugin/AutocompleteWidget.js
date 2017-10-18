@@ -1,7 +1,7 @@
 import React from 'react';
 import './Autocomplete.less';
 import Types from 'prop-types';
-import { getSlateEditor } from '../../../utils';
+import { getSlateEditor } from '../../utils';
 import getMessage from '../../../translations';
 
 const propTypes = {

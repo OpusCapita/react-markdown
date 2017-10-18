@@ -1,29 +1,29 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 import { expect } from 'chai';
-import Plain from 'slate-plain-serializer';
+import sinon from 'sinon';
 import LinkButton from '../LinkButton';
+import getMessage from '../../../translations';
 
-describe.skip('<LinkButton/>', () => {
-  it('check insert link into selected text', () => {
-    let state = Plain.deserialize("some text").
-    // selected 'text' in state
-    transform().moveOffsetsTo('some '.length, 'some text'.length).apply();
-    const wrapper = shallow(<LinkButton state={state} onChange={(newState) => { state = newState }} />);
-    wrapper.find('button').simulate('click');
-    expect('some [text](http://example.com)').to.equal(Plain.serialize(state));
-    expect('some [text]('.length).to.equal(state.selection.startOffset);
-    expect('some [text](http://example.com'.length).to.equal(state.selection.endOffset);
+describe('<LinkButton/>', () => {
+  it('check default button', () => {
+    const component = <LinkButton onClick={() => {}} />;
+    const wrapper = shallow(component);
+    expect(wrapper.find('.btn')).to.have.length(1);
+    expect(wrapper.find(`.btn-default`)).to.have.length(1);
+    expect(wrapper.find('.fa')).to.have.length(1);
+    expect(wrapper.find(`.fa-link`)).to.have.length(1);
+    expect(wrapper.find(`[title="${getMessage('en', 'insertLink')}"]`)).to.have.length(1);
+    const props = component.props;
+    expect(props.disabled).to.equal(false);
+    expect(props.locale).to.equal('en');
   });
 
-  it('check insert link into cursor', () => {
-    let state = Plain.deserialize('some text').
-    // selected 'text' in state
-    transform().move('some text'.length).apply();
-    const wrapper = shallow(<LinkButton state={state} onChange={(newState) => { state = newState }} />);
+  it('click on the button', () => {
+    let handleClick = sinon.spy();
+    const component = <LinkButton onClick={handleClick} />;
+    const wrapper = shallow(component);
     wrapper.find('button').simulate('click');
-    expect('some text[link text](http://example.com)').to.equal(Plain.serialize(state));
-    expect('some text['.length).to.equal(state.selection.startOffset);
-    expect('some text[link text](http://example.com'.length).to.equal(state.selection.endOffset);
+    expect(handleClick.callCount).to.equal(1);
   });
 });

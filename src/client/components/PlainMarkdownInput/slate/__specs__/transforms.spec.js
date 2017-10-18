@@ -8,10 +8,11 @@ import PlainMarkdownInput from '../../PlainMarkdownInput.react';
 import {
   hasAccent,
   wrapAccent,
-  // unwrapAccent,
+  unwrapAccent,
   hasHeader,
-  // wrapHeader,
-  // unwrapHeader,
+  wrapHeader,
+  unwrapHeader,
+  wrapLinkMarkdown,
   hasMultiLineSelection
 } from '../transforms';
 
@@ -616,6 +617,108 @@ describe('plain editor transform', () => {
     });
   });
 
+  describe('nonexistent accents or levels', () => {
+    it('hasAccent', () => {
+      const nodeText = '_italic text_';
+      let component = (<PlainMarkdownInput
+        value={nodeText}
+        fullScreen={true}
+        readOnly={true}
+      />);
+
+      let wrapper = shallow(component);
+      let editorState = wrapper.state('editorState');
+      let change = editorState.change();
+      change.moveOffsetsTo(1, nodeText.length - 1);
+      let result = hasAccent(change.state, 'italic');
+      expect(result).to.equal(true);
+      result = hasAccent(change.state, 'italic_new');
+      expect(result).to.equal(false);
+    });
+
+    it('hasHeader', () => {
+      const nodeText = '## Header';
+      let component = (<PlainMarkdownInput
+        value={nodeText}
+        fullScreen={true}
+        readOnly={true}
+      />);
+
+      let wrapper = shallow(component);
+      let editorState = wrapper.state('editorState');
+      let change = editorState.change();
+      change.moveOffsetsTo(1, nodeText.length - 1);
+      let result = hasHeader(change.state, 2);
+      expect(result).to.equal(true);
+      result = hasHeader(change.state, 25);
+      expect(result).to.equal(false);
+    });
+
+    it('wrapAccent', () => {
+      const nodeText = 'simple text';
+      let component = (<PlainMarkdownInput
+        value={nodeText}
+        fullScreen={true}
+        readOnly={true}
+      />);
+
+      let wrapper = shallow(component);
+      let editorState = wrapper.state('editorState');
+      let change = editorState.change();
+      change.moveOffsetsTo(0, nodeText.length);
+      let newState = wrapAccent(change.state, 'bold_new');
+      expect(Plain.serialize(newState)).to.equal(nodeText);
+    });
+
+    it('wrapHeader', () => {
+      const nodeText = 'simple text';
+      let component = (<PlainMarkdownInput
+        value={nodeText}
+        fullScreen={true}
+        readOnly={true}
+      />);
+
+      let wrapper = shallow(component);
+      let editorState = wrapper.state('editorState');
+      let change = editorState.change();
+      change.moveOffsetsTo(0, nodeText.length);
+      let newState = wrapHeader(change.state, 10);
+      expect(Plain.serialize(newState)).to.equal(nodeText);
+    });
+
+    it('unwrapAccent', () => {
+      const nodeText = '**simple text**';
+      let component = (<PlainMarkdownInput
+        value={nodeText}
+        fullScreen={true}
+        readOnly={true}
+      />);
+
+      let wrapper = shallow(component);
+      let editorState = wrapper.state('editorState');
+      let change = editorState.change();
+      change.moveOffsetsTo(2, nodeText.length - 1);
+      let newState = unwrapAccent(change.state, 'bold_new');
+      expect(Plain.serialize(newState)).to.equal(nodeText);
+    });
+
+    it('unwrapHeader', () => {
+      const nodeText = '# Header 1';
+      let component = (<PlainMarkdownInput
+        value={nodeText}
+        fullScreen={true}
+        readOnly={true}
+      />);
+
+      let wrapper = shallow(component);
+      let editorState = wrapper.state('editorState');
+      let change = editorState.change();
+      change.moveOffsetsTo(0, nodeText.length);
+      let newState = unwrapHeader(change.state, 10);
+      expect(Plain.serialize(newState)).to.equal(nodeText);
+    });
+  });
+
   describe('multiline selection', () => {
     it('Has multiline selection', () => {
       const nodeText = 'some **text**\nnext line';
@@ -732,230 +835,304 @@ describe('plain editor transform', () => {
     });
   });
 
-  describe.skip('Unwrap marks', () => {
-    it('Unwrap bold from **bold text**', () => {
-      let state = createCustomCharacters(deserialize('**bold text**').
-      transform().moveOffsetsTo('**'.length, '**bold text'.length).apply());
-      state = unwrapBoldMarkdown(state);
-      expect(Plain.serialize(state)).to.equal('bold text');
+  describe('Unwrap accents', () => {
+    it('Unwrap bold', () => {
+      let nodeText = '**bold text**';
+      let component = (<PlainMarkdownInput
+        value={nodeText}
+        fullScreen={true}
+        readOnly={true}
+      />);
 
-      state = createCustomCharacters(deserialize('**bold text**').
-      transform().moveOffsetsTo(6, 6).apply());
-      state = unwrapBoldMarkdown(state);
-      expect(Plain.serialize(state)).to.equal('bold text');
+      let wrapper = shallow(component);
+      let editorState = wrapper.state('editorState');
+      let change = editorState.change();
 
-      state = createCustomCharacters(deserialize('**bold text**').
-      transform().moveOffsetsTo(1, 1).apply());
-      state = unwrapBoldMarkdown(state);
-      expect(Plain.serialize(state)).to.equal('bold text');
+      change.moveOffsetsTo('**'.length, '**bold text'.length);
+      let newState = unwrapAccent(change.state, 'bold');
+      expect(Plain.serialize(newState)).to.equal('bold text');
 
-      state = createCustomCharacters(deserialize('**bold text**').
-      transform().moveOffsetsTo('**bold text*'.length, '**bold text*'.length).apply());
-      state = unwrapBoldMarkdown(state);
-      expect(Plain.serialize(state)).to.equal('bold text');
+      nodeText = 'simple text****';
+      component = (<PlainMarkdownInput
+        value={nodeText}
+        fullScreen={true}
+        readOnly={true}
+      />);
 
-      state = createCustomCharacters(deserialize('**bold text**').
-      transform().moveOffsetsTo(0, 0).apply());
-      expect(hasBoldMarkdown(state)).is.not.equal(true);
-      state = unwrapBoldMarkdown(state);
-      expect(Plain.serialize(state)).to.equal('**bold text**');
+      wrapper = shallow(component);
+      editorState = wrapper.state('editorState');
+      change = editorState.change();
 
-      state = createCustomCharacters(deserialize('**bold text** ').
-      transform().moveOffsetsTo('**bold text**'.length, '**bold text**'.length).apply());
-      expect(hasBoldMarkdown(state)).is.not.equal(true);
-      state = unwrapBoldMarkdown(state);
-      expect(Plain.serialize(state)).to.equal('**bold text** ');
+      change.moveOffsetsTo('simple text**'.length, 'simple text**'.length);
+      newState = unwrapAccent(change.state, 'bold');
+      expect(Plain.serialize(newState)).to.equal('simple text');
     });
 
-    it('Unwrap bold from __bold text__', () => {
-      let state = createCustomCharacters(deserialize('__bold text__').
-      transform().moveOffsetsTo('__'.length, '__bold text'.length).apply());
-      state = unwrapBoldMarkdown(state);
-      expect(Plain.serialize(state)).to.equal('bold text');
+    it('Unwrap italic', () => {
+      let nodeText = '_italic text_';
+      let component = (<PlainMarkdownInput
+        value={nodeText}
+        fullScreen={true}
+        readOnly={true}
+      />);
 
-      state = createCustomCharacters(deserialize('__bold text__').
-      transform().moveOffsetsTo(6, 6).apply());
-      state = unwrapBoldMarkdown(state);
-      expect(Plain.serialize(state)).to.equal('bold text');
+      let wrapper = shallow(component);
+      let editorState = wrapper.state('editorState');
+      let change = editorState.change();
 
-      state = createCustomCharacters(deserialize('__bold text__').
-      transform().moveOffsetsTo(1, 1).apply());
-      state = unwrapBoldMarkdown(state);
-      expect(Plain.serialize(state)).to.equal('bold text');
+      change.moveOffsetsTo('_'.length, '_italic text'.length);
+      let newState = unwrapAccent(change.state, 'italic');
+      expect(Plain.serialize(newState)).to.equal('italic text');
 
-      state = createCustomCharacters(deserialize('__bold text__').
-      transform().moveOffsetsTo('__bold text_'.length, '__bold text_'.length).apply());
-      state = unwrapBoldMarkdown(state);
-      expect(Plain.serialize(state)).to.equal('bold text');
+      nodeText = 'simple text__';
+      component = (<PlainMarkdownInput
+        value={nodeText}
+        fullScreen={true}
+        readOnly={true}
+      />);
 
-      state = createCustomCharacters(deserialize('__bold text__').
-      transform().moveOffsetsTo(0, 0).apply());
-      expect(hasBoldMarkdown(state)).is.not.equal(true);
-      state = unwrapBoldMarkdown(state);
-      expect(Plain.serialize(state)).to.equal('__bold text__');
+      wrapper = shallow(component);
+      editorState = wrapper.state('editorState');
+      change = editorState.change();
 
-      state = createCustomCharacters(deserialize('__bold text__ ').
-      transform().moveOffsetsTo('__bold text__'.length, '__bold text__'.length).apply());
-      expect(hasBoldMarkdown(state)).is.not.equal(true);
-      state = unwrapBoldMarkdown(state);
-      expect(Plain.serialize(state)).to.equal('__bold text__ ');
+      change.moveOffsetsTo('simple text_'.length, 'simple text_'.length);
+      newState = unwrapAccent(change.state, 'italic');
+      expect(Plain.serialize(newState)).to.equal('simple text');
     });
 
-    it('Unwrap italic from *italic text*', () => {
-      let state = createCustomCharacters(deserialize('*italic text*').
-      transform().moveOffsetsTo(1, '*italic text'.length).apply());
-      state = unwrapItalicMarkdown(state);
-      expect(Plain.serialize(state)).to.equal('italic text');
+    it('Unwrap strikethrough', () => {
+      let nodeText = '~~strikethrough text~~';
+      let component = (<PlainMarkdownInput
+        value={nodeText}
+        fullScreen={true}
+        readOnly={true}
+      />);
 
-      state = createCustomCharacters(deserialize('*italic text*').
-      transform().moveOffsetsTo(6, 6).apply());
-      state = unwrapItalicMarkdown(state);
-      expect(Plain.serialize(state)).to.equal('italic text');
+      let wrapper = shallow(component);
+      let editorState = wrapper.state('editorState');
+      let change = editorState.change();
 
-      state = createCustomCharacters(deserialize('*italic text*').
-      transform().moveOffsetsTo(1, 1).apply());
-      state = unwrapItalicMarkdown(state);
-      expect(Plain.serialize(state)).to.equal('italic text');
+      change.moveOffsetsTo(2, '~~strikethrough text'.length);
+      let newState = unwrapAccent(change.state, 'strikethrough');
+      expect(Plain.serialize(newState)).to.equal('strikethrough text');
 
-      state = createCustomCharacters(deserialize('*italic text*').
-      transform().moveOffsetsTo('*italic text'.length, '*italic text'.length).apply());
-      state = unwrapItalicMarkdown(state);
-      expect(Plain.serialize(state)).to.equal('italic text');
+      nodeText = 'simple text~~~~';
+      component = (<PlainMarkdownInput
+        value={nodeText}
+        fullScreen={true}
+        readOnly={true}
+      />);
 
-      state = createCustomCharacters(deserialize('*italic text*').
-      transform().moveOffsetsTo(0, 0).apply());
-      state = unwrapItalicMarkdown(state);
-      expect(Plain.serialize(state)).to.equal('*italic text*');
+      wrapper = shallow(component);
+      editorState = wrapper.state('editorState');
+      change = editorState.change();
 
-      state = createCustomCharacters(deserialize('*italic text*').
-      transform().moveOffsetsTo('*italic text*'.length, '*italic text*'.length).apply());
-      state = unwrapItalicMarkdown(state);
-      expect(Plain.serialize(state)).to.equal('*italic text*');
+      change.moveOffsetsTo('simple text~~'.length, 'simple text~~'.length);
+      newState = unwrapAccent(change.state, 'strikethrough');
+      expect(Plain.serialize(newState)).to.equal('simple text');
+    });
+  });
+
+  describe('Wrap-unwrap Headers', () => {
+    it('Wrap-unwrap', () => {
+      let nodeText = 'Header';
+      let component = (<PlainMarkdownInput
+        value={nodeText}
+        fullScreen={true}
+        readOnly={true}
+      />);
+
+      let wrapper = shallow(component);
+      let editorState = wrapper.state('editorState');
+      let change = editorState.change();
+
+      change.moveOffsetsTo(3, 3);
+
+      let newState = wrapHeader(change.state, 1);
+      expect(Plain.serialize(newState)).to.equal('# Header');
+
+      change = newState.change();
+      newState = unwrapHeader(change.state, 1);
+      expect(Plain.serialize(newState)).to.equal('Header');
+
+      change = newState.change();
+      newState = wrapHeader(change.state, 2);
+      expect(Plain.serialize(newState)).to.equal('## Header');
+
+      change = newState.change();
+      newState = unwrapHeader(change.state, 2);
+      expect(Plain.serialize(newState)).to.equal('Header');
+
+      change = newState.change();
+      newState = wrapHeader(change.state, 3);
+      expect(Plain.serialize(newState)).to.equal('### Header');
+
+      change = newState.change();
+      newState = unwrapHeader(change.state, 3);
+      expect(Plain.serialize(newState)).to.equal('Header');
+
+      change = newState.change();
+      newState = wrapHeader(change.state, 4);
+      expect(Plain.serialize(newState)).to.equal('#### Header');
+
+      change = newState.change();
+      newState = unwrapHeader(change.state, 4);
+      expect(Plain.serialize(newState)).to.equal('Header');
+
+      change = newState.change();
+      newState = wrapHeader(change.state, 5);
+      expect(Plain.serialize(newState)).to.equal('##### Header');
+
+      change = newState.change();
+      newState = unwrapHeader(change.state, 5);
+      expect(Plain.serialize(newState)).to.equal('Header');
+
+      change = newState.change();
+      newState = wrapHeader(change.state, 6);
+      expect(Plain.serialize(newState)).to.equal('###### Header');
+
+      change = newState.change();
+      newState = unwrapHeader(change.state, 6);
+      expect(Plain.serialize(newState)).to.equal('Header');
     });
 
-    it('Unwrap italic from _italic text_', () => {
-      let state = createCustomCharacters(deserialize('_italic text_').
-      transform().moveOffsetsTo('_'.length, '_italic text'.length).apply());
-      state = unwrapItalicMarkdown(state);
-      expect(Plain.serialize(state)).to.equal('italic text');
+    it('Change', () => {
+      let nodeText = '# Header';
+      let component = (<PlainMarkdownInput
+        value={nodeText}
+        fullScreen={true}
+        readOnly={true}
+      />);
 
-      state = createCustomCharacters(deserialize('_italic text_').
-      transform().moveOffsetsTo(6, 6).apply());
-      state = unwrapItalicMarkdown(state);
-      expect(Plain.serialize(state)).to.equal('italic text');
+      let wrapper = shallow(component);
+      let editorState = wrapper.state('editorState');
+      let change = editorState.change();
 
-      state = createCustomCharacters(deserialize('_italic text_').
-      transform().moveOffsetsTo(1, 1).apply());
-      state = unwrapItalicMarkdown(state);
-      expect(Plain.serialize(state)).to.equal('italic text');
+      change.moveOffsetsTo(5, 5);
+      let newState = wrapHeader(change.state, 2);
+      expect(Plain.serialize(newState)).to.equal('## Header');
 
-      state = createCustomCharacters(deserialize('_italic text_').
-      transform().moveOffsetsTo('_italic text'.length, '_italic text'.length).apply());
-      state = unwrapItalicMarkdown(state);
-      expect(Plain.serialize(state)).to.equal('italic text');
+      change = newState.change();
+      newState = wrapHeader(change.state, 3);
+      expect(Plain.serialize(newState)).to.equal('### Header');
 
-      state = createCustomCharacters(deserialize('_italic text_').
-      transform().moveOffsetsTo(0, 0).apply());
-      state = unwrapItalicMarkdown(state);
-      expect(Plain.serialize(state)).to.equal('_italic text_');
+      change = newState.change();
+      newState = wrapHeader(change.state, 4);
+      expect(Plain.serialize(newState)).to.equal('#### Header');
 
-      state = createCustomCharacters(deserialize('_italic text_').
-      transform().moveOffsetsTo('_italic text_'.length, '_italic text_'.length).apply());
-      state = unwrapItalicMarkdown(state);
-      expect(Plain.serialize(state)).to.equal('_italic text_');
+      change = newState.change();
+      newState = wrapHeader(change.state, 5);
+      expect(Plain.serialize(newState)).to.equal('##### Header');
+
+      change = newState.change();
+      newState = wrapHeader(change.state, 6);
+      expect(Plain.serialize(newState)).to.equal('###### Header');
+
+      change = newState.change();
+      newState = wrapHeader(change.state, 1);
+      expect(Plain.serialize(newState)).to.equal('# Header');
+    });
+  });
+
+  describe('Wrap-unwrap lists', () => {
+    it('Wrap-unwrap', () => {
+      let nodeText = 'Item';
+      let component = (<PlainMarkdownInput
+        value={nodeText}
+        fullScreen={true}
+        readOnly={true}
+      />);
+
+      let wrapper = shallow(component);
+      let editorState = wrapper.state('editorState');
+      let change = editorState.change();
+
+      change.moveOffsetsTo(3, 3);
+
+      let newState = wrapAccent(change.state, 'ul');
+      expect(Plain.serialize(newState)).to.equal('* Item');
+
+      change = newState.change();
+      newState = unwrapAccent(change.state, 'ul');
+      expect(Plain.serialize(newState)).to.equal('Item');
+
+      change = newState.change();
+      newState = wrapAccent(change.state, 'ol');
+      expect(Plain.serialize(newState)).to.equal('1. Item');
+
+      change = newState.change();
+      newState = unwrapAccent(change.state, 'ol');
+      expect(Plain.serialize(newState)).to.equal('Item');
     });
 
-    it('Unwrap from simple text', () => {
-      let state = createCustomCharacters(deserialize('just a text').
-      transform().moveOffsetsTo(6, 6).apply());
-      state = createCustomCharacters(unwrapItalicMarkdown(state));
-      expect(Plain.serialize(state)).to.equal('just a text');
-      state = createCustomCharacters(unwrapBoldMarkdown(state));
-      expect(Plain.serialize(state)).to.equal('just a text');
-      state = createCustomCharacters(unwrapStrikethroughMarkdown(state));
-      expect(Plain.serialize(state)).to.equal('just a text');
+    it('Change', () => {
+      let nodeText = 'Item';
+      let component = (<PlainMarkdownInput
+        value={nodeText}
+        fullScreen={true}
+        readOnly={true}
+      />);
+
+      let wrapper = shallow(component);
+      let editorState = wrapper.state('editorState');
+      let change = editorState.change();
+
+      change.moveOffsetsTo(3, 3);
+
+      let newState = wrapAccent(change.state, 'ul');
+      expect(Plain.serialize(newState)).to.equal('* Item');
+
+      change = newState.change();
+      newState = wrapAccent(change.state, 'ol');
+      expect(Plain.serialize(newState)).to.equal('1. Item');
+
+      change = newState.change();
+      newState = wrapAccent(change.state, 'ul');
+      expect(Plain.serialize(newState)).to.equal('* Item');
+
+      change = newState.change();
+      newState = wrapHeader(change.state, 6);
+      expect(Plain.serialize(newState)).to.equal('###### Item');
+
+      change = newState.change();
+      newState = wrapAccent(change.state, 'ol');
+      expect(Plain.serialize(newState)).to.equal('1. Item');
     });
+  });
 
-    it('Unwrap strike-through from ~~strike-through text~~', () => {
-      let state = createCustomCharacters(deserialize('~~strike-through text~~').
-      transform().moveOffsetsTo(2, '~~strike-through text'.length).apply());
-      state = unwrapStrikethroughMarkdown(state);
-      expect(Plain.serialize(state)).to.equal('strike-through text');
+  describe('Wrap Link', () => {
+    it('wrapLinkMarkdown', () => {
+      let nodeText = 'text';
+      let component = (<PlainMarkdownInput
+        value={nodeText}
+        fullScreen={true}
+        readOnly={true}
+      />);
 
-      state = createCustomCharacters(deserialize('~~strike-through text~~').
-      transform().moveOffsetsTo(6, 6).apply());
-      state = unwrapStrikethroughMarkdown(state);
-      expect(Plain.serialize(state)).to.equal('strike-through text');
+      let wrapper = shallow(component);
+      let editorState = wrapper.state('editorState');
+      let change = editorState.change();
 
-      state = createCustomCharacters(deserialize('~~strike-through text~~').
-      transform().moveOffsetsTo(1, 1).apply());
-      state = unwrapStrikethroughMarkdown(state);
-      expect(Plain.serialize(state)).to.equal('strike-through text');
+      change.moveOffsetsTo(0, 4);
 
-      state = createCustomCharacters(deserialize('~~strike-through text~~').
-      transform().
-      moveOffsetsTo('~~strike-through text~'.length, '~~strike-through text~'.length).
-      apply());
-      state = unwrapStrikethroughMarkdown(state);
-      expect(Plain.serialize(state)).to.equal('strike-through text');
+      let newState = wrapLinkMarkdown(change.state);
+      expect(Plain.serialize(newState)).to.equal('[text](http://example.com)');
 
-      state = createCustomCharacters(deserialize('~~strike-through text~~').
-      transform().moveOffsetsTo(0, 0).apply());
-      state = unwrapStrikethroughMarkdown(state);
-      expect(Plain.serialize(state)).to.equal('~~strike-through text~~');
+      nodeText = ' other text';
+      component = (<PlainMarkdownInput
+        value={nodeText}
+        fullScreen={true}
+        readOnly={true}
+      />);
 
-      state = createCustomCharacters(deserialize('~~strike-through text~~').
-      transform().
-      moveOffsetsTo('~~strike-through text~~'.length, '~~strike-through text~~'.length).
-      apply());
-      state = unwrapStrikethroughMarkdown(state);
-      expect(Plain.serialize(state)).to.equal('~~strike-through text~~');
-    });
+      wrapper = shallow(component);
+      editorState = wrapper.state('editorState');
+      change = editorState.change();
 
-    it('Unwrap from ***bold italic text***', () => {
-      let state = createCustomCharacters(deserialize('***bold italic text***').
-      transform().moveOffsetsTo('**'.length, '***bold italic text*'.length).apply());
-      state = unwrapBoldMarkdown(state);
-      expect(Plain.serialize(state)).to.equal('*bold italic text*');
+      change.moveOffsetsTo(0, 0);
 
-      state = createCustomCharacters(deserialize('***bold italic text***').
-      transform().moveOffsetsTo(6, 6).apply());
-      state = createCustomCharacters(unwrapBoldMarkdown(state));
-      state = unwrapItalicMarkdown(state);
-      expect(Plain.serialize(state)).to.equal('bold italic text');
-
-      state = createCustomCharacters(deserialize('***bold italic text***').transform().
-      moveOffsetsTo('***bold italic text**'.length, '***bold italic text**'.length).apply());
-      state = createCustomCharacters(unwrapBoldMarkdown(state));
-      expect(Plain.serialize(state)).to.equal('*bold italic text*');
-
-      state = createCustomCharacters(deserialize('***bold italic text***').transform().
-      moveOffsetsTo('***bold italic text*'.length, '***bold italic text*'.length).apply());
-      state = unwrapBoldMarkdown(state);
-      expect(Plain.serialize(state)).to.equal('*bold italic text*');
-    });
-
-    it('Unwrap of a selected text', () => {
-      let state = createCustomCharacters(deserialize('***bold italic text***').
-      transform().moveOffsetsTo(3, '***bold italic text'.length).apply());
-      state = createCustomCharacters(unwrapItalicMarkdown(state));
-      expect(Plain.serialize(state)).to.equal('**bold italic text**');
-      state = unwrapBoldMarkdown(state);
-      expect(Plain.serialize(state)).to.equal('bold italic text');
-
-      state = createCustomCharacters(deserialize('***bold italic text***').
-      transform().moveOffsetsTo(3, '***bold italic text'.length).apply());
-      state = createCustomCharacters(unwrapBoldMarkdown(state));
-      expect(Plain.serialize(state)).to.equal('*bold italic text*');
-      state = unwrapItalicMarkdown(state);
-      expect(Plain.serialize(state)).to.equal('bold italic text');
-
-      state = createCustomCharacters(deserialize('***bold italic text***').
-      transform().moveOffsetsTo(0, '***bold italic text***'.length).apply());
-      state = createCustomCharacters(unwrapBoldMarkdown(state));
-      expect(Plain.serialize(state)).to.equal('*bold italic text*');
-      state = unwrapItalicMarkdown(state);
-      expect(Plain.serialize(state)).to.equal('bold italic text');
+      newState = wrapLinkMarkdown(change.state);
+      expect(Plain.serialize(newState)).to.equal('[link text](http://example.com) other text');
     });
   });
 });
