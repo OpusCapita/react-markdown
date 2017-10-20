@@ -85,7 +85,7 @@ class PlainMarkdownInput extends React.Component {
     this.handleMouseDown = this.handleMouseDown.bind(this);
     this.handleRef = this.handleRef.bind(this);
     this.handleScroll = this.handleScroll.bind(this);
-    this.handleClickActionButton = this.handleClickActionButton.bind(this);
+    this.handleActionButtonClick = this.handleActionButtonClick.bind(this);
   }
 
   componentWillMount() {
@@ -233,23 +233,23 @@ class PlainMarkdownInput extends React.Component {
     }
   }
 
-  handleClickActionButton(accent) {
+  handleActionButtonClick(accent) {
     const state = this.state.editorState;
     return this._toggleAccent(state, accent);
   }
 
-  handleClickHeaderButton(level) {
+  handleHeaderButtonClick(level) {
     const state = this.state.editorState;
     const active = hasHeader(state, level);
     return this.handleChange(active ? unwrapHeader(state, level) : wrapHeader(state, level));
   }
 
-  handleClickLinkButton() {
+  handleLinkButtonClick() {
     const state = this.state.editorState;
     return this.handleChange(wrapLinkMarkdown(state));
   }
 
-  handleClickObjectReferenceButton(extension) {
+  handleObjectReferenceButtonClick(extension) {
     const state = this.state.editorState;
     return this.handleChange(addSpecialCharacter(extension.specialCharacter, state));
   }
@@ -263,7 +263,7 @@ class PlainMarkdownInput extends React.Component {
       return (
         <ObjectReferenceButton
           key={ind}
-          onClick={this.handleClickObjectReferenceButton.bind(this)}
+          onClick={this.handleObjectReferenceButtonClick.bind(this)}
           extension={extension}
           disabled={readOnly}
         />
@@ -282,7 +282,7 @@ class PlainMarkdownInput extends React.Component {
             {['bold', 'italic', 'strikethrough'].map((accent, ind) => (
               <ActionButton
                 key={ind}
-                onClick={this.handleClickActionButton}
+                onClick={this.handleActionButtonClick}
                 disabled={disabled}
                 locale={locale}
                 accent={accent}
@@ -293,7 +293,7 @@ class PlainMarkdownInput extends React.Component {
 
           <div className="btn-group">
             <LinkButton
-              onClick={this.handleClickLinkButton.bind(this)}
+              onClick={this.handleLinkButtonClick.bind(this)}
               disabled={disabled}
               locale={locale}
             />
@@ -308,7 +308,7 @@ class PlainMarkdownInput extends React.Component {
               {[1, 2, 3, 4, 5, 6].map((level, ind) => (
                 <HeaderButton
                   key={ind}
-                  onClick={this.handleClickHeaderButton.bind(this)}
+                  onClick={this.handleHeaderButtonClick.bind(this)}
                   level={level}
                 />
               ))}
@@ -319,7 +319,7 @@ class PlainMarkdownInput extends React.Component {
             {['ol', 'ul'].map((accent, ind) => (
               <ActionButton
                 key={ind}
-                onClick={this.handleClickActionButton}
+                onClick={this.handleActionButtonClick}
                 disabled={disabled}
                 locale={locale}
                 accent={accent}

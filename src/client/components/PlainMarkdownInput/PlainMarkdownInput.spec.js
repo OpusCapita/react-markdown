@@ -490,7 +490,7 @@ describe('<PlainMarkdownInput />', () => {
     });
   });
 
-  describe('handleClickActionButton(accent)', () => {
+  describe('handleActionButtonClick(accent)', () => {
     it('bold', () => {
       let nodeText = '**bold text**';
       let component = (<PlainMarkdownInput
@@ -505,7 +505,7 @@ describe('<PlainMarkdownInput />', () => {
       change.moveOffsetsTo(2, nodeText.length - 2);
       wrapper.setState({ editorState: change.state });
       let wrapperInstance = wrapper.instance();
-      wrapperInstance.handleClickActionButton('bold');
+      wrapperInstance.handleActionButtonClick('bold');
       let newState = wrapper.state('editorState');
       expect(Plain.serialize(newState)).to.equal('bold text');
 
@@ -522,7 +522,7 @@ describe('<PlainMarkdownInput />', () => {
       change.moveOffsetsTo(0, nodeText.length);
       wrapper.setState({ editorState: change.state });
       wrapperInstance = wrapper.instance();
-      wrapperInstance.handleClickActionButton('bold');
+      wrapperInstance.handleActionButtonClick('bold');
       newState = wrapper.state('editorState');
       expect(Plain.serialize(newState)).to.equal('**bold text**');
     });
@@ -541,7 +541,7 @@ describe('<PlainMarkdownInput />', () => {
       change.moveOffsetsTo(2, 2);
       wrapper.setState({ editorState: change.state });
       let wrapperInstance = wrapper.instance();
-      wrapperInstance.handleClickActionButton('ul');
+      wrapperInstance.handleActionButtonClick('ul');
       let newState = wrapper.state('editorState');
       expect(Plain.serialize(newState)).to.equal('* item');
 
@@ -558,13 +558,13 @@ describe('<PlainMarkdownInput />', () => {
       change.moveOffsetsTo(4, 4);
       wrapper.setState({ editorState: change.state });
       wrapperInstance = wrapper.instance();
-      wrapperInstance.handleClickActionButton('ul');
+      wrapperInstance.handleActionButtonClick('ul');
       newState = wrapper.state('editorState');
       expect(Plain.serialize(newState)).to.equal('item');
     });
   });
 
-  describe('handleClickHeaderButton(level)', () => {
+  describe('handleHeaderButtonClick(level)', () => {
     it('# Header 1', () => {
       let nodeText = '# Header 1';
       let component = (<PlainMarkdownInput
@@ -579,7 +579,7 @@ describe('<PlainMarkdownInput />', () => {
       change.moveOffsetsTo(5, 5);
       wrapper.setState({ editorState: change.state });
       let wrapperInstance = wrapper.instance();
-      wrapperInstance.handleClickHeaderButton(1);
+      wrapperInstance.handleHeaderButtonClick(1);
       let newState = wrapper.state('editorState');
       expect(Plain.serialize(newState)).to.equal('Header 1');
 
@@ -596,13 +596,13 @@ describe('<PlainMarkdownInput />', () => {
       change.moveOffsetsTo(0, nodeText.length);
       wrapper.setState({ editorState: change.state });
       wrapperInstance = wrapper.instance();
-      wrapperInstance.handleClickHeaderButton(1);
+      wrapperInstance.handleHeaderButtonClick(1);
       newState = wrapper.state('editorState');
       expect(Plain.serialize(newState)).to.equal('# Header 1');
     });
   });
 
-  describe('handleClickLinkButton()', () => {
+  describe('handleLinkButtonClick()', () => {
     it('link', () => {
       let nodeText = 'text';
       let component = (<PlainMarkdownInput
@@ -617,7 +617,7 @@ describe('<PlainMarkdownInput />', () => {
       change.moveOffsetsTo(0, nodeText.length);
       wrapper.setState({ editorState: change.state });
       let wrapperInstance = wrapper.instance();
-      wrapperInstance.handleClickLinkButton();
+      wrapperInstance.handleLinkButtonClick();
       let newState = wrapper.state('editorState');
       expect(Plain.serialize(newState)).to.equal('[text](http://example.com)');
     });
