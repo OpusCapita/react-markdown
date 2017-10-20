@@ -1,41 +1,49 @@
 import React from 'react';
-import _ from 'lodash';
 import { findDOMNode } from 'react-dom';
 import Types from 'prop-types';
-import FullScreenButton from '../SlateEditor/plugins/slate-fullscreen-plugin/FullScreenButton';
+import classnames from 'classnames';
 import DropdownButton from 'react-bootstrap/lib/DropdownButton';
+import { Editor } from 'slate-react';
+import Plain from 'slate-plain-serializer';
+import _ from 'lodash';
 import schema from './slate/schema';
-import shortcuts from './slate/shortcuts';
-import { hasMultiLineSelection } from './slate/transforms';
 import './PlainMarkdownInput.less';
 import { parse } from './slate/tokenizer';
-import { autoScrollToTop } from '../utils';
 import getMessage from '../translations';
 
 import {
-  AutocompletePlugin,
-  ObjectReferenceButton
-} from '../SlateEditor/plugins';
+  autoScrollToTop,
+  addSpecialCharacter
+} from './utils';
+
+import { AutocompletePlugin } from './plugins';
 
 import {
-  BoldButton,
-  HeaderFiveButton,
-  HeaderFourButton,
-  HeaderOneButton,
-  HeaderSixButton,
-  HeaderThreeButton,
-  HeaderTwoButton,
-  ItalicButton,
+  ActionButton,
+  HeaderButton,
   LinkButton,
-  OrderedListButton,
-  StrikethroughButton,
-  UnorderedListButton
+  ObjectReferenceButton,
+  FullScreenButton
 } from './buttons';
 
-import { SlateContent, SlateEditor, SlateToolbar, SlateToolbarGroup } from '../SlateEditor';
-import Plain from 'slate-plain-serializer';
+import {
+  hasAccent,
+  wrapAccent,
+  unwrapAccent,
+  hasHeader,
+  wrapHeader,
+  unwrapHeader,
+  wrapLinkMarkdown,
+  hasMultiLineSelection
+} from './slate/transforms';
 
-function getCopyText(state) {
+const ACCENTS = {
+  b: 'bold',
+  i: 'italic',
+  s: 'strikethrough'
+};
+
+export const getCopyText = state => {
   const { startKey, startOffset, endKey, endOffset, texts } = state;
   let resText;
 
@@ -54,7 +62,7 @@ function getCopyText(state) {
     resText = resTextArr.join('\n');
   }
   return resText;
-}
+};
 
 function copySelectionToClipboard(event, change) {
   event.preventDefault();
@@ -77,6 +85,7 @@ class PlainMarkdownInput extends React.Component {
     this.handleMouseDown = this.handleMouseDown.bind(this);
     this.handleRef = this.handleRef.bind(this);
     this.handleScroll = this.handleScroll.bind(this);
+    this.handleActionButtonClick = this.handleActionButtonClick.bind(this);
   }
 
   componentWillMount() {
@@ -90,7 +99,7 @@ class PlainMarkdownInput extends React.Component {
     }
   }
 
-  shouldComponentUpdate =(nextProps, nextState) => {
+  shouldComponentUpdate = (nextProps, nextState) => {
     // XXX
     // for only modal mode
     return this.state.editorState.endKey !== nextState.editorState.endKey ||
@@ -179,8 +188,20 @@ class PlainMarkdownInput extends React.Component {
     this.props.onFullScreen(fullScreen);
   };
 
-  handleKeyDown(event, data, state, editor) {
-    return shortcuts(event, data, state, editor);
+  _toggleAccent(state, accent) {
+    const active = hasAccent(state, accent);
+    return this.handleChange(active ? unwrapAccent(state, accent) : wrapAccent(state, accent));
+  }
+
+  handleKeyDown(event, data, change) {
+    if (data.isMod && ACCENTS[data.key]) {
+      if (data.key === 's') {
+        event.preventDefault();
+      }
+      return this._toggleAccent(change.state, ACCENTS[data.key]);
+    }
+
+    return undefined;
   }
 
   handleCopy(event, data, change) {
@@ -212,91 +233,141 @@ class PlainMarkdownInput extends React.Component {
     }
   }
 
+  handleActionButtonClick(accent) {
+    const state = this.state.editorState;
+    return this._toggleAccent(state, accent);
+  }
+
+  handleHeaderButtonClick(level) {
+    const state = this.state.editorState;
+    const active = hasHeader(state, level);
+    return this.handleChange(active ? unwrapHeader(state, level) : wrapHeader(state, level));
+  }
+
+  handleLinkButtonClick() {
+    const state = this.state.editorState;
+    return this.handleChange(wrapLinkMarkdown(state));
+  }
+
+  handleObjectReferenceButtonClick(extension) {
+    const state = this.state.editorState;
+    return this.handleChange(addSpecialCharacter(extension.specialCharacter, state));
+  }
+
   render() {
     const { editorState, fullScreen } = this.state;
     const { children, extensions, readOnly, locale } = this.props;
+    const disabled = readOnly || hasMultiLineSelection(editorState);
 
-    let objectReferenceButtons = this.props.extensions.map((extension, index) => {
+    let objectReferenceButtons = this.props.extensions.map((extension, ind) => {
       return (
         <ObjectReferenceButton
-          key={index}
+          key={ind}
+          onClick={this.handleObjectReferenceButtonClick.bind(this)}
           extension={extension}
           disabled={readOnly}
-          locale={locale}
         />
       );
     });
 
     return (
-      <SlateEditor
-        state={editorState}
-        fullScreen={fullScreen}
-        schema={schema}
-        onChange={this.handleChange}
-        onCopy={this.handleCopy}
-        onCut={this.handleCut}
-        onKeyDown={this.handleKeyDown}
-        plugins={[
-          AutocompletePlugin({
-            extensions: extensions,
-            locale: locale,
-            onChange: this.handleChange,
-            onMouseDown: this.handleMouseDown,
-            onScroll: this.handleScroll
-          })
-        ]}
-        readOnly={readOnly}
+      <div
+        className={classnames(
+          'react-markdown--slate-editor',
+          { 'react-markdown--slate-editor--fulscreen': fullScreen }
+        )}
       >
-        <SlateToolbar>
-          <SlateToolbarGroup>
-            <BoldButton disabled={readOnly} locale={locale} />
-            <ItalicButton disabled={readOnly} locale={locale} />
-            <StrikethroughButton disabled={readOnly} locale={locale} />
-          </SlateToolbarGroup>
+        <div className="react-markdown--toolbar">
+          <div className="btn-group">
+            {['bold', 'italic', 'strikethrough'].map((accent, ind) => (
+              <ActionButton
+                key={ind}
+                onClick={this.handleActionButtonClick}
+                disabled={disabled}
+                locale={locale}
+                accent={accent}
+                active={hasAccent(editorState, accent)}
+              />
+            ))}
+          </div>
 
-          <SlateToolbarGroup>
-            <LinkButton disabled={readOnly} locale={locale} />
-          </SlateToolbarGroup>
+          <div className="btn-group">
+            <LinkButton
+              onClick={this.handleLinkButtonClick.bind(this)}
+              disabled={disabled}
+              locale={locale}
+            />
+          </div>
 
-          <SlateToolbarGroup>
-            <div title={getMessage(locale, 'insertHeader')}>
-              <DropdownButton
-                id="oc-md--toolbar__headers-dropdown"
-                title={<i className="fa fa-header"/>}
-                disabled={hasMultiLineSelection(editorState) || readOnly}
-              >
-                <HeaderOneButton state={editorState} onChange={this.handleChange} />
-                <HeaderTwoButton state={editorState} onChange={this.handleChange} />
-                <HeaderThreeButton state={editorState} onChange={this.handleChange} />
-                <HeaderFourButton state={editorState} onChange={this.handleChange} />
-                <HeaderFiveButton state={editorState} onChange={this.handleChange} />
-                <HeaderSixButton state={editorState} onChange={this.handleChange} />
-              </DropdownButton>
-            </div>
-          </SlateToolbarGroup>
+          <div className="btn-group" title={getMessage(locale, 'insertHeader')}>
+            <DropdownButton
+              id="oc-md--toolbar__headers-dropdown"
+              title={<i className="fa fa-header"/>}
+              disabled={disabled}
+            >
+              {[1, 2, 3, 4, 5, 6].map((level, ind) => (
+                <HeaderButton
+                  key={ind}
+                  onClick={this.handleHeaderButtonClick.bind(this)}
+                  level={level}
+                />
+              ))}
+            </DropdownButton>
+          </div>
 
-          <SlateToolbarGroup>
-            <OrderedListButton disabled={readOnly} locale={locale} />
-            <UnorderedListButton disabled={readOnly} locale={locale} />
-          </SlateToolbarGroup>
+          <div className="btn-group">
+            {['ol', 'ul'].map((accent, ind) => (
+              <ActionButton
+                key={ind}
+                onClick={this.handleActionButtonClick}
+                disabled={disabled}
+                locale={locale}
+                accent={accent}
+                active={hasAccent(editorState, accent)}
+              />
+            ))}
+          </div>
 
-          <SlateToolbarGroup>
+          <div className="btn-group">
             {objectReferenceButtons}
-          </SlateToolbarGroup>
+          </div>
 
-          <SlateToolbarGroup className="react-markdown--plain-markdown-input__fullscreen-button">
+          <div className="btn-group react-markdown--plain-markdown-input__fullscreen-button">
             <FullScreenButton
               onClick={this.handleFullScreen}
               locale={locale}
               fullScreen={fullScreen}
               disabled={readOnly}
             />
-          </SlateToolbarGroup>
-
-          {children}
-        </SlateToolbar>
-        <SlateContent onRef={this.handleRef} />
-      </SlateEditor>
+          </div>
+        </div>
+        <div className={'react-markdown--slate-content'}>
+          <Editor
+            spellCheck={false}
+            state={editorState}
+            fullScreen={fullScreen}
+            schema={schema}
+            onChange={this.handleChange}
+            onCopy={this.handleCopy}
+            onCut={this.handleCut}
+            onKeyDown={this.handleKeyDown.bind(this)}
+            plugins={[
+              AutocompletePlugin({
+                extensions: extensions,
+                locale: locale,
+                onChange: this.handleChange,
+                onMouseDown: this.handleMouseDown,
+                onScroll: this.handleScroll
+              })
+            ]}
+            readOnly={readOnly}
+            className={`react-markdown--slate-content__editor`}
+            ref={this.handleRef}
+          >
+            {children}
+          </Editor>
+        </div>
+      </div>
     );
   }
 }

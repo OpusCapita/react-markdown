@@ -1,28 +1,14 @@
-import BoldButton from './BoldButton';
-import HeaderFiveButton from './HeaderFiveButton';
-import HeaderFourButton from './HeaderFourButton';
-import HeaderOneButton from './HeaderOneButton';
-import HeaderSixButton from './HeaderSixButton';
-import HeaderThreeButton from './HeaderThreeButton';
-import HeaderTwoButton from './HeaderTwoButton';
-import ItalicButton from './ItalicButton';
+import ActionButton from './ActionButton';
+import HeaderButton from './HeaderButton';
 import LinkButton from './LinkButton';
-import OrderedListButton from './OrderedListButton';
-import StrikethroughButton from './StrikethroughButton';
-import UnorderedListButton from './UnorderedListButton';
+import ObjectReferenceButton from './ObjectReferenceButton';
+import FullScreenButton from './FullScreenButton';
 
 
 export {
-  BoldButton,
-  HeaderFiveButton,
-  HeaderFourButton,
-  HeaderOneButton,
-  HeaderSixButton,
-  HeaderThreeButton,
-  HeaderTwoButton,
-  ItalicButton,
+  ActionButton,
+  HeaderButton,
   LinkButton,
-  OrderedListButton,
-  StrikethroughButton,
-  UnorderedListButton
+  ObjectReferenceButton,
+  FullScreenButton
 }

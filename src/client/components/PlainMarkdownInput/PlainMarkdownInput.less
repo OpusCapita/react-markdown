@@ -21,3 +21,78 @@
 .oc-md-hl-strikethrough {
   text-decoration: line-through;
 }
+
+
+
+.react-markdown--plain-markdown-input__fullscreen-button {
+  margin-left: auto !important;
+}
+
+.react-markdown--slate-editor {
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+}
+
+.react-markdown--slate-editor--fulscreen {
+  bottom: 0;
+  left: 0;
+  margin: 0;
+  position: fixed;
+  right: 0;
+  top: 0;
+  width: auto;
+  z-index: 999;
+  background-color: white;
+}
+
+.react-markdown--toolbar {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  flex: 1 0 auto;
+  position: relative;
+  z-index: 10;
+}
+
+.react-markdown--toolbar .btn {
+  border: 0;
+  box-shadow: none;
+}
+
+.react-markdown--toolbar .btn-group {
+  margin-left: 0;
+}
+
+
+
+.react-markdown--slate-content {
+  display: flex;
+  justify-content: stretch;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  padding: 5px;
+  overflow: auto;
+  height: 100%;
+  position: relative;
+  font-size: 14px;
+  font-family: Ubuntu Mono, Monaco, monospace;
+}
+
+
+.react-markdown--slate-content > div {
+  // https://github.com/OpusCapita/react-markdown/issues/41
+  // Could not position cursor to the Markdown Input if value is empty
+  flex: 1 0;
+}
+
+.react-markdown--slate-content__editor {
+  min-height: 100%;
+}
+
+
+.fullscreen-tp {
+  z-index: 2000;
+}

@@ -28,11 +28,11 @@ const hasBlock = function(regExp, state) {
  */
 const unwrapBlock = function(removedLength, state) {
   const { startOffset, endOffset } = state;
-  return state.transform().
-    moveOffsetsTo(0).
-    deleteForward(removedLength).
-    moveOffsetsTo(Math.max(startOffset - removedLength, 0), Math.max(endOffset - removedLength, 0)).
-    focus().apply();
+  const change = state.change();
+  const startPos = Math.max(startOffset - removedLength, 0);
+  const endPos = Math.max(endOffset - removedLength, 0);
+  change.moveOffsetsTo(0).deleteForward(removedLength).moveOffsetsTo(startPos, endPos).focus();
+  return change.state;
 };
 
 /**
@@ -45,164 +45,78 @@ const unwrapBlock = function(removedLength, state) {
 const wrapBlock = function(matchRules, text, state) {
   const { startOffset, endOffset, focusText } = state;
   const focusedText = focusText.text;
-  const t = state.transform().moveOffsetsTo(0);
+  const change = state.change();
+  change.moveOffsetsTo(0);
   let length = 0;
   for (let i = 0, k = matchRules.length; i < k; i++) {
     const result = matchRules[i].exec(focusedText);
     if (result) {
       length = result[0].length;
-      t.deleteForward(length);
+      change.deleteForward(length);
       break;
     }
   }
-  return t.insertText(text).
-    moveOffsetsTo(Math.max(startOffset + text.length - length, 0), Math.max(endOffset + text.length - length, 0)).
-    focus().apply();
+  const startPos = Math.max(startOffset + text.length - length, 0);
+  const endPos = Math.max(endOffset + text.length - length, 0);
+  change.insertText(text).moveOffsetsTo(startPos, endPos).focus();
+
+  return change.state;
 };
 
 /**
- * Has text wrapped italic markdown tokens
+ * Has text wrapped of accent at characters
  *
+ * @param mark
  * @param state - editor state
  */
-export const hasItalicMarkdown = state => {
+function hasAccentAtLetters(mark, state) {
   const { startOffset, endOffset, focusText } = state;
   const focusedText = focusText.text;
-  if ((startOffset - 1) >= 0 && endOffset + 1 <= focusedText.length) {
-    const text = focusedText.slice(startOffset - 1, endOffset + 1);
-    return text && text.startsWith('_') && text.endsWith('_');
+  const markLength = mark.length;
+  if ((startOffset - markLength) >= 0 && endOffset + markLength <= focusedText.length) {
+    const text = focusedText.slice(startOffset - markLength, endOffset + markLength);
+    return text && text.startsWith(mark) && text.endsWith(mark);
   } else {
     return false;
   }
-};
+}
 
 /**
- * Wrap text italic with markdown token
+ * Wrap text with mark
  *
- * @param state - editor state
- */
-export const wrapItalicMarkdown = state => {
-  const { startOffset, endOffset } = state;
-  let t = state.transform();
-  if (startOffset === endOffset) {
-    const text = '';
-    t.insertText('_' + text + '_').
-      move(-1).
-      extend(text.length * -1);
-  } else {
-    t.wrapText('_', '_');
-  }
-  return t.focus().apply();
-};
-
-/**
- * Unwrap text with italic markdown token
- *
- * @param state - editor state
- */
-export const unwrapItalicMarkdown = state => {
-  const { startOffset, endOffset, focusText } = state;
-  return state.transform().
-    removeTextByKey(focusText.key, endOffset, 1).
-    removeTextByKey(focusText.key, startOffset - 1, 1).
-    focus().apply();
-};
-
-/**
- * Has text wrapped with bold markdown tokens
- *
- * @param state - editor state
- */
-export const hasBoldMarkdown = state => {
-  const { startOffset, endOffset, focusText } = state;
-  const focusedText = focusText.text;
-  if ((startOffset - 2) >= 0 && endOffset + 2 <= focusedText.length) {
-    const text = focusedText.slice(startOffset - 2, endOffset + 2);
-    return text && text.startsWith('**') && text.endsWith('**');
-  } else {
-    return false;
-  }
-};
-
-/**
- * Wrap text with bold markdown tokens
- *
- * @param state - editor state
- */
-export const wrapBoldMarkdown = state => {
-  const { startOffset, endOffset } = state;
-  let t = state.transform();
-  if (startOffset === endOffset) {
-    const text = '';
-    t.insertText('**' + text + '**').
-      move(-2).
-      extend(text.length * -1);
-  } else {
-    t.wrapText('**', '**');
-  }
-  return t.focus().apply();
-};
-
-/**
- * Unwrap text with bold markdown tokens
- *
- * @param state - editor state
- */
-export const unwrapBoldMarkdown = state => {
-  const { startOffset, endOffset, focusText } = state;
-  return state.transform().
-    removeTextByKey(focusText.key, endOffset, 2).
-    removeTextByKey(focusText.key, startOffset - 2, 2).
-    focus().apply();
-};
-
-/**
- * Has wrap text with strikethrough markdown tokens
- *
- * @param state - editor state
- */
-export const hasStrikethroughMarkdown = state => {
-  const { startOffset, endOffset, focusText } = state;
-  const focusedText = focusText.text;
-  if ((startOffset - 2) >= 0 && endOffset + 2 <= focusedText.length) {
-    const text = focusedText.slice(startOffset - 2, endOffset + 2);
-    return text && text.startsWith('~~') && text.endsWith('~~');
-  } else {
-    return false;
-  }
-};
-
-/**
- * Wrap text with strikethrough markdown tokens
- *
+ * @param mark
  * @param state
  */
-export const wrapStrikethroughMarkdown = state => {
+function wrapLetters(mark, state) {
   const { startOffset, endOffset } = state;
-  let t = state.transform();
+  const lettersCount = mark.length;
+  const change = state.change();
   if (startOffset === endOffset) {
     const text = '';
-    t.insertText('~~' + text + '~~').
-      move(-2).
-      extend(text.length * -1)
+    change.insertText(`${mark}${mark}`).
+    move(-lettersCount).
+    extend(text.length * -1);
   } else {
-    t.wrapText('~~', '~~');
+    change.wrapText(mark, mark);
   }
-  return t.focus().apply();
-};
+  change.focus();
+  return change.state;
+}
 
 /**
- * Unwrap text with strikethrought markdown tokens
+ * Unwrap text from accent
  *
  * @param state - editor state
+ * @param count - count of the deleted characters
  */
-export const unwrapStrikethroughMarkdown = state => {
+function unwrapLetters(count, state) {
   const { startOffset, endOffset, focusText } = state;
-  return state.transform().
-    removeTextByKey(focusText.key, endOffset, 2).
-    removeTextByKey(focusText.key, startOffset - 2, 2).
-    focus().apply()
-};
+  const change = state.change();
+  const focusKey = focusText.key;
+  change.removeTextByKey(focusKey, endOffset, count).
+  removeTextByKey(focusKey, startOffset - count, count).focus();
+  return change.state;
+}
 
 /**
  * Unwrap text with OL markdown token
@@ -224,15 +138,16 @@ export const unwrapOrderedListMarkdown = state => {
  */
 export const wrapLinkMarkdown = state => {
   const { startOffset, endOffset } = state;
-  const t = state.transform();
+  const change = state.change();
   const url = 'http://example.com';
   if (startOffset === endOffset) {
     const text = `[link text](${url})`;
-    t.insertText(text).move((text.length - 1) * -1).extend(text.length - 2);
+    change.insertText(text).move((text.length - 1) * -1).extend(text.length - 2);
   } else {
-    t.wrapText('[', `](${(url)})`).moveOffsetsTo(endOffset + 3, endOffset + 3 + url.length)
+    change.wrapText('[', `](${(url)})`).moveOffsetsTo(endOffset + 3, endOffset + 3 + url.length)
   }
-  return t.focus().apply();
+  change.focus();
+  return change.state;
 };
 
 /**
@@ -243,34 +158,101 @@ export const wrapLinkMarkdown = state => {
  */
 export const hasMultiLineSelection = ({ selection: { startKey, endKey } }) => startKey !== endKey;
 
-export const hasUnorderedListMarkdown = hasBlock.bind(null, ulRegExp);
-export const hasOrderedListMarkdown = hasBlock.bind(null, olRegExp);
-export const hasHeaderOneMarkdown = hasBlock.bind(null, h1RegExp);
-export const hasHeaderTwoMarkdown = hasBlock.bind(null, h2RegExp);
-export const hasHeaderThreeMarkdown = hasBlock.bind(null, h3RegExp);
-export const hasHeaderFourMarkdown = hasBlock.bind(null, h4RegExp);
-export const hasHeaderFiveMarkdown = hasBlock.bind(null, h5RegExp);
-export const hasHeaderSixMarkdown = hasBlock.bind(null, h6RegExp);
-export const unwrapHeaderOneMarkdown = unwrapBlock.bind(null, '# '.length);
-export const unwrapHeaderTwoMarkdown = unwrapBlock.bind(null, '## '.length);
-export const unwrapHeaderThreeMarkdown = unwrapBlock.bind(null, '### '.length);
-export const unwrapHeaderFourMarkdown = unwrapBlock.bind(null, '#### '.length);
-export const unwrapHeaderFiveMarkdown = unwrapBlock.bind(null, '##### '.length);
-export const unwrapHeaderSixMarkdown = unwrapBlock.bind(null, '###### '.length);
-export const wrapUnorderedListMarkdown = wrapBlock.bind(null,
-  [olRegExp, h1RegExp, h2RegExp, h3RegExp, h4RegExp, h5RegExp, h6RegExp], '* ');
-export const unwrapUnorderedListMarkdown = unwrapBlock.bind(null, '* '.length);
-export const wrapOrderedListMarkdown = wrapBlock.bind(null,
-  [ulRegExp, h1RegExp, h2RegExp, h3RegExp, h4RegExp, h5RegExp, h6RegExp], '1. ');
-export const wrapHeaderOneMarkdown = wrapBlock.bind(null,
-  [olRegExp, ulRegExp, h2RegExp, h3RegExp, h4RegExp, h5RegExp, h6RegExp], '# ');
-export const wrapHeaderTwoMarkdown = wrapBlock.bind(null,
-  [olRegExp, ulRegExp, h1RegExp, h3RegExp, h4RegExp, h5RegExp, h6RegExp], '## ');
-export const wrapHeaderThreeMarkdown = wrapBlock.bind(null,
-  [olRegExp, ulRegExp, h1RegExp, h2RegExp, h4RegExp, h5RegExp, h6RegExp], '### ');
-export const wrapHeaderFourMarkdown = wrapBlock.bind(null,
-  [olRegExp, ulRegExp, h1RegExp, h2RegExp, h3RegExp, h5RegExp, h6RegExp], '#### ');
-export const wrapHeaderFiveMarkdown = wrapBlock.bind(null,
-  [olRegExp, ulRegExp, h1RegExp, h2RegExp, h3RegExp, h4RegExp, h6RegExp], '##### ');
-export const wrapHeaderSixMarkdown = wrapBlock.bind(null,
-  [olRegExp, ulRegExp, h1RegExp, h2RegExp, h3RegExp, h4RegExp, h5RegExp], '###### ');
+const activities = {
+  has: {
+    bold: hasAccentAtLetters.bind(null, '**'),
+    italic: hasAccentAtLetters.bind(null, '_'),
+    strikethrough: hasAccentAtLetters.bind(null, '~~'),
+    ul: hasBlock.bind(null, ulRegExp),
+    ol: hasBlock.bind(null, olRegExp),
+    header: [
+      null,
+      hasBlock.bind(null, h1RegExp),
+      hasBlock.bind(null, h2RegExp),
+      hasBlock.bind(null, h3RegExp),
+      hasBlock.bind(null, h4RegExp),
+      hasBlock.bind(null, h5RegExp),
+      hasBlock.bind(null, h6RegExp)
+    ]
+  },
+  unwrap: {
+    bold: unwrapLetters.bind(null, 2),
+    italic: unwrapLetters.bind(null, 1),
+    strikethrough: unwrapLetters.bind(null, 2),
+    ul: unwrapBlock.bind(null, '* '.length),
+    ol: unwrapOrderedListMarkdown,
+    header: [
+      null,
+      unwrapBlock.bind(null, '# '.length),
+      unwrapBlock.bind(null, '## '.length),
+      unwrapBlock.bind(null, '### '.length),
+      unwrapBlock.bind(null, '#### '.length),
+      unwrapBlock.bind(null, '##### '.length),
+      unwrapBlock.bind(null, '###### '.length)
+    ]
+  },
+  wrap: {
+    bold: wrapLetters.bind(null, '**'),
+    italic: wrapLetters.bind(null, '_'),
+    strikethrough: wrapLetters.bind(null, '~~'),
+    ul: wrapBlock.bind(null, [olRegExp, h1RegExp, h2RegExp, h3RegExp, h4RegExp, h5RegExp, h6RegExp], '* '),
+    ol: wrapBlock.bind(null, [ulRegExp, h1RegExp, h2RegExp, h3RegExp, h4RegExp, h5RegExp, h6RegExp], '1. '),
+    header: [
+      null,
+      wrapBlock.bind(null, [olRegExp, ulRegExp, h2RegExp, h3RegExp, h4RegExp, h5RegExp, h6RegExp], '# '),
+      wrapBlock.bind(null, [olRegExp, ulRegExp, h1RegExp, h3RegExp, h4RegExp, h5RegExp, h6RegExp], '## '),
+      wrapBlock.bind(null, [olRegExp, ulRegExp, h1RegExp, h2RegExp, h4RegExp, h5RegExp, h6RegExp], '### '),
+      wrapBlock.bind(null, [olRegExp, ulRegExp, h1RegExp, h2RegExp, h3RegExp, h5RegExp, h6RegExp], '#### '),
+      wrapBlock.bind(null, [olRegExp, ulRegExp, h1RegExp, h2RegExp, h3RegExp, h4RegExp, h6RegExp], '##### '),
+      wrapBlock.bind(null, [olRegExp, ulRegExp, h1RegExp, h2RegExp, h3RegExp, h4RegExp, h5RegExp], '###### ')
+    ]
+  }
+};
+
+export const hasAccent = (state, accent) => {
+  if (activities.has[accent]) {
+    return activities.has[accent](state);
+  }
+
+  return false;
+};
+
+export const wrapAccent = (state, accent) => {
+  if (activities.wrap[accent]) {
+    return activities.wrap[accent](state);
+  }
+
+  return state;
+};
+
+export const unwrapAccent = (state, accent) => {
+  if (activities.unwrap[accent]) {
+    return activities.unwrap[accent](state);
+  }
+
+  return state;
+};
+
+export const hasHeader = (state, level) => {
+  if (activities.has.header[level]) {
+    return activities.has.header[level](state);
+  }
+
+  return false;
+};
+
+export const wrapHeader = (state, level) => {
+  if (activities.wrap.header[level]) {
+    return activities.wrap.header[level](state);
+  }
+
+  return state;
+};
+
+export const unwrapHeader = (state, level) => {
+  if (activities.unwrap.header[level]) {
+    return activities.unwrap.header[level](state);
+  }
+
+  return state;
+};

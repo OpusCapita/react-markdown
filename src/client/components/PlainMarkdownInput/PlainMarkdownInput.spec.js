@@ -1,11 +1,15 @@
 import React from 'react';
 import { expect } from 'chai';
-import { mount } from 'enzyme';
+import { mount, shallow } from 'enzyme';
 import sinon from 'sinon';
 import PlainMarkdownInput from '.';
 import { parse } from './slate/tokenizer';
 import { List } from 'immutable';
+import Plain from 'slate-plain-serializer';
 
+const event = {
+  preventDefault() {}
+};
 
 describe('<PlainMarkdownInput />', () => {
   const nodeText = `###### h6
@@ -145,74 +149,6 @@ describe('<PlainMarkdownInput />', () => {
     expect(fullScreen).to.equal(false);
   });
 
-  describe.skip('_getCopyText(state)', () => {
-    it('singleline text', () => {
-      let component = (<PlainMarkdownInput
-        value={nodeText}
-      />);
-      let wrapper = mount(component);
-      let wrapperInstance = wrapper.instance();
-      const state = {
-        startKey: '018',
-        endKey: '018',
-        startOffset: 0,
-        endOffset: 17,
-        texts: List([{ text: '# header *italic*' }])
-      };
-      const resText = wrapperInstance._getCopyText(state);
-      const pattern = `# header *italic*`;
-      expect(resText).to.equal(pattern);
-    });
-
-    it('line`s part', () => {
-      let component = (<PlainMarkdownInput
-        value={nodeText}
-      />);
-      let wrapper = mount(component);
-      let wrapperInstance = wrapper.instance();
-      const state = {
-        startKey: '018',
-        endKey: '018',
-        startOffset: 2,
-        endOffset: 10,
-        texts: List([{ text: '# header *italic*' }])
-      };
-      const resText = wrapperInstance._getCopyText(state);
-      const pattern = `header *`;
-      expect(resText).to.equal(pattern);
-    });
-
-    it('multiline text', () => {
-      let component = (<PlainMarkdownInput
-        value={nodeText}
-      />);
-      let wrapper = mount(component);
-      let wrapperInstance = wrapper.instance();
-      const state = {
-        startKey: '018',
-        endKey: '028',
-        startOffset: 2,
-        endOffset: 6,
-        texts: List([
-          { text: '# header *italic*' },
-          { text: '## header *italic*' },
-          { text: '### header *italic*' },
-          { text: '#### header *italic*' },
-          { text: '##### header *italic*' },
-          { text: '###### header *italic*' }
-        ])
-      };
-      const resText = wrapperInstance._getCopyText(state);
-      const pattern = `header *italic*
-## header *italic*
-### header *italic*
-#### header *italic*
-##### header *italic*
-######`;
-      expect(resText).to.equal(pattern);
-    });
-  });
-
   describe('handleCopy(event, data, change)', () => {
     let event;
     beforeEach(() => {
@@ -297,6 +233,588 @@ describe('<PlainMarkdownInput />', () => {
       expect(change).to.deep.equal(changePattern);
       expect(event.clipboardData.setData.callCount).to.equal(1);
       expect(event.clipboardData.setData.calledWith('text/plain', pattern)).to.equal(true);
+    });
+
+    it('single line for window.clipboardData', () => {
+      let component = (<PlainMarkdownInput
+        value={nodeText}
+      />);
+      let wrapper = mount(component);
+      let wrapperInstance = wrapper.instance();
+      const state = {
+        startKey: '018',
+        endKey: '018',
+        startOffset: 0,
+        endOffset: 17,
+        texts: List([{ text: '# header *italic*' }])
+      };
+
+      window.clipboardData = { // eslint-disable-line
+        setData: sinon.spy()
+      };
+
+      const change = wrapperInstance.handleCopy(event, {}, { state });
+      const changePattern = { state };
+      const pattern = `# header *italic*`;
+      expect(change).to.deep.equal(changePattern);
+      expect(window.clipboardData.setData.callCount).to.equal(1);
+      expect(window.clipboardData.setData.calledWith('Text', pattern)).to.equal(true);
+      delete window.clipboardData;
+    });
+  });
+
+  describe('handleCut(event, data, change)', () => {
+    let event;
+    beforeEach(() => {
+      event = {
+        preventDefault() {},
+        clipboardData: {
+          setData: sinon.spy()
+        }
+      }
+    });
+
+    it('line`s part', () => {
+      let nodeText = '# header *italic*';
+      let component = (<PlainMarkdownInput
+        value={nodeText}
+        fullScreen={false}
+        readOnly={false}
+      />);
+
+      let wrapper = shallow(component);
+      let wrapperInstance = wrapper.instance();
+      let editorState = wrapper.state('editorState');
+      let change = editorState.change();
+      change.moveOffsetsTo(2, 10);
+      change = wrapperInstance.handleCut(event, {}, change);
+      expect(Plain.serialize(change.state)).to.equal('# italic*');
+    });
+  });
+
+  describe('_toggleAccent(state, accent)', () => {
+    it('strikethrough', () => {
+      let nodeText = '~~strikethrough text~~';
+      let component = (<PlainMarkdownInput
+        value={nodeText}
+        fullScreen={false}
+        readOnly={false}
+      />);
+
+      let wrapper = shallow(component);
+      let editorState = wrapper.state('editorState');
+      let change = editorState.change();
+      change.moveOffsetsTo(2, nodeText.length - 2);
+      editorState = change.state;
+      let wrapperInstance = wrapper.instance();
+      wrapperInstance._toggleAccent(editorState, 'strikethrough');
+      let newState = wrapper.state('editorState');
+      expect(Plain.serialize(newState)).to.equal('strikethrough text');
+
+      nodeText = 'strikethrough text';
+      component = (<PlainMarkdownInput
+        value={nodeText}
+        fullScreen={false}
+        readOnly={false}
+      />);
+
+      wrapper = shallow(component);
+      editorState = wrapper.state('editorState');
+      change = editorState.change();
+      change.moveOffsetsTo(0, nodeText.length);
+      editorState = change.state;
+      wrapperInstance = wrapper.instance();
+      wrapperInstance._toggleAccent(editorState, 'strikethrough');
+      newState = wrapper.state('editorState');
+      expect(Plain.serialize(newState)).to.equal('~~strikethrough text~~');
+    });
+  });
+
+  describe('handleKeyDown(event, data, change)', () => {
+    it('bold', () => {
+      let nodeText = '**bold text**';
+      let component = (<PlainMarkdownInput
+        value={nodeText}
+        fullScreen={false}
+        readOnly={false}
+      />);
+
+      let wrapper = shallow(component);
+      let editorState = wrapper.state('editorState');
+      let change = editorState.change();
+      change.moveOffsetsTo(2, nodeText.length - 2);
+      let wrapperInstance = wrapper.instance();
+      wrapperInstance.handleKeyDown(event, {
+        key: 'b',
+        isMod: true
+      }, change);
+      let newState = wrapper.state('editorState');
+      expect(Plain.serialize(newState)).to.equal('bold text');
+
+      nodeText = 'bold text';
+      component = (<PlainMarkdownInput
+        value={nodeText}
+        fullScreen={false}
+        readOnly={false}
+      />);
+
+      wrapper = shallow(component);
+      editorState = wrapper.state('editorState');
+      change = editorState.change();
+      change.moveOffsetsTo(0, nodeText.length);
+      wrapperInstance = wrapper.instance();
+      wrapperInstance.handleKeyDown(event, {
+        key: 'b',
+        isMod: true
+      }, change);
+      newState = wrapper.state('editorState');
+      expect(Plain.serialize(newState)).to.equal('**bold text**');
+    });
+
+    it('strikethrough', () => {
+      let eventData = {
+        key: 's',
+        isMod: true
+      };
+      let nodeText = '~~strikethrough text~~';
+      let component = (<PlainMarkdownInput
+        value={nodeText}
+        fullScreen={false}
+        readOnly={false}
+      />);
+
+      let wrapper = shallow(component);
+      let editorState = wrapper.state('editorState');
+      let change = editorState.change();
+      change.moveOffsetsTo(2, nodeText.length - 2);
+      let wrapperInstance = wrapper.instance();
+      wrapperInstance.handleKeyDown(event, eventData, change);
+      let newState = wrapper.state('editorState');
+      expect(Plain.serialize(newState)).to.equal('strikethrough text');
+
+      nodeText = 'strikethrough text';
+      component = (<PlainMarkdownInput
+        value={nodeText}
+        fullScreen={false}
+        readOnly={false}
+      />);
+
+      wrapper = shallow(component);
+      editorState = wrapper.state('editorState');
+      change = editorState.change();
+      change.moveOffsetsTo(0, nodeText.length);
+      wrapperInstance = wrapper.instance();
+      wrapperInstance.handleKeyDown(event, eventData, change);
+      newState = wrapper.state('editorState');
+      expect(Plain.serialize(newState)).to.equal('~~strikethrough text~~');
+    });
+
+    it('italic', () => {
+      let eventData = {
+        key: 'i',
+        isMod: true
+      };
+      let nodeText = '_italic text_';
+      let component = (<PlainMarkdownInput
+        value={nodeText}
+        fullScreen={false}
+        readOnly={false}
+      />);
+
+      let wrapper = shallow(component);
+      let editorState = wrapper.state('editorState');
+      let change = editorState.change();
+      change.moveOffsetsTo(1, nodeText.length - 1);
+      let wrapperInstance = wrapper.instance();
+      wrapperInstance.handleKeyDown(event, eventData, change);
+      let newState = wrapper.state('editorState');
+      expect(Plain.serialize(newState)).to.equal('italic text');
+
+      nodeText = 'italic text';
+      component = (<PlainMarkdownInput
+        value={nodeText}
+        fullScreen={false}
+        readOnly={false}
+      />);
+
+      wrapper = shallow(component);
+      editorState = wrapper.state('editorState');
+      change = editorState.change();
+      change.moveOffsetsTo(0, nodeText.length);
+      wrapperInstance = wrapper.instance();
+      wrapperInstance.handleKeyDown(event, eventData, change);
+      newState = wrapper.state('editorState');
+      expect(Plain.serialize(newState)).to.equal('_italic text_');
+    });
+
+    it('without mod', () => {
+      let eventData = {
+        key: 'i',
+        isMod: false
+      };
+      let nodeText = '_italic text_';
+      let component = (<PlainMarkdownInput
+        value={nodeText}
+        fullScreen={false}
+        readOnly={false}
+      />);
+
+      let wrapper = shallow(component);
+      let editorState = wrapper.state('editorState');
+      let change = editorState.change();
+      change.moveOffsetsTo(1, nodeText.length - 1);
+      let wrapperInstance = wrapper.instance();
+      wrapperInstance.handleKeyDown(event, eventData, change);
+      let newState = wrapper.state('editorState');
+      expect(Plain.serialize(newState)).to.equal('_italic text_');
+
+      eventData = {
+        key: 'i',
+        isMod: false
+      };
+      nodeText = 'italic text';
+      component = (<PlainMarkdownInput
+        value={nodeText}
+        fullScreen={false}
+        readOnly={false}
+      />);
+
+      wrapper = shallow(component);
+      editorState = wrapper.state('editorState');
+      change = editorState.change();
+      change.moveOffsetsTo(0, nodeText.length);
+      wrapperInstance = wrapper.instance();
+      wrapperInstance.handleKeyDown(event, eventData, change);
+      newState = wrapper.state('editorState');
+      expect(Plain.serialize(newState)).to.equal('italic text');
+    });
+  });
+
+  describe('handleActionButtonClick(accent)', () => {
+    it('bold', () => {
+      let nodeText = '**bold text**';
+      let component = (<PlainMarkdownInput
+        value={nodeText}
+        fullScreen={false}
+        readOnly={false}
+      />);
+
+      let wrapper = shallow(component);
+      let editorState = wrapper.state('editorState');
+      let change = editorState.change();
+      change.moveOffsetsTo(2, nodeText.length - 2);
+      wrapper.setState({ editorState: change.state });
+      let wrapperInstance = wrapper.instance();
+      wrapperInstance.handleActionButtonClick('bold');
+      let newState = wrapper.state('editorState');
+      expect(Plain.serialize(newState)).to.equal('bold text');
+
+      nodeText = 'bold text';
+      component = (<PlainMarkdownInput
+        value={nodeText}
+        fullScreen={false}
+        readOnly={false}
+      />);
+
+      wrapper = shallow(component);
+      editorState = wrapper.state('editorState');
+      change = editorState.change();
+      change.moveOffsetsTo(0, nodeText.length);
+      wrapper.setState({ editorState: change.state });
+      wrapperInstance = wrapper.instance();
+      wrapperInstance.handleActionButtonClick('bold');
+      newState = wrapper.state('editorState');
+      expect(Plain.serialize(newState)).to.equal('**bold text**');
+    });
+
+    it('unordered list', () => {
+      let nodeText = 'item';
+      let component = (<PlainMarkdownInput
+        value={nodeText}
+        fullScreen={false}
+        readOnly={false}
+      />);
+
+      let wrapper = shallow(component);
+      let editorState = wrapper.state('editorState');
+      let change = editorState.change();
+      change.moveOffsetsTo(2, 2);
+      wrapper.setState({ editorState: change.state });
+      let wrapperInstance = wrapper.instance();
+      wrapperInstance.handleActionButtonClick('ul');
+      let newState = wrapper.state('editorState');
+      expect(Plain.serialize(newState)).to.equal('* item');
+
+      nodeText = '* item';
+      component = (<PlainMarkdownInput
+        value={nodeText}
+        fullScreen={false}
+        readOnly={false}
+      />);
+
+      wrapper = shallow(component);
+      editorState = wrapper.state('editorState');
+      change = editorState.change();
+      change.moveOffsetsTo(4, 4);
+      wrapper.setState({ editorState: change.state });
+      wrapperInstance = wrapper.instance();
+      wrapperInstance.handleActionButtonClick('ul');
+      newState = wrapper.state('editorState');
+      expect(Plain.serialize(newState)).to.equal('item');
+    });
+  });
+
+  describe('handleHeaderButtonClick(level)', () => {
+    it('# Header 1', () => {
+      let nodeText = '# Header 1';
+      let component = (<PlainMarkdownInput
+        value={nodeText}
+        fullScreen={false}
+        readOnly={false}
+      />);
+
+      let wrapper = shallow(component);
+      let editorState = wrapper.state('editorState');
+      let change = editorState.change();
+      change.moveOffsetsTo(5, 5);
+      wrapper.setState({ editorState: change.state });
+      let wrapperInstance = wrapper.instance();
+      wrapperInstance.handleHeaderButtonClick(1);
+      let newState = wrapper.state('editorState');
+      expect(Plain.serialize(newState)).to.equal('Header 1');
+
+      nodeText = 'Header 1';
+      component = (<PlainMarkdownInput
+        value={nodeText}
+        fullScreen={false}
+        readOnly={false}
+      />);
+
+      wrapper = shallow(component);
+      editorState = wrapper.state('editorState');
+      change = editorState.change();
+      change.moveOffsetsTo(0, nodeText.length);
+      wrapper.setState({ editorState: change.state });
+      wrapperInstance = wrapper.instance();
+      wrapperInstance.handleHeaderButtonClick(1);
+      newState = wrapper.state('editorState');
+      expect(Plain.serialize(newState)).to.equal('# Header 1');
+    });
+  });
+
+  describe('handleLinkButtonClick()', () => {
+    it('link', () => {
+      let nodeText = 'text';
+      let component = (<PlainMarkdownInput
+        value={nodeText}
+        fullScreen={false}
+        readOnly={false}
+      />);
+
+      let wrapper = shallow(component);
+      let editorState = wrapper.state('editorState');
+      let change = editorState.change();
+      change.moveOffsetsTo(0, nodeText.length);
+      wrapper.setState({ editorState: change.state });
+      let wrapperInstance = wrapper.instance();
+      wrapperInstance.handleLinkButtonClick();
+      let newState = wrapper.state('editorState');
+      expect(Plain.serialize(newState)).to.equal('[text](http://example.com)');
+    });
+  });
+
+  describe('handleMouseDown()', () => {
+    it('handleMouseDown', () => {
+      let nodeText = 'text';
+      let component = (<PlainMarkdownInput
+        value={nodeText}
+        fullScreen={false}
+        readOnly={false}
+      />);
+
+      let wrapper = shallow(component);
+      let editorState = wrapper.state('editorState');
+      let change = editorState.change();
+      change.moveOffsetsTo(0, nodeText.length);
+      wrapper.setState({ editorState: change.state });
+      let wrapperInstance = wrapper.instance();
+      wrapperInstance.forceUpdate = sinon.spy();
+      wrapperInstance.handleMouseDown();
+      expect(wrapperInstance.forceUpdate.callCount).to.equal(1);
+    });
+  });
+
+  describe('Button click', () => {
+    it('ActionButton', () => {
+      let nodeText = 'text';
+      let component = (<PlainMarkdownInput
+        value={nodeText}
+        fullScreen={false}
+        readOnly={false}
+      />);
+
+      let wrapper = shallow(component);
+      const actionButtons = wrapper.find(`ActionButton`);
+      expect(actionButtons).to.have.length(5);
+      let boldButton = actionButtons.at(0).shallow();
+      let italicButton = actionButtons.at(1).shallow();
+      let strikethroughButton = actionButtons.at(2).shallow();
+      let olButton = actionButtons.at(3).shallow();
+      let ulButton = actionButtons.at(4).shallow();
+
+      let editorState = wrapper.state('editorState');
+      let change = editorState.change();
+      change.moveOffsetsTo(0, nodeText.length);
+      wrapper.setState({ editorState: change.state });
+
+      boldButton.simulate('click');
+      editorState = wrapper.state('editorState');
+      expect(Plain.serialize(editorState)).to.equal('**text**');
+      boldButton.simulate('click');
+      editorState = wrapper.state('editorState');
+      expect(Plain.serialize(editorState)).to.equal('text');
+
+      italicButton.simulate('click');
+      editorState = wrapper.state('editorState');
+      expect(Plain.serialize(editorState)).to.equal('_text_');
+      italicButton.simulate('click');
+      editorState = wrapper.state('editorState');
+      expect(Plain.serialize(editorState)).to.equal('text');
+
+      strikethroughButton.simulate('click');
+      editorState = wrapper.state('editorState');
+      expect(Plain.serialize(editorState)).to.equal('~~text~~');
+      strikethroughButton.simulate('click');
+      editorState = wrapper.state('editorState');
+      expect(Plain.serialize(editorState)).to.equal('text');
+
+      olButton.simulate('click');
+      editorState = wrapper.state('editorState');
+      expect(Plain.serialize(editorState)).to.equal('1. text');
+      olButton.simulate('click');
+      editorState = wrapper.state('editorState');
+      expect(Plain.serialize(editorState)).to.equal('text');
+
+      ulButton.simulate('click');
+      editorState = wrapper.state('editorState');
+      expect(Plain.serialize(editorState)).to.equal('* text');
+      ulButton.simulate('click');
+      editorState = wrapper.state('editorState');
+      expect(Plain.serialize(editorState)).to.equal('text');
+    });
+
+    it('HeaderButton', () => {
+      let nodeText = 'Header line';
+      let component = (<PlainMarkdownInput
+        value={nodeText}
+        fullScreen={false}
+        readOnly={false}
+      />);
+
+      let wrapper = shallow(component);
+      const headerButtons = wrapper.find(`HeaderButton`);
+      expect(headerButtons).to.have.length(6);
+      let headerButton1 = headerButtons.at(0).shallow();
+      let headerButton2 = headerButtons.at(1).shallow();
+      let headerButton3 = headerButtons.at(2).shallow();
+      let headerButton4 = headerButtons.at(3).shallow();
+      let headerButton5 = headerButtons.at(4).shallow();
+      let headerButton6 = headerButtons.at(5).shallow();
+
+      let editorState = wrapper.state('editorState');
+      let change = editorState.change();
+      change.moveOffsetsTo(7, nodeText.length);
+      wrapper.setState({ editorState: change.state });
+
+      headerButton1.simulate('click');
+      editorState = wrapper.state('editorState');
+      expect(Plain.serialize(editorState)).to.equal('# Header line');
+      headerButton1.simulate('click');
+      editorState = wrapper.state('editorState');
+      expect(Plain.serialize(editorState)).to.equal('Header line');
+
+      headerButton2.simulate('click');
+      editorState = wrapper.state('editorState');
+      expect(Plain.serialize(editorState)).to.equal('## Header line');
+      headerButton2.simulate('click');
+      editorState = wrapper.state('editorState');
+      expect(Plain.serialize(editorState)).to.equal('Header line');
+
+      headerButton3.simulate('click');
+      editorState = wrapper.state('editorState');
+      expect(Plain.serialize(editorState)).to.equal('### Header line');
+      headerButton3.simulate('click');
+      editorState = wrapper.state('editorState');
+      expect(Plain.serialize(editorState)).to.equal('Header line');
+
+      headerButton4.simulate('click');
+      editorState = wrapper.state('editorState');
+      expect(Plain.serialize(editorState)).to.equal('#### Header line');
+      headerButton4.simulate('click');
+      editorState = wrapper.state('editorState');
+      expect(Plain.serialize(editorState)).to.equal('Header line');
+
+      headerButton5.simulate('click');
+      editorState = wrapper.state('editorState');
+      expect(Plain.serialize(editorState)).to.equal('##### Header line');
+      headerButton5.simulate('click');
+      editorState = wrapper.state('editorState');
+      expect(Plain.serialize(editorState)).to.equal('Header line');
+
+      headerButton6.simulate('click');
+      editorState = wrapper.state('editorState');
+      expect(Plain.serialize(editorState)).to.equal('###### Header line');
+      headerButton6.simulate('click');
+      editorState = wrapper.state('editorState');
+      expect(Plain.serialize(editorState)).to.equal('Header line');
+    });
+
+    it('LinkButton', () => {
+      let nodeText = 'text';
+      let component = (<PlainMarkdownInput
+        value={nodeText}
+        fullScreen={false}
+        readOnly={false}
+      />);
+
+      let wrapper = shallow(component);
+      const linkButtons = wrapper.find(`LinkButton`);
+      expect(linkButtons).to.have.length(1);
+      let linkButton = linkButtons.at(0).shallow();
+
+      let editorState = wrapper.state('editorState');
+      let change = editorState.change();
+      change.moveOffsetsTo(0, nodeText.length);
+      wrapper.setState({ editorState: change.state });
+
+      linkButton.simulate('click');
+      editorState = wrapper.state('editorState');
+      expect(Plain.serialize(editorState)).to.equal('[text](http://example.com)');
+    });
+
+    it('FullScreenButton', () => {
+      let nodeText = 'text';
+      let component = (<PlainMarkdownInput
+        value={nodeText}
+        fullScreen={false}
+        readOnly={false}
+      />);
+
+      let wrapper = shallow(component);
+      const fullScreenButtons = wrapper.find(`FullScreenButton`);
+      expect(fullScreenButtons).to.have.length(1);
+      let fullScreenButton = fullScreenButtons.at(0).shallow().find('button');
+
+      let fullScreen = wrapper.state('fullScreen');
+      expect(fullScreen).to.equal(false);
+
+      fullScreenButton.simulate('click');
+      fullScreen = wrapper.state('fullScreen');
+      expect(fullScreen).to.equal(true);
+
+      fullScreenButton.simulate('click');
+      fullScreen = wrapper.state('fullScreen');
+      expect(fullScreen).to.equal(false);
     });
   });
 });
