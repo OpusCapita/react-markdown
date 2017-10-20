@@ -249,7 +249,7 @@ describe('<PlainMarkdownInput />', () => {
         texts: List([{ text: '# header *italic*' }])
       };
 
-      window.clipboardData = {
+      window.clipboardData = { // eslint-disable-line
         setData: sinon.spy()
       };
 

@@ -51,12 +51,12 @@ class AutocompleteWidget extends React.Component {
     this.adjustPosition();
   };
 
-  componentWillUpdate = (nextProps, nextState) => {
+  componentWillUpdate = (nextProps) => {
     let { isMouseIndexSelected } = this.props;
     let itemsRef = this['items-ref'];
     let itemRef = this[`item-ref-${nextProps.selectedIndex}`];
 
-    if (itemsRef && itemRef && !isMouseIndexSelected) {  // calculating scrolling with keyboard up and down arrows
+    if (itemsRef && itemRef && !isMouseIndexSelected) { // calculating scrolling with keyboard up and down arrows
       if ((this.props.selectedIndex < nextProps.selectedIndex) && (itemRef.offsetTop - itemsRef.scrollTop > 156)) {
         itemsRef.scrollTop = (itemRef.offsetTop - 156);
       }
@@ -70,13 +70,17 @@ class AutocompleteWidget extends React.Component {
     this.cancelAdjustPosition();
   };
 
-  adjustPosition = () => {
-    let selection = window.getSelection();
-
-    if (!selection.anchorNode) {
-      return;
+  cancelAdjustPosition = () => {
+    if (this._animationFrame) {
+      window.cancelAnimationFrame(this._animationFrame); // XXX
     }
+  };
 
+  handleSelectItem = (index) => {
+    this.props.onSelectItem(index);
+  };
+
+  setPosition = (selection) => {
     let editorWidth = this.props.restrictorRef.offsetWidth;
     let autocompleteWidth = this['items-ref'].offsetWidth;
     let autocompleteHeight = this['items-ref'].offsetHeight;
@@ -113,14 +117,51 @@ class AutocompleteWidget extends React.Component {
     this._animationFrame = window.requestAnimationFrame(() => this.adjustPosition());
   };
 
-  cancelAdjustPosition = () => {
-    if (this._animationFrame) {
-      cancelAnimationFrame(this._animationFrame);
-    }
-  };
+  adjustPosition = () => {
+    let selection = window.getSelection();
 
-  handleSelectItem = (index, e) => {
-    this.props.onSelectItem(index);
+    if (selection.anchorNode) {
+      this.setPosition(selection);
+    }
+
+    // if (!selection.anchorNode) {
+    //   return;
+    // }
+    //
+    // let editorWidth = this.props.restrictorRef.offsetWidth;
+    // let autocompleteWidth = this['items-ref'].offsetWidth;
+    // let autocompleteHeight = this['items-ref'].offsetHeight;
+    // let selectionRect = selection.getRangeAt(0).getBoundingClientRect(); // element with cursor
+    // let restrictorRect = this.props.restrictorRef.getBoundingClientRect();
+    // let lineHeight = selectionRect.bottom - selectionRect.top;
+    //
+    // let left = selectionRect.left - restrictorRect.left;
+    // left = editorWidth >= left + autocompleteWidth ? left : left - autocompleteWidth;
+    // left = left < 0 ? 0 : left;
+    //
+    // let top = selectionRect.top - restrictorRect.top + lineHeight + 4;
+    // let offsetTop = selection.anchorNode.parentNode.offsetTop;
+    // let slateEditor = getSlateEditor(selection);
+    //
+    // slateEditor.style.overflow = 'hidden';
+    //
+    // let showToTop = slateEditor.scrollTop + slateEditor.offsetHeight < offsetTop + autocompleteHeight;
+    // if (showToTop) {
+    //   top -= autocompleteHeight + lineHeight;
+    //   top = top < 0 ? 0 : top;
+    // }
+    // let position = {
+    //   left: `${left}px`,
+    //   top: `${top}px`
+    // };
+    //
+    // let positionChanged = (this.state.left !== position.left) || (this.state.top !== position.top);
+    //
+    // if (positionChanged) {
+    //   this.setState(position);
+    // }
+    //
+    // this._animationFrame = window.requestAnimationFrame(() => this.adjustPosition());
   };
 
   render() {
@@ -163,7 +204,6 @@ class AutocompleteWidget extends React.Component {
 
           {!items.length ? (
             <div className="react-markdown--autocomplete-widget__item">{getMessage(locale, 'noMatchesFound')}</div>
-            // <div className="react-markdown--autocomplete-widget__item">No matches found</div>
           ) : null}
         </div>
       );

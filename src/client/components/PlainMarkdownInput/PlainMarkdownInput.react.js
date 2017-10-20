@@ -16,8 +16,7 @@ import {
   addSpecialCharacter
 } from './utils';
 
-import {
-  AutocompletePlugin } from './plugins';
+import { AutocompletePlugin } from './plugins';
 
 import {
   ActionButton,
