@@ -144,7 +144,7 @@ function hasEmphasis(mark, state) {
                 (startOffset === 1 || startOffset === focusText.length - 1 ||
                   (startOffset > 1 && !hasMarkOnChar(characters.get(startOffset - 2), 'bold'))) ||
                   (startOffset < focusText.length - 1 &&
-                    !hasMarkOnChar(characters.get(startOffset +1), 'bold')))) {
+                   !hasMarkOnChar(characters.get(startOffset + 1), 'bold')))) {
             return true;
           }
         }
@@ -162,25 +162,6 @@ function hasEmphasis(mark, state) {
 
   return false;
 }
-
-
-/**
- * Has text wrapped of accent at characters
- *
- * @param mark
- * @param state - editor state
- */
-// function hasEmphasis(mark, state) {
-//   const { startOffset, endOffset, focusText } = state;
-//   const focusedText = focusText.text;
-//   const markLength = mark.length;
-//   if ((startOffset - markLength) >= 0 && endOffset + markLength <= focusedText.length) {
-//     const text = focusedText.slice(startOffset - markLength, endOffset + markLength);
-//     return text && text.startsWith(mark) && text.endsWith(mark);
-//   } else {
-//     return false;
-//   }
-// }
 
 /**
  * Wrap text with mark

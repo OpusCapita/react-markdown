@@ -41,35 +41,35 @@ describe('plain editor transform', () => {
       expect(hasHeader(newState, 5)).to.equal(false);
       expect(hasHeader(newState, 6)).to.equal(false);
 
-      wrapper.setProps({ value: '  * List Item 2'});
+      wrapper.setProps({ value: '  * List Item 2' });
       editorState = wrapper.state('editorState');
       expect(hasAccent(editorState, 'ul')).to.equal(true);
 
-      wrapper.setProps({ value: '    * List Item 3'});
+      wrapper.setProps({ value: '    * List Item 3 ' });
       editorState = wrapper.state('editorState');
       expect(hasAccent(editorState, 'ul')).to.equal(true);
 
-      wrapper.setProps({ value: '+ List Item 1'});
+      wrapper.setProps({ value: '+ List Item 1' });
       editorState = wrapper.state('editorState');
       expect(hasAccent(editorState, 'ul')).to.equal(true);
 
-      wrapper.setProps({ value: '  + List Item 2'});
+      wrapper.setProps({ value: '  + List Item 2' });
       editorState = wrapper.state('editorState');
       expect(hasAccent(editorState, 'ul')).to.equal(true);
 
-      wrapper.setProps({ value: '    + List Item 3'});
+      wrapper.setProps({ value: '    + List Item 3' });
       editorState = wrapper.state('editorState');
       expect(hasAccent(editorState, 'ul')).to.equal(true);
 
-      wrapper.setProps({ value: '- List Item 1'});
+      wrapper.setProps({ value: '- List Item 1' });
       editorState = wrapper.state('editorState');
       expect(hasAccent(editorState, 'ul')).to.equal(true);
 
-      wrapper.setProps({ value: '  - List Item 2'});
+      wrapper.setProps({ value: '  - List Item 2' });
       editorState = wrapper.state('editorState');
       expect(hasAccent(editorState, 'ul')).to.equal(true);
 
-      wrapper.setProps({ value: '    - List Item 3'});
+      wrapper.setProps({ value: '    - List Item 3' });
       editorState = wrapper.state('editorState');
       expect(hasAccent(editorState, 'ul')).to.equal(true);
     });
@@ -97,23 +97,23 @@ describe('plain editor transform', () => {
       expect(hasHeader(newState, 5)).to.equal(false);
       expect(hasHeader(newState, 6)).to.equal(false);
 
-      wrapper.setProps({ value: '  2. List Item 2'});
+      wrapper.setProps({ value: '  2. List Item 2' });
       editorState = wrapper.state('editorState');
       expect(hasAccent(editorState, 'ol')).to.equal(true);
 
-      wrapper.setProps({ value: '    3. List Item 3'});
+      wrapper.setProps({ value: '    3. List Item 3' });
       editorState = wrapper.state('editorState');
       expect(hasAccent(editorState, 'ol')).to.equal(true);
 
-      wrapper.setProps({ value: '1) List Item 1'});
+      wrapper.setProps({ value: '1) List Item 1' });
       editorState = wrapper.state('editorState');
       expect(hasAccent(editorState, 'ol')).to.equal(true);
 
-      wrapper.setProps({ value: '  2) List Item 2'});
+      wrapper.setProps({ value: '  2) List Item 2' });
       editorState = wrapper.state('editorState');
       expect(hasAccent(editorState, 'ol')).to.equal(true);
 
-      wrapper.setProps({ value: '    3) List Item 3'});
+      wrapper.setProps({ value: '    3) List Item 3' });
       editorState = wrapper.state('editorState');
       expect(hasAccent(editorState, 'ol')).to.equal(true);
     });
