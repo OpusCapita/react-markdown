@@ -64,22 +64,123 @@ const wrapBlock = function(matchRules, text, state) {
 };
 
 /**
+ * Has the mark on a char
+ *
+ * @param character
+ * @param mark
+ * @returns {boolean}
+ */
+function hasMarkOnChar(character, mark) {
+  let arrChars = Array.from(character.marks);
+  let marksSize = arrChars.length;
+  for (let i = 0; i < marksSize; i++) {
+    if (arrChars[i].type === mark) {
+      return true;
+    }
+  }
+  return false;
+}
+
+/**
+ * Has block selected
+ *
+ * @param {string} type - list type
+ * @param {Object} state - editor state
+ */
+function hasList(type, state) {
+  let { texts } = state;
+  if (texts.get(0).charsData) {
+    let characters = texts.get(0).charsData.characters;
+    if (characters.size > 0) {
+      let character = characters.get(0);
+      return hasMarkOnChar(character, type);
+    }
+  }
+  return false;
+}
+
+/**
+ * The text has a wrapper in emphasis
+ *
+ * @param mark
+ * @param state
+ * @returns {boolean}
+ */
+function hasEmphasis(mark, state) {
+  let { startKey, endKey, startOffset, endOffset, texts } = state;
+
+  if (startKey === endKey) {
+    let focusText = texts.get(0).text;
+    let textLength = focusText.length;
+    if (texts.get(0).charsData) {
+      let characters = texts.get(0).charsData.characters;
+      // not selection
+      if (startOffset === endOffset) {
+        // string's edge
+        if (startOffset === 0 || startOffset === textLength) {
+          return false;
+        } else {
+          const prevChar = characters.get(startOffset - 1);
+          const currChar = characters.get(startOffset);
+          const hasPrevMark = hasMarkOnChar(prevChar, mark);
+          const hasCurrMark = hasMarkOnChar(currChar, mark);
+          // between character's marks
+          if (hasPrevMark && hasCurrMark) {
+            return true;
+          // between pairs of markers
+          } else if ((mark === 'bold' || mark === 'strikethrough') &&
+            startOffset > 1 && startOffset < textLength - 1) {
+            let leftPart = focusText.substr(startOffset - 2, 2);
+            let rightPart = focusText.substr(startOffset, 2);
+            if (leftPart === rightPart &&
+              (mark === 'bold' && (leftPart === '**' || leftPart === '__') ||
+                mark === 'strikethrough' && leftPart === '~~')) {
+              return true;
+            }
+          // between italic markers and not bold's edge
+          } else if (mark === 'italic' && prevChar.text === currChar.text &&
+            (currChar.text === '_' || currChar.text === '*') && !hasPrevMark && !hasCurrMark &&
+              !(hasMarkOnChar(prevChar, 'bold') && hasMarkOnChar(currChar, 'bold') &&
+                (startOffset === 1 || startOffset === focusText.length - 1 ||
+                  (startOffset > 1 && !hasMarkOnChar(characters.get(startOffset - 2), 'bold'))) ||
+                  (startOffset < focusText.length - 1 &&
+                    !hasMarkOnChar(characters.get(startOffset +1), 'bold')))) {
+            return true;
+          }
+        }
+      // selection
+      } else {
+        for (let i = startOffset; i < endOffset; i++) {
+          if (!hasMarkOnChar(characters.get(i), mark)) {
+            return false;
+          }
+        }
+        return true;
+      }
+    }
+  }
+
+  return false;
+}
+
+
+/**
  * Has text wrapped of accent at characters
  *
  * @param mark
  * @param state - editor state
  */
-function hasAccentAtLetters(mark, state) {
-  const { startOffset, endOffset, focusText } = state;
-  const focusedText = focusText.text;
-  const markLength = mark.length;
-  if ((startOffset - markLength) >= 0 && endOffset + markLength <= focusedText.length) {
-    const text = focusedText.slice(startOffset - markLength, endOffset + markLength);
-    return text && text.startsWith(mark) && text.endsWith(mark);
-  } else {
-    return false;
-  }
-}
+// function hasEmphasis(mark, state) {
+//   const { startOffset, endOffset, focusText } = state;
+//   const focusedText = focusText.text;
+//   const markLength = mark.length;
+//   if ((startOffset - markLength) >= 0 && endOffset + markLength <= focusedText.length) {
+//     const text = focusedText.slice(startOffset - markLength, endOffset + markLength);
+//     return text && text.startsWith(mark) && text.endsWith(mark);
+//   } else {
+//     return false;
+//   }
+// }
 
 /**
  * Wrap text with mark
@@ -87,7 +188,7 @@ function hasAccentAtLetters(mark, state) {
  * @param mark
  * @param state
  */
-function wrapLetters(mark, state) {
+function wrapEmphasis(mark, state) {
   const { startOffset, endOffset } = state;
   const lettersCount = mark.length;
   const change = state.change();
@@ -109,7 +210,7 @@ function wrapLetters(mark, state) {
  * @param state - editor state
  * @param count - count of the deleted characters
  */
-function unwrapLetters(count, state) {
+function unwrapEmphasis(count, state) {
   const { startOffset, endOffset, focusText } = state;
   const change = state.change();
   const focusKey = focusText.key;
@@ -160,11 +261,11 @@ export const hasMultiLineSelection = ({ selection: { startKey, endKey } }) => st
 
 const activities = {
   has: {
-    bold: hasAccentAtLetters.bind(null, '**'),
-    italic: hasAccentAtLetters.bind(null, '_'),
-    strikethrough: hasAccentAtLetters.bind(null, '~~'),
-    ul: hasBlock.bind(null, ulRegExp),
-    ol: hasBlock.bind(null, olRegExp),
+    bold: hasEmphasis.bind(null, 'bold'),
+    italic: hasEmphasis.bind(null, 'italic'),
+    strikethrough: hasEmphasis.bind(null, 'strikethrough'),
+    ul: hasList.bind(null, 'list'),
+    ol: hasList.bind(null, 'ordered-list'),
     header: [
       null,
       hasBlock.bind(null, h1RegExp),
@@ -176,9 +277,9 @@ const activities = {
     ]
   },
   unwrap: {
-    bold: unwrapLetters.bind(null, 2),
-    italic: unwrapLetters.bind(null, 1),
-    strikethrough: unwrapLetters.bind(null, 2),
+    bold: unwrapEmphasis.bind(null, 2),
+    italic: unwrapEmphasis.bind(null, 1),
+    strikethrough: unwrapEmphasis.bind(null, 2),
     ul: unwrapBlock.bind(null, '* '.length),
     ol: unwrapOrderedListMarkdown,
     header: [
@@ -192,9 +293,9 @@ const activities = {
     ]
   },
   wrap: {
-    bold: wrapLetters.bind(null, '**'),
-    italic: wrapLetters.bind(null, '_'),
-    strikethrough: wrapLetters.bind(null, '~~'),
+    bold: wrapEmphasis.bind(null, '**'),
+    italic: wrapEmphasis.bind(null, '_'),
+    strikethrough: wrapEmphasis.bind(null, '~~'),
     ul: wrapBlock.bind(null, [olRegExp, h1RegExp, h2RegExp, h3RegExp, h4RegExp, h5RegExp, h6RegExp], '* '),
     ol: wrapBlock.bind(null, [ulRegExp, h1RegExp, h2RegExp, h3RegExp, h4RegExp, h5RegExp, h6RegExp], '1. '),
     header: [

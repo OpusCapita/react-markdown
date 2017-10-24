@@ -145,7 +145,7 @@ class PlainMarkdownInput extends React.Component {
     return editorStateMutable.asImmutable();
   }
 
-  handleChange = (obj) => {
+  handleChange = (obj, isForceUpdate = false) => {
     // XXX Slate "Editor.props.onChange" behavior changed
     // https://github.com/ianstormtaylor/slate/blob/master/packages/slate/Changelog.md#0220--september-5-2017
     let editorState = obj.state || obj;
@@ -172,6 +172,9 @@ class PlainMarkdownInput extends React.Component {
 
     setTimeout(() => {
       autoScrollToTop();
+      if (isForceUpdate) {
+        this.forceUpdate()
+      }
     }, 0);
   };
 
@@ -190,7 +193,7 @@ class PlainMarkdownInput extends React.Component {
 
   _toggleAccent(state, accent) {
     const active = hasAccent(state, accent);
-    return this.handleChange(active ? unwrapAccent(state, accent) : wrapAccent(state, accent));
+    return this.handleChange(active ? unwrapAccent(state, accent) : wrapAccent(state, accent), true);
   }
 
   handleKeyDown(event, data, change) {

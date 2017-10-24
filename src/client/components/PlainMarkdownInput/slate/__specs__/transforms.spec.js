@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { expect } from 'chai';
-import { shallow } from 'enzyme';
+import { shallow, mount } from 'enzyme';
 import Plain from 'slate-plain-serializer';
 import PlainMarkdownInput from '../../PlainMarkdownInput.react';
 import {
@@ -26,7 +26,7 @@ describe('plain editor transform', () => {
         readOnly={true}
       />);
 
-      let wrapper = shallow(component);
+      let wrapper = mount(component);
       let editorState = wrapper.state('editorState');
       let change = editorState.change();
       change.moveOffsetsTo(0, nodeText.length);
@@ -40,6 +40,38 @@ describe('plain editor transform', () => {
       expect(hasHeader(newState, 4)).to.equal(false);
       expect(hasHeader(newState, 5)).to.equal(false);
       expect(hasHeader(newState, 6)).to.equal(false);
+
+      wrapper.setProps({ value: '  * List Item 2'});
+      editorState = wrapper.state('editorState');
+      expect(hasAccent(editorState, 'ul')).to.equal(true);
+
+      wrapper.setProps({ value: '    * List Item 3'});
+      editorState = wrapper.state('editorState');
+      expect(hasAccent(editorState, 'ul')).to.equal(true);
+
+      wrapper.setProps({ value: '+ List Item 1'});
+      editorState = wrapper.state('editorState');
+      expect(hasAccent(editorState, 'ul')).to.equal(true);
+
+      wrapper.setProps({ value: '  + List Item 2'});
+      editorState = wrapper.state('editorState');
+      expect(hasAccent(editorState, 'ul')).to.equal(true);
+
+      wrapper.setProps({ value: '    + List Item 3'});
+      editorState = wrapper.state('editorState');
+      expect(hasAccent(editorState, 'ul')).to.equal(true);
+
+      wrapper.setProps({ value: '- List Item 1'});
+      editorState = wrapper.state('editorState');
+      expect(hasAccent(editorState, 'ul')).to.equal(true);
+
+      wrapper.setProps({ value: '  - List Item 2'});
+      editorState = wrapper.state('editorState');
+      expect(hasAccent(editorState, 'ul')).to.equal(true);
+
+      wrapper.setProps({ value: '    - List Item 3'});
+      editorState = wrapper.state('editorState');
+      expect(hasAccent(editorState, 'ul')).to.equal(true);
     });
 
     it('Ordered', () => {
@@ -50,7 +82,7 @@ describe('plain editor transform', () => {
         readOnly={true}
       />);
 
-      let wrapper = shallow(component);
+      let wrapper = mount(component);
       let editorState = wrapper.state('editorState');
       let change = editorState.change();
       change.moveOffsetsTo(0, nodeText.length);
@@ -64,6 +96,26 @@ describe('plain editor transform', () => {
       expect(hasHeader(newState, 4)).to.equal(false);
       expect(hasHeader(newState, 5)).to.equal(false);
       expect(hasHeader(newState, 6)).to.equal(false);
+
+      wrapper.setProps({ value: '  2. List Item 2'});
+      editorState = wrapper.state('editorState');
+      expect(hasAccent(editorState, 'ol')).to.equal(true);
+
+      wrapper.setProps({ value: '    3. List Item 3'});
+      editorState = wrapper.state('editorState');
+      expect(hasAccent(editorState, 'ol')).to.equal(true);
+
+      wrapper.setProps({ value: '1) List Item 1'});
+      editorState = wrapper.state('editorState');
+      expect(hasAccent(editorState, 'ol')).to.equal(true);
+
+      wrapper.setProps({ value: '  2) List Item 2'});
+      editorState = wrapper.state('editorState');
+      expect(hasAccent(editorState, 'ol')).to.equal(true);
+
+      wrapper.setProps({ value: '    3) List Item 3'});
+      editorState = wrapper.state('editorState');
+      expect(hasAccent(editorState, 'ol')).to.equal(true);
     });
   });
 
@@ -282,7 +334,7 @@ describe('plain editor transform', () => {
         readOnly={true}
       />);
 
-      let wrapper = shallow(component);
+      let wrapper = mount(component);
       let editorState = wrapper.state('editorState');
       let change = editorState.change();
       change.moveOffsetsTo(1, nodeText.length - 1);
@@ -293,13 +345,13 @@ describe('plain editor transform', () => {
 
       change.moveOffsetsTo(0, nodeText.length);
       newState = change.state;
-      expect(hasAccent(newState, 'italic')).to.equal(false);
+      expect(hasAccent(newState, 'italic')).to.equal(true);
       expect(hasAccent(newState, 'bold')).to.equal(false);
       expect(hasAccent(newState, 'strikethrough')).to.equal(false);
 
       change.moveOffsetsTo(5, 5);
       newState = change.state;
-      expect(hasAccent(newState, 'italic')).to.equal(false);
+      expect(hasAccent(newState, 'italic')).to.equal(true);
     });
 
     it('**bold**', () => {
@@ -310,7 +362,7 @@ describe('plain editor transform', () => {
         readOnly={true}
       />);
 
-      let wrapper = shallow(component);
+      let wrapper = mount(component);
       let editorState = wrapper.state('editorState');
       let change = editorState.change();
       change.moveOffsetsTo(2, nodeText.length - 2);
@@ -322,12 +374,12 @@ describe('plain editor transform', () => {
       change.moveOffsetsTo(0, nodeText.length);
       newState = change.state;
       expect(hasAccent(newState, 'italic')).to.equal(false);
-      expect(hasAccent(newState, 'bold')).to.equal(false);
+      expect(hasAccent(newState, 'bold')).to.equal(true);
       expect(hasAccent(newState, 'strikethrough')).to.equal(false);
 
       change.moveOffsetsTo(5, 5);
       newState = change.state;
-      expect(hasAccent(newState, 'bold')).to.equal(false);
+      expect(hasAccent(newState, 'bold')).to.equal(true);
     });
 
     it('~~strikethrough~~', () => {
@@ -338,7 +390,7 @@ describe('plain editor transform', () => {
         readOnly={true}
       />);
 
-      let wrapper = shallow(component);
+      let wrapper = mount(component);
       let editorState = wrapper.state('editorState');
       let change = editorState.change();
       change.moveOffsetsTo(2, nodeText.length - 2);
@@ -351,11 +403,11 @@ describe('plain editor transform', () => {
       newState = change.state;
       expect(hasAccent(newState, 'italic')).to.equal(false);
       expect(hasAccent(newState, 'bold')).to.equal(false);
-      expect(hasAccent(newState, 'strikethrough')).to.equal(false);
+      expect(hasAccent(newState, 'strikethrough')).to.equal(true);
 
       change.moveOffsetsTo(5, 5);
       newState = change.state;
-      expect(hasAccent(newState, 'strikethrough')).to.equal(false);
+      expect(hasAccent(newState, 'strikethrough')).to.equal(true);
     });
 
     it('_**bold italic**_', () => {
@@ -366,31 +418,31 @@ describe('plain editor transform', () => {
         readOnly={true}
       />);
 
-      let wrapper = shallow(component);
+      let wrapper = mount(component);
       let editorState = wrapper.state('editorState');
       let change = editorState.change();
       change.moveOffsetsTo(1, nodeText.length - 1);
       let newState = change.state;
       expect(hasAccent(newState, 'italic')).to.equal(true);
-      expect(hasAccent(newState, 'bold')).to.equal(false);
+      expect(hasAccent(newState, 'bold')).to.equal(true);
       expect(hasAccent(newState, 'strikethrough')).to.equal(false);
 
       change.moveOffsetsTo(3, nodeText.length - 3);
       newState = change.state;
-      expect(hasAccent(newState, 'italic')).to.equal(false);
+      expect(hasAccent(newState, 'italic')).to.equal(true);
       expect(hasAccent(newState, 'bold')).to.equal(true);
       expect(hasAccent(newState, 'strikethrough')).to.equal(false);
 
       change.moveOffsetsTo(0, nodeText.length);
       newState = change.state;
-      expect(hasAccent(newState, 'italic')).to.equal(false);
+      expect(hasAccent(newState, 'italic')).to.equal(true);
       expect(hasAccent(newState, 'bold')).to.equal(false);
       expect(hasAccent(newState, 'strikethrough')).to.equal(false);
 
       change.moveOffsetsTo(5, 5);
       newState = change.state;
-      expect(hasAccent(newState, 'italic')).to.equal(false);
-      expect(hasAccent(newState, 'bold')).to.equal(false);
+      expect(hasAccent(newState, 'italic')).to.equal(true);
+      expect(hasAccent(newState, 'bold')).to.equal(true);
       expect(hasAccent(newState, 'strikethrough')).to.equal(false);
     });
 
@@ -402,31 +454,31 @@ describe('plain editor transform', () => {
         readOnly={true}
       />);
 
-      let wrapper = shallow(component);
+      let wrapper = mount(component);
       let editorState = wrapper.state('editorState');
       let change = editorState.change();
       change.moveOffsetsTo(2, nodeText.length - 2);
       let newState = change.state;
-      expect(hasAccent(newState, 'italic')).to.equal(false);
+      expect(hasAccent(newState, 'italic')).to.equal(true);
       expect(hasAccent(newState, 'bold')).to.equal(true);
       expect(hasAccent(newState, 'strikethrough')).to.equal(false);
 
       change.moveOffsetsTo(3, nodeText.length - 3);
       newState = change.state;
       expect(hasAccent(newState, 'italic')).to.equal(true);
-      expect(hasAccent(newState, 'bold')).to.equal(false);
+      expect(hasAccent(newState, 'bold')).to.equal(true);
       expect(hasAccent(newState, 'strikethrough')).to.equal(false);
 
       change.moveOffsetsTo(0, nodeText.length);
       newState = change.state;
       expect(hasAccent(newState, 'italic')).to.equal(false);
-      expect(hasAccent(newState, 'bold')).to.equal(false);
+      expect(hasAccent(newState, 'bold')).to.equal(true);
       expect(hasAccent(newState, 'strikethrough')).to.equal(false);
 
       change.moveOffsetsTo(5, 5);
       newState = change.state;
-      expect(hasAccent(newState, 'italic')).to.equal(false);
-      expect(hasAccent(newState, 'bold')).to.equal(false);
+      expect(hasAccent(newState, 'italic')).to.equal(true);
+      expect(hasAccent(newState, 'bold')).to.equal(true);
       expect(hasAccent(newState, 'strikethrough')).to.equal(false);
     });
 
@@ -438,32 +490,32 @@ describe('plain editor transform', () => {
         readOnly={true}
       />);
 
-      let wrapper = shallow(component);
+      let wrapper = mount(component);
       let editorState = wrapper.state('editorState');
       let change = editorState.change();
       change.moveOffsetsTo(1, nodeText.length - 1);
       let newState = change.state;
       expect(hasAccent(newState, 'italic')).to.equal(true);
       expect(hasAccent(newState, 'bold')).to.equal(false);
-      expect(hasAccent(newState, 'strikethrough')).to.equal(false);
+      expect(hasAccent(newState, 'strikethrough')).to.equal(true);
 
       change.moveOffsetsTo(3, nodeText.length - 3);
       newState = change.state;
-      expect(hasAccent(newState, 'italic')).to.equal(false);
+      expect(hasAccent(newState, 'italic')).to.equal(true);
       expect(hasAccent(newState, 'bold')).to.equal(false);
       expect(hasAccent(newState, 'strikethrough')).to.equal(true);
 
       change.moveOffsetsTo(0, nodeText.length);
       newState = change.state;
-      expect(hasAccent(newState, 'italic')).to.equal(false);
+      expect(hasAccent(newState, 'italic')).to.equal(true);
       expect(hasAccent(newState, 'bold')).to.equal(false);
       expect(hasAccent(newState, 'strikethrough')).to.equal(false);
 
       change.moveOffsetsTo(5, 5);
       newState = change.state;
-      expect(hasAccent(newState, 'italic')).to.equal(false);
+      expect(hasAccent(newState, 'italic')).to.equal(true);
       expect(hasAccent(newState, 'bold')).to.equal(false);
-      expect(hasAccent(newState, 'strikethrough')).to.equal(false);
+      expect(hasAccent(newState, 'strikethrough')).to.equal(true);
     });
 
     it('~~_strikethrough italic_~~', () => {
@@ -474,12 +526,12 @@ describe('plain editor transform', () => {
         readOnly={true}
       />);
 
-      let wrapper = shallow(component);
+      let wrapper = mount(component);
       let editorState = wrapper.state('editorState');
       let change = editorState.change();
       change.moveOffsetsTo(2, nodeText.length - 2);
       let newState = change.state;
-      expect(hasAccent(newState, 'italic')).to.equal(false);
+      expect(hasAccent(newState, 'italic')).to.equal(true);
       expect(hasAccent(newState, 'bold')).to.equal(false);
       expect(hasAccent(newState, 'strikethrough')).to.equal(true);
 
@@ -487,19 +539,19 @@ describe('plain editor transform', () => {
       newState = change.state;
       expect(hasAccent(newState, 'italic')).to.equal(true);
       expect(hasAccent(newState, 'bold')).to.equal(false);
-      expect(hasAccent(newState, 'strikethrough')).to.equal(false);
+      expect(hasAccent(newState, 'strikethrough')).to.equal(true);
 
       change.moveOffsetsTo(0, nodeText.length);
       newState = change.state;
       expect(hasAccent(newState, 'italic')).to.equal(false);
       expect(hasAccent(newState, 'bold')).to.equal(false);
-      expect(hasAccent(newState, 'strikethrough')).to.equal(false);
+      expect(hasAccent(newState, 'strikethrough')).to.equal(true);
 
       change.moveOffsetsTo(5, 5);
       newState = change.state;
-      expect(hasAccent(newState, 'italic')).to.equal(false);
+      expect(hasAccent(newState, 'italic')).to.equal(true);
       expect(hasAccent(newState, 'bold')).to.equal(false);
-      expect(hasAccent(newState, 'strikethrough')).to.equal(false);
+      expect(hasAccent(newState, 'strikethrough')).to.equal(true);
     });
 
     it('**~~strikethrough bold~~**', () => {
@@ -510,32 +562,32 @@ describe('plain editor transform', () => {
         readOnly={true}
       />);
 
-      let wrapper = shallow(component);
+      let wrapper = mount(component);
       let editorState = wrapper.state('editorState');
       let change = editorState.change();
       change.moveOffsetsTo(2, nodeText.length - 2);
       let newState = change.state;
       expect(hasAccent(newState, 'italic')).to.equal(false);
       expect(hasAccent(newState, 'bold')).to.equal(true);
-      expect(hasAccent(newState, 'strikethrough')).to.equal(false);
+      expect(hasAccent(newState, 'strikethrough')).to.equal(true);
 
       change.moveOffsetsTo(4, nodeText.length - 4);
       newState = change.state;
       expect(hasAccent(newState, 'italic')).to.equal(false);
-      expect(hasAccent(newState, 'bold')).to.equal(false);
+      expect(hasAccent(newState, 'bold')).to.equal(true);
       expect(hasAccent(newState, 'strikethrough')).to.equal(true);
 
       change.moveOffsetsTo(0, nodeText.length);
       newState = change.state;
       expect(hasAccent(newState, 'italic')).to.equal(false);
-      expect(hasAccent(newState, 'bold')).to.equal(false);
+      expect(hasAccent(newState, 'bold')).to.equal(true);
       expect(hasAccent(newState, 'strikethrough')).to.equal(false);
 
       change.moveOffsetsTo(5, 5);
       newState = change.state;
       expect(hasAccent(newState, 'italic')).to.equal(false);
-      expect(hasAccent(newState, 'bold')).to.equal(false);
-      expect(hasAccent(newState, 'strikethrough')).to.equal(false);
+      expect(hasAccent(newState, 'bold')).to.equal(true);
+      expect(hasAccent(newState, 'strikethrough')).to.equal(true);
     });
 
     it('~~**strikethrough bold**~~', () => {
@@ -546,32 +598,32 @@ describe('plain editor transform', () => {
         readOnly={true}
       />);
 
-      let wrapper = shallow(component);
+      let wrapper = mount(component);
       let editorState = wrapper.state('editorState');
       let change = editorState.change();
       change.moveOffsetsTo(2, nodeText.length - 2);
       let newState = change.state;
       expect(hasAccent(newState, 'italic')).to.equal(false);
-      expect(hasAccent(newState, 'bold')).to.equal(false);
+      expect(hasAccent(newState, 'bold')).to.equal(true);
       expect(hasAccent(newState, 'strikethrough')).to.equal(true);
 
       change.moveOffsetsTo(4, nodeText.length - 4);
       newState = change.state;
       expect(hasAccent(newState, 'italic')).to.equal(false);
       expect(hasAccent(newState, 'bold')).to.equal(true);
-      expect(hasAccent(newState, 'strikethrough')).to.equal(false);
+      expect(hasAccent(newState, 'strikethrough')).to.equal(true);
 
       change.moveOffsetsTo(0, nodeText.length);
       newState = change.state;
       expect(hasAccent(newState, 'italic')).to.equal(false);
       expect(hasAccent(newState, 'bold')).to.equal(false);
-      expect(hasAccent(newState, 'strikethrough')).to.equal(false);
+      expect(hasAccent(newState, 'strikethrough')).to.equal(true);
 
       change.moveOffsetsTo(5, 5);
       newState = change.state;
       expect(hasAccent(newState, 'italic')).to.equal(false);
-      expect(hasAccent(newState, 'bold')).to.equal(false);
-      expect(hasAccent(newState, 'strikethrough')).to.equal(false);
+      expect(hasAccent(newState, 'bold')).to.equal(true);
+      expect(hasAccent(newState, 'strikethrough')).to.equal(true);
     });
 
     it('_~~**italic strikethrough bold**~~_', () => {
@@ -582,38 +634,38 @@ describe('plain editor transform', () => {
         readOnly={true}
       />);
 
-      let wrapper = shallow(component);
+      let wrapper = mount(component);
       let editorState = wrapper.state('editorState');
       let change = editorState.change();
       change.moveOffsetsTo(1, nodeText.length - 1);
       let newState = change.state;
       expect(hasAccent(newState, 'italic')).to.equal(true);
       expect(hasAccent(newState, 'bold')).to.equal(false);
-      expect(hasAccent(newState, 'strikethrough')).to.equal(false);
+      expect(hasAccent(newState, 'strikethrough')).to.equal(true);
 
       change.moveOffsetsTo(3, nodeText.length - 3);
       newState = change.state;
-      expect(hasAccent(newState, 'italic')).to.equal(false);
-      expect(hasAccent(newState, 'bold')).to.equal(false);
+      expect(hasAccent(newState, 'italic')).to.equal(true);
+      expect(hasAccent(newState, 'bold')).to.equal(true);
       expect(hasAccent(newState, 'strikethrough')).to.equal(true);
 
       change.moveOffsetsTo(5, nodeText.length - 5);
       newState = change.state;
-      expect(hasAccent(newState, 'italic')).to.equal(false);
+      expect(hasAccent(newState, 'italic')).to.equal(true);
       expect(hasAccent(newState, 'bold')).to.equal(true);
-      expect(hasAccent(newState, 'strikethrough')).to.equal(false);
+      expect(hasAccent(newState, 'strikethrough')).to.equal(true);
 
       change.moveOffsetsTo(0, nodeText.length);
       newState = change.state;
-      expect(hasAccent(newState, 'italic')).to.equal(false);
+      expect(hasAccent(newState, 'italic')).to.equal(true);
       expect(hasAccent(newState, 'bold')).to.equal(false);
       expect(hasAccent(newState, 'strikethrough')).to.equal(false);
 
       change.moveOffsetsTo(7, 7);
       newState = change.state;
-      expect(hasAccent(newState, 'italic')).to.equal(false);
-      expect(hasAccent(newState, 'bold')).to.equal(false);
-      expect(hasAccent(newState, 'strikethrough')).to.equal(false);
+      expect(hasAccent(newState, 'italic')).to.equal(true);
+      expect(hasAccent(newState, 'bold')).to.equal(true);
+      expect(hasAccent(newState, 'strikethrough')).to.equal(true);
     });
   });
 
@@ -626,7 +678,7 @@ describe('plain editor transform', () => {
         readOnly={true}
       />);
 
-      let wrapper = shallow(component);
+      let wrapper = mount(component);
       let editorState = wrapper.state('editorState');
       let change = editorState.change();
       change.moveOffsetsTo(1, nodeText.length - 1);
