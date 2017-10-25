@@ -1149,6 +1149,31 @@ describe('plain editor transform', () => {
       change = newState.change();
       newState = wrapAccent(change.state, 'ol');
       expect(Plain.serialize(newState)).to.equal('1. Item');
+
+      wrapper.setProps({ value: '  2. List Item 2' });
+      editorState = wrapper.state('editorState');
+      newState = wrapAccent(editorState, 'ul');
+      expect(Plain.serialize(newState)).to.equal('* List Item 2');
+
+      wrapper.setProps({ value: '    3) List Item 3' });
+      editorState = wrapper.state('editorState');
+      newState = wrapAccent(editorState, 'ul');
+      expect(Plain.serialize(newState)).to.equal('* List Item 3');
+
+      wrapper.setProps({ value: '    3) List Item' });
+      editorState = wrapper.state('editorState');
+      newState = wrapHeader(editorState, 6);
+      expect(Plain.serialize(newState)).to.equal('###### List Item');
+
+      wrapper.setProps({ value: '  + List Item' });
+      editorState = wrapper.state('editorState');
+      newState = wrapHeader(editorState, 3);
+      expect(Plain.serialize(newState)).to.equal('### List Item');
+
+      wrapper.setProps({ value: '    - List Item' });
+      editorState = wrapper.state('editorState');
+      newState = wrapAccent(editorState, 'ol');
+      expect(Plain.serialize(newState)).to.equal('1. List Item');
     });
   });
 
