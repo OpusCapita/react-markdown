@@ -134,6 +134,7 @@ class AutocompleteWidget extends React.Component {
         <div
           className="react-markdown--autocomplete-widget"
           ref={ref => (this['items-ref'] = ref)}
+          onMouseDown={e => e.preventDefault()}
           style={{
             left,
             top,
