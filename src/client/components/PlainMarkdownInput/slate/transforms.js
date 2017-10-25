@@ -221,86 +221,6 @@ function wrapEmphasis(mark, state) {
   return change.state;
 }
 
-/**
- * Unwrap text from accent
- *
- * @param {string} accent
- * @param state - editor state
- */
-function unwrapEmphasis(accent, state) {
-  let markerLength = EMPHASIS[accent].length;
-  // 1) если без выделения курсор обернут в маркеры, удаляем маркеры
-  // 2) если без выделения на маркере, ничего не делаем
-  // 3) если без выделения внутри маркеров, добавляем маркеры на место курсора
-  // 4) если выделение по маркерам, удаляем маркеры
-  // 5) если одна сторона выделения на маркере, а другая внутри маркеров,
-  //    снимаем выделение с части строки - переносим маркер, на котором находится край выделения, внутрь
-  const { startOffset, endOffset, focusText, texts } = state;
-  const change = state.change();
-  const focusKey = focusText.key;
-  let characters = texts.get(0).charsData.characters;
-  const { text } = focusText;
-  const leftEdge = getLeftEdge(accent, characters, startOffset);
-  const rightEdge = getRightEdge(accent, characters, startOffset, text.length);
-  console.log(`startOffset: ${startOffset}`);
-  console.log(`endOffset: ${endOffset}`);
-  console.log(`leftEdge: ${leftEdge}`);
-  console.log(`rightEdge: ${rightEdge}`);
-
-  // no selection
-  if (startOffset === endOffset) {
-    if (startOffset > markerLength - 1 && startOffset < text.length - markerLength + 1) {
-      let leftMarker = text.substr(startOffset - markerLength, markerLength);
-      let rightMarker = text.substr(startOffset, markerLength);
-      // #1 the cursor is wrapped in markers, delete markers
-      if (leftMarker === rightMarker && EMPHASIS_ALL[accent].indexOf(leftMarker) !== -1) {
-        change.removeTextByKey(focusKey, endOffset, markerLength).
-        removeTextByKey(focusKey, startOffset - markerLength, markerLength).focus();
-        return change.state;
-      }
-    }
-
-    // #2 the cursor on a marker, do nothing
-    if (leftEdge + 1 === startOffset || leftEdge + markerLength === startOffset ||
-      rightEdge === startOffset || rightEdge - markerLength + 1 === startOffset) {
-      return state
-    // #3 the between markers, add markers to the place of the cursor
-    } else {
-      change.insertText(`${EMPHASIS[accent]}${EMPHASIS[accent]}`).
-      move(-markerLength).focus();
-      return change.state;
-    }
-
-  // selection
-  } else {
-    // the selection on the left edge, do nothing
-    if ((leftEdge === startOffset || leftEdge + 1 === startOffset) &&
-      leftEdge + 1 === endOffset || leftEdge + markerLength === endOffset) {
-      return state
-    }
-    // the selection on the right edge, do nothing
-    if ((rightEdge - markerLength === startOffset || rightEdge - markerLength + 1 === startOffset) &&
-      (rightEdge - 1 === endOffset || rightEdge === endOffset)) {
-      return state
-    }
-    // the selection between markers
-    if (leftEdge + markerLength < startOffset && endOffset < rightEdge - markerLength - 1) {
-      change.wrapText(EMPHASIS[accent], EMPHASIS[accent]).focus();
-      return change.state;
-    }
-    // the selection on markers, delete markers
-    if ((leftEdge <= startOffset || startOffset <= leftEdge + markerLength) &&
-      (rightEdge - markerLength <= endOffset || endOffset <= rightEdge)) {
-      change.removeTextByKey(focusKey, rightEdge - markerLength, markerLength).
-      removeTextByKey(focusKey, leftEdge, markerLength).focus();
-      return change.state;
-    }
-
-  }
-
-  return state;
-}
-
 function getLeftEdge(accent, characters, startPos) {
   let leftEdge = -1;
   for (let i = startPos - 1; i >= 0; i--) {
@@ -321,6 +241,95 @@ function getRightEdge(accent, characters, startPos, maxPos) {
     }
   }
   return rightEdge < 0 ? maxPos : rightEdge;
+}
+
+/**
+ * Unwrap text from accent
+ *
+ * @param {string} accent
+ * @param state - editor state
+ */
+function unwrapEmphasis(accent, state) {
+  let markerLength = EMPHASIS[accent].length;
+  const { startOffset, endOffset, focusText, texts } = state;
+  const change = state.change();
+  const focusKey = focusText.key;
+  let characters = texts.get(0).charsData.characters;
+  const { text } = focusText;
+  const leftEdge = getLeftEdge(accent, characters, startOffset);
+  const rightEdge = getRightEdge(accent, characters, startOffset, text.length);
+  const marker = text.substr(leftEdge, markerLength);
+
+  // no selection
+  if (startOffset === endOffset) {
+    if (startOffset > markerLength - 1 && startOffset < text.length - markerLength + 1) {
+      let leftMarker = text.substr(startOffset - markerLength, markerLength);
+      let rightMarker = text.substr(startOffset, markerLength);
+      // #1 the cursor is wrapped in markers, delete markers
+      if (leftMarker === rightMarker && EMPHASIS_ALL[accent].indexOf(leftMarker) !== -1) {
+        change.removeTextByKey(focusKey, endOffset, markerLength).
+        removeTextByKey(focusKey, startOffset - markerLength, markerLength).focus();
+        return change.state;
+      }
+    }
+
+    // #2 the cursor on a marker, do nothing
+    if (leftEdge + 1 === startOffset || leftEdge + markerLength === startOffset ||
+      rightEdge === startOffset || rightEdge - markerLength + 1 === startOffset) {
+      return state
+
+    // #3 the between markers, add markers to the place of the cursor
+    } else {
+      change.insertText(`${marker}${marker}`).
+      move(-markerLength).focus();
+      return change.state;
+    }
+
+  // selection
+  } else {
+    // #4 the selection on the left edge, do nothing
+    if ((leftEdge === startOffset || leftEdge + 1 === startOffset) &&
+      leftEdge + 1 === endOffset || leftEdge + markerLength === endOffset) {
+      return state
+    }
+
+    // #5 the selection on the right edge, do nothing
+    if ((rightEdge - markerLength === startOffset || rightEdge - markerLength + 1 === startOffset) &&
+      (rightEdge - 1 === endOffset || rightEdge === endOffset)) {
+      return state
+    }
+
+    // #6 the selection between markers, wrap selection in additional markers
+    // (between additional markers there is no current emphasis)
+    if (leftEdge + markerLength < startOffset && endOffset < rightEdge - markerLength - 1) {
+      change.wrapText(marker, marker).focus();
+      return change.state;
+    }
+
+    // #7 the selection on markers, delete markers
+    if (leftEdge <= startOffset && startOffset <= leftEdge + markerLength &&
+      rightEdge - markerLength + 1 <= endOffset && endOffset <= rightEdge) {
+      change.removeTextByKey(focusKey, rightEdge - markerLength + 1, markerLength).
+      removeTextByKey(focusKey, leftEdge, markerLength).focus();
+      return change.state;
+    }
+
+    // #8 startOffset on left marker, endOffset between markers,
+    // remove accent from the left part of a wrapper
+    if (leftEdge <= startOffset && startOffset <= leftEdge + markerLength) {
+      change.insertTextByKey(focusKey, endOffset, marker).
+      removeTextByKey(focusKey, leftEdge, markerLength).
+      moveOffsetsTo(leftEdge, endOffset - markerLength).focus();
+      return change.state;
+    }
+
+    // #9 startOffset between markers, endOffset on right marker,
+    // remove accent from the right part of a wrapper
+    change.removeTextByKey(focusKey, rightEdge - markerLength + 1, markerLength).
+    insertTextByKey(focusKey, startOffset, marker).
+    moveOffsetsTo(startOffset + markerLength, rightEdge + 1).focus();
+    return change.state;
+  }
 }
 
 /**

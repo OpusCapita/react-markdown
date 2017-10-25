@@ -293,7 +293,7 @@ describe('<PlainMarkdownInput />', () => {
   });
 
   describe('_toggleAccent(state, accent)', () => {
-    it('strikethrough', () => {
+    it.skip('strikethrough', () => {
       let nodeText = '~~strikethrough text~~';
       let component = (<PlainMarkdownInput
         value={nodeText}
@@ -335,7 +335,7 @@ describe('<PlainMarkdownInput />', () => {
   });
 
   describe('handleKeyDown(event, data, change)', () => {
-    it('bold', () => {
+    it.skip('bold', () => {
       let nodeText = '**bold text**';
       let component = (<PlainMarkdownInput
         value={nodeText}
@@ -379,7 +379,7 @@ describe('<PlainMarkdownInput />', () => {
       expect(Plain.serialize(newState.editorState)).to.equal('**bold text**');
     });
 
-    it('strikethrough', () => {
+    it.skip('strikethrough', () => {
       let eventData = {
         key: 's',
         isMod: true
@@ -421,7 +421,7 @@ describe('<PlainMarkdownInput />', () => {
       expect(Plain.serialize(newState.editorState)).to.equal('~~strikethrough text~~');
     });
 
-    it('italic', () => {
+    it.skip('italic', () => {
       let eventData = {
         key: 'i',
         isMod: true
@@ -530,7 +530,7 @@ describe('<PlainMarkdownInput />', () => {
   }
 
   describe('handleActionButtonClick(accent)', () => {
-    it('bold', () => {
+    it.skip('bold', () => {
       let nodeText = '**bold text**';
       let wrapperInstance = initIt(nodeText, { start: 2, end: nodeText.length - 2 });
       wrapperInstance.handleActionButtonClick('bold');
@@ -542,7 +542,7 @@ describe('<PlainMarkdownInput />', () => {
       checkIt(wrapperInstance, '**bold text**');
     });
 
-    it('italic', () => {
+    it.skip('italic', () => {
       let nodeText = '_italic text_';
       let wrapperInstance = initIt(nodeText, { start: 1, end: nodeText.length - 1 });
       wrapperInstance.handleActionButtonClick('italic');
@@ -554,7 +554,7 @@ describe('<PlainMarkdownInput />', () => {
       checkIt(wrapperInstance, '_italic text_');
     });
 
-    it('strikethrough', () => {
+    it.skip('strikethrough', () => {
       let nodeText = '~~strikethrough text~~';
       let wrapperInstance = initIt(nodeText, { start: 2, end: nodeText.length - 2 });
       wrapperInstance.handleActionButtonClick('strikethrough');
