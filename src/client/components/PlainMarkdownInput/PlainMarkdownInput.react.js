@@ -99,23 +99,6 @@ class PlainMarkdownInput extends React.Component {
     }
   }
 
-  shouldComponentUpdate = (nextProps, nextState) => {
-    // XXX
-    // for only modal mode
-    return this.state.editorState.endKey !== nextState.editorState.endKey ||
-      this.state.editorState.endOffset !== nextState.editorState.endOffset ||
-      this.state.editorState.startKey !== nextState.editorState.startKey ||
-      this.state.editorState.startOffset !== nextState.editorState.startOffset ||
-      this.state.fullScreen !== nextState.fullScreen ||
-      this.state.editorState.texts.get(0).text !== nextState.editorState.texts.get(0).text ||
-      this.props.readOnly !== nextProps.readOnly ||
-      this.props.value !== nextProps.value ||
-      this.props.onFullScreen !== nextProps.onFullScreen ||
-      this.props.locale !== nextProps.locale ||
-      this.props.onChange !== nextProps.onChange ||
-      !_.isEqual(this.props.extensions, nextProps.extensions);
-  };
-
   handleNewValue(value) {
     let editorState = Plain.deserialize(value);
     let nodes = editorState.document.nodes.asMutable();
