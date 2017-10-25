@@ -1,6 +1,6 @@
 // common reg expressions
-const olRegExp = /^[0-9]+\.\s/;
-const ulRegExp = /^\*\s/;
+const olRegExp = /^\s*[0-9]+(\.|\))\s/;
+const ulRegExp = /^\s*(\*|\+|-)\s/;
 const h1RegExp = /^#\s/;
 const h2RegExp = /^##\s/;
 const h3RegExp = /^###\s/;
@@ -8,17 +8,37 @@ const h4RegExp = /^####\s/;
 const h5RegExp = /^#####\s/;
 const h6RegExp = /^######\s/;
 
+const MATCH_RULES = {
+  ul: [olRegExp, h1RegExp, h2RegExp, h3RegExp, h4RegExp, h5RegExp, h6RegExp],
+  ol: [ulRegExp, h1RegExp, h2RegExp, h3RegExp, h4RegExp, h5RegExp, h6RegExp],
+  header: [
+    null,
+    [olRegExp, ulRegExp, h2RegExp, h3RegExp, h4RegExp, h5RegExp, h6RegExp],
+    [olRegExp, ulRegExp, h1RegExp, h3RegExp, h4RegExp, h5RegExp, h6RegExp],
+    [olRegExp, ulRegExp, h1RegExp, h2RegExp, h4RegExp, h5RegExp, h6RegExp],
+    [olRegExp, ulRegExp, h1RegExp, h2RegExp, h3RegExp, h5RegExp, h6RegExp],
+    [olRegExp, ulRegExp, h1RegExp, h2RegExp, h3RegExp, h4RegExp, h6RegExp],
+    [olRegExp, ulRegExp, h1RegExp, h2RegExp, h3RegExp, h4RegExp, h5RegExp]
+  ]
+};
+
+const EMPHASIS = {
+  bold: '**',
+  italic: '_',
+  strikethrough: '~~',
+};
+
 /**
  * Has block selected
  *
  * @param regExp - match regexp
  * @param state - editor state
  */
-const hasBlock = function(regExp, state) {
+function hasBlock(regExp, state) {
   const { focusText } = state;
   const focusedText = focusText.text;
   return regExp.test(focusedText);
-};
+}
 
 /**
  * Unwrap block
@@ -26,14 +46,14 @@ const hasBlock = function(regExp, state) {
  * @param removedLength - first length should be removed
  * @param state - editor state
  */
-const unwrapBlock = function(removedLength, state) {
+function unwrapBlock(removedLength, state) {
   const { startOffset, endOffset } = state;
   const change = state.change();
   const startPos = Math.max(startOffset - removedLength, 0);
   const endPos = Math.max(endOffset - removedLength, 0);
   change.moveOffsetsTo(0).deleteForward(removedLength).moveOffsetsTo(startPos, endPos).focus();
   return change.state;
-};
+}
 
 /**
  * Wrap block
@@ -42,7 +62,7 @@ const unwrapBlock = function(removedLength, state) {
  * @param text - marker of the block
  * @param state - editor state
  */
-const wrapBlock = function(matchRules, text, state) {
+function wrapBlock(matchRules, text, state) {
   const { startOffset, endOffset, focusText } = state;
   const focusedText = focusText.text;
   const change = state.change();
@@ -61,7 +81,7 @@ const wrapBlock = function(matchRules, text, state) {
   change.insertText(text).moveOffsetsTo(startPos, endPos).focus();
 
   return change.state;
-};
+}
 
 /**
  * Has the mark on a char
@@ -170,6 +190,16 @@ function hasEmphasis(mark, state) {
  * @param state
  */
 function wrapEmphasis(mark, state) {
+  // 1) вне маркеров - оборачиваем курсор или выделение в маркеры
+  // 2) пересекается с оберткой
+  //    - расширяем обертку до границы выделения с одной стороны (переносим маркер)
+  // 3) полностью перекрывает оберкту
+  //    - расширяем обертку до границы выделения с двух сторон (переносим маркеры)
+  // 4) на внешней границе обертки
+  //    - оборачиваем курсор или выделение в маркеры
+  //    - внутренние маркеры такого же типа удаляем
+
+  // 1) найти границы обертки с текущим маркером
   const { startOffset, endOffset } = state;
   const lettersCount = mark.length;
   const change = state.change();
@@ -188,10 +218,16 @@ function wrapEmphasis(mark, state) {
 /**
  * Unwrap text from accent
  *
+ * @param {string} accent
  * @param state - editor state
- * @param count - count of the deleted characters
  */
-function unwrapEmphasis(count, state) {
+function unwrapEmphasis(accent, state) {
+  let count = EMPHASIS[accent].length;
+  // 1) если выделение по маркерам, удаляем маркеры
+  // 2) если без выделения курсор обернут в маркеры, удаляем маркеры
+  // 3) если без выделения внутри маркеров, добавляем маркеры на место курсора
+  // 4) если одна сторона выделения на маркере, а другая внутри маркеров,
+  //    снимаем выделение с части строки - переносим маркер, на котором находится край выделения, внутрь
   const { startOffset, endOffset, focusText } = state;
   const change = state.change();
   const focusKey = focusText.key;
@@ -203,15 +239,17 @@ function unwrapEmphasis(count, state) {
 /**
  * Unwrap text with OL markdown token
  *
+ * @param {RegExp} regExp
  * @param state - editor state
+ * @returns {Object} - editor state
  */
-export const unwrapOrderedListMarkdown = state => {
+function unwrapList(regExp, state) {
   const { focusText } = state;
   const focusedText = focusText.text;
-  const result = olRegExp.exec(focusedText);
+  const result = regExp.exec(focusedText);
   const length = result[0].length;
   return unwrapBlock(length, state);
-};
+}
 
 /**
  * Wrap text with link markdown tokens
@@ -258,11 +296,11 @@ const activities = {
     ]
   },
   unwrap: {
-    bold: unwrapEmphasis.bind(null, 2),
-    italic: unwrapEmphasis.bind(null, 1),
-    strikethrough: unwrapEmphasis.bind(null, 2),
-    ul: unwrapBlock.bind(null, '* '.length),
-    ol: unwrapOrderedListMarkdown,
+    bold: unwrapEmphasis.bind(null, 'bold'),
+    italic: unwrapEmphasis.bind(null, 'italic'),
+    strikethrough: unwrapEmphasis.bind(null, 'strikethrough'),
+    ul: unwrapList.bind(null, ulRegExp),
+    ol: unwrapList.bind(null, olRegExp),
     header: [
       null,
       unwrapBlock.bind(null, '# '.length),
@@ -277,16 +315,16 @@ const activities = {
     bold: wrapEmphasis.bind(null, '**'),
     italic: wrapEmphasis.bind(null, '_'),
     strikethrough: wrapEmphasis.bind(null, '~~'),
-    ul: wrapBlock.bind(null, [olRegExp, h1RegExp, h2RegExp, h3RegExp, h4RegExp, h5RegExp, h6RegExp], '* '),
-    ol: wrapBlock.bind(null, [ulRegExp, h1RegExp, h2RegExp, h3RegExp, h4RegExp, h5RegExp, h6RegExp], '1. '),
+    ul: wrapBlock.bind(null, MATCH_RULES.ul, '* '),
+    ol: wrapBlock.bind(null, MATCH_RULES.ol, '1. '),
     header: [
       null,
-      wrapBlock.bind(null, [olRegExp, ulRegExp, h2RegExp, h3RegExp, h4RegExp, h5RegExp, h6RegExp], '# '),
-      wrapBlock.bind(null, [olRegExp, ulRegExp, h1RegExp, h3RegExp, h4RegExp, h5RegExp, h6RegExp], '## '),
-      wrapBlock.bind(null, [olRegExp, ulRegExp, h1RegExp, h2RegExp, h4RegExp, h5RegExp, h6RegExp], '### '),
-      wrapBlock.bind(null, [olRegExp, ulRegExp, h1RegExp, h2RegExp, h3RegExp, h5RegExp, h6RegExp], '#### '),
-      wrapBlock.bind(null, [olRegExp, ulRegExp, h1RegExp, h2RegExp, h3RegExp, h4RegExp, h6RegExp], '##### '),
-      wrapBlock.bind(null, [olRegExp, ulRegExp, h1RegExp, h2RegExp, h3RegExp, h4RegExp, h5RegExp], '###### ')
+      wrapBlock.bind(null, MATCH_RULES.header[1], '# '),
+      wrapBlock.bind(null, MATCH_RULES.header[2], '## '),
+      wrapBlock.bind(null, MATCH_RULES.header[3], '### '),
+      wrapBlock.bind(null, MATCH_RULES.header[4], '#### '),
+      wrapBlock.bind(null, MATCH_RULES.header[5], '##### '),
+      wrapBlock.bind(null, MATCH_RULES.header[6], '###### ')
     ]
   }
 };
