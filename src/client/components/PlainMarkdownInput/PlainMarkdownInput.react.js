@@ -5,7 +5,6 @@ import classnames from 'classnames';
 import DropdownButton from 'react-bootstrap/lib/DropdownButton';
 import { Editor } from 'slate-react';
 import Plain from 'slate-plain-serializer';
-import _ from 'lodash';
 import schema from './slate/schema';
 import './PlainMarkdownInput.less';
 import { parse } from './slate/tokenizer';
