@@ -1,3 +1,113 @@
+## [v1.1.8](https://github.com/OpusCapita/react-markdown/compare/v1.1.7...v1.1.8) (Wed, 25 Oct 2017 13:51:09 GMT)
+ - Fix MarkdownInput bug using inside modal (Kirill Volkovich <kirill.volkovich@jcatalog.com>, a8a388d)
+ - Enhancement/buttons/#26 (#71)
+    
+    * buttons refactoring
+    
+    * Remove old files
+    
+    * Refactoring list buttons
+    
+    * Remove old files
+    
+    * Switch off of not used plug-ins
+    
+    * Remove not used plug-ins
+    
+    * Remove old code
+    
+    * Refactoring transforms.js
+    
+    * Refactoring ActionButton
+    
+    * Extract button's handlers to PlainMarkdownInput.react.js
+    
+    * Refactoring of SlateEditor.js
+    
+    * Refactoring of SlateEditor's component
+    
+    * Refactoring of SlateContent.js
+    
+    * Remove old code
+    
+    * Refactoring of transforms.js
+    
+    * Remove old code
+    
+    * Refactoring of PlainMarkdownInput.react.js handleKeyDown()
+    
+    * Remove old code
+    
+    * Add tests
+    
+    * Refactoring ObjectReferenceButton
+    
+    * Remove old code
+    
+    * Refactoring FullScreenButton
+    
+    * Remove old code
+    
+    * Tests for autocomplete plugin
+    
+    * Remove old code
+    
+    * Refactoring PlainMarkdownInput.react.js (Aleksandr Baliunov <abaliunov-sc@users.noreply.github.com>, 22e7330)
+ - Enhancement/internationalization/#66 (#68)
+    
+    * add translations.js
+    
+    * Add internationalization
+    
+    * Refactoring
+    
+    * Refactoring
+    
+    * Change DOCUMENTATION's files
+    
+    * Change Default locale (Aleksandr Baliunov <abaliunov-sc@users.noreply.github.com>, 8fc6608)
+ - Bug/tooltip/#61 (#67)
+    
+    * tmp commit
+    
+    * Fix bug autocomplete widget position, hide-show editor's scroll
+    
+    * Fix bug Widget's top < 0
+    
+    * Fix bug with autoScrollToTop
+    
+    * Fix bug with autocompleteWidget's scroll
+    
+    * Fix bug with autocomplete scroll
+    
+    * Fix bug in IE11
+    
+    * Fix bug with fullscreen button
+    
+    * Fix bug The tooltip is hidden
+    
+    * Refactoring
+    
+    * Change of conditions for updating PlainMarkdownInput instance (Aleksandr Baliunov <abaliunov-sc@users.noreply.github.com>, e1f0527)
+ - Bug/autocomplete 2/#58 (#64)
+    
+    * tmp commit
+    
+    * Fix bug autocomplete widget position, hide-show editor's scroll
+    
+    * Fix bug Widget's top < 0
+    
+    * Fix bug with autoScrollToTop
+    
+    * Fix bug with autocompleteWidget's scroll
+    
+    * Fix bug with autocomplete scroll
+    
+    * Fix bug in IE11
+    
+    * Add commentaries (Aleksandr Baliunov <abaliunov-sc@users.noreply.github.com>, d85481f)
+ - Remove unused "scripts/gh-pages/urlencode.sh" (Kirill Volkovich <kirill.volkovich@jcatalog.com>, eb1dd61)
+
 ## [v1.1.7](https://github.com/OpusCapita/react-markdown/compare/v1.1.6...v1.1.7) (Tue, 10 Oct 2017 14:10:42 GMT)
  - Fix bug with autoScrollToTop() (#65) (Aleksandr Baliunov <abaliunov-sc@users.noreply.github.com>, 184f30b)
 
