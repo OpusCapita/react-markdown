@@ -32,7 +32,7 @@ import {
   hasHeader,
   wrapHeader,
   unwrapHeader,
-  wrapLinkMarkdown,
+  wrapLink,
   hasMultiLineSelection
 } from './slate/transforms';
 
@@ -231,7 +231,7 @@ class PlainMarkdownInput extends React.Component {
 
   handleLinkButtonClick() {
     const state = this.state.editorState;
-    return this.handleChange(wrapLinkMarkdown(state));
+    return this.handleChange(wrapLink(state));
   }
 
   handleObjectReferenceButtonClick(extension) {
