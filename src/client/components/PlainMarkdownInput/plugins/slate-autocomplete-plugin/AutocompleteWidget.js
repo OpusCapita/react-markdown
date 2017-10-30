@@ -158,6 +158,7 @@ class AutocompleteWidget extends React.Component {
                   ${selectedIndex === index ? 'react-markdown--autocomplete-widget__item--active' : ''}
                 `}
                 title={itemLength > maxItemLength ? itemLabel : ''}
+                style={item.style}
               >
                 {itemLength > maxItemLength ? `${itemLabel.substr(0, maxItemLength)}…` : itemLabel}
               </div>
