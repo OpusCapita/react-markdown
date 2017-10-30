@@ -74,6 +74,24 @@ describe('plain editor transform', () => {
       expect(hasAccent(editorState, 'ul')).to.equal(true);
     });
 
+    it('Unordered Multiline Selection', () => {
+      const nodeText = '* List item 1\n* List item 2';
+      let component = (<PlainMarkdownInput
+        value={nodeText}
+        fullScreen={true}
+        readOnly={true}
+      />);
+
+      let wrapper = mount(component);
+      let editorState = wrapper.state('editorState');
+      let change = editorState.change();
+      change.selectAll();
+      let newState = change.state;
+
+      expect(hasAccent(newState, 'ul')).to.equal(true);
+      expect(hasAccent(newState, 'ol')).to.equal(false);
+    });
+
     it('Ordered', () => {
       const nodeText = '1. List item 1';
       let component = (<PlainMarkdownInput
@@ -116,6 +134,24 @@ describe('plain editor transform', () => {
       wrapper.setProps({ value: '    3) List Item 3' });
       editorState = wrapper.state('editorState');
       expect(hasAccent(editorState, 'ol')).to.equal(true);
+    });
+
+    it('Ordered Multiline Selection', () => {
+      const nodeText = '1. List item 1\n2. List item 2';
+      let component = (<PlainMarkdownInput
+        value={nodeText}
+        fullScreen={true}
+        readOnly={true}
+      />);
+
+      let wrapper = mount(component);
+      let editorState = wrapper.state('editorState');
+      let change = editorState.change();
+      change.selectAll();
+      let newState = change.state;
+
+      expect(hasAccent(newState, 'ul')).to.equal(false);
+      expect(hasAccent(newState, 'ol')).to.equal(true);
     });
   });
 
@@ -2197,6 +2233,116 @@ describe('plain editor transform', () => {
   });
 
   describe('Wrap-unwrap lists', () => {
+    it('unwrap', () => {
+      let component = (<PlainMarkdownInput
+        value=""
+        fullScreen={true}
+        readOnly={true}
+      />);
+
+      let wrapper = shallow(component);
+
+      let items = [
+        '1. Item 1',
+        '1) Item 1',
+        '  1. Item 1',
+        '  1) Item 1',
+        '    1. Item 1',
+        '    1) Item 1',
+      ];
+
+      for (let i = 0; i < items.length; i++) {
+        wrapper.setProps({ value: items[i] });
+        let editorState = wrapper.state('editorState');
+        let change = editorState.change();
+        let newState = unwrapAccent(change.state, 'ol');
+        expect(Plain.serialize(newState)).to.equal('Item 1');
+      }
+
+      items = [
+        '* Item 1',
+        '+ Item 1',
+        '- Item 1',
+        '  * Item 1',
+        '  + Item 1',
+        '  - Item 1',
+        '    * Item 1',
+        '    + Item 1',
+        '    - Item 1',
+      ];
+
+      for (let i = 0; i < items.length; i++) {
+        wrapper.setProps({ value: items[i] });
+        let editorState = wrapper.state('editorState');
+        let change = editorState.change();
+        let newState = unwrapAccent(change.state, 'ul');
+        expect(Plain.serialize(newState)).to.equal('Item 1');
+      }
+    });
+
+    it('unwrap multiline lists', () => {
+      let lists = [
+        `1. Item 1
+2. Item 2
+3. Item 3
+4. Item 4
+5. Item 5`,
+        `1) Item 1
+2) Item 2
+3) Item 3
+4) Item 4
+5) Item 5`,
+        `1. Item 1
+  2) Item 2
+3. Item 3
+  4) Item 4
+  5) Item 5`,
+      ];
+      let pattern = `Item 1
+Item 2
+Item 3
+Item 4
+Item 5`;
+      let component = (<PlainMarkdownInput
+        value=""
+        fullScreen={true}
+        readOnly={true}
+      />);
+
+      let wrapper = shallow(component);
+
+      for (let i = 0; i < lists.length; i++) {
+        wrapper.setProps({ value: lists[i] });
+        let editorState = wrapper.state('editorState');
+        let change = editorState.change();
+        change.selectAll();
+        let newState = unwrapAccent(change.state, 'ol');
+        expect(Plain.serialize(newState)).to.equal(pattern);
+      }
+
+      lists = [
+        `+ Item 1
++ Item 2
+- Item 3
+- Item 4
+* Item 5`,
+        `+ Item 1
+  - Item 2
++ Item 3
+  - Item 4
+  * Item 5`,
+      ];
+
+      for (let i = 0; i < lists.length; i++) {
+        wrapper.setProps({ value: lists[i] });
+        let editorState = wrapper.state('editorState');
+        let change = editorState.change();
+        change.selectAll();
+        let newState = unwrapAccent(change.state, 'ul');
+        expect(Plain.serialize(newState)).to.equal(pattern);
+      }
+    });
+
     it('Wrap-unwrap', () => {
       let nodeText = 'Item';
       let component = (<PlainMarkdownInput

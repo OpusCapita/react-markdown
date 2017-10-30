@@ -9,8 +9,8 @@ const h5RegExp = /^#####\s/;
 const h6RegExp = /^######\s/;
 
 const MATCH_SINGLE_RULE = {
-  'list': ulRegExp,
-  'ordered-list': olRegExp,
+  ul: ulRegExp,
+  ol: olRegExp,
 };
 
 const MATCH_RULES = {
@@ -75,6 +75,21 @@ function unwrapBlock(removedLength, state) {
 }
 
 /**
+ * Unwrap block
+ *
+ * @param removedLength - first length should be removed
+ * @param change - editor change
+ * @returns {Object} - change
+ */
+const unwrapBlockForChange = function(removedLength, change) {
+  const { startOffset, endOffset } = change.state;
+  const startPos = Math.max(startOffset - removedLength, 0);
+  const endPos = Math.max(endOffset - removedLength, 0);
+  change.moveOffsetsTo(0).deleteForward(removedLength).moveOffsetsTo(startPos, endPos).focus();
+  return change;
+};
+
+/**
  * Wrap block
  *
  * @param matchRules - list of regexp
@@ -125,11 +140,12 @@ function hasMarkOnChar(character, mark) {
  *
  * @param {string} type - list type
  * @param {Object} state - editor state
+ * @param {number} numLine
  */
-function hasListLine(type, state) {
+function hasListLine(type, state, numLine = 0) {
   let { texts } = state;
   if (texts.get(0).charsData) {
-    let characters = texts.get(0).charsData.characters;
+    let characters = texts.get(numLine).charsData.characters;
     if (characters.size > 0) {
       let character = characters.get(0);
       return hasMarkOnChar(character, type);
@@ -147,7 +163,7 @@ function hasListLine(type, state) {
 function hasList(type, state) {
   if (hasMultiLineSelection(state)) {
     for (let i = 0; i < state.texts.size; i++) {
-      if (!MATCH_SINGLE_RULE[type].test(state.texts.get(i).text)) {
+      if (!hasListLine(type, state, i)) {
         return false;
       }
     }
@@ -509,20 +525,159 @@ function unwrapEmphasis(accent, state) {
   }
 }
 
+// /**
+//  * Unwrap line with OL markdown token
+//  *
+//  * @param state - editor state
+//  * @returns {Object} - state
+//  */
+// export const unwrapOrderedListLine = state => {
+//   const { focusText } = state;
+//   const focusedText = focusText.text;
+//   const result = olRegExp.exec(focusedText);
+//   const length = result[0].length;
+//   return unwrapBlock(length, state);
+// };
+
 /**
- * Unwrap text with OL markdown token
+ * Unwrap line with OL markdown token
  *
- * @param {RegExp} regExp
+ * @param {string} accent
  * @param state - editor state
- * @returns {Object} - editor state
+ * @returns {Object} - state
  */
-function unwrapList(regExp, state) {
+export const unwrapListLine = (accent, state) => {
   const { focusText } = state;
   const focusedText = focusText.text;
-  const result = regExp.exec(focusedText);
-  const length = result[0].length;
-  return unwrapBlock(length, state);
-}
+  const result = MATCH_SINGLE_RULE[accent].exec(focusedText);
+  if (result) {
+    const length = result[0].length;
+    return unwrapBlock(length, state);
+  }
+  return state;
+};
+
+// /**
+//  * Unwrap line with OL markdown token
+//  *
+//  * @param change - editor change
+//  * @returns {Object} - change
+//  */
+// export const unwrapOrderedListLineForChange = change => {
+//   const { focusText } = change.state;
+//   const focusedText = focusText.text;
+//   const result = olRegExp.exec(focusedText);
+//   const length = result[0].length;
+//   return unwrapBlockForChange(length, change);
+// };
+
+/**
+ * Unwrap line with OL markdown token
+ *
+ * @param {string} accent
+ * @param change - editor change
+ * @returns {Object} - change
+ */
+export const unwrapListLineForChange = (accent, change) => {
+  const { focusText } = change.state;
+  const focusedText = focusText.text;
+  const result = MATCH_SINGLE_RULE[accent].exec(focusedText);
+  if (result) {
+    const length = result[0].length;
+    return unwrapBlockForChange(length, change);
+  }
+  return change;
+};
+
+const unwrapListCallbacks = {
+  ul: unwrapListLine.bind(null, 'ul'),
+  ol: unwrapListLine.bind(null, 'ol')
+  // ul: unwrapBlock.bind(null, 2),
+  // ol: unwrapOrderedListLine
+};
+
+const unwrapListCallbacksForChange = {
+  ul: unwrapListLineForChange.bind(null, 'ul'),
+  ol: unwrapListLineForChange.bind(null, 'ol')
+  // ul: unwrapBlockForChange.bind(null, 2),
+  // ol: unwrapOrderedListLineForChange
+};
+
+// /**
+//  * Unwrap text with OL markdown token
+//  *
+//  * @param {RegExp} regExp
+//  * @param state - editor state
+//  * @returns {Object} - editor state
+//  */
+// function unwrapList(regExp, state) {
+//   const { focusText } = state;
+//   const focusedText = focusText.text;
+//   const result = regExp.exec(focusedText);
+//   const length = result[0].length;
+//   return unwrapBlock(length, state);
+// }
+
+/**
+ * Unwrap text with list token
+ *
+ * @param {string} accent
+ * @param state - editor state
+ * @returns {Object} - state
+ */
+const unwrapList = function(accent, state) {
+  if (hasMultiLineSelection(state)) {
+    let {
+      anchorKey,
+      anchorOffset,
+      focusKey,
+      focusOffset,
+      isBackward
+    } = state.selection;
+    let keys = [];
+    let firstBefore, firstAfter, lastBefore, lastAfter;
+    for (let i = 0; i < state.texts.size; i++) {
+      keys.push(state.texts.get(i).key);
+    }
+
+    let change = state.change();
+    let keysLength = keys.length;
+    let lastNum = keysLength - 1;
+    for (let i = 0; i < keysLength; i++) {
+      change.select({
+        anchorKey: keys[i],
+        anchorOffset: 0,
+        focusKey: keys[i],
+        focusOffset: 0,
+        isFocused: true,
+        isBackward: false,
+      });
+      if (i === 0) {
+        firstBefore = change.state.texts.get(0).text.length;
+      } else if (i === lastNum) {
+        lastBefore = change.state.texts.get(0).text.length;
+      }
+      change = unwrapListCallbacksForChange[accent](change);
+      if (i === 0) {
+        firstAfter = change.state.texts.get(0).text.length;
+      } else if (i === lastNum) {
+        lastAfter = change.state.texts.get(0).text.length;
+      }
+    }
+    change.select({
+      anchorKey,
+      anchorOffset: anchorOffset - firstBefore + firstAfter,
+      focusKey,
+      focusOffset: focusOffset - lastBefore + lastAfter,
+      isFocused: true,
+      isBackward
+    });
+
+    return change.state;
+  } else {
+    return unwrapListCallbacks[accent](state);
+  }
+};
 
 /**
  * Wrap text with link markdown tokens
@@ -564,8 +719,10 @@ const activities = {
     bold: unwrapEmphasis.bind(null, 'bold'),
     italic: unwrapEmphasis.bind(null, 'italic'),
     strikethrough: unwrapEmphasis.bind(null, 'strikethrough'),
-    ul: unwrapList.bind(null, ulRegExp),
-    ol: unwrapList.bind(null, olRegExp),
+    ul: unwrapList.bind(null, 'ul'),
+    ol: unwrapList.bind(null, 'ol'),
+    // ul: unwrapList.bind(null, ulRegExp),
+    // ol: unwrapList.bind(null, olRegExp),
     header: [
       null,
       unwrapBlock.bind(null, '# '.length),
