@@ -525,20 +525,6 @@ function unwrapEmphasis(accent, state) {
   }
 }
 
-// /**
-//  * Unwrap line with OL markdown token
-//  *
-//  * @param state - editor state
-//  * @returns {Object} - state
-//  */
-// export const unwrapOrderedListLine = state => {
-//   const { focusText } = state;
-//   const focusedText = focusText.text;
-//   const result = olRegExp.exec(focusedText);
-//   const length = result[0].length;
-//   return unwrapBlock(length, state);
-// };
-
 /**
  * Unwrap line with OL markdown token
  *
@@ -556,20 +542,6 @@ export const unwrapListLine = (accent, state) => {
   }
   return state;
 };
-
-// /**
-//  * Unwrap line with OL markdown token
-//  *
-//  * @param change - editor change
-//  * @returns {Object} - change
-//  */
-// export const unwrapOrderedListLineForChange = change => {
-//   const { focusText } = change.state;
-//   const focusedText = focusText.text;
-//   const result = olRegExp.exec(focusedText);
-//   const length = result[0].length;
-//   return unwrapBlockForChange(length, change);
-// };
 
 /**
  * Unwrap line with OL markdown token
@@ -592,31 +564,12 @@ export const unwrapListLineForChange = (accent, change) => {
 const unwrapListCallbacks = {
   ul: unwrapListLine.bind(null, 'ul'),
   ol: unwrapListLine.bind(null, 'ol')
-  // ul: unwrapBlock.bind(null, 2),
-  // ol: unwrapOrderedListLine
 };
 
 const unwrapListCallbacksForChange = {
   ul: unwrapListLineForChange.bind(null, 'ul'),
   ol: unwrapListLineForChange.bind(null, 'ol')
-  // ul: unwrapBlockForChange.bind(null, 2),
-  // ol: unwrapOrderedListLineForChange
 };
-
-// /**
-//  * Unwrap text with OL markdown token
-//  *
-//  * @param {RegExp} regExp
-//  * @param state - editor state
-//  * @returns {Object} - editor state
-//  */
-// function unwrapList(regExp, state) {
-//   const { focusText } = state;
-//   const focusedText = focusText.text;
-//   const result = regExp.exec(focusedText);
-//   const length = result[0].length;
-//   return unwrapBlock(length, state);
-// }
 
 /**
  * Unwrap text with list token
