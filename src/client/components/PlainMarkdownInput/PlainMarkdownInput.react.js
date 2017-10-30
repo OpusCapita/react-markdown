@@ -305,7 +305,8 @@ class PlainMarkdownInput extends React.Component {
               <ActionButton
                 key={ind}
                 onClick={this.handleActionButtonClick}
-                disabled={disabled}
+                disabled={readOnly}
+                // disabled={disabled}
                 locale={locale}
                 accent={accent}
                 active={hasAccent(editorState, accent)}

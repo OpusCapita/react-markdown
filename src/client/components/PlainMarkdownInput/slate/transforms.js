@@ -8,6 +8,11 @@ const h4RegExp = /^####\s/;
 const h5RegExp = /^#####\s/;
 const h6RegExp = /^######\s/;
 
+const MATCH_SINGLE_RULE = {
+  'list': ulRegExp,
+  'ordered-list': olRegExp,
+};
+
 const MATCH_RULES = {
   ul: [olRegExp, h1RegExp, h2RegExp, h3RegExp, h4RegExp, h5RegExp, h6RegExp],
   ol: [ulRegExp, h1RegExp, h2RegExp, h3RegExp, h4RegExp, h5RegExp, h6RegExp],
@@ -18,7 +23,7 @@ const MATCH_RULES = {
     [olRegExp, ulRegExp, h1RegExp, h2RegExp, h4RegExp, h5RegExp, h6RegExp],
     [olRegExp, ulRegExp, h1RegExp, h2RegExp, h3RegExp, h5RegExp, h6RegExp],
     [olRegExp, ulRegExp, h1RegExp, h2RegExp, h3RegExp, h4RegExp, h6RegExp],
-    [olRegExp, ulRegExp, h1RegExp, h2RegExp, h3RegExp, h4RegExp, h5RegExp]
+    [olRegExp, ulRegExp, h1RegExp, h2RegExp, h3RegExp, h4RegExp, h5RegExp],
   ]
 };
 
@@ -33,6 +38,14 @@ const EMPHASIS_ALL = {
   italic: ['_', '*'],
   strikethrough: ['~~'],
 };
+
+/**
+ * Check is the current state selected as multi line
+ *
+ * @param startKey - start selection key in current editor state
+ * @param endKey - end selection key in current editor state
+ */
+export const hasMultiLineSelection = ({ selection: { startKey, endKey } }) => startKey !== endKey;
 
 /**
  * Has block selected
@@ -108,12 +121,12 @@ function hasMarkOnChar(character, mark) {
 }
 
 /**
- * Has block selected
+ * Has list selected
  *
  * @param {string} type - list type
  * @param {Object} state - editor state
  */
-function hasList(type, state) {
+function hasListLine(type, state) {
   let { texts } = state;
   if (texts.get(0).charsData) {
     let characters = texts.get(0).charsData.characters;
@@ -123,6 +136,25 @@ function hasList(type, state) {
     }
   }
   return false;
+}
+
+/**
+ * Has list selected
+ *
+ * @param {string} type - list type
+ * @param {Object} state - editor state
+ */
+function hasList(type, state) {
+  if (hasMultiLineSelection(state)) {
+    for (let i = 0; i < state.texts.size; i++) {
+      if (!MATCH_SINGLE_RULE[type].test(state.texts.get(i).text)) {
+        return false;
+      }
+    }
+    return true;
+  } else {
+    return hasListLine(type, state)
+  }
 }
 
 /**
@@ -510,14 +542,6 @@ export const wrapLinkMarkdown = state => {
   change.focus();
   return change.state;
 };
-
-/**
- * Check is the current state selected as multi line
- *
- * @param startKey - start selection key in current editor state
- * @param endKey - end selection key in current editor state
- */
-export const hasMultiLineSelection = ({ selection: { startKey, endKey } }) => startKey !== endKey;
 
 const activities = {
   has: {
