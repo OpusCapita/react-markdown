@@ -213,7 +213,9 @@ function delInternalMarkers({ change, focusKey, characters, accent, startPos, en
 
 function delInternalMarkersBind({ change, focusKey, characters, accent }) {
   return function({ startPos, endPos }) {
-    return delInternalMarkers({ change, focusKey, characters, accent, startPos, endPos });
+    return delInternalMarkers({
+      change, focusKey, characters, accent, startPos, endPos
+    });
   }
 }
 
@@ -605,14 +607,15 @@ const wrapList = function(accent, state) {
     let keysLength = keys.length;
     let lastNum = keysLength - 1;
     for (let i = 0; i < keysLength; i++) {
-      change.select({
-        anchorKey: keys[i],
-        anchorOffset: 0,
-        focusKey: keys[i],
-        focusOffset: 0,
-        isFocused: true,
-        isBackward: false,
-      });
+      moveSelectionToLine(change, keys[i]);
+      // change.select({
+      //   anchorKey: keys[i],
+      //   anchorOffset: 0,
+      //   focusKey: keys[i],
+      //   focusOffset: 0,
+      //   isFocused: true,
+      //   isBackward: false,
+      // });
       if (i === 0) {
         firstBefore = change.state.texts.get(0).text.length;
       } else if (i === lastNum) {
@@ -696,6 +699,17 @@ const unwrapListCallbacksForChange = {
   ol: unwrapListLineForChange.bind(null, 'ol')
 };
 
+function moveSelectionToLine(change, key) {
+  change.select({
+    anchorKey: key,
+    anchorOffset: 0,
+    focusKey: key,
+    focusOffset: 0,
+    isFocused: true,
+    isBackward: false,
+  });
+}
+
 /**
  * Unwrap text with list token
  *
@@ -722,14 +736,15 @@ const unwrapList = function(accent, state) {
     let keysLength = keys.length;
     let lastNum = keysLength - 1;
     for (let i = 0; i < keysLength; i++) {
-      change.select({
-        anchorKey: keys[i],
-        anchorOffset: 0,
-        focusKey: keys[i],
-        focusOffset: 0,
-        isFocused: true,
-        isBackward: false,
-      });
+      moveSelectionToLine(change, keys[i]);
+      // change.select({
+      //   anchorKey: keys[i],
+      //   anchorOffset: 0,
+      //   focusKey: keys[i],
+      //   focusOffset: 0,
+      //   isFocused: true,
+      //   isBackward: false,
+      // });
       if (i === 0) {
         firstBefore = change.state.texts.get(0).text.length;
       } else if (i === lastNum) {
