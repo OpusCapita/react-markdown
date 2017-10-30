@@ -478,21 +478,6 @@ const wrapBlockForChange = function(matchRules, text, change) {
  * Unwrap block
  *
  * @param removedLength - first length should be removed
- * @param state - editor state
- */
-function unwrapBlock(removedLength, state) {
-  const { startOffset, endOffset } = state;
-  const change = state.change();
-  const startPos = Math.max(startOffset - removedLength, 0);
-  const endPos = Math.max(endOffset - removedLength, 0);
-  change.moveOffsetsTo(0).deleteForward(removedLength).moveOffsetsTo(startPos, endPos).focus();
-  return change.state;
-}
-
-/**
- * Unwrap block
- *
- * @param removedLength - first length should be removed
  * @param change - editor change
  * @returns {Object} - change
  */
@@ -500,9 +485,22 @@ const unwrapBlockForChange = function(removedLength, change) {
   const { startOffset, endOffset } = change.state;
   const startPos = Math.max(startOffset - removedLength, 0);
   const endPos = Math.max(endOffset - removedLength, 0);
-  change.moveOffsetsTo(0).deleteForward(removedLength).moveOffsetsTo(startPos, endPos).focus();
+  change.moveOffsetsTo(0).deleteForward(removedLength).
+  moveOffsetsTo(startPos, endPos).focus();
   return change;
 };
+
+/**
+ * Unwrap block
+ *
+ * @param removedLength - first length should be removed
+ * @param state - editor state
+ */
+function unwrapBlock(removedLength, state) {
+  let change = state.change();
+  change = unwrapBlockForChange(removedLength, change);
+  return change.state;
+}
 
 /**
  * Has list selected
@@ -560,6 +558,10 @@ const getOlNum = function(text) {
   return false;
 };
 
+function getTextLength(change) {
+  return change.state.texts.get(0).text.length;
+}
+
 /**
  * Wrap text with list token
  *
@@ -608,34 +610,26 @@ const wrapList = function(accent, state) {
     let lastNum = keysLength - 1;
     for (let i = 0; i < keysLength; i++) {
       moveSelectionToLine(change, keys[i]);
-      // change.select({
-      //   anchorKey: keys[i],
-      //   anchorOffset: 0,
-      //   focusKey: keys[i],
-      //   focusOffset: 0,
-      //   isFocused: true,
-      //   isBackward: false,
-      // });
       if (i === 0) {
-        firstBefore = change.state.texts.get(0).text.length;
+        firstBefore = getTextLength(change);
       } else if (i === lastNum) {
-        lastBefore = change.state.texts.get(0).text.length;
+        lastBefore = getTextLength(change);
       }
       itemNum++;
       if (!hasBlock(MATCH_SINGLE_RULE[accent], change.state)) {
         text = accent === 'ul' ? text : `${itemNum}. `;
         change = wrapBlockForChange(MATCH_RULES[accent], text, change);// eslint-disable-line
         if (i === 0) {
-          firstAfter = change.state.texts.get(0).text.length;
+          firstAfter = getTextLength(change);
         } else if (i === lastNum) {
-          lastAfter = change.state.texts.get(0).text.length;
+          lastAfter = getTextLength(change);
         }
-      } else {
-        if (i === 0) {
-          firstAfter = firstBefore;
-        } else if (i === lastNum) {
-          lastAfter = lastBefore;
-        }
+        continue;
+      }
+      if (i === 0) {
+        firstAfter = firstBefore;
+      } else if (i === lastNum) {
+        lastAfter = lastBefore;
       }
     }
     change.select({
@@ -657,24 +651,6 @@ const wrapList = function(accent, state) {
  * Unwrap line with OL markdown token
  *
  * @param {string} accent
- * @param state - editor state
- * @returns {Object} - state
- */
-export const unwrapListLine = (accent, state) => {
-  const { focusText } = state;
-  const focusedText = focusText.text;
-  const result = MATCH_SINGLE_RULE[accent].exec(focusedText);
-  if (result) {
-    const length = result[0].length;
-    return unwrapBlock(length, state);
-  }
-  return state;
-};
-
-/**
- * Unwrap line with OL markdown token
- *
- * @param {string} accent
  * @param change - editor change
  * @returns {Object} - change
  */
@@ -687,6 +663,18 @@ export const unwrapListLineForChange = (accent, change) => {
     return unwrapBlockForChange(length, change);
   }
   return change;
+};
+
+/**
+ * Unwrap line with OL markdown token
+ *
+ * @param {string} accent
+ * @param state - editor state
+ * @returns {Object} - state
+ */
+export const unwrapListLine = (accent, state) => {
+  const change = unwrapListLineForChange(accent, state.change());
+  return change.state;
 };
 
 const unwrapListCallbacks = {
@@ -737,24 +725,16 @@ const unwrapList = function(accent, state) {
     let lastNum = keysLength - 1;
     for (let i = 0; i < keysLength; i++) {
       moveSelectionToLine(change, keys[i]);
-      // change.select({
-      //   anchorKey: keys[i],
-      //   anchorOffset: 0,
-      //   focusKey: keys[i],
-      //   focusOffset: 0,
-      //   isFocused: true,
-      //   isBackward: false,
-      // });
       if (i === 0) {
-        firstBefore = change.state.texts.get(0).text.length;
+        firstBefore = getTextLength(change);
       } else if (i === lastNum) {
-        lastBefore = change.state.texts.get(0).text.length;
+        lastBefore = getTextLength(change);
       }
       change = unwrapListCallbacksForChange[accent](change);
       if (i === 0) {
-        firstAfter = change.state.texts.get(0).text.length;
+        firstAfter = getTextLength(change);
       } else if (i === lastNum) {
-        lastAfter = change.state.texts.get(0).text.length;
+        lastAfter = getTextLength(change);
       }
     }
     change.select({
@@ -814,8 +794,6 @@ const activities = {
     strikethrough: unwrapEmphasis.bind(null, 'strikethrough'),
     ul: unwrapList.bind(null, 'ul'),
     ol: unwrapList.bind(null, 'ol'),
-    // ul: unwrapList.bind(null, ulRegExp),
-    // ol: unwrapList.bind(null, olRegExp),
     header: [
       null,
       unwrapBlock.bind(null, '# '.length),
@@ -832,8 +810,6 @@ const activities = {
     strikethrough: wrapEmphasis.bind(null, 'strikethrough'),
     ul: wrapList.bind(null, 'ul'),
     ol: wrapList.bind(null, 'ol'),
-    // ul: wrapBlock.bind(null, MATCH_RULES.ul, '* '),
-    // ol: wrapBlock.bind(null, MATCH_RULES.ol, '1. '),
     header: [
       null,
       wrapBlock.bind(null, MATCH_RULES.header[1], '# '),
