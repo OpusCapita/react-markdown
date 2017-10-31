@@ -1,3 +1,18 @@
+## [v1.1.9](https://github.com/OpusCapita/react-markdown/compare/v1.1.8...v1.1.9) (Tue, 31 Oct 2017 10:23:16 GMT)
+ - Merge pull request #76 from OpusCapita/1.1.8-DEV.PIM-12254.3
+    
+    Added the first priority to autocomplete active item colors. (3ebf86f fa32009, 94bf74a)
+ - Added first priority to autocomplete active item colors. (Helen Valkova <valkova@scand.com>, fa32009)
+ - Merge pull request #74 from OpusCapita/1.1.8-DEV.PIM-12254
+    
+    Added style for autocomplete widget item. (fbef7f8 267ec4a, 3ebf86f)
+ - Merge pull request #75 from OpusCapita/1.1.8-DEV.PIM-12254.2
+    
+    Changed active autocomplete item color. (4d97e61 dc793ab, fbef7f8)
+ - (PIM-12254) Changed active autocomplete item color. (Helen Valkova <valkova@scand.com>, dc793ab)
+ - Added style for autocomplete widget item. (Helen Valkova <valkova@scand.com>, 267ec4a)
+ - Fix lint (Kirill Volkovich <kirill.volkovich@jcatalog.com>, 4d97e61)
+
 ## [v1.1.8](https://github.com/OpusCapita/react-markdown/compare/v1.1.7...v1.1.8) (Wed, 25 Oct 2017 13:51:09 GMT)
  - Fix MarkdownInput bug using inside modal (Kirill Volkovich <kirill.volkovich@jcatalog.com>, a8a388d)
  - Enhancement/buttons/#26 (#71)
