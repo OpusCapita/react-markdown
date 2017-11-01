@@ -33,7 +33,9 @@ import {
   wrapHeader,
   unwrapHeader,
   wrapLink,
-  hasMultiLineSelection
+  hasMultiLineSelection,
+  getOlNum,
+  getUlMarker
 } from './slate/transforms';
 
 const ACCENTS = {
@@ -131,7 +133,6 @@ class PlainMarkdownInput extends React.Component {
     // XXX Slate "Editor.props.onChange" behavior changed
     // https://github.com/ianstormtaylor/slate/blob/master/packages/slate/Changelog.md#0220--september-5-2017
     let editorState = obj.state || obj;
-
     let numBlock = -1;
     let key = editorState.blocks.get(0).key;
     let nodesSize = editorState.document.nodes.size;
@@ -173,9 +174,37 @@ class PlainMarkdownInput extends React.Component {
     this.props.onFullScreen(fullScreen);
   };
 
-  _toggleAccent(state, accent) {
+  toggleAccent(state, accent) {
     const active = hasAccent(state, accent);
     return this.handleChange(active ? unwrapAccent(state, accent) : wrapAccent(state, accent), true);
+  }
+
+  handleEnterFromListDown(change, accent) { // eslint-disable-line
+    let lineText = change.state.texts.get(0).text;
+    let text, listMarker, pref, itemNum, div;
+    if (accent === 'ul') {
+      listMarker = getUlMarker(lineText);
+      if (listMarker) {
+        text = listMarker;
+      } else {
+        text = '* ';
+      }
+    } else {
+      ({ pref, itemNum, div, listMarker } = getOlNum(lineText));
+      text = `${pref}${++itemNum}${div} `;
+    }
+
+    if (lineText.trim() === listMarker.trim()) {
+      change.moveStart(-text.length).delete();
+      return this.handleChange(change.state);
+    }
+
+    setTimeout(() => {
+      const { editorState } = this.state;
+      change = editorState.change(); // eslint-disable-line
+      change.insertText(text);
+      this.handleChange(change.state);
+    }, 5);
   }
 
   handleKeyDown(event, data, change) {
@@ -183,7 +212,16 @@ class PlainMarkdownInput extends React.Component {
       if (data.key === 's') {
         event.preventDefault();
       }
-      return this._toggleAccent(change.state, ACCENTS[data.key]);
+      return this.toggleAccent(change.state, ACCENTS[data.key]);
+    }
+
+    if (data.key === 'enter') {
+      let state = change.state;
+      if (hasAccent(state, 'ul')) {
+        return this.handleEnterFromListDown(change, 'ul');
+      } else if (hasAccent(state, 'ol')) {
+        return this.handleEnterFromListDown(change, 'ol');
+      }
     }
 
     return undefined;
@@ -220,7 +258,7 @@ class PlainMarkdownInput extends React.Component {
 
   handleActionButtonClick(accent) {
     const state = this.state.editorState;
-    return this._toggleAccent(state, accent);
+    return this.toggleAccent(state, accent);
   }
 
   handleHeaderButtonClick(level) {

@@ -902,6 +902,20 @@ describe('plain editor transform', () => {
         newState = wrapAccent(change.state, 'bold');
         expect(Plain.serialize(newState)).to.equal('__bold text bold__');
 
+        wrapper.setProps({ value: `__bold__ text **bold**
+new line` });
+        editorState = wrapper.state('editorState');
+        change = editorState.change();
+        change.moveOffsetsTo('__bold__'.length, '__bold__ text **bold**'.length);
+        newState = wrapAccent(change.state, 'bold');
+        expect(Plain.serialize(newState)).to.equal(`__bold text bold__
+new line`);
+
+        change.moveOffsetsTo(0, '__bold__ text **bold**'.length);
+        newState = wrapAccent(change.state, 'bold');
+        expect(Plain.serialize(newState)).to.equal(`__bold text bold__
+new line`);
+
         wrapper.setProps({ value: '**bold** text **bold**' });
         editorState = wrapper.state('editorState');
         change = editorState.change();
@@ -2316,6 +2330,28 @@ Item 5`,
 3. Item 3
 4. Item 4
 5. Item 5`;
+
+      for (let i = 0; i < lists.length; i++) {
+        wrapper.setProps({ value: lists[i] });
+        let editorState = wrapper.state('editorState');
+        let change = editorState.change();
+        change.selectAll();
+        let newState = wrapAccent(change.state, 'ol');
+        expect(Plain.serialize(newState)).to.equal(pattern);
+      }
+
+      lists = [
+        `3. Item 1
++ Item 2
+- Item 3
+- Item 4
+* Item 5`,
+      ];
+      pattern = `3. Item 1
+4. Item 2
+5. Item 3
+6. Item 4
+7. Item 5`;
 
       for (let i = 0; i < lists.length; i++) {
         wrapper.setProps({ value: lists[i] });

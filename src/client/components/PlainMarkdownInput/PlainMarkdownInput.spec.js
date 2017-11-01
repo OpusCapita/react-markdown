@@ -292,7 +292,7 @@ describe('<PlainMarkdownInput />', () => {
     });
   });
 
-  describe('_toggleAccent(state, accent)', () => {
+  describe('toggleAccent(state, accent)', () => {
     it.skip('strikethrough', () => {
       let nodeText = '~~strikethrough text~~';
       let component = (<PlainMarkdownInput
@@ -308,7 +308,7 @@ describe('<PlainMarkdownInput />', () => {
       editorState = change.state;
       let wrapperInstance = wrapper.instance();
       wrapperInstance.setState = sinon.spy();
-      wrapperInstance._toggleAccent(editorState, 'strikethrough');
+      wrapperInstance.toggleAccent(editorState, 'strikethrough');
       expect(wrapperInstance.setState.callCount).to.equal(1);
       let newState = wrapperInstance.setState.getCall(0).args[0];
       expect(Plain.serialize(newState.editorState)).to.equal('strikethrough text');
@@ -327,7 +327,7 @@ describe('<PlainMarkdownInput />', () => {
       editorState = change.state;
       wrapperInstance = wrapper.instance();
       wrapperInstance.setState = sinon.spy();
-      wrapperInstance._toggleAccent(editorState, 'strikethrough');
+      wrapperInstance.toggleAccent(editorState, 'strikethrough');
       expect(wrapperInstance.setState.callCount).to.equal(1);
       newState = wrapperInstance.setState.getCall(0).args[0];
       expect(Plain.serialize(newState.editorState)).to.equal('~~strikethrough text~~');

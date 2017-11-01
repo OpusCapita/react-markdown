@@ -1,5 +1,5 @@
 // common reg expressions
-const olRegExp = /^\s*[0-9]+(\.|\))\s/;
+const olRegExp = /^(\s*)([0-9]+)(\.|\))\s/;
 const ulRegExp = /^\s*(\*|\+|-)\s/;
 const h1RegExp = /^#\s/;
 const h2RegExp = /^##\s/;
@@ -14,8 +14,8 @@ const MATCH_SINGLE_RULE = {
 };
 
 const MATCH_RULES = {
-  ul: [olRegExp, h1RegExp, h2RegExp, h3RegExp, h4RegExp, h5RegExp, h6RegExp],
-  ol: [ulRegExp, h1RegExp, h2RegExp, h3RegExp, h4RegExp, h5RegExp, h6RegExp],
+  ul: [olRegExp, ulRegExp, h1RegExp, h2RegExp, h3RegExp, h4RegExp, h5RegExp, h6RegExp],
+  ol: [olRegExp, ulRegExp, h1RegExp, h2RegExp, h3RegExp, h4RegExp, h5RegExp, h6RegExp],
   header: [
     null,
     [olRegExp, ulRegExp, h2RegExp, h3RegExp, h4RegExp, h5RegExp, h6RegExp],
@@ -55,7 +55,7 @@ export const hasMultiLineSelection = ({ selection: { startKey, endKey } }) => st
  * @returns {boolean}
  */
 function hasMarkOnChar(character, mark) {
-  let arrChars = Array.from(character.marks);
+  let arrChars = character.marks.toJS();
   let marksSize = arrChars.length;
   for (let i = 0; i < marksSize; i++) {
     if (arrChars[i].type === mark) {
@@ -233,7 +233,7 @@ function delInternalMarkersBind({ change, focusKey, characters, accent }) {
  */
 function unionEmphasis({ change, focusKey, characters, accent, text, startOffset, endOffset, markerLength }) {
   let leftEmphEdge = getLeftEmphEdge(accent, characters, startOffset);
-  let rightEmphEdge = getRightEmphEdge(accent, characters, endOffset, text.length);
+  let rightEmphEdge = getRightEmphEdge(accent, characters, endOffset - 1, text.length);
   let leftMarker = text.substr(leftEmphEdge, markerLength);
   let rightMarkerPos = rightEmphEdge - markerLength;
   let rightMarker = text.substr(rightMarkerPos, markerLength);
@@ -298,9 +298,9 @@ function wrapEmphasis(accent, state) {
       }
     } else {
       if (hasRightOnEmphasis) {
-        // #4 right edge on emphasis, left edge beyond markers
-        let rightEmphEdge = getRightEmphEdge(accent, characters, endOffset, text.length - markerLength + 1);
-        let rightMarker = text.substr(rightEmphEdge, markerLength);
+        // #4 left edge beyond markers, right edge on emphasis
+        let rightEmphEdge = getRightEmphEdge(accent, characters, endOffset - 1, text.length);
+        let rightMarker = text.substr(rightEmphEdge - markerLength + 1, markerLength);
         delMarkers({ startPos: startOffset, endPos: rightEmphEdge });
         change.insertTextByKey(focusKey, startOffset, rightMarker);
       } else {
@@ -456,7 +456,6 @@ function wrapBlock(matchRules, text, state) {
 const wrapBlockForChange = function(matchRules, text, change) {
   const { startOffset, endOffset, focusText } = change.state;
   const focusedText = focusText.text;
-  // const change = state.change();
   change.moveOffsetsTo(0);
   let length = 0;
   for (let i = 0, k = matchRules.length; i < k; i++) {
@@ -505,20 +504,14 @@ function unwrapBlock(removedLength, state) {
 /**
  * Has list selected
  *
- * @param {string} type - list type
+ * @param {string} accent - list type
  * @param {Object} state - editor state
  * @param {number} numLine
  */
-function hasListLine(type, state, numLine = 0) {
+function hasListLine(accent, state, numLine = 0) {
   let { texts } = state;
-  if (texts.get(numLine).charsData) {
-    let characters = texts.get(numLine).charsData.characters;
-    if (characters.size > 0) {
-      let character = characters.get(0);
-      return hasMarkOnChar(character, type);
-    }
-  }
-  return false;
+  let text = texts.get(numLine).text;
+  return MATCH_SINGLE_RULE[accent].test(text);
 }
 
 /**
@@ -540,7 +533,7 @@ function hasList(type, state) {
   }
 }
 
-const getUlMarker = function(text) {
+export const getUlMarker = function(text) {
   let res = ulRegExp.exec(text);
   if (res) {
     return res[0];
@@ -549,13 +542,20 @@ const getUlMarker = function(text) {
   return false;
 };
 
-const getOlNum = function(text) {
+export const getOlNum = function(text) {
   let res = olRegExp.exec(text);
+  let pref = '';
+  let itemNum = 1;
+  let div = '.';
+  let listMarker = '';
   if (res) {
-    return res[0].substr(0, res[0].length - 2);
+    listMarker = res[0]; // === '   2) '
+    pref = res[1]; // === '   '
+    itemNum = +res[2]; // === 2
+    div = res[3]; // === ')'
   }
 
-  return false;
+  return { pref, itemNum, div, listMarker };
 };
 
 function getTextLength(change) {
@@ -571,8 +571,6 @@ function getTextLength(change) {
  */
 const wrapList = function(accent, state) {
   let text = accent === 'ul' ? '* ' : '1. ';
-  let itemNum;
-  // let text, itemNum;
   if (hasMultiLineSelection(state)) {
     let {
       anchorKey,
@@ -588,6 +586,7 @@ const wrapList = function(accent, state) {
     }
 
     let lineText = state.texts.get(0).text;
+    let pref, itemNum, div;
     if (accent === 'ul') {
       let ulMarker = getUlMarker(lineText);
       if (ulMarker) {
@@ -596,13 +595,7 @@ const wrapList = function(accent, state) {
         text = '* ';
       }
     } else {
-      let olNum = getOlNum(lineText);
-
-      if (olNum) {
-        itemNum = +olNum;
-      } else {
-        itemNum = 0;
-      }
+      ({ pref, itemNum, div } = getOlNum(lineText));
     }
 
     let change = state.change();
@@ -615,15 +608,15 @@ const wrapList = function(accent, state) {
       } else if (i === lastNum) {
         lastBefore = getTextLength(change);
       }
-      itemNum++;
-      if (!hasBlock(MATCH_SINGLE_RULE[accent], change.state)) {
-        text = accent === 'ul' ? text : `${itemNum}. `;
+      if (i === 0 && !hasBlock(MATCH_SINGLE_RULE[accent], change.state) || i > 0) {
+        text = accent === 'ul' ? text : `${pref}${itemNum}${div} `;
         change = wrapBlockForChange(MATCH_RULES[accent], text, change);// eslint-disable-line
         if (i === 0) {
           firstAfter = getTextLength(change);
         } else if (i === lastNum) {
           lastAfter = getTextLength(change);
         }
+        itemNum++;
         continue;
       }
       if (i === 0) {
@@ -631,6 +624,7 @@ const wrapList = function(accent, state) {
       } else if (i === lastNum) {
         lastAfter = lastBefore;
       }
+      itemNum++;
     }
     change.select({
       anchorKey,
@@ -776,8 +770,8 @@ const activities = {
     bold: hasEmphasis.bind(null, 'bold'),
     italic: hasEmphasis.bind(null, 'italic'),
     strikethrough: hasEmphasis.bind(null, 'strikethrough'),
-    ul: hasList.bind(null, 'list'),
-    ol: hasList.bind(null, 'ordered-list'),
+    ul: hasList.bind(null, 'ul'),
+    ol: hasList.bind(null, 'ol'),
     header: [
       null,
       hasBlock.bind(null, h1RegExp),
