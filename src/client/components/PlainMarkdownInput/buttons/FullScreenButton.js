@@ -6,7 +6,8 @@ import Types from 'prop-types';
 import getMessage from '../../translations';
 
 const FullScreenButton = function({ onClick, fullScreen, locale }) {
-  const tooltip = <Tooltip id="switch-tp" className="fullscreen-tp">{getMessage(locale, 'fullscreen')}</Tooltip>;
+  const msgKey = fullScreen ? 'Minimize' : 'Maximize';
+  const tooltip = <Tooltip id="switch-tp" className="fullscreen-tp">{getMessage(locale, msgKey)}</Tooltip>;
   return (
     <OverlayTrigger placement="bottom" overlay={tooltip}>
       <button type="button" className={classnames('btn btn-default')} onClick={onClick}>
