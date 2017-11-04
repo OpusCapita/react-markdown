@@ -9,7 +9,6 @@ const propTypes = {
   onSelectedIndexChange: Types.func,
   items: Types.array,
   locale: Types.string,
-  onMouseDown: Types.func,
   onScroll: Types.func,
   onSelectItem: Types.func,
   selectedIndex: Types.number,
@@ -151,7 +150,6 @@ class AutocompleteWidget extends React.Component {
                 key={index}
                 ref={ref => (this[`item-ref-${index}`] = ref)}
                 onClick={() => this.handleSelectItem(index)}
-                onMouseDown={this.props.onMouseDown}
                 onMouseMove={() => onSelectedIndexChange(index)}
                 className={`
                   react-markdown--autocomplete-widget__item

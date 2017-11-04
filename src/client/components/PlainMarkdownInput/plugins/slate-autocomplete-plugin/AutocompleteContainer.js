@@ -15,7 +15,6 @@ class AutocompleteContainer extends React.Component {
     locale: Types.string,
     options: Types.object,
     onChange: Types.func,
-    onMouseDown: Types.func,
     onScroll: Types.func,
   };
 
@@ -24,7 +23,6 @@ class AutocompleteContainer extends React.Component {
     locale: 'en',
     options: {},
     onChange: () => {},
-    onMouseDown: () => {},
     onScroll: () => {}
   };
 
@@ -192,7 +190,6 @@ class AutocompleteContainer extends React.Component {
             isLoading={isLoading}
             selectedIndex={selectedIndex}
             locale={locale}
-            onMouseDown={this.props.onMouseDown}
             onScroll={this.props.onScroll}
             onSelectItem={this.handleSelectItem}
             onSelectedIndexChange={this.handleSelectedIndexChange}

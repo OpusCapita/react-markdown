@@ -81,7 +81,6 @@ class PlainMarkdownInput extends React.Component {
       editorState: '',
       fullScreen: false
     };
-    this.handleMouseDown = this.handleMouseDown.bind(this);
     this.handleRef = this.handleRef.bind(this);
     this.handleScroll = this.handleScroll.bind(this);
     this.handleActionButtonClick = this.handleActionButtonClick.bind(this);
@@ -155,10 +154,6 @@ class PlainMarkdownInput extends React.Component {
     setTimeout(() => {
       autoScrollToTop();
     }, 0);
-  };
-
-  handleMouseDown = () => {
-    this.forceUpdate();
   };
 
   handleFullScreen = () => {
@@ -338,7 +333,6 @@ class PlainMarkdownInput extends React.Component {
                 extensions: extensions,
                 locale: locale,
                 onChange: this.handleChange,
-                onMouseDown: this.handleMouseDown,
                 onScroll: this.handleScroll
               })
             ]}
