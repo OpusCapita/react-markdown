@@ -10,7 +10,9 @@ const translations = {
     noMatchesFound: 'No matches found',
     fullscreen: 'Fullscreen',
     Product: 'Product',
-    Term: 'Term'
+    Term: 'Term',
+    Maximize: 'Maximize',
+    Minimize: 'Minimize',
   },
   de: {
     insertHeader: 'Kopfzeile einfügen',
@@ -23,7 +25,9 @@ const translations = {
     noMatchesFound: 'Keine Treffer gefunden',
     fullscreen: 'Vollbild',
     Product: 'Product',
-    Term: 'Term'
+    Term: 'Term',
+    Maximize: 'Maximieren',
+    Minimize: 'Minimieren',
   }
 };
 
