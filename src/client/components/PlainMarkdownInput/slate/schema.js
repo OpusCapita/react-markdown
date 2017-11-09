@@ -7,7 +7,7 @@ import { parse } from './tokenizer';
  * Define a decorator for markdown styles.
  */
 
-const addMarks = function addMarks(characters, tokens, offset) {
+export const addMarks = function addMarks(characters, tokens, offset) {
   let updatedOffset = offset;
 
   for (let i = 0; i < tokens.length; i++) {
