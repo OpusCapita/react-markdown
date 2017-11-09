@@ -9,6 +9,7 @@ const propTypes = {
   onSelectedIndexChange: Types.func,
   items: Types.array,
   locale: Types.string,
+  onMouseDown: Types.func,
   onScroll: Types.func,
   onSelectItem: Types.func,
   selectedIndex: Types.number,
@@ -21,6 +22,7 @@ const defaultProps = {
   onSelectedIndexChange: () => {},
   items: [],
   locale: 'en',
+  onMouseDown: () => {},
   onScroll: () => {},
   onSelectItem: () => {},
   style: {},
@@ -41,16 +43,37 @@ class AutocompleteWidget extends React.Component {
   }
 
   componentDidMount = () => {
+    // console.log('AutocompleteWidget.componentDidMount');
     this.adjustPosition();
     this['items-ref'].addEventListener('scroll', this.props.onScroll, false);
+    // this['items-ref'].addEventListener('mouseDown', e => {
+    //   e.stopPropagation();
+    //   e.preventDefault();
+    //   return false;
+    // }, false);
+    // this['items-ref'].addEventListener('click', e => {
+    //   e.stopPropagation();
+    //   e.preventDefault();
+    //   return false;
+    // }, false);
   };
 
   componentWillReceiveProps = (nextProps) => {
+    // console.log('AutocompleteWidget.componentWillReceiveProps');
     this.cancelAdjustPosition();
     this.adjustPosition();
   };
 
+  // componentDidReceiveProps = () => {
+  //   // console.log('AutocompleteWidget.componentDidReceiveProps');
+  // };
+
+  // componentDidUpdate = () => {
+  //   console.log('AutocompleteWidget.componentDidUpdate');
+  // };
+
   componentWillUpdate = (nextProps) => {
+    // console.log('AutocompleteWidget.componentWillUpdate');
     let { isMouseIndexSelected } = this.props;
     let itemsRef = this['items-ref'];
     let itemRef = this[`item-ref-${nextProps.selectedIndex}`];
@@ -66,8 +89,13 @@ class AutocompleteWidget extends React.Component {
   };
 
   componentWillUnmount = () => {
+    // console.log('AutocompleteWidget.componentWillUnmount');
     this.cancelAdjustPosition();
   };
+
+  // componentWillMount = () => {
+  //   console.log('AutocompleteWidget.componentWillMount');
+  // };
 
   cancelAdjustPosition = () => {
     if (this._animationFrame) {
@@ -76,6 +104,8 @@ class AutocompleteWidget extends React.Component {
   };
 
   handleSelectItem = (index) => {
+    console.log(' ');
+    console.log('AutocompleteWidget.handleSelectItem');
     this.props.onSelectItem(index);
   };
 
@@ -133,7 +163,14 @@ class AutocompleteWidget extends React.Component {
         <div
           className="react-markdown--autocomplete-widget"
           ref={ref => (this['items-ref'] = ref)}
-          onMouseDown={e => e.preventDefault()}
+          onMouseDown={e => {
+            // e.preventDefault();
+            // console.log(' ');
+            console.log('AutocompleteWidget.onMouseDown');
+            e.currTarget = 'widget';
+            this.props.onMouseDown(e);
+            e.stopPropagation();
+          }}
           style={{
             left,
             top,
@@ -151,6 +188,12 @@ class AutocompleteWidget extends React.Component {
                 ref={ref => (this[`item-ref-${index}`] = ref)}
                 onClick={() => this.handleSelectItem(index)}
                 onMouseMove={() => onSelectedIndexChange(index)}
+                onMouseDown={e => {
+                  e.currTarget = 'item';
+                  console.log('AutocompleteWidget-item.onMouseDown');
+                  this.props.onMouseDown(e);
+                  e.stopPropagation();
+                }}
                 className={`
                   react-markdown--autocomplete-widget__item
                   ${selectedIndex === index ? 'react-markdown--autocomplete-widget__item--active' : ''}

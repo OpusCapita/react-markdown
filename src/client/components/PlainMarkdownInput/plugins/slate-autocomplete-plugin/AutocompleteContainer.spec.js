@@ -1,6 +1,6 @@
 import React from 'react';
 import { expect } from 'chai';
-import { shallow } from 'enzyme';
+import { shallow, mount } from 'enzyme';
 import sinon from 'sinon';
 import AutocompleteContainer from './AutocompleteContainer';
 import PlainMarkdownInput from '../../PlainMarkdownInput.react';
@@ -91,7 +91,6 @@ describe('<AutocompleteContainer />', () => {
     let currState = wrapper.state();
     expect(currState.show).to.equal(false);
     expect(currState.selectedIndex).to.equal(0);
-    expect(currState.isLoading).to.equal(false);
     expect(currState.isMouseIndexSelected).to.equal(false);
     expect(currState.items).to.deep.equal([]);
     expect(currState.ref).to.equal(null);
@@ -113,7 +112,7 @@ describe('<AutocompleteContainer />', () => {
       options={{ extensions }}
       state={editorState}
     />);
-    let wrapper = shallow(component);
+    let wrapper = mount(component);
     let wrapperInstance = wrapper.instance();
     wrapperInstance.handleSelectItem = sinon.spy();
     wrapperInstance.searchItems = sinon.spy();
@@ -173,9 +172,9 @@ describe('<AutocompleteContainer />', () => {
     />);
     let wrapper = shallow(component);
     let wrapperInstance = wrapper.instance();
-    wrapperInstance.handleSelectedIndexChange(2);
-    expect(wrapper.state('isMouseIndexSelected')).to.equal(true);
-    expect(wrapper.state('selectedIndex')).to.equal(0);
+    // wrapperInstance.handleSelectedIndexChange(2);
+    // expect(wrapper.state('isMouseIndexSelected')).to.equal(true);
+    // expect(wrapper.state('selectedIndex')).to.equal(0);
 
     wrapperInstance.handleSelectedIndexChange(3);
     expect(wrapper.state('isMouseIndexSelected')).to.equal(true);
@@ -325,7 +324,6 @@ describe('<AutocompleteContainer />', () => {
 
     setTimeout(() => {
       expect(wrapper.state('show')).to.equal(true);
-      expect(wrapper.state('isLoading')).to.equal(false);
       const pattern = [
         { _objectLabel: "ba2" },
         { _objectLabel: "ba21" },

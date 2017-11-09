@@ -92,10 +92,25 @@ class PlainMarkdownInput extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    // console.log('PlainMarkdownInput.componentWillReceiveProps');
     if (this.props.value !== nextProps.value) {
       this.handleNewValue(nextProps.value);
     }
   }
+
+  // componentDidReceiveProps = () => {
+  //   console.log('PlainMarkdownInput.componentDidReceiveProps');
+  // };
+
+  // componentWillUpdate = () => {
+  //   console.log(' ');
+  //   console.log('PlainMarkdownInput.------');
+  //   console.log('PlainMarkdownInput.componentWillUpdate');
+  // };
+
+  // componentDidUpdate = () => {
+  //   console.log('PlainMarkdownInput.componentDidUpdate');
+  // };
 
   handleNewValue(value) {
     let editorState = Plain.deserialize(value);
@@ -118,6 +133,10 @@ class PlainMarkdownInput extends React.Component {
     nodes.set(numBlock, currNode.asImmutable());
   }
 
+  handleMouseDown = () => {
+    this.forceUpdate();
+  };
+
   setNodesToState(editorState, nodes) {
     let editorStateMutable = editorState.asMutable();
     editorStateMutable.document = editorStateMutable.document.asMutable();
@@ -127,6 +146,9 @@ class PlainMarkdownInput extends React.Component {
   }
 
   handleChange = (obj) => {
+    // console.log(' ');
+    // console.log('PlainMarkdownInput.------');
+    // console.log('PlainMarkdownInput.handleChange');
     // XXX Slate "Editor.props.onChange" behavior changed
     // https://github.com/ianstormtaylor/slate/blob/master/packages/slate/Changelog.md#0220--september-5-2017
     let editorState = obj.state || obj;
