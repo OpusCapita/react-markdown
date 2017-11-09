@@ -15,9 +15,9 @@
  ###### h6
 
 # header *italic*
-## header *italic*
-### header *italic*
-#### header *italic*
+## header _italic text_
+### header **bold text**
+#### header __bold text__
 ##### header *italic*
 ###### header *italic*
 
