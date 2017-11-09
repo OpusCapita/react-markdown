@@ -891,7 +891,14 @@ describe('plain editor transform', () => {
         newState = wrapAccent(change.state, 'bold');
         expect(Plain.serialize(newState)).to.equal('__bold text bold__');
 
-        wrapper.setProps({ value: '__bold__ text **bold**' });
+        nodeText = '__bold__ text **bold**';
+        component = (<PlainMarkdownInput
+          value={nodeText}
+          fullScreen={true}
+          readOnly={true}
+        />);
+        wrapper = mount(component);
+
         editorState = wrapper.state('editorState');
         change = editorState.change();
         change.moveOffsetsTo('__bold__'.length, '__bold__ text '.length);
@@ -902,8 +909,14 @@ describe('plain editor transform', () => {
         newState = wrapAccent(change.state, 'bold');
         expect(Plain.serialize(newState)).to.equal('__bold text bold__');
 
-        wrapper.setProps({ value: `__bold__ text **bold**
-new line` });
+        nodeText = `__bold__ text **bold**
+new line`;
+        component = (<PlainMarkdownInput
+          value={nodeText}
+          fullScreen={true}
+          readOnly={true}
+        />);
+        wrapper = mount(component);
         editorState = wrapper.state('editorState');
         change = editorState.change();
         change.moveOffsetsTo('__bold__'.length, '__bold__ text **bold**'.length);
@@ -916,7 +929,13 @@ new line`);
         expect(Plain.serialize(newState)).to.equal(`__bold text bold__
 new line`);
 
-        wrapper.setProps({ value: '**bold** text **bold**' });
+        nodeText = '**bold** text **bold**';
+        component = (<PlainMarkdownInput
+          value={nodeText}
+          fullScreen={true}
+          readOnly={true}
+        />);
+        wrapper = mount(component);
         editorState = wrapper.state('editorState');
         change = editorState.change();
         change.moveOffsetsTo(0, nodeText.length);
@@ -927,7 +946,13 @@ new line`);
         newState = wrapAccent(change.state, 'bold');
         expect(Plain.serialize(newState)).to.equal('**bold text bold**');
 
-        wrapper.setProps({ value: '**bold** text __bold__' });
+        nodeText = '**bold** text __bold__';
+        component = (<PlainMarkdownInput
+          value={nodeText}
+          fullScreen={true}
+          readOnly={true}
+        />);
+        wrapper = mount(component);
         editorState = wrapper.state('editorState');
         change = editorState.change();
         change.moveOffsetsTo(0, nodeText.length);
@@ -939,7 +964,12 @@ new line`);
         expect(Plain.serialize(newState)).to.equal('**bold text bold**');
 
         nodeText = '**bold** text __bold__ text **bold**';
-        wrapper.setProps({ value: nodeText });
+        component = (<PlainMarkdownInput
+          value={nodeText}
+          fullScreen={true}
+          readOnly={true}
+        />);
+        wrapper = mount(component);
         editorState = wrapper.state('editorState');
         change = editorState.change();
         change.moveOffsetsTo(0, nodeText.length);
@@ -947,7 +977,12 @@ new line`);
         expect(Plain.serialize(newState)).to.equal('**bold text bold text bold**');
 
         nodeText = '**bold** text __bold__ text __bold__';
-        wrapper.setProps({ value: nodeText });
+        component = (<PlainMarkdownInput
+          value={nodeText}
+          fullScreen={true}
+          readOnly={true}
+        />);
+        wrapper = mount(component);
         editorState = wrapper.state('editorState');
         change = editorState.change();
         change.moveOffsetsTo(0, nodeText.length);
@@ -955,7 +990,12 @@ new line`);
         expect(Plain.serialize(newState)).to.equal('**bold text bold text bold**');
 
         nodeText = '__bold__ text __bold__ text **bold**';
-        wrapper.setProps({ value: nodeText });
+        component = (<PlainMarkdownInput
+          value={nodeText}
+          fullScreen={true}
+          readOnly={true}
+        />);
+        wrapper = mount(component);
         editorState = wrapper.state('editorState');
         change = editorState.change();
         change.moveOffsetsTo(0, nodeText.length);
@@ -983,7 +1023,12 @@ new line`);
         expect(Plain.serialize(newState)).to.equal('__bold text__');
 
         nodeText = '**bold** text';
-        wrapper.setProps({ value: nodeText });
+        component = (<PlainMarkdownInput
+          value={nodeText}
+          fullScreen={true}
+          readOnly={true}
+        />);
+        wrapper = mount(component);
         editorState = wrapper.state('editorState');
         change = editorState.change();
         change.moveOffsetsTo(0, nodeText.length);
@@ -1015,7 +1060,12 @@ new line`);
         expect(Plain.serialize(newState)).to.equal('__text bold__');
 
         nodeText = 'text **bold**';
-        wrapper.setProps({ value: nodeText });
+        component = (<PlainMarkdownInput
+          value={nodeText}
+          fullScreen={true}
+          readOnly={true}
+        />);
+        wrapper = mount(component);
         editorState = wrapper.state('editorState');
         change = editorState.change();
         change.moveOffsetsTo(0, nodeText.length);
@@ -1093,7 +1143,13 @@ new line`);
         newState = wrapAccent(change.state, 'italic');
         expect(Plain.serialize(newState)).to.equal('_italic text italic_');
 
-        wrapper.setProps({ value: '_italic_ text *italic*' });
+        nodeText = '_italic_ text *italic*';
+        component = (<PlainMarkdownInput
+          value={nodeText}
+          fullScreen={true}
+          readOnly={true}
+        />);
+        wrapper = mount(component);
         editorState = wrapper.state('editorState');
         change = editorState.change();
         change.moveOffsetsTo('_italic_'.length, '_italic_ text '.length);
@@ -1104,7 +1160,13 @@ new line`);
         newState = wrapAccent(change.state, 'italic');
         expect(Plain.serialize(newState)).to.equal('_italic text italic_');
 
-        wrapper.setProps({ value: '*italic* text *italic*' });
+        nodeText = '*italic* text *italic*';
+        component = (<PlainMarkdownInput
+          value={nodeText}
+          fullScreen={true}
+          readOnly={true}
+        />);
+        wrapper = mount(component);
         editorState = wrapper.state('editorState');
         change = editorState.change();
         change.moveOffsetsTo(0, nodeText.length);
@@ -1115,7 +1177,13 @@ new line`);
         newState = wrapAccent(change.state, 'italic');
         expect(Plain.serialize(newState)).to.equal('*italic text italic*');
 
-        wrapper.setProps({ value: '*italic* text _italic_' });
+        nodeText = '*italic* text _italic_';
+        component = (<PlainMarkdownInput
+          value={nodeText}
+          fullScreen={true}
+          readOnly={true}
+        />);
+        wrapper = mount(component);
         editorState = wrapper.state('editorState');
         change = editorState.change();
         change.moveOffsetsTo(0, nodeText.length);
@@ -1127,7 +1195,12 @@ new line`);
         expect(Plain.serialize(newState)).to.equal('*italic text italic*');
 
         nodeText = '*italic* text _italic_ text *italic*';
-        wrapper.setProps({ value: nodeText });
+        component = (<PlainMarkdownInput
+          value={nodeText}
+          fullScreen={true}
+          readOnly={true}
+        />);
+        wrapper = mount(component);
         editorState = wrapper.state('editorState');
         change = editorState.change();
         change.moveOffsetsTo(0, nodeText.length);
@@ -1135,7 +1208,12 @@ new line`);
         expect(Plain.serialize(newState)).to.equal('*italic text italic text italic*');
 
         nodeText = '*italic* text _italic_ text _italic_';
-        wrapper.setProps({ value: nodeText });
+        component = (<PlainMarkdownInput
+          value={nodeText}
+          fullScreen={true}
+          readOnly={true}
+        />);
+        wrapper = mount(component);
         editorState = wrapper.state('editorState');
         change = editorState.change();
         change.moveOffsetsTo(0, nodeText.length);
@@ -1143,7 +1221,12 @@ new line`);
         expect(Plain.serialize(newState)).to.equal('*italic text italic text italic*');
 
         nodeText = '_italic_ text _italic_ text *italic*';
-        wrapper.setProps({ value: nodeText });
+        component = (<PlainMarkdownInput
+          value={nodeText}
+          fullScreen={true}
+          readOnly={true}
+        />);
+        wrapper = mount(component);
         editorState = wrapper.state('editorState');
         change = editorState.change();
         change.moveOffsetsTo(0, nodeText.length);
@@ -1171,7 +1254,12 @@ new line`);
         expect(Plain.serialize(newState)).to.equal('_italic text_');
 
         nodeText = '*italic* text';
-        wrapper.setProps({ value: nodeText });
+        component = (<PlainMarkdownInput
+          value={nodeText}
+          fullScreen={true}
+          readOnly={true}
+        />);
+        wrapper = mount(component);
         editorState = wrapper.state('editorState');
         change = editorState.change();
         change.moveOffsetsTo(0, nodeText.length);
@@ -1203,7 +1291,12 @@ new line`);
         expect(Plain.serialize(newState)).to.equal('_text italic_');
 
         nodeText = 'text *italic*';
-        wrapper.setProps({ value: nodeText });
+        component = (<PlainMarkdownInput
+          value={nodeText}
+          fullScreen={true}
+          readOnly={true}
+        />);
+        wrapper = mount(component);
         editorState = wrapper.state('editorState');
         change = editorState.change();
         change.moveOffsetsTo(0, nodeText.length);
@@ -1282,7 +1375,12 @@ new line`);
         expect(Plain.serialize(newState)).to.equal('~~strikethrough text strikethrough~~');
 
         nodeText = '~~strikethrough~~ text ~~strikethrough~~ ~~strikethrough~~';
-        wrapper.setProps({ value: nodeText });
+        component = (<PlainMarkdownInput
+          value={nodeText}
+          fullScreen={true}
+          readOnly={true}
+        />);
+        wrapper = mount(component);
         editorState = wrapper.state('editorState');
         change = editorState.change();
         change.moveOffsetsTo(0, nodeText.length);
@@ -1367,14 +1465,26 @@ new line`);
         let newState = unwrapAccent(change.state, 'bold');
         expect(Plain.serialize(newState)).to.equal('simple text');
 
-        wrapper.setProps({ value: 'simple **** text' });
+        nodeText = 'simple **** text';
+        component = (<PlainMarkdownInput
+          value={nodeText}
+          fullScreen={true}
+          readOnly={true}
+        />);
+        wrapper = mount(component);
         editorState = wrapper.state('editorState');
         change = editorState.change();
         change.moveOffsetsTo('simple **'.length, 'simple **'.length);
         newState = unwrapAccent(change.state, 'bold');
         expect(Plain.serialize(newState)).to.equal('simple  text');
 
-        wrapper.setProps({ value: '****simple text' });
+        nodeText = '****simple text';
+        component = (<PlainMarkdownInput
+          value={nodeText}
+          fullScreen={true}
+          readOnly={true}
+        />);
+        wrapper = mount(component);
         editorState = wrapper.state('editorState');
         change = editorState.change();
         change.moveOffsetsTo('**'.length, '**'.length);
@@ -1435,7 +1545,13 @@ new line`);
         newState = unwrapAccent(change.state, 'bold');
         expect(Plain.serialize(newState)).to.equal('**bold tex****t**');
 
-        wrapper.setProps({ value: '__bold text__' });
+        nodeText = '__bold text__';
+        component = (<PlainMarkdownInput
+          value={nodeText}
+          fullScreen={true}
+          readOnly={true}
+        />);
+        wrapper = mount(component);
         editorState = wrapper.state('editorState');
         change = editorState.change();
 
@@ -1488,7 +1604,13 @@ new line`);
         newState = unwrapAccent(change.state, 'bold');
         expect(Plain.serialize(newState)).to.equal('**bold text**');
 
-        wrapper.setProps({ value: '__bold text__' });
+        nodeText = '__bold text__';
+        component = (<PlainMarkdownInput
+          value={nodeText}
+          fullScreen={true}
+          readOnly={true}
+        />);
+        wrapper = mount(component);
         editorState = wrapper.state('editorState');
         change = editorState.change();
 
@@ -1541,7 +1663,13 @@ new line`);
         newState = unwrapAccent(change.state, 'bold');
         expect(Plain.serialize(newState)).to.equal('**bold** tex**t**');
 
-        wrapper.setProps({ value: '__bold text__' });
+        nodeText = '__bold text__';
+        component = (<PlainMarkdownInput
+          value={nodeText}
+          fullScreen={true}
+          readOnly={true}
+        />);
+        wrapper = mount(component);
         editorState = wrapper.state('editorState');
         change = editorState.change();
 
@@ -1583,6 +1711,12 @@ new line`);
         expect(Plain.serialize(newState)).to.equal('bold text');
 
         nodeText = '__bold text__';
+        component = (<PlainMarkdownInput
+          value={nodeText}
+          fullScreen={true}
+          readOnly={true}
+        />);
+        wrapper = mount(component);
         wrapper.setProps({ value: nodeText });
         editorState = wrapper.state('editorState');
         change = editorState.change();
@@ -1628,7 +1762,13 @@ new line`);
         newState = unwrapAccent(change.state, 'bold');
         expect(Plain.serialize(newState)).to.equal('bold **text**');
 
-        wrapper.setProps({ value: '__bold text__' });
+        nodeText = '__bold text__';
+        component = (<PlainMarkdownInput
+          value={nodeText}
+          fullScreen={true}
+          readOnly={true}
+        />);
+        wrapper = mount(component);
         editorState = wrapper.state('editorState');
         change = editorState.change();
 
@@ -1678,7 +1818,13 @@ new line`);
         newState = unwrapAccent(change.state, 'bold');
         expect(Plain.serialize(newState)).to.equal('**bold** text');
 
-        wrapper.setProps({ value: '__bold text__' });
+        nodeText = '__bold text__';
+        component = (<PlainMarkdownInput
+          value={nodeText}
+          fullScreen={true}
+          readOnly={true}
+        />);
+        wrapper = mount(component);
         editorState = wrapper.state('editorState');
         change = editorState.change();
 
@@ -1717,14 +1863,26 @@ new line`);
         let newState = unwrapAccent(change.state, 'strikethrough');
         expect(Plain.serialize(newState)).to.equal('simple text');
 
-        wrapper.setProps({ value: 'simple ~~~~ text' });
+        nodeText = 'simple ~~~~ text';
+        component = (<PlainMarkdownInput
+          value={nodeText}
+          fullScreen={true}
+          readOnly={true}
+        />);
+        wrapper = mount(component);
         editorState = wrapper.state('editorState');
         change = editorState.change();
         change.moveOffsetsTo('simple ~~'.length, 'simple ~~'.length);
         newState = unwrapAccent(change.state, 'strikethrough');
         expect(Plain.serialize(newState)).to.equal('simple  text');
 
-        wrapper.setProps({ value: '~~~~simple text' });
+        nodeText = '~~~~simple text';
+        component = (<PlainMarkdownInput
+          value={nodeText}
+          fullScreen={true}
+          readOnly={true}
+        />);
+        wrapper = mount(component);
         editorState = wrapper.state('editorState');
         change = editorState.change();
         change.moveOffsetsTo('~~'.length, '~~'.length);
@@ -1949,14 +2107,26 @@ new line`);
         let newState = unwrapAccent(change.state, 'italic');
         expect(Plain.serialize(newState)).to.equal('simple text');
 
-        wrapper.setProps({ value: 'simple __ text' });
+        nodeText = 'simple __ text';
+        component = (<PlainMarkdownInput
+          value={nodeText}
+          fullScreen={true}
+          readOnly={true}
+        />);
+        wrapper = mount(component);
         editorState = wrapper.state('editorState');
         change = editorState.change();
         change.moveOffsetsTo('simple _'.length, 'simple _'.length);
         newState = unwrapAccent(change.state, 'italic');
         expect(Plain.serialize(newState)).to.equal('simple  text');
 
-        wrapper.setProps({ value: '__simple text' });
+        nodeText = '__simple text';
+        component = (<PlainMarkdownInput
+          value={nodeText}
+          fullScreen={true}
+          readOnly={true}
+        />);
+        wrapper = mount(component);
         editorState = wrapper.state('editorState');
         change = editorState.change();
         change.moveOffsetsTo('_'.length, '_'.length);
@@ -2076,7 +2246,13 @@ new line`);
         newState = unwrapAccent(change.state, 'italic');
         expect(Plain.serialize(newState)).to.equal('italic text');
 
-        wrapper.setProps({ value: '##### header *italic*' });
+        nodeText = '##### header *italic*';
+        component = (<PlainMarkdownInput
+          value={nodeText}
+          fullScreen={true}
+          readOnly={true}
+        />);
+        wrapper = mount(component);
         editorState = wrapper.state('editorState');
         change = editorState.change();
 
@@ -2084,7 +2260,13 @@ new line`);
         newState = unwrapAccent(change.state, 'italic');
         expect(Plain.serialize(newState)).to.equal('##### header italic');
 
-        wrapper.setProps({ value: '##### header *italic* text' });
+        nodeText = '##### header *italic* text';
+        component = (<PlainMarkdownInput
+          value={nodeText}
+          fullScreen={true}
+          readOnly={true}
+        />);
+        wrapper = mount(component);
         editorState = wrapper.state('editorState');
         change = editorState.change();
 
