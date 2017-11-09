@@ -27,7 +27,6 @@ class AutocompleteContainer extends React.Component {
   };
 
   constructor(props) {
-    console.log('constructor #');
     super(props);
     this.state = {
       show: false,
@@ -39,37 +38,24 @@ class AutocompleteContainer extends React.Component {
   }
 
   componentDidMount = () => {
-    console.log('componentDidMount #');
     this.searchItems(this.props);
   };
 
   componentWillReceiveProps = (nextProps) => {
-    console.log('componentWillReceiveProps #');
-    console.log(`  >>> this.currEventTarget: ${this.currEventTarget}`);
-
-    // const condition = /*!this.currEventTarget ||*/ this.currEventTarget && this.currEventTarget !== 'widget';
-
-    // if (condition) {
-      this.searchItems(nextProps);
-      // if (typeof this.state.selectedIndex !== 'undefined' &&
-      //   (this.props.state.startOffset === nextProps.state.startOffset) &&
-      //   (this.props.state.startText.text === nextProps.state.startText.text) &&
-      //   nextProps.state.startText.text) {
-      //   this.handleSelectItem(this.state.selectedIndex);
-      // }
-    // }
-
-    // this.currEventTarget = null;
+    this.searchItems(nextProps);
   };
 
+  /**
+   * update a component in all cases, except pressing on a scroll of a widget
+   * XXX FOR IE11. Issue #78@opuscapita/react-markdown
+   *
+   * @returns {boolean}
+   */
   shouldComponentUpdate = (newProps, newState) => {
-    console.log('shouldComponentUpdate #');
-    return this.currEventTarget && this.currEventTarget !== 'widget';
-    // return this.currEventTarget && (this.currEventTarget !== 'widget' || this.currEventTarget === 'widget' && this.state.selectedIndex !== newState.selectedIndex);
+    return !!this.currEventTarget && this.currEventTarget !== 'widget';
   };
 
   matchExtension = (extensions, token) => {
-    console.log('matchExtension #');
     for (let i = 0, count = extensions.length; i < count; i++) {
       const extension = extensions[i];
 
@@ -81,7 +67,6 @@ class AutocompleteContainer extends React.Component {
   };
 
   getSearchToken = (state) => {
-    console.log('getSearchToken #');
     const text = state.focusBlock.text;
     const { anchorOffset } = state.selection;
 
@@ -104,53 +89,56 @@ class AutocompleteContainer extends React.Component {
     return { term, text, offset };
   };
 
+  /**
+   * handleSelectedIndexChange
+   * @param {number} selectedIndex
+   */
   handleSelectedIndexChange = (selectedIndex) => {
-    console.log('handleSelectedIndexChange #');
+    // This value is necessary in order that the mouseMove event has been processed and the component was rerendered
     this.currEventTarget = 'item-move';
-    this.setState({ isMouseIndexSelected: true, selectedIndex, show: true });
+    this.setState({ isMouseIndexSelected: true, selectedIndex });
   };
 
   handleKeyDown = (e) => {
-    const { show, items, selectedIndex } = this.state;
+    let { show, items, selectedIndex } = this.state;
 
     if (show && items) {
       if (e.keyCode === escapeCode) {
         e.preventDefault();
         e.stopPropagation();
-        this.hideWidget();
+        this.forceHide();
       } else if (e.keyCode === enterCode) {
         e.preventDefault();
-
         this.handleSelectItem(selectedIndex);
+        this.forceHide();
       } else if (e.keyCode === arrowUpCode || e.keyCode === arrowDownCode) {
         e.preventDefault();
-
-        this.setState({ isMouseIndexSelected: false });
         const length = items.length;
-        if (e.keyCode === arrowDownCode && selectedIndex < length - 1) {
-          this.setState({ selectedIndex: selectedIndex + 1 });
-        } else if (e.keyCode === arrowUpCode && selectedIndex > 0) {
-          this.setState({ selectedIndex: selectedIndex - 1 });
+        selectedIndex = e.keyCode === arrowDownCode ? selectedIndex + 1 : selectedIndex - 1;
+        if (e.keyCode === arrowDownCode && selectedIndex < length ||
+          e.keyCode === arrowUpCode && selectedIndex >= 0) {
+          this.setState({ isMouseIndexSelected: false, selectedIndex });
         }
       }
     }
   };
 
-  handleMouseDown = e => {
-    console.log('handleMouseDown #');
-    this.currEventTarget = e.currTarget;
-
+  /**
+   * handleMouseDown
+   *
+   *  Is called for a container, for a widget and for an item
+   *  Get and save the event's target
+   *  If there was a click on item, call handleSelectItem for one
+   * @param {string} currTarget
+   */
+  handleMouseDown = currTarget => {
+    this.currEventTarget = currTarget;
     if (this.currEventTarget === 'item') {
       this.handleSelectItem(this.state.selectedIndex);
     }
-    console.log(`- `);
-    console.log(`- `);
-    console.log(`  >>> this.currEventTarget: ${this.currEventTarget}`);
   };
 
   handleSelectItem = (index) => {
-    console.log('handleSelectItem #');
-    console.log(`  >>> this.currEventTarget: ${this.currEventTarget}`);
     const { items } = this.state;
     const { state, options } = this.props;
     const { term } = this.getSearchToken(state);
@@ -173,10 +161,7 @@ class AutocompleteContainer extends React.Component {
   };
 
   addTerm = ({ state, options }) => {
-    console.log('addTerm #');
     let { term } = this.getSearchToken(state);
-
-    console.log(`term: ${term}`);
 
     if (term) {
       const { extensions } = options;
@@ -191,16 +176,23 @@ class AutocompleteContainer extends React.Component {
     return false;
   };
 
+  /**
+   * hideWidget
+   */
   hideWidget = () => {
-    console.log('hideWidget #');
     const { show } = this.state;
+    // Check of the event's target is necessary for IE11
+    // XXX FOR IE11. Issue #78@opuscapita/react-markdown
     if (show && this.currEventTarget !== 'widget' && this.currEventTarget !== 'item-move') {
       this.setState({ show: false });
     }
   };
 
+  forceHide = () => {
+    this.setState({ show: false });
+  };
+
   searchItems = props => {
-    console.log('searchItems #');
     const hasTerm = this.addTerm(props);
     if (hasTerm) {
       return;
@@ -214,7 +206,6 @@ class AutocompleteContainer extends React.Component {
   };
 
   render() {
-    console.log('render #');
     const { show, selectedIndex, items, isMouseIndexSelected, ref } = this.state;
     const { children, state, locale } = this.props;
 
@@ -231,10 +222,8 @@ class AutocompleteContainer extends React.Component {
         onKeyDown={this.handleKeyDown}
         ref={this.handleRef}
         onMouseDown={e => {
-          console.log('AutocompleteContainer.onMouseDown');
-          e.currTarget = 'container';
-          this.handleMouseDown(e);
-          e.stopPropagation();
+          this.handleMouseDown('container');
+          e.stopPropagation(); // Isolate event target
         }}
       >
         {show && (state.isFocused || this.currEventTarget === 'item-move') ? (

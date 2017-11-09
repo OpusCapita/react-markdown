@@ -96,7 +96,7 @@ describe('<AutocompleteContainer />', () => {
     expect(currState.ref).to.equal(null);
   });
 
-  it('componentWillReceiveProps(nextProps)', () => {
+  it.skip('componentWillReceiveProps(nextProps)', () => {
     const nodeText = '# Header1 ';
     let inputComponent = (<PlainMarkdownInput
       value={nodeText}
@@ -172,10 +172,6 @@ describe('<AutocompleteContainer />', () => {
     />);
     let wrapper = shallow(component);
     let wrapperInstance = wrapper.instance();
-    // wrapperInstance.handleSelectedIndexChange(2);
-    // expect(wrapper.state('isMouseIndexSelected')).to.equal(true);
-    // expect(wrapper.state('selectedIndex')).to.equal(0);
-
     wrapperInstance.handleSelectedIndexChange(3);
     expect(wrapper.state('isMouseIndexSelected')).to.equal(true);
     expect(wrapper.state('selectedIndex')).to.equal(3);
@@ -218,6 +214,7 @@ describe('<AutocompleteContainer />', () => {
       wrapperInstance.handleSelectItem = backupHandleSelectItem;
 
       // arrowUpCode
+      wrapper.setState({ show: true });
       event.keyCode = arrowUpCode;
       wrapperInstance.handleKeyDown(event);
       expect(wrapper.state('selectedIndex')).to.equal(1);
@@ -245,6 +242,10 @@ describe('<AutocompleteContainer />', () => {
 
       delete event.keyCode;
       done();
+    }).
+    catch(e => {
+      console.log(e);
+      throw e;
     });
   });
 
