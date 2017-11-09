@@ -1,3 +1,44 @@
+## [v1.1.10](https://github.com/OpusCapita/react-markdown/compare/v1.1.9...v1.1.10) (Thu, 09 Nov 2017 12:36:21 GMT)
+ - Autocomplete is closed after clicking on the scrollbar in IE11 (#83)
+    
+    * Tmp commit
+    
+    * Fix Autocomplete widget bug in IE11
+    
+    * Remove old code. Add commentaries
+    
+    * Fix test (Aleksandr Baliunov <abaliunov-sc@users.noreply.github.com>, 8414f70)
+ - Numbered/Bulleted list behavior #70 (#77)
+    
+    * Change hasEmphasis. Extract hasLists
+    
+    * Remove old code
+    
+    * Add tests
+    
+    * Extract MATCH_RULES
+    
+    * Tmp commit
+    
+    * Change unwrapEmphasis()
+    
+    * Change wrapEmphasis()
+    
+    * Has multiline list
+    
+    * Change unwrapList()
+    
+    * Remove old code
+    
+    * Tmp commit
+    
+    * Extract moveSelectionToLine()
+    
+    * Refactoring
+    
+    * Fix bug in IE (Aleksandr Baliunov <abaliunov-sc@users.noreply.github.com>, 0ebefc1)
+ - Change 'Fullscreen' tooltip (#81) (Aleksandr Baliunov <abaliunov-sc@users.noreply.github.com>, 9ad8d40)
+
 ## [v1.1.9](https://github.com/OpusCapita/react-markdown/compare/v1.1.8...v1.1.9) (Tue, 31 Oct 2017 10:23:16 GMT)
  - Merge pull request #76 from OpusCapita/1.1.8-DEV.PIM-12254.3
     
