@@ -1,3 +1,6 @@
+## [v1.1.11](Mon, 20 Nov 2017 08:28:46 GMT)
+ - Changed components export. (Dmitriy Sanko <dsanko@scand.com>, 67007d2)
+
 ## [v1.1.10](https://github.com/OpusCapita/react-markdown/compare/v1.1.9...v1.1.10) (Thu, 09 Nov 2017 12:36:21 GMT)
  - Autocomplete is closed after clicking on the scrollbar in IE11 (#83)
     
