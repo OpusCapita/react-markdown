@@ -103,7 +103,10 @@
   "grails": {
     "buildDir": "lib",
     "standaloneFiles": {
-      "index.js": "web-app/components/MarkdownInput.js"
+      "components/MarkdownInput.js": "web-app/components/MarkdownInput.js",
+      "components/core-js/es6/string.js": "web-app/components/core-js/es6/string.js",
+      "components/core-js/es6/promise.js": "web-app/components/core-js/es6/promise.js",
+      "components/core-js/es7/array.js": "web-app/components/core-js/es7/array.js"
     }
   },
   "keywords": [
