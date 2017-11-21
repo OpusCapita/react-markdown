@@ -1,3 +1,7 @@
+## [v1.1.12](Tue, 21 Nov 2017 13:12:36 GMT)
+ - Fixing version. (Dmitriy Sanko <dsanko@scand.com>, 642f448)
+ - Added polyfills for MarkdownInput (Dmitriy Sanko <dsanko@scand.com>, 60383b9)
+
 ## [v1.1.11](Mon, 20 Nov 2017 08:28:46 GMT)
  - Changed components export. (Dmitriy Sanko <dsanko@scand.com>, 67007d2)
 
