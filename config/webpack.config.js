@@ -49,20 +49,20 @@ if(WEBPACK_BUNDLE_ANALYZE && IS_PRODUCTION_MODE) {
 }
 
 const prod = {
-  entry: {
+  entry: [
     // IE11 - "String.prototype.startsWith" and endsWith methods (local code)
-    "core-js/es6/string": "core-js/es6/string.js",
+    "core-js/es6/string.js",
     // IE11 - "Promise"s - required for autocompletes
-    "core-js/es6/promise": "core-js/es6/promise.js",
+    "core-js/es6/promise.js",
     // IE11 - Used in "slate-js" dependency code
-    "core-js/es7/array": "core-js/es7/array.js",
-    "MarkdownInput": '../src/client/components/MarkdownInput'
-  },
+    "core-js/es7/array.js",
+    path.resolve(__dirname, '../src/client/components/MarkdownInput')
+  ],
   output: {
     publicPath: '/',
     path: path.resolve(__dirname, '../lib/components'),
-    filename: `[name].js`,
-    library: `[name]`,
+    filename: `MarkdownInput.js`,
+    library: `MarkdownInput`,
     libraryTarget: 'umd'
   }
 };
