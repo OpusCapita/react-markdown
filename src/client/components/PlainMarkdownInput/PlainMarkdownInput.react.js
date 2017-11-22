@@ -207,7 +207,29 @@ class PlainMarkdownInput extends React.Component {
     }, 5);
   }
 
+  handlePaste(event, change) {
+    let pasteText;
+    if (window.clipboardData) {
+      pasteText = window.clipboardData.getData("Text");
+    } else {
+      pasteText = event.clipboardData.getData('text/plain');
+    }
+
+    let txtArr = pasteText.split('\n');
+    if (txtArr.length > 1) {
+      return undefined;
+    }
+
+    event.preventDefault();
+    change.insertText(pasteText).focus();
+    return this.handleChange(change.state);
+  }
+
   handleKeyDown(event, data, change) {
+    if (data.isMod && data.key === 'v') {
+      return this.handlePaste(event, change);
+    }
+
     if (data.isMod && ACCENTS[data.key]) {
       if (data.key === 's') {
         event.preventDefault();
