@@ -208,18 +208,14 @@ class PlainMarkdownInput extends React.Component {
   }
 
   handlePaste(event, change) {
-    let pasteText;
-    if (window.clipboardData) {
-      pasteText = window.clipboardData.getData("Text");
-    } else {
-      pasteText = event.clipboardData.getData('text/plain');
-    }
-
-    let txtArr = pasteText.split('\n');
-    if (txtArr.length > 1) {
+    if (!window.clipboardData) { // for chrome and ff
       return undefined;
     }
-
+    let pasteText = window.clipboardData.getData("Text");
+    let txtArr = pasteText.split('\n');
+    if (txtArr.length > 1) { // insert multiline text
+      return undefined;
+    }
     event.preventDefault();
     change.insertText(pasteText).focus();
     return this.handleChange(change.state);
