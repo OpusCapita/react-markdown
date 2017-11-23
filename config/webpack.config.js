@@ -48,31 +48,39 @@ if(WEBPACK_BUNDLE_ANALYZE && IS_PRODUCTION_MODE) {
   plugins.push(bundleAnalyzerPlugin);
 }
 
-const entries = [
-  // IE11 - "String.prototype.startsWith" and endsWith methods (local code)
-  "core-js/es6/string.js",
-  // IE11 - "Promise"s - required for autocompletes
-  "core-js/es6/promise.js",
-  // IE11 - Used in "slate-js" dependency code
-  "core-js/es7/array.js"
-];
-
-entries.push(
-  (IS_PRODUCTION_MODE || IS_LINK_MODE) ?
-    path.resolve(__dirname, '../src/client/index.js') :
-    path.resolve(__dirname, '../www/index-page.js')
-);
-
-module.exports = {
-  entry: entries,
-  context: path.resolve(__dirname),
+const prod = {
+  entry: [
+    // IE11 - "String.prototype.startsWith" and endsWith methods (local code)
+    "core-js/es6/string.js",
+    // IE11 - "Promise"s - required for autocompletes
+    "core-js/es6/promise.js",
+    // IE11 - Used in "slate-js" dependency code
+    "core-js/es7/array.js",
+    path.resolve(__dirname, '../src/client/components/MarkdownInput')
+  ],
   output: {
     publicPath: '/',
-    path: path.resolve(__dirname, '../lib'),
-    filename: `index.js`,
+    path: path.resolve(__dirname, '../lib/components'),
+    filename: `MarkdownInput.js`,
     library: `MarkdownInput`,
     libraryTarget: 'umd'
-  },
+  }
+};
+
+const demo = {
+  entry: path.resolve(__dirname, '../www/index-page.js'),
+  output: {
+    publicPath: `/`,
+    filename: 'index.js',
+    library: 'index',
+    libraryTarget: 'umd'
+  }
+};
+
+module.exports = {
+  entry: (IS_PRODUCTION_MODE || IS_LINK_MODE) ? prod.entry : demo.entry,
+  context: path.resolve(__dirname),
+  output: (IS_PRODUCTION_MODE || IS_LINK_MODE) ? prod.output : demo.output,
   devtool: IS_PRODUCTION_MODE ? false : 'inline-source-map',
   watch: !IS_PRODUCTION_MODE,
   bail: true,

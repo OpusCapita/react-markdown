@@ -83,7 +83,6 @@ class PlainMarkdownInput extends React.Component {
       editorState: '',
       fullScreen: false
     };
-    this.handleMouseDown = this.handleMouseDown.bind(this);
     this.handleRef = this.handleRef.bind(this);
     this.handleScroll = this.handleScroll.bind(this);
     this.handleActionButtonClick = this.handleActionButtonClick.bind(this);
@@ -120,6 +119,10 @@ class PlainMarkdownInput extends React.Component {
     };
     nodes.set(numBlock, currNode.asImmutable());
   }
+
+  handleMouseDown = () => {
+    this.forceUpdate();
+  };
 
   setNodesToState(editorState, nodes) {
     let editorStateMutable = editorState.asMutable();
@@ -159,10 +162,6 @@ class PlainMarkdownInput extends React.Component {
         this.forceUpdate()
       }
     }, 0);
-  };
-
-  handleMouseDown = () => {
-    this.forceUpdate();
   };
 
   handleFullScreen = () => {
@@ -398,7 +397,6 @@ class PlainMarkdownInput extends React.Component {
                 extensions: extensions,
                 locale: locale,
                 onChange: this.handleChange,
-                onMouseDown: this.handleMouseDown,
                 onScroll: this.handleScroll
               })
             ]}

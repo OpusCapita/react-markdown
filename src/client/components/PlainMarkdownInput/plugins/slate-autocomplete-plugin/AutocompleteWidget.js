@@ -22,6 +22,7 @@ const defaultProps = {
   onSelectedIndexChange: () => {},
   items: [],
   locale: 'en',
+  onMouseDown: () => {},
   onScroll: () => {},
   onSelectItem: () => {},
   style: {},
@@ -134,7 +135,11 @@ class AutocompleteWidget extends React.Component {
         <div
           className="react-markdown--autocomplete-widget"
           ref={ref => (this['items-ref'] = ref)}
-          onMouseDown={e => e.preventDefault()}
+          onMouseDown={e => {
+            e.preventDefault(); // XXX Not work in IE11
+            e.stopPropagation(); // Isolate event target
+            this.props.onMouseDown('widget');
+          }}
           style={{
             left,
             top,
@@ -151,8 +156,11 @@ class AutocompleteWidget extends React.Component {
                 key={index}
                 ref={ref => (this[`item-ref-${index}`] = ref)}
                 onClick={() => this.handleSelectItem(index)}
-                onMouseDown={this.props.onMouseDown}
                 onMouseMove={() => onSelectedIndexChange(index)}
+                onMouseDown={e => {
+                  this.props.onMouseDown('item');
+                  e.stopPropagation(); // Isolate event target
+                }}
                 className={`
                   react-markdown--autocomplete-widget__item
                   ${selectedIndex === index ? 'react-markdown--autocomplete-widget__item--active' : ''}
