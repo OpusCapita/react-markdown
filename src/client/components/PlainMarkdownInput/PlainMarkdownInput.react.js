@@ -132,7 +132,7 @@ class PlainMarkdownInput extends React.Component {
     return editorStateMutable.asImmutable();
   }
 
-  handleChange = (obj, isForceUpdate = false) => {
+  setChange = obj => {
     // XXX Slate "Editor.props.onChange" behavior changed
     // https://github.com/ianstormtaylor/slate/blob/master/packages/slate/Changelog.md#0220--september-5-2017
     let editorState = obj.state || obj;
@@ -152,8 +152,13 @@ class PlainMarkdownInput extends React.Component {
       this.setDataToNode(nodes, numBlock, text);
       editorState = this.setNodesToState(editorState, nodes);
     }
-    this.props.onChange(Plain.serialize(editorState));
 
+    return editorState;
+  };
+
+  handleChange = (obj, isForceUpdate = false) => {
+    let editorState = this.setChange(obj);
+    this.props.onChange(Plain.serialize(editorState));
     this.setState({ editorState });
 
     setTimeout(() => {
@@ -210,13 +215,21 @@ class PlainMarkdownInput extends React.Component {
     if (!window.clipboardData) { // for chrome and ff
       return undefined;
     }
+
+    event.preventDefault();
     let pasteText = window.clipboardData.getData("Text");
     let txtArr = pasteText.split('\n');
     if (txtArr.length > 1) { // insert multiline text
-      return undefined;
+      for (let i = 0; i < txtArr.length; i++) {
+        change.insertText(txtArr[i]);
+        if (i < txtArr.length - 1) {
+          change.splitBlock(1);
+        }
+      }
+    } else {
+      change.insertText(pasteText);
     }
-    event.preventDefault();
-    change.insertText(pasteText).focus();
+    change.focus();
     return this.handleChange(change.state);
   }
 

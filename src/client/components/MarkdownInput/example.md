@@ -1,3 +1,10 @@
+# Plain text
+
+line 1
+line 2
+line 3
+line 4
+
 # Headers
 
 # h1
@@ -30,20 +37,17 @@ text ```inline code``` text
 `inline code`
 ```inline code```
 
-
 # URL
 
 [opuscapita](https://www.opuscapita.com/)
 **[opuscapita](https://www.opuscapita.com/)**
 [~~opuscapita~~](https://www.opuscapita.com/)
 
-
 # Blockquotes
 
 > blockquote _italic text_
 >> blockquote **bold text**
 >>> blockquotes ~~strikethrough~~
-
 
 # Horisontal rules
 
@@ -62,7 +66,6 @@ ___
   1) third first line
     1. third first first line
 
-
 # Unordered list
 
 + Create a list by starting a line with `+`, `-`, or `*`
@@ -73,7 +76,6 @@ ___
     - Nulla volutpat aliquam velit
 + Very easy!
 
-
 # Emphasis
 
 _italic_
@@ -81,7 +83,6 @@ _italic_
 __bold__
 **bold**
 ~~strikethrough~~
-
 
 # Other
 
