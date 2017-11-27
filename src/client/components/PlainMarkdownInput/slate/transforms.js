@@ -27,7 +27,11 @@ const MATCH_RULES = {
   ]
 };
 
-const EMPHASIS = {
+const EMPHASIS_NAMES = [
+  'bold', 'italic', 'strikethrough'
+];
+
+export const EMPHASIS = {
   bold: '**',
   italic: '_',
   strikethrough: '~~',
@@ -128,7 +132,7 @@ function hasEmphasis(mark, state) {
   return false;
 }
 
-function getLeftEmphEdge(accent, characters, startPos) {
+export const getLeftEmphEdge = (accent, characters, startPos) => {
   let leftEdge = -1;
   for (let i = startPos - 1; i >= 0; i--) {
     if (!hasMarkOnChar(characters.get(i), accent)) {
@@ -137,9 +141,9 @@ function getLeftEmphEdge(accent, characters, startPos) {
     }
   }
   return leftEdge < 0 ? 0 : leftEdge;
-}
+};
 
-function getRightEmphEdge(accent, characters, startPos, maxPos) {
+export const getRightEmphEdge = (accent, characters, startPos, maxPos) => {
   let rightEdge = -1;
   for (let i = startPos + 1; i < maxPos; i++) {
     if (!hasMarkOnChar(characters.get(i), accent)) {
@@ -148,9 +152,9 @@ function getRightEmphEdge(accent, characters, startPos, maxPos) {
     }
   }
   return rightEdge < 0 ? maxPos - 1 : rightEdge;
-}
+};
 
-function getLeftSelectionEdgeData({ accent, characters, startOffset }) {
+export const getLeftSelectionEdgeData = ({ accent, characters, startOffset }) => {
   let leftInChar = characters.get(startOffset);
   let hasLeftInMark = hasMarkOnChar(leftInChar, accent);
   let leftOutChar = null;
@@ -167,9 +171,9 @@ function getLeftSelectionEdgeData({ accent, characters, startOffset }) {
     hasLeftOutMark,
     hasLeftOnEmphasis
   }
-}
+};
 
-function getRightSelectionEdgeData({ accent, characters, endOffset, text }) {
+export const getRightSelectionEdgeData = ({ accent, characters, endOffset, text }) => {
   let rightInChar = characters.get(endOffset - 1);
   let hasRightInMark = hasMarkOnChar(rightInChar, accent);
   let rightOutChar = null;
@@ -186,7 +190,7 @@ function getRightSelectionEdgeData({ accent, characters, endOffset, text }) {
     hasRightOutMark,
     hasRightOnEmphasis
   }
-}
+};
 
 function delInternalMarkers({ change, focusKey, characters, accent, startPos, endPos }) {
   const marker = EMPHASIS[accent];
@@ -824,6 +828,18 @@ export const hasAccent = (state, accent) => {
   return false;
 };
 
+export const getAccents = state => {
+  const accents = [];
+  for (let i = 0; i < EMPHASIS_NAMES.length; i++) {
+    let accent = EMPHASIS_NAMES[i];
+    if (hasAccent(state, accent)) {
+      accents.push(accent);
+    }
+  }
+
+  return accents;
+};
+
 export const wrapAccent = (state, accent) => {
   if (activities.wrap[accent]) {
     return activities.wrap[accent](state);
@@ -862,4 +878,100 @@ export const unwrapHeader = (state, level) => {
   }
 
   return state;
+};
+
+/**
+ * getBracketsPos - function returns positions of brackets of the next to the cursor
+ *    brackets can be () or []
+ *
+ * @param {string} text
+ * @param {number} pos
+ * @returns {{leftPos: number, rightPos: number}}
+ */
+export const getBracketsPos = (text, pos) => {
+  let leftPart = text.substr(0, pos);
+  let rightPart = text.substr(pos);
+
+  // find brackets of the next to the cursor
+  let leftBracketPos = leftPart.lastIndexOf('(');
+  let rightBracketPos = rightPart.indexOf(')');
+  let leftSquareBracketPos = leftPart.lastIndexOf('[');
+  let rightSquareBracketPos = rightPart.indexOf(']');
+
+  // checks which brackets closer to the cursor: round or square
+  let isBrackets = leftBracketPos >= leftSquareBracketPos &&
+    (leftBracketPos !== -1 && rightBracketPos !== -1 ||
+      leftSquareBracketPos === -1 || rightSquareBracketPos === -1) ||
+    leftBracketPos < leftSquareBracketPos &&
+    (leftBracketPos !== -1 && rightBracketPos !== -1 &&
+      (leftSquareBracketPos === -1 || rightSquareBracketPos === -1));
+
+  // calculate the positions of brackets of the next to the cursor
+  let leftPos = isBrackets ? leftBracketPos : leftSquareBracketPos;
+  let rightPos = isBrackets ? rightBracketPos : rightSquareBracketPos;
+  leftPos = leftPos === -1 ? false : leftPos + 1;
+  rightPos = rightPos === -1 ? false : rightPos;
+
+  return { leftPos, rightPos }
+};
+
+const insertText = ({ state, insertedText, insertedPos, endOffset }) => {
+  const change = state.change();
+  change.moveOffsetsTo(insertedPos).insertText(insertedText).moveOffsetsTo(endOffset + insertedText.length).focus();
+  return change.state;
+};
+
+const getPosAfterEmphasis = (state, accents) => {
+  let maxPos = -1;
+  const { texts, startOffset } = state;
+  const accentsCount = accents.length;
+  let characters = texts.get(0).charsData.characters;
+  for (let i = 0; i < accentsCount; i++) {
+    let accent = accents[i];
+    let currLeftPos = getLeftEmphEdge(accent, characters, startOffset) + EMPHASIS[accent].length;
+    if (maxPos < currLeftPos) {
+      maxPos = currLeftPos;
+    }
+  }
+  return maxPos;
+};
+
+export const addSpecialCharacter = (specialCharacter, state) => {
+  const { startBlock, startOffset, endOffset } = state;
+  let text = startBlock.text;
+  let insertedPos = -1;
+  let insertedText = specialCharacter;
+
+  // get right position of the left accent closer to the cursor
+  const accents = getAccents(state);
+  if (accents.length > 0) { // this position has some accent
+    let currLeftPos = getPosAfterEmphasis(state, accents);
+    if (insertedPos < currLeftPos) {
+      insertedPos = currLeftPos;
+    }
+  }
+
+  // get the position of the left open bracket closer to the cursor
+  let { leftPos, rightPos } = getBracketsPos(text, startOffset);
+  // this position is between brackets
+  if (leftPos && rightPos && leftPos > insertedPos) {
+    insertedPos = leftPos;
+  }
+
+  // found left emphasis or left bracket
+  if (insertedPos > -1) {
+    // get the position of the left space closer to the cursor
+    let spacePos = text.substring(insertedPos, startOffset).lastIndexOf(' ');
+    if (spacePos === -1) { // space not found
+      return insertText({ state, insertedText, insertedPos, endOffset });
+    }
+  }
+
+  if ((text.length === endOffset) && (text[text.length - 1] !== ' ')) {
+    insertedText = ` ${insertedText}`;
+    insertedPos = text.length;
+  } else {
+    insertedPos = text.substring(0, startOffset).lastIndexOf(' ') + 1;
+  }
+  return insertText({ state, insertedText, insertedPos, endOffset });
 };
