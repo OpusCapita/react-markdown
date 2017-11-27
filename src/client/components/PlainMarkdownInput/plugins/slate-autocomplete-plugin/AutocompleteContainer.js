@@ -109,7 +109,7 @@ class AutocompleteContainer extends React.Component {
         this.forceHide();
       } else if (e.keyCode === enterCode) {
         e.preventDefault();
-        this.handleSelectItem(selectedIndex);
+        this.handleSelectItem(selectedIndex, e);
         this.forceHide();
       } else if (e.keyCode === arrowUpCode || e.keyCode === arrowDownCode) {
         e.preventDefault();
@@ -138,7 +138,17 @@ class AutocompleteContainer extends React.Component {
     }
   };
 
-  handleSelectItem = (index) => {
+  removeSpecialCharacter = (state, specialCharacter) => {
+    let change = state.change();
+    let text = state.startBlock.text;
+    let charLength = specialCharacter.length;
+    let specialCharPos = text.lastIndexOf(specialCharacter, state.endOffset);
+    change.moveOffsetsTo(specialCharPos).deleteForward(charLength).
+    moveOffsetsTo(state.endOffset - charLength).focus();
+    this.props.onChange(change.state);
+  };
+
+  handleSelectItem = (index, event = null) => {
     const { items } = this.state;
     const { state, options } = this.props;
     const { term } = this.getSearchToken(state);
@@ -149,11 +159,14 @@ class AutocompleteContainer extends React.Component {
       const { extensions } = options;
       const extension = this.matchExtension(extensions, term);
 
-      if (extension) {
+      if (extension && item) {
         let change = state.change();
-        change.deleteBackward(term.length);
-        change.insertText(extension.markdownText(item) + ' ').focus();
+        change.deleteBackward(term.length).insertText(extension.markdownText(item) + ' ').focus();
         this.props.onChange(change.state);
+      }
+
+      if (!item && event) {
+        this.removeSpecialCharacter(state, extension.specialCharacter);
       }
     }
 
