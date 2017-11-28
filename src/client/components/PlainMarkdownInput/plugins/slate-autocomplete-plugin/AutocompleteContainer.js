@@ -68,15 +68,9 @@ class AutocompleteContainer extends React.Component {
   };
 
   getSymbolPos = term => {
-    let offset = -1;
-    let symbols = [' ', '[', '('];
-
-    for (let i = 0; i < symbols.length; i++) {
-      let currOffset = term.lastIndexOf(symbols[i]);
-      if (currOffset > offset) {
-        offset = currOffset;
-      }
-    }
+    let offset = [' ', '[', '('].
+    map(symbol => term.lastIndexOf(symbol)).
+    reduce((offset, currOffset) => (offset < currOffset ? currOffset : offset), -1);
 
     if (offset !== -1) {
       offset++;
