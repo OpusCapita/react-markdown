@@ -917,11 +917,12 @@ export const getBracketsPos = (text, pos) => {
 
 const insertText = ({ state, insertedText, insertedPos, endOffset }) => {
   const change = state.change();
-  change.moveOffsetsTo(insertedPos).insertText(insertedText).moveOffsetsTo(endOffset + insertedText.length).focus();
+  change.moveOffsetsTo(insertedPos).insertText(insertedText).
+  moveOffsetsTo(endOffset + insertedText.length).focus();
   return change.state;
 };
 
-const getPosAfterEmphasis = (state, accents) => {
+export const getPosAfterEmphasis = (state, accents) => {
   let maxPos = -1;
   const { texts, startOffset } = state;
   const accentsCount = accents.length;

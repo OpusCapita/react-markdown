@@ -3,6 +3,7 @@ import Types from 'prop-types';
 
 import AutocompleteWidget from './AutocompleteWidget';
 import { getSlateEditor } from '../../utils';
+import { getAccents, getPosAfterEmphasis } from '../../slate/transforms';
 
 const escapeCode = 27;
 const arrowUpCode = 38;
@@ -66,6 +67,24 @@ class AutocompleteContainer extends React.Component {
     return undefined;
   };
 
+  getSymbolPos = term => {
+    let offset = -1;
+    let symbols = [' ', '[', '('];
+
+    for (let i = 0; i < symbols.length; i++) {
+      let currOffset = term.lastIndexOf(symbols[i]);
+      if (currOffset > offset) {
+        offset = currOffset;
+      }
+    }
+
+    if (offset !== -1) {
+      offset++;
+    }
+
+    return offset;
+  };
+
   getSearchToken = (state) => {
     const text = state.focusBlock.text;
     const { anchorOffset } = state.selection;
@@ -77,10 +96,17 @@ class AutocompleteContainer extends React.Component {
       term = text.substring(0, anchorOffset);
 
       if (!term.endsWith(' ')) {
-        offset = term.lastIndexOf(' ');
+        offset = this.getSymbolPos(term);
+
+        const accents = getAccents(state);
+        if (accents.length > 0) { // this position has some accent
+          let currLeftPos = getPosAfterEmphasis(state, accents);
+          if (offset < currLeftPos) {
+            offset = currLeftPos;
+          }
+        }
 
         if (offset !== -1) {
-          offset = offset + 1;
           term = term.substring(offset);
         }
       }
