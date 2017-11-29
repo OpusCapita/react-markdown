@@ -35,7 +35,9 @@ import {
   wrapLink,
   hasMultiLineSelection,
   getOlNum,
-  getUlMarker
+  getUlMarker,
+  copySelection,
+  setSelectionToState
 } from './slate/transforms';
 
 const ACCENTS = {
@@ -136,6 +138,7 @@ class PlainMarkdownInput extends React.Component {
     // XXX Slate "Editor.props.onChange" behavior changed
     // https://github.com/ianstormtaylor/slate/blob/master/packages/slate/Changelog.md#0220--september-5-2017
     let editorState = obj.state || obj;
+    let selection = copySelection(editorState);
     let numBlock = -1;
     let key = editorState.blocks.get(0).key;
     let nodesSize = editorState.document.nodes.size;
@@ -159,6 +162,8 @@ class PlainMarkdownInput extends React.Component {
     setTimeout(() => {
       autoScrollToTop();
       if (isForceUpdate) {
+        let editorState = setSelectionToState(this.state.editorState, selection, true);
+        this.setState({ editorState });
         this.forceUpdate()
       }
     }, 0);
@@ -343,7 +348,6 @@ class PlainMarkdownInput extends React.Component {
                 key={ind}
                 onClick={this.handleActionButtonClick}
                 disabled={readOnly}
-                // disabled={disabled}
                 locale={locale}
                 accent={accent}
                 active={hasAccent(editorState, accent)}

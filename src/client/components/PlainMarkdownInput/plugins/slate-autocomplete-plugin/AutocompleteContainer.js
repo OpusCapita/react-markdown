@@ -153,7 +153,7 @@ class AutocompleteContainer extends React.Component {
         let change = state.change();
         change.deleteBackward(term.length);
         change.insertText(extension.markdownText(item) + ' ').focus();
-        this.props.onChange(change.state);
+        this.props.onChange(change.state, true);
       }
     }
 

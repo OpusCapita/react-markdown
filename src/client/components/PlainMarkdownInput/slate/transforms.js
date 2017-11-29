@@ -863,3 +863,30 @@ export const unwrapHeader = (state, level) => {
 
   return state;
 };
+
+export const copySelection = state => {
+  const {
+    anchorKey,
+    anchorOffset,
+    focusKey,
+    focusOffset,
+    isBackward
+  } = state.selection;
+
+  return {
+    anchorKey,
+    anchorOffset,
+    focusKey,
+    focusOffset,
+    isBackward
+  };
+};
+
+export const setSelectionToState = (state, selectBackup, isFocused) => {
+  let change = state.change();
+  change.select({
+    ...selectBackup,
+    isFocused
+  });
+  return change.state;
+};
