@@ -23,6 +23,17 @@ See interactive example for more details: https://opuscapita.github.io/react-mar
 
 > Demo powered by [React Showroom](https://github.com/OpusCapita/react-showroom-client)
 
+If you want to use together with Bootstrap Modal, you need to add styles:
+
+```
+.markdown-input_fullscreen { // pass this class to Modal component
+  overflow: hidden;
+}
+.markdown-input_fullscreen.modal.in .modal-dialog {
+  transform: none;
+}
+```
+
 ## Known issues
 
 * Code blocks are not supported
