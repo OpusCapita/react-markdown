@@ -35,7 +35,7 @@ class MarkdownInputModalScope extends React.Component {
 
   render() {
     const modalClasses = classNames({
-      markdownInput_fullscreen: this.state.fullScreen,
+      'markdown-input_fullscreen': this.state.fullScreen,
       ...this.props.className
     });
 
