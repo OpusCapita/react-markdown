@@ -87,7 +87,6 @@ class PlainMarkdownInput extends React.Component {
     };
     this.handleRef = this.handleRef.bind(this);
     this.handleScroll = this.handleScroll.bind(this);
-    this.handleMouseUp = this.handleMouseUp.bind(this);
     this.handleActionButtonClick = this.handleActionButtonClick.bind(this);
   }
 
@@ -141,7 +140,7 @@ class PlainMarkdownInput extends React.Component {
     return editorStateMutable.asImmutable();
   }
 
-  handleChange = (obj, isForceUpdate = false) => {
+  handleChange = (obj, isSetFocus = false) => {
     // XXX Slate "Editor.props.onChange" behavior changed
     // https://github.com/ianstormtaylor/slate/blob/master/packages/slate/Changelog.md#0220--september-5-2017
     let editorState = obj.state || obj;
@@ -168,10 +167,9 @@ class PlainMarkdownInput extends React.Component {
 
     setTimeout(() => {
       autoScrollToTop();
-      if (isForceUpdate) {
+      if (isSetFocus) {
         let editorState = setSelectionToState(this.state.editorState, selection);
         this.setState({ editorState });
-        this.forceUpdate()
       }
     }, 0);
   };
