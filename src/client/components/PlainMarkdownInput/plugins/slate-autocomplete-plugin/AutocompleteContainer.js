@@ -16,6 +16,7 @@ class AutocompleteContainer extends React.Component {
     options: Types.object,
     onChange: Types.func,
     onScroll: Types.func,
+    onMouseUp: Types.func,
   };
 
   static defaultProps = {
@@ -23,7 +24,8 @@ class AutocompleteContainer extends React.Component {
     locale: 'en',
     options: {},
     onChange: () => {},
-    onScroll: () => {}
+    onScroll: () => {},
+    onMouseUp: () => {}
   };
 
   constructor(props) {
@@ -153,7 +155,7 @@ class AutocompleteContainer extends React.Component {
         let change = state.change();
         change.deleteBackward(term.length);
         change.insertText(extension.markdownText(item) + ' ').focus();
-        this.props.onChange(change.state);
+        this.props.onChange(change.state, true);
       }
     }
 
@@ -236,6 +238,7 @@ class AutocompleteContainer extends React.Component {
             onSelectedIndexChange={this.handleSelectedIndexChange}
             isMouseIndexSelected={isMouseIndexSelected}
             onMouseDown={this.handleMouseDown.bind(this)}
+            onMouseUp={this.props.onMouseUp}
             restrictorRef={ref}
           />
         ) : null}
