@@ -87,6 +87,7 @@ class PlainMarkdownInput extends React.Component {
     };
     this.handleRef = this.handleRef.bind(this);
     this.handleScroll = this.handleScroll.bind(this);
+    this.handleMouseUp = this.handleMouseUp.bind(this);
     this.handleActionButtonClick = this.handleActionButtonClick.bind(this);
   }
 
@@ -126,6 +127,15 @@ class PlainMarkdownInput extends React.Component {
     this.forceUpdate();
   };
 
+  handleMouseUp = () => {
+    // let select  = copySelection(this.state.editorState);
+    // let editorState = setSelectionToState(this.state.editorState, select, true);
+    // this.setState({ editorState });
+    // this.forceUpdate();
+
+    this.handleChange(this.state.editorState, true);
+  };
+
   setNodesToState(editorState, nodes) {
     let editorStateMutable = editorState.asMutable();
     editorStateMutable.document = editorStateMutable.document.asMutable();
@@ -162,7 +172,7 @@ class PlainMarkdownInput extends React.Component {
     setTimeout(() => {
       autoScrollToTop();
       if (isForceUpdate) {
-        let editorState = setSelectionToState(this.state.editorState, selection, true);
+        let editorState = setSelectionToState(this.state.editorState, selection);
         this.setState({ editorState });
         this.forceUpdate()
       }
@@ -383,7 +393,8 @@ class PlainMarkdownInput extends React.Component {
                 extensions: extensions,
                 locale: locale,
                 onChange: this.handleChange,
-                onScroll: this.handleScroll
+                onScroll: this.handleScroll,
+                onMouseUp: this.handleMouseUp
               })
             ]}
             readOnly={readOnly}

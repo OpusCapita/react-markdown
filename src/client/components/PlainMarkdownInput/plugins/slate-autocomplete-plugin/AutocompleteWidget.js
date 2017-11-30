@@ -10,6 +10,7 @@ const propTypes = {
   items: Types.array,
   locale: Types.string,
   onMouseDown: Types.func,
+  onMouseUp: Types.func,
   onScroll: Types.func,
   onSelectItem: Types.func,
   selectedIndex: Types.number,
@@ -23,6 +24,7 @@ const defaultProps = {
   items: [],
   locale: 'en',
   onMouseDown: () => {},
+  onMouseUp: () => {},
   onScroll: () => {},
   onSelectItem: () => {},
   style: {},
@@ -139,6 +141,10 @@ class AutocompleteWidget extends React.Component {
             e.preventDefault(); // XXX Not work in IE11
             e.stopPropagation(); // Isolate event target
             this.props.onMouseDown('widget');
+          }}
+          onMouseUp={e => {
+            e.stopPropagation(); // Isolate event target
+            this.props.onMouseUp();
           }}
           style={{
             left,

@@ -882,7 +882,7 @@ export const copySelection = state => {
   };
 };
 
-export const setSelectionToState = (state, selectBackup, isFocused) => {
+export const setSelectionToState = (state, selectBackup, isFocused = true) => {
   let change = state.change();
   change.select({
     ...selectBackup,
