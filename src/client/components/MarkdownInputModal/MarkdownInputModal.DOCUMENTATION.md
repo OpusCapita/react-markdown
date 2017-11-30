@@ -32,6 +32,7 @@ Configurable extensions with autocomplete for **products**, **terms**, etc.
 <div style={{ height: '70vh' }}>
   <MarkdownInputModal
     onChange={_scope.handleValueChange}
+    onFullScreen={_scope.handleFullScreen}
     value={_scope.state.markdownExample}
     readOnly={false}
     locale='de'
