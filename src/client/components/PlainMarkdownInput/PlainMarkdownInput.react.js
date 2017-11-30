@@ -128,12 +128,9 @@ class PlainMarkdownInput extends React.Component {
   };
 
   handleMouseUp = () => {
-    // let select  = copySelection(this.state.editorState);
-    // let editorState = setSelectionToState(this.state.editorState, select, true);
-    // this.setState({ editorState });
-    // this.forceUpdate();
-
-    this.handleChange(this.state.editorState, true);
+    let change = this.state.editorState.change();
+    change.focus();
+    this.setState({ editorState: change.state });
   };
 
   setNodesToState(editorState, nodes) {
@@ -259,15 +256,8 @@ class PlainMarkdownInput extends React.Component {
   }
 
   handleScroll() {
-    if (navigator.userAgent.match(/msie/i) || navigator.userAgent.match(/trident/i)) {
-      // Works in the modal mode only in IE
-      // In other browsers interception of focus does not work in the modal mode
-      this.slateContentRef.focus();
-    } else {
-      // This code in case of execution in IE as a ghost effect scrolls the content of the block to the top
-      let refEl = findDOMNode(this.slateContentRef);
-      refEl.getElementsByClassName('react-markdown--slate-content__editor')[0].focus();
-    }
+    let refEl = findDOMNode(this.slateContentRef);
+    refEl.getElementsByClassName('react-markdown--slate-content__editor')[0].focus();
   }
 
   handleActionButtonClick(accent) {
