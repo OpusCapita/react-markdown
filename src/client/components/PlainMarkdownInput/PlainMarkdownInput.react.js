@@ -11,8 +11,7 @@ import { parse } from './slate/tokenizer';
 import getMessage from '../translations';
 
 import {
-  autoScrollToTop,
-  addSpecialCharacter
+  autoScrollToTop
 } from './utils';
 
 import { AutocompletePlugin } from './plugins';
@@ -37,7 +36,8 @@ import {
   getOlNum,
   getUlMarker,
   copySelection,
-  setSelectionToState
+  setSelectionToState,
+  addSpecialCharacter
 } from './slate/transforms';
 
 const ACCENTS = {

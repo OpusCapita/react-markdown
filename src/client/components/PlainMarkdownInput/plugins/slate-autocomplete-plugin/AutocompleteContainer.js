@@ -3,6 +3,7 @@ import Types from 'prop-types';
 
 import AutocompleteWidget from './AutocompleteWidget';
 import { getSlateEditor } from '../../utils';
+import { getAccents, getPosAfterEmphasis } from '../../slate/transforms';
 
 const escapeCode = 27;
 const arrowUpCode = 38;
@@ -68,6 +69,18 @@ class AutocompleteContainer extends React.Component {
     return undefined;
   };
 
+  getSymbolPos = term => {
+    let offset = [' ', '[', '('].
+    map(symbol => term.lastIndexOf(symbol)).
+    reduce((offset, currOffset) => (offset < currOffset ? currOffset : offset), -1);
+
+    if (offset !== -1) {
+      offset++;
+    }
+
+    return offset;
+  };
+
   getSearchToken = (state) => {
     const text = state.focusBlock.text;
     const { anchorOffset } = state.selection;
@@ -79,10 +92,17 @@ class AutocompleteContainer extends React.Component {
       term = text.substring(0, anchorOffset);
 
       if (!term.endsWith(' ')) {
-        offset = term.lastIndexOf(' ');
+        offset = this.getSymbolPos(term);
+
+        const accents = getAccents(state);
+        if (accents.length > 0) { // this position has some accent
+          let currLeftPos = getPosAfterEmphasis(state, accents);
+          if (offset < currLeftPos) {
+            offset = currLeftPos;
+          }
+        }
 
         if (offset !== -1) {
-          offset = offset + 1;
           term = term.substring(offset);
         }
       }
@@ -111,7 +131,7 @@ class AutocompleteContainer extends React.Component {
         this.forceHide();
       } else if (e.keyCode === enterCode) {
         e.preventDefault();
-        this.handleSelectItem(selectedIndex);
+        this.handleSelectItem(selectedIndex, e);
         this.forceHide();
       } else if (e.keyCode === arrowUpCode || e.keyCode === arrowDownCode) {
         e.preventDefault();
@@ -140,7 +160,17 @@ class AutocompleteContainer extends React.Component {
     }
   };
 
-  handleSelectItem = (index) => {
+  removeSpecialCharacter = (state, specialCharacter) => {
+    let change = state.change();
+    let text = state.startBlock.text;
+    let charLength = specialCharacter.length;
+    let specialCharPos = text.lastIndexOf(specialCharacter, state.endOffset);
+    change.moveOffsetsTo(specialCharPos).deleteForward(charLength).
+    moveOffsetsTo(state.endOffset - charLength).focus();
+    this.props.onChange(change.state);
+  };
+
+  handleSelectItem = (index, event = null) => {
     const { items } = this.state;
     const { state, options } = this.props;
     const { term } = this.getSearchToken(state);
@@ -151,11 +181,14 @@ class AutocompleteContainer extends React.Component {
       const { extensions } = options;
       const extension = this.matchExtension(extensions, term);
 
-      if (extension) {
+      if (extension && item) {
         let change = state.change();
-        change.deleteBackward(term.length);
-        change.insertText(extension.markdownText(item) + ' ').focus();
+        change.deleteBackward(term.length).insertText(extension.markdownText(item) + ' ').focus();
         this.props.onChange(change.state, true);
+      }
+
+      if (!item && event) {
+        this.removeSpecialCharacter(state, extension.specialCharacter);
       }
     }
 
