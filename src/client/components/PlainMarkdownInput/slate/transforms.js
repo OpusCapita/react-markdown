@@ -735,15 +735,15 @@ const unwrapList = function(accent, state) {
         lastAfter = getTextLength(change);
       }
     }
+    let newAnchorOffset = anchorOffset - firstBefore + firstAfter;
     change.select({
       anchorKey,
-      anchorOffset: anchorOffset - firstBefore + firstAfter,
+      anchorOffset: newAnchorOffset < 0 ? 0 : newAnchorOffset,
       focusKey,
       focusOffset: focusOffset - lastBefore + lastAfter,
       isFocused: true,
       isBackward
     });
-
     return change.state;
   } else {
     return unwrapListCallbacks[accent](state);
@@ -975,4 +975,31 @@ export const addSpecialCharacter = (specialCharacter, state) => {
     insertedPos = text.substring(0, startOffset).lastIndexOf(' ') + 1;
   }
   return insertText({ state, insertedText, insertedPos, endOffset });
+};
+
+export const copySelection = state => {
+  const {
+    anchorKey,
+    anchorOffset,
+    focusKey,
+    focusOffset,
+    isBackward
+  } = state.selection;
+
+  return {
+    anchorKey,
+    anchorOffset,
+    focusKey,
+    focusOffset,
+    isBackward
+  };
+};
+
+export const setSelectionToState = (state, selectBackup, isFocused = true) => {
+  let change = state.change();
+  change.select({
+    ...selectBackup,
+    isFocused
+  });
+  return change.state;
 };

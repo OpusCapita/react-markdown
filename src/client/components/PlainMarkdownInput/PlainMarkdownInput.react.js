@@ -11,7 +11,8 @@ import { parse } from './slate/tokenizer';
 import getMessage from '../translations';
 
 import {
-  autoScrollToTop
+  autoScrollToTop,
+  addSpecialCharacter
 } from './utils';
 
 import { AutocompletePlugin } from './plugins';
@@ -35,6 +36,8 @@ import {
   hasMultiLineSelection,
   getOlNum,
   getUlMarker,
+  copySelection,
+  setSelectionToState,
   addSpecialCharacter
 } from './slate/transforms';
 
@@ -124,6 +127,12 @@ class PlainMarkdownInput extends React.Component {
     this.forceUpdate();
   };
 
+  handleMouseUp = () => {
+    let change = this.state.editorState.change();
+    change.focus();
+    this.setState({ editorState: change.state });
+  };
+
   setNodesToState(editorState, nodes) {
     let editorStateMutable = editorState.asMutable();
     editorStateMutable.document = editorStateMutable.document.asMutable();
@@ -132,10 +141,11 @@ class PlainMarkdownInput extends React.Component {
     return editorStateMutable.asImmutable();
   }
 
-  handleChange = (obj, isForceUpdate = false) => {
+  handleChange = (obj, isSetFocus = false) => {
     // XXX Slate "Editor.props.onChange" behavior changed
     // https://github.com/ianstormtaylor/slate/blob/master/packages/slate/Changelog.md#0220--september-5-2017
     let editorState = obj.state || obj;
+    let selection = copySelection(editorState);
     let numBlock = -1;
     let key = editorState.blocks.get(0).key;
     let nodesSize = editorState.document.nodes.size;
@@ -158,8 +168,9 @@ class PlainMarkdownInput extends React.Component {
 
     setTimeout(() => {
       autoScrollToTop();
-      if (isForceUpdate) {
-        this.forceUpdate()
+      if (isSetFocus) {
+        let editorState = setSelectionToState(this.state.editorState, selection);
+        this.setState({ editorState });
       }
     }, 0);
   };
@@ -206,7 +217,33 @@ class PlainMarkdownInput extends React.Component {
     }, 5);
   }
 
+  handlePaste(event, change) {
+    if (!window.clipboardData) { // for chrome and ff
+      return undefined;
+    }
+
+    event.preventDefault();
+    let pasteText = window.clipboardData.getData("Text");
+    let txtArr = pasteText.split('\n');
+    if (txtArr.length > 1) { // insert multiline text
+      for (let i = 0; i < txtArr.length; i++) {
+        change.insertText(txtArr[i]);
+        if (i < txtArr.length - 1) {
+          change.splitBlock(1);
+        }
+      }
+    } else {
+      change.insertText(pasteText);
+    }
+    change.focus();
+    return this.handleChange(change.state);
+  }
+
   handleKeyDown(event, data, change) {
+    if (data.isMod && data.key === 'v') {
+      return this.handlePaste(event, change);
+    }
+
     if (data.isMod && ACCENTS[data.key]) {
       if (data.key === 's') {
         event.preventDefault();
@@ -244,15 +281,8 @@ class PlainMarkdownInput extends React.Component {
   }
 
   handleScroll() {
-    if (navigator.userAgent.match(/msie/i) || navigator.userAgent.match(/trident/i)) {
-      // Works in the modal mode only in IE
-      // In other browsers interception of focus does not work in the modal mode
-      this.slateContentRef.focus();
-    } else {
-      // This code in case of execution in IE as a ghost effect scrolls the content of the block to the top
-      let refEl = findDOMNode(this.slateContentRef);
-      refEl.getElementsByClassName('react-markdown--slate-content__editor')[0].focus();
-    }
+    let refEl = findDOMNode(this.slateContentRef);
+    refEl.getElementsByClassName('react-markdown--slate-content__editor')[0].focus();
   }
 
   handleActionButtonClick(accent) {
@@ -343,7 +373,6 @@ class PlainMarkdownInput extends React.Component {
                 key={ind}
                 onClick={this.handleActionButtonClick}
                 disabled={readOnly}
-                // disabled={disabled}
                 locale={locale}
                 accent={accent}
                 active={hasAccent(editorState, accent)}
@@ -379,7 +408,8 @@ class PlainMarkdownInput extends React.Component {
                 extensions: extensions,
                 locale: locale,
                 onChange: this.handleChange,
-                onScroll: this.handleScroll
+                onScroll: this.handleScroll,
+                onMouseUp: this.handleMouseUp
               })
             ]}
             readOnly={readOnly}
