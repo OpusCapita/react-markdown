@@ -731,15 +731,15 @@ const unwrapList = function(accent, state) {
         lastAfter = getTextLength(change);
       }
     }
+    let newAnchorOffset = anchorOffset - firstBefore + firstAfter;
     change.select({
       anchorKey,
-      anchorOffset: anchorOffset - firstBefore + firstAfter,
+      anchorOffset: newAnchorOffset < 0 ? 0 : newAnchorOffset,
       focusKey,
       focusOffset: focusOffset - lastBefore + lastAfter,
       isFocused: true,
       isBackward
     });
-
     return change.state;
   } else {
     return unwrapListCallbacks[accent](state);
