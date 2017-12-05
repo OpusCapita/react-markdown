@@ -735,12 +735,13 @@ const unwrapList = function(accent, state) {
         lastAfter = getTextLength(change);
       }
     }
-    let newAnchorOffset = anchorOffset - firstBefore + firstAfter;
+    let newAnchorOffset = anchorOffset - (isBackward ? lastBefore - lastAfter : firstBefore - firstAfter);
+    let newFocusOffset = focusOffset - (isBackward ? firstBefore - firstAfter : lastBefore - lastAfter);
     change.select({
       anchorKey,
       anchorOffset: newAnchorOffset < 0 ? 0 : newAnchorOffset,
       focusKey,
-      focusOffset: focusOffset - lastBefore + lastAfter,
+      focusOffset: newFocusOffset < 0 ? 0 : newFocusOffset,
       isFocused: true,
       isBackward
     });
