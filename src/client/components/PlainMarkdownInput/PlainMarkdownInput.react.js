@@ -283,6 +283,8 @@ class PlainMarkdownInput extends React.Component {
     if (navigator.userAgent.match(/msie/i) || navigator.userAgent.match(/trident/i)) {
       // Works in the modal mode only in IE
       // In other browsers interception of focus does not work in the modal mode
+      // (XXX: autocomplete widget loses focus after click on autocomplete scroll,
+      // as a result pressing the Up Arrow and Down Arrow buttons cease to be processed)
       this.slateContentRef.focus();
     } else {
       // This code in case of execution in IE as a ghost effect scrolls the content of the block to the top
