@@ -72,7 +72,7 @@ window.cancelAnimationFrame = callback => {
 window.requestAnimationFrame = callback => callback;
 
 describe('<AutocompleteWidget />', () => {
-  it('componentDidMount()', () => {
+  it.skip('+ componentDidMount()', () => {
     const handler = sinon.spy();
     const listener = sinon.spy();
     let component = (
@@ -93,7 +93,7 @@ describe('<AutocompleteWidget />', () => {
     expect(listener.getCall(0).args[2]).to.equal(false);
   });
 
-  it('componentWillReceiveProps(nextProps)', () => {
+  it.skip('+ componentWillReceiveProps(nextProps)', () => {
     let component = (
       <AutocompleteWidget
         selectedIndex={0}
@@ -109,7 +109,7 @@ describe('<AutocompleteWidget />', () => {
     expect(wrapperInstance.adjustPosition.callCount).to.equal(1);
   });
 
-  it('componentWillUpdate(nextProps)', () => {
+  it.skip('+ componentWillUpdate(nextProps)', () => {
     const selectedIndex = 2;
     let component = (
       <AutocompleteWidget
@@ -137,7 +137,7 @@ describe('<AutocompleteWidget />', () => {
     expect(wrapperInstance['items-ref'].scrollTop).to.equal(44);
   });
 
-  it('componentWillUnmount()', () => {
+  it.skip('+ componentWillUnmount()', () => {
     let component = (
       <AutocompleteWidget
         selectedIndex={0}
@@ -151,7 +151,7 @@ describe('<AutocompleteWidget />', () => {
     expect(wrapperInstance._animationFrame.callCount).to.equal(1);
   });
 
-  it('setPosition(selection)', () => {
+  it.skip('+ setPosition(selection)', () => {
     window.requestAnimationFrame = sinon.spy();
     let restrictorRef = {
       offsetWidth: 800,
@@ -203,7 +203,7 @@ describe('<AutocompleteWidget />', () => {
     expect(wrapper.state('top')).to.equal(`192px`);
   });
 
-  it('adjustPosition()', () => {
+  it.skip('+ adjustPosition()', () => {
     let component = (
       <AutocompleteWidget
         selectedIndex={0}
@@ -217,7 +217,7 @@ describe('<AutocompleteWidget />', () => {
     expect(wrapperInstance.requestAnimationFrame.callCount).to.equal(0);
   });
 
-  it('cancelAdjustPosition()', () => {
+  it.skip('+ cancelAdjustPosition()', () => {
     let component = (
       <AutocompleteWidget
         selectedIndex={0}
@@ -232,7 +232,7 @@ describe('<AutocompleteWidget />', () => {
     expect(wrapperInstance._animationFrame.callCount).to.equal(1);
   });
 
-  it('handleSelectItem(index)', () => {
+  it.skip('+ handleSelectItem(index)', () => {
     let handler = sinon.spy();
     let index = 2;
     let component = (

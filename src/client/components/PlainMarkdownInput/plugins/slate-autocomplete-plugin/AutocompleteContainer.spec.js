@@ -82,7 +82,7 @@ const extensions = [
 ];
 
 describe('<AutocompleteContainer />', () => {
-  it('creation by default', () => {
+  it.skip('+ creation by default', () => {
     let component = (<AutocompleteContainer
       options={{ extensions }}
     />);
@@ -121,7 +121,7 @@ describe('<AutocompleteContainer />', () => {
     expect(wrapperInstance.searchItems.callCount).to.equal(1);
   });
 
-  it('matchExtension(extensions, token)', () => {
+  it.skip('+ matchExtension(extensions, token)', () => {
     let component = (<AutocompleteContainer
       options={{ extensions }}
     />);
@@ -136,7 +136,7 @@ describe('<AutocompleteContainer />', () => {
     expect(extension).to.deep.equal(undefined);
   });
 
-  it('getSearchToken(state)', () => {
+  it.skip('+ getSearchToken(state)', () => {
     const nodeText = '# Header1 ';
     let inputComponent = (<PlainMarkdownInput
       value={nodeText}
@@ -166,7 +166,7 @@ describe('<AutocompleteContainer />', () => {
     expect(res.offset).to.equal(-1);
   });
 
-  it('handleSelectedIndexChange(selectedIndex)', () => {
+  it.skip('+ handleSelectedIndexChange(selectedIndex)', () => {
     let component = (<AutocompleteContainer
       options={{ extensions }}
     />);
@@ -177,7 +177,7 @@ describe('<AutocompleteContainer />', () => {
     expect(wrapper.state('selectedIndex')).to.equal(3);
   });
 
-  it('handleKeyDown(e)', (done) => {
+  it.skip('+ handleKeyDown(e)', (done) => {
     let component = (<AutocompleteContainer
       options={{ extensions }}
     />);
@@ -249,7 +249,7 @@ describe('<AutocompleteContainer />', () => {
     });
   });
 
-  it('handleSelectItem(index)', (done) => {
+  it.skip('+ handleSelectItem(index)', (done) => {
     const nodeText = '# bi2 #ba';
     let inputComponent = (<PlainMarkdownInput
       value={nodeText}
@@ -341,7 +341,7 @@ describe('<AutocompleteContainer />', () => {
     }, 100);
   });
 
-  it('handleRef(ref)', () => {
+  it.skip('+ handleRef(ref)', () => {
     let component = (<AutocompleteContainer
       options={{ extensions }}
     />);
