@@ -384,12 +384,17 @@ class PlainMarkdownInput extends React.Component {
           </div>
 
           <div className="btn-group react-markdown--plain-markdown-input__fullscreen-button">
-            <FullScreenButton
-              onClick={this.handleFullScreen}
-              locale={locale}
-              fullScreen={fullScreen}
-              disabled={readOnly}
-            />
+            {this.props.showFullScreenButton ?
+              (
+                <FullScreenButton
+                  onClick={this.handleFullScreen}
+                  locale={locale}
+                  fullScreen={fullScreen}
+                  disabled={readOnly}
+                />
+              ) :
+              ''
+            }
           </div>
         </div>
         <div className={'react-markdown--slate-content'}>
@@ -429,6 +434,7 @@ PlainMarkdownInput.propTypes = {
   onChange: Types.func,
   onFullScreen: Types.func,
   readOnly: Types.bool,
+  showFullScreenButton: Types.bool,
   locale: Types.string
 };
 
@@ -438,6 +444,7 @@ PlainMarkdownInput.defaultProps = {
   onFullScreen: () => {},
   onChange: () => {},
   readOnly: false,
+  showFullScreenButton: false,
   locale: 'en'
 };
 
