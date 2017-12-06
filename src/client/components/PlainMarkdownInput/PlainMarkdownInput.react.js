@@ -20,7 +20,6 @@ import {
   ActionButton,
   HeaderButton,
   LinkButton,
-  ObjectReferenceButton,
   FullScreenButton
 } from './buttons';
 
@@ -310,17 +309,6 @@ class PlainMarkdownInput extends React.Component {
     const { children, extensions, readOnly, locale } = this.props;
     const disabled = readOnly || hasMultiLineSelection(editorState);
 
-    let objectReferenceButtons = this.props.extensions.map((extension, ind) => {
-      return (
-        <ObjectReferenceButton
-          key={ind}
-          onClick={this.handleObjectReferenceButtonClick.bind(this)}
-          extension={extension}
-          disabled={readOnly}
-        />
-      );
-    });
-
     return (
       <div
         className={classnames(
@@ -377,10 +365,6 @@ class PlainMarkdownInput extends React.Component {
                 active={hasAccent(editorState, accent)}
               />
             ))}
-          </div>
-
-          <div className="btn-group">
-            {objectReferenceButtons}
           </div>
 
           <div className="btn-group react-markdown--plain-markdown-input__fullscreen-button">
