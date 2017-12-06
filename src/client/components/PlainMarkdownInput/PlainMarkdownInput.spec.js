@@ -819,12 +819,26 @@ describe('<PlainMarkdownInput />', () => {
       expect(Plain.serialize(editorState)).to.equal('[text](http://example.com)');
     });
 
-    it('FullScreenButton', () => {
+    it('FullScreenButton hide', () => {
       let nodeText = 'text';
       let component = (<PlainMarkdownInput
         value={nodeText}
         fullScreen={false}
         readOnly={false}
+      />);
+
+      let wrapper = shallow(component);
+      const fullScreenButtons = wrapper.find(`FullScreenButton`);
+      expect(fullScreenButtons).to.have.length(0);
+    });
+
+    it('FullScreenButton show', () => {
+      let nodeText = 'text';
+      let component = (<PlainMarkdownInput
+        value={nodeText}
+        fullScreen={false}
+        readOnly={false}
+        showFullScreenButton={true}
       />);
 
       let wrapper = shallow(component);
