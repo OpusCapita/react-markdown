@@ -3,6 +3,7 @@ import Types from 'prop-types';
 
 import AutocompleteWidget from './AutocompleteWidget';
 import { getSlateEditor } from '../../utils';
+// import { getSlateEditor, getEditorScrollTop, setEditorScrollTop } from '../../utils';
 import { getAccents, getPosAfterEmphasis } from '../../slate/transforms';
 
 const escapeCode = 27;
@@ -18,6 +19,7 @@ class AutocompleteContainer extends React.Component {
     onChange: Types.func,
     onScroll: Types.func,
     onMouseUp: Types.func,
+    setEditorFocus: Types.func,
   };
 
   static defaultProps = {
@@ -26,7 +28,8 @@ class AutocompleteContainer extends React.Component {
     options: {},
     onChange: () => {},
     onScroll: () => {},
-    onMouseUp: () => {}
+    onMouseUp: () => {},
+    setEditorFocus: () => {},
   };
 
   constructor(props) {
@@ -38,6 +41,7 @@ class AutocompleteContainer extends React.Component {
       items: [],
       ref: null
     };
+    this.editorScrollTop = -1;
   }
 
   componentDidMount = () => {
@@ -156,6 +160,17 @@ class AutocompleteContainer extends React.Component {
   handleMouseDown = currTarget => {
     this.currEventTarget = currTarget;
     if (this.currEventTarget === 'item') {
+      console.log(document.activeElement);
+
+
+      // if (navigator.userAgent.match(/msie/i) || navigator.userAgent.match(/trident/i)) {
+      //   this.editorScrollTop = getEditorScrollTop();
+      //   this.props.setEditorFocus();
+      //   if (this.editorScrollTop !== -1) {
+      //     setEditorScrollTop(this.editorScrollTop);
+      //   }
+      // }
+
       this.handleSelectItem(this.state.selectedIndex);
     }
   };

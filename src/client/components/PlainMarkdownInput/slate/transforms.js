@@ -969,7 +969,7 @@ export const addSpecialCharacter = (specialCharacter, state) => {
     }
   }
 
-  if ((text.length === endOffset) && (text[text.length - 1] !== ' ')) {
+  if (text.length === endOffset && text[text.length - 1] !== ' ' && (startOffset !== 0 || endOffset !== 0)) {
     insertedText = ` ${insertedText}`;
     insertedPos = text.length;
   } else {
