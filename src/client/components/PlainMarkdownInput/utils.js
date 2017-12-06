@@ -29,3 +29,23 @@ export const autoScrollToTop = () => {
     }
   }
 };
+
+export const getEditorScrollTop = () => {
+  let selection = window.getSelection();
+
+  if (selection.anchorNode) {
+    let editor = getSlateEditor(selection);
+    return editor.scrollTop;
+  }
+
+  return -1;
+};
+
+export const setEditorScrollTop = scrollTop => {
+  let selection = window.getSelection();
+
+  if (selection.anchorNode) {
+    let editor = getSlateEditor(selection);
+    editor.scrollTop = scrollTop;
+  }
+};

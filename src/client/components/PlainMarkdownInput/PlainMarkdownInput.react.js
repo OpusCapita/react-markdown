@@ -88,6 +88,7 @@ class PlainMarkdownInput extends React.Component {
     this.handleRef = this.handleRef.bind(this);
     this.handleScroll = this.handleScroll.bind(this);
     this.handleActionButtonClick = this.handleActionButtonClick.bind(this);
+    this.setFocus = this.setFocus.bind(this);
   }
 
   componentWillMount() {
@@ -170,6 +171,8 @@ class PlainMarkdownInput extends React.Component {
       if (isSetFocus) {
         let editorState = setSelectionToState(this.state.editorState, selection);
         this.setState({ editorState });
+
+        console.log(document.activeElement);
       }
     }, 0);
   };
@@ -279,6 +282,11 @@ class PlainMarkdownInput extends React.Component {
     this.slateContentRef = ref;
   }
 
+  setFocus() {
+    let refEl = findDOMNode(this.slateContentRef);
+    refEl.getElementsByClassName('react-markdown--slate-content__editor')[0].focus();
+  }
+
   handleScroll() {
     if (navigator.userAgent.match(/msie/i) || navigator.userAgent.match(/trident/i)) {
       // Works in the modal mode only in IE
@@ -286,10 +294,13 @@ class PlainMarkdownInput extends React.Component {
       // (XXX: autocomplete widget loses focus after click on autocomplete scroll,
       // as a result pressing the Up Arrow and Down Arrow buttons cease to be processed)
       this.slateContentRef.focus();
+
+      console.log(document.activeElement);
     } else {
       // This code in case of execution in IE as a ghost effect scrolls the content of the block to the top
-      let refEl = findDOMNode(this.slateContentRef);
-      refEl.getElementsByClassName('react-markdown--slate-content__editor')[0].focus();
+      this.setFocus();
+      // let refEl = findDOMNode(this.slateContentRef);
+      // refEl.getElementsByClassName('react-markdown--slate-content__editor')[0].focus();
     }
   }
 
@@ -417,7 +428,8 @@ class PlainMarkdownInput extends React.Component {
                 locale: locale,
                 onChange: this.handleChange,
                 onScroll: this.handleScroll,
-                onMouseUp: this.handleMouseUp
+                onMouseUp: this.handleMouseUp,
+                setEditorFocus: this.setFocus
               })
             ]}
             readOnly={readOnly}

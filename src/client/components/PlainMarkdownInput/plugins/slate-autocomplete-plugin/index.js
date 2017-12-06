@@ -14,6 +14,7 @@ const AutocompletePlugin = options => ({
         onChange={options.onChange} // eslint-disable-line
         onScroll={options.onScroll} // eslint-disable-line
         onMouseUp={options.onMouseUp} // eslint-disable-line
+        setEditorFocus={options.setEditorFocus} // eslint-disable-line
       >
         {children}
       </AutocompleteContainer>
