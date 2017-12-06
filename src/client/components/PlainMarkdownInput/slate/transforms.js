@@ -956,7 +956,7 @@ export const addSpecialCharacter = (specialCharacter, state) => {
   // get the position of the left open bracket closer to the cursor
   let { leftPos, rightPos } = getBracketsPos(text, startOffset);
   // this position is between brackets
-  if (leftPos && rightPos && leftPos > insertedPos) {
+  if (leftPos !== false && rightPos !== false && leftPos > insertedPos) {
     insertedPos = leftPos;
   }
 
