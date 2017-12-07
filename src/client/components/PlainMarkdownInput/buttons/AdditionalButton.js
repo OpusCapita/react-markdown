@@ -5,12 +5,12 @@ class AdditionalButton extends React.Component {
   static propTypes = {
     onClick: Types.func,
     disabled: Types.bool,
-    settings: Types.object
+    settings: Types.object,
   };
 
   static defaultProps = {
     onClick: () => {},
-    disabled: false
+    disabled: false,
   };
 
   render() {
@@ -20,9 +20,10 @@ class AdditionalButton extends React.Component {
       <button
         className="btn btn-default"
         disabled={disabled}
-        onClick={e => onClick(settings.handleButtonPress)}
+        onClick={e => (settings.handleButtonPress ? onClick(settings.handleButtonPress) : null)}
       >
-        {settings.label}
+        {settings.iconComponent ? settings.iconComponent : ``}
+        {(settings.iconComponent ? ' ' : '') + (settings.label ? settings.label : '')}
       </button>
     );
   }
