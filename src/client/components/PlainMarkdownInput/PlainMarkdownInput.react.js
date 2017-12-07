@@ -17,10 +17,10 @@ import {
 import { AutocompletePlugin } from './plugins';
 
 import {
+  AdditionalButton,
   ActionButton,
   HeaderButton,
   LinkButton,
-  ObjectReferenceButton,
   FullScreenButton
 } from './buttons';
 
@@ -37,7 +37,6 @@ import {
   getUlMarker,
   copySelection,
   setSelectionToState,
-  addSpecialCharacter
 } from './slate/transforms';
 
 const ACCENTS = {
@@ -87,7 +86,11 @@ class PlainMarkdownInput extends React.Component {
     };
     this.handleRef = this.handleRef.bind(this);
     this.handleScroll = this.handleScroll.bind(this);
+    this.handleAdditionalButtonsClick = this.handleAdditionalButtonsClick.bind(this);
     this.handleActionButtonClick = this.handleActionButtonClick.bind(this);
+    this.handleHeaderButtonClick = this.handleHeaderButtonClick.bind(this);
+    this.handleLinkButtonClick = this.handleLinkButtonClick.bind(this);
+    this.insertAtCursorPosition = this.insertAtCursorPosition.bind(this);
   }
 
   componentWillMount() {
@@ -118,6 +121,7 @@ class PlainMarkdownInput extends React.Component {
     currNode.data = {
       text,
       tokens: parse(text),
+      toJSON: () => this.text
     };
     nodes.set(numBlock, currNode.asImmutable());
   }
@@ -300,9 +304,16 @@ class PlainMarkdownInput extends React.Component {
     return this.handleChange(wrapLink(state));
   }
 
-  handleObjectReferenceButtonClick(extension) {
-    const state = this.state.editorState;
-    return this.handleChange(addSpecialCharacter(extension.specialCharacter, state));
+  insertAtCursorPosition(insertedText) {
+    let change = this.state.editorState.change();
+    change.insertText(insertedText).focus();
+    return this.handleChange(change.state);
+  }
+
+  handleAdditionalButtonsClick(handleButtonPress) {
+    let arrNodes = this.state.editorState.document.nodes.toArray();
+    let value = arrNodes.map(block => block.text).join('\n');
+    handleButtonPress({ value, insertAtCursorPosition: this.insertAtCursorPosition });
   }
 
   render() {
@@ -310,12 +321,12 @@ class PlainMarkdownInput extends React.Component {
     const { children, extensions, readOnly, locale } = this.props;
     const disabled = readOnly || hasMultiLineSelection(editorState);
 
-    let objectReferenceButtons = this.props.extensions.map((extension, ind) => {
+    let additionalButtons = this.props.additionalButtons.map((buttonData, ind) => {
       return (
-        <ObjectReferenceButton
+        <AdditionalButton
           key={ind}
-          onClick={this.handleObjectReferenceButtonClick.bind(this)}
-          extension={extension}
+          onClick={this.handleAdditionalButtonsClick}
+          settings={buttonData}
           disabled={readOnly}
         />
       );
@@ -344,7 +355,7 @@ class PlainMarkdownInput extends React.Component {
 
           <div className="btn-group">
             <LinkButton
-              onClick={this.handleLinkButtonClick.bind(this)}
+              onClick={this.handleLinkButtonClick}
               disabled={disabled}
               locale={locale}
             />
@@ -359,7 +370,7 @@ class PlainMarkdownInput extends React.Component {
               {[1, 2, 3, 4, 5, 6].map((level, ind) => (
                 <HeaderButton
                   key={ind}
-                  onClick={this.handleHeaderButtonClick.bind(this)}
+                  onClick={this.handleHeaderButtonClick}
                   level={level}
                 />
               ))}
@@ -380,7 +391,7 @@ class PlainMarkdownInput extends React.Component {
           </div>
 
           <div className="btn-group">
-            {objectReferenceButtons}
+            {additionalButtons}
           </div>
 
           <div className="btn-group react-markdown--plain-markdown-input__fullscreen-button">
@@ -430,6 +441,7 @@ class PlainMarkdownInput extends React.Component {
 
 PlainMarkdownInput.propTypes = {
   extensions: Types.array,
+  additionalButtons: Types.array,
   value: Types.string,
   onChange: Types.func,
   onFullScreen: Types.func,
@@ -440,6 +452,7 @@ PlainMarkdownInput.propTypes = {
 
 PlainMarkdownInput.defaultProps = {
   extensions: [],
+  additionalButtons: [],
   value: '',
   onFullScreen: () => {},
   onChange: () => {},

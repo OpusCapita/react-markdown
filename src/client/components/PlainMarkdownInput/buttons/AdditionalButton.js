@@ -1,11 +1,11 @@
 import React from 'react';
 import Types from 'prop-types';
 
-class ObjectReferenceButton extends React.Component {
+class AdditionalButton extends React.Component {
   static propTypes = {
     onClick: Types.func,
     disabled: Types.bool,
-    extension: Types.object
+    settings: Types.object
   };
 
   static defaultProps = {
@@ -14,18 +14,18 @@ class ObjectReferenceButton extends React.Component {
   };
 
   render() {
-    const { extension, disabled, onClick } = this.props;
+    const { settings, disabled, onClick } = this.props;
 
     return (
       <button
         className="btn btn-default"
         disabled={disabled}
-        onClick={e => onClick(extension)}
+        onClick={e => onClick(settings.handleButtonPress)}
       >
-        {extension.objectClassName}
+        {settings.label}
       </button>
     );
   }
 }
 
-export default ObjectReferenceButton;
+export default AdditionalButton;

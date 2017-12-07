@@ -36,6 +36,20 @@ Configurable extensions with autocomplete for **products**, **terms**, etc.
     readOnly={false}
     showFullScreenButton={true}
     locale='en'
+    additionalButtons={[
+      {
+        handleButtonPress({ value, insertAtCursorPosition }) {
+          insertAtCursorPosition('#Product.new');                 
+        },
+        label: 'Product'
+      },
+      {
+        handleButtonPress({ value, insertAtCursorPosition }) {
+          insertAtCursorPosition('$Term.new');                 
+        },
+        label: 'Term'
+      }
+    ]}
     extensions={[
       {
         objectClassName: 'Product',
