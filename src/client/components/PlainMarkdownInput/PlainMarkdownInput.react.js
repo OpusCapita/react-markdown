@@ -390,23 +390,21 @@ class PlainMarkdownInput extends React.Component {
             ))}
           </div>
 
-          <div className="btn-group">
+          <div className="btn-group react-markdown--plain-markdown-input__right-buttons">
             {additionalButtons}
           </div>
 
-          <div className="btn-group react-markdown--plain-markdown-input__fullscreen-button">
-            {this.props.showFullScreenButton ?
-              (
-                <FullScreenButton
-                  onClick={this.handleFullScreen}
-                  locale={locale}
-                  fullScreen={fullScreen}
-                  disabled={readOnly}
-                />
-              ) :
-              ''
-            }
-          </div>
+          {this.props.showFullScreenButton ?
+            (<div className="btn-group react-markdown--plain-markdown-input__left-border">
+              <FullScreenButton
+                onClick={this.handleFullScreen}
+                locale={locale}
+                fullScreen={fullScreen}
+                disabled={readOnly}
+              />
+            </div>) :
+            ''
+          }
         </div>
         <div className={'react-markdown--slate-content'}>
           <Editor
