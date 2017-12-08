@@ -98,10 +98,6 @@ class PlainMarkdownInput extends React.Component {
     this.handleNewValue(this.props.value);
   }
 
-  componentDidMount() {
-    this.handleScroll();
-  }
-
   componentWillReceiveProps(nextProps) {
     if (this.props.value !== nextProps.value) {
       this.handleNewValue(nextProps.value);
@@ -308,16 +304,19 @@ class PlainMarkdownInput extends React.Component {
     return this.handleChange(wrapLink(state));
   }
 
+  getCurrentText() {
+    let arrNodes = this.state.editorState.document.nodes.toArray();
+    return arrNodes.map(block => block.text).join('\n');
+  }
+
   insertAtCursorPosition(insertedText) {
     let change = this.state.editorState.change();
-    change.insertText(insertedText).focus();
+    change.delete().insertText(insertedText).focus();
     return this.handleChange(change.state, true);
   }
 
   handleAdditionalButtonsClick(handleButtonPress) {
-    let arrNodes = this.state.editorState.document.nodes.toArray();
-    let value = arrNodes.map(block => block.text).join('\n');
-    handleButtonPress({ value, insertAtCursorPosition: this.insertAtCursorPosition });
+    handleButtonPress({ value: this.getCurrentText(), insertAtCursorPosition: this.insertAtCursorPosition });
   }
 
   render() {
@@ -415,6 +414,7 @@ class PlainMarkdownInput extends React.Component {
             spellCheck={false}
             state={editorState}
             fullScreen={fullScreen}
+            autoFocus={true}
             schema={schema}
             onChange={this.handleChange}
             onCopy={this.handleCopy}
