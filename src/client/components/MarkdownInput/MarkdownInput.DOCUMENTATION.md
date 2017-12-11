@@ -63,7 +63,9 @@ function (optional) that is called on when the user presses the button, the func
       {
         iconComponent: (<i className="fa fa-search"></i>),
         handleButtonPress({ value, insertAtCursorPosition }) {
-          insertAtCursorPosition('#Product.new');                 
+          setTimeout(() => {
+            insertAtCursorPosition('#Product.new');    
+          }, 100);             
         },
       },
       {
