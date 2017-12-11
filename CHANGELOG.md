@@ -1,3 +1,16 @@
+## [v2.0.0](https://github.com/OpusCapita/react-markdown/compare/v1.2.0...v2.0.0) (Mon, 11 Dec 2017 14:27:48 GMT)
+ - Enhancement/migrate react 16/#99 (#111)
+    
+    * Migrate to React 16
+    
+    * Fix test after migration
+    
+    * Change index.html
+    
+    * Change index.html
+    
+    * Update package.json (Aleksandr Baliunov <abaliunov-sc@users.noreply.github.com>, 257ae1d)
+
 ## [v1.2.0](https://github.com/OpusCapita/react-markdown/compare/v1.1.12...v1.2.0) (Mon, 11 Dec 2017 08:36:57 GMT)
  - Increment minor package version number (Kirill Volkovich <kirill.volkovich@jcatalog.com>, b51b2a7)
  - Enhancement/additional buttons/#107 (#110)
