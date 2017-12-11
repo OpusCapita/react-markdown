@@ -334,7 +334,203 @@ describe('<PlainMarkdownInput />', () => {
     });
   });
 
+  describe('handleEnterFromListDown(change, accent)', () => {
+    it("handleEnterFromListDown(change, 'ul')", (done) => {
+      let nodeText = '* Item 1';
+      let component = (<PlainMarkdownInput
+        value={nodeText}
+        fullScreen={false}
+        readOnly={false}
+      />);
+
+      let wrapper = mount(component);
+      let editorState = wrapper.state('editorState');
+      let change = editorState.change();
+      change.moveOffsetsTo(nodeText.length, nodeText.length);
+      let wrapperInstance = wrapper.instance();
+      wrapperInstance.handleChange = sinon.spy();
+      wrapperInstance.handleEnterFromListDown(change, 'ul');
+
+      setTimeout(() => {
+        expect(wrapperInstance.handleChange.callCount).to.equal(1);
+        done();
+      }, 150);
+    });
+
+    it("handleEnterFromListDown(change, 'ol')", (done) => {
+      let nodeText = '1. Item 1';
+      let component = (<PlainMarkdownInput
+        value={nodeText}
+        fullScreen={false}
+        readOnly={false}
+      />);
+
+      let wrapper = mount(component);
+      let editorState = wrapper.state('editorState');
+      let change = editorState.change();
+      change.moveOffsetsTo(nodeText.length, nodeText.length);
+      let wrapperInstance = wrapper.instance();
+      wrapperInstance.handleChange = sinon.spy();
+      wrapperInstance.handleEnterFromListDown(change, 'ol');
+
+      setTimeout(() => {
+        expect(wrapperInstance.handleChange.callCount).to.equal(1);
+        done();
+      }, 150);
+    });
+  });
+
+  describe('handlePaste(event, change)', () => {
+    it('window.clipboardData is not defined', () => {
+      let backupClipboardData = window.clipboardData;
+      window.clipboardData = undefined;
+
+      let nodeText = '**bold text**';
+      let component = (<PlainMarkdownInput
+        value={nodeText}
+        fullScreen={false}
+        readOnly={false}
+      />);
+
+      let wrapper = mount(component);
+      let wrapperInstance = wrapper.instance();
+      wrapperInstance.handleChange = sinon.spy();
+      wrapperInstance.handlePaste({}, {});
+      expect(wrapperInstance.handleChange.callCount).to.equal(0);
+      window.clipboardData = backupClipboardData;
+    });
+
+    it('window.clipboardData is defined, paste single line', () => {
+      let backupClipboardData = window.clipboardData;
+      window.clipboardData = {
+        getData() {
+          return "Plain text";
+        }
+      };
+
+      let nodeText = '**bold text**';
+      let component = (<PlainMarkdownInput
+        value={nodeText}
+        fullScreen={false}
+        readOnly={false}
+      />);
+
+      let wrapper = mount(component);
+      let editorState = wrapper.state('editorState');
+      let change = editorState.change();
+      let wrapperInstance = wrapper.instance();
+      wrapperInstance.handleChange = sinon.spy();
+      wrapperInstance.handlePaste(event, change);
+      expect(wrapperInstance.handleChange.callCount).to.equal(1);
+      editorState = wrapperInstance.handleChange.getCall(0).args[0];
+      expect(Plain.serialize(editorState)).to.equal('Plain text**bold text**');
+
+      window.clipboardData = backupClipboardData;
+    });
+
+    it('window.clipboardData is defined, paste multiline text', () => {
+      let backupClipboardData = window.clipboardData;
+      window.clipboardData = {
+        getData() {
+          return "Plain text\nPlain text";
+        }
+      };
+
+      let nodeText = '**bold text**';
+      let component = (<PlainMarkdownInput
+        value={nodeText}
+        fullScreen={false}
+        readOnly={false}
+      />);
+
+      let wrapper = mount(component);
+      let editorState = wrapper.state('editorState');
+      let change = editorState.change();
+      let wrapperInstance = wrapper.instance();
+      wrapperInstance.handleChange = sinon.spy();
+      wrapperInstance.handlePaste(event, change);
+      expect(wrapperInstance.handleChange.callCount).to.equal(1);
+      editorState = wrapperInstance.handleChange.getCall(0).args[0];
+      expect(Plain.serialize(editorState)).to.equal('Plain text\nPlain text**bold text**');
+
+      window.clipboardData = backupClipboardData;
+    });
+  });
+
   describe('handleKeyDown(event, data, change)', () => {
+    it('ctrl-v', () => {
+      let nodeText = '**bold text**';
+      let component = (<PlainMarkdownInput
+        value={nodeText}
+        fullScreen={false}
+        readOnly={false}
+      />);
+
+      let wrapper = mount(component);
+      let editorState = wrapper.state('editorState');
+      let change = editorState.change();
+      let wrapperInstance = wrapper.instance();
+      wrapperInstance.handlePaste = sinon.spy();
+      wrapperInstance.handleKeyDown(event, {
+        key: 'v',
+        isMod: true
+      }, change);
+      expect(wrapperInstance.handlePaste.callCount).to.equal(1);
+      let newEvent = wrapperInstance.handlePaste.getCall(0).args[0];
+      let newChange = wrapperInstance.handlePaste.getCall(0).args[1];
+      expect(newEvent).to.equal(event);
+      expect(newChange).to.equal(change);
+    });
+
+    it('ctrl-s', () => {
+      let nodeText = 'plain text';
+      let component = (<PlainMarkdownInput
+        value={nodeText}
+        fullScreen={false}
+        readOnly={false}
+      />);
+
+      let wrapper = mount(component);
+      let editorState = wrapper.state('editorState');
+      let change = editorState.change();
+      let wrapperInstance = wrapper.instance();
+      wrapperInstance.toggleAccent = sinon.spy();
+      wrapperInstance.handleKeyDown(event, {
+        key: 's',
+        isMod: true
+      }, change);
+      expect(wrapperInstance.toggleAccent.callCount).to.equal(1);
+      let newState = wrapperInstance.toggleAccent.getCall(0).args[0];
+      let accent = wrapperInstance.toggleAccent.getCall(0).args[1];
+      expect(newState).to.equal(change.state);
+      expect(accent).to.equal('strikethrough');
+    });
+
+    it('ctrl-b', () => {
+      let nodeText = 'plain text';
+      let component = (<PlainMarkdownInput
+        value={nodeText}
+        fullScreen={false}
+        readOnly={false}
+      />);
+
+      let wrapper = mount(component);
+      let editorState = wrapper.state('editorState');
+      let change = editorState.change();
+      let wrapperInstance = wrapper.instance();
+      wrapperInstance.toggleAccent = sinon.spy();
+      wrapperInstance.handleKeyDown(event, {
+        key: 'b',
+        isMod: true
+      }, change);
+      expect(wrapperInstance.toggleAccent.callCount).to.equal(1);
+      let newState = wrapperInstance.toggleAccent.getCall(0).args[0];
+      let accent = wrapperInstance.toggleAccent.getCall(0).args[1];
+      expect(newState).to.equal(change.state);
+      expect(accent).to.equal('bold');
+    });
+
+
     it.skip('bold', () => {
       let nodeText = '**bold text**';
       let component = (<PlainMarkdownInput
@@ -650,6 +846,42 @@ describe('<PlainMarkdownInput />', () => {
     });
   });
 
+  describe('handleAdditionalButtonsClick()', () => {
+    let additionalButtons = [
+      {
+        iconComponent: (<i className="fa fa-search"></i>),
+        handleButtonPress({ value, insertAtCursorPosition }) {
+          insertAtCursorPosition('#Product.new');
+        },
+        label: 'Product'
+      },
+    ];
+
+    it('handleAdditionalButtonsClick', () => {
+      let nodeText = 'text';
+      let component = (<PlainMarkdownInput
+        value={nodeText}
+        fullScreen={false}
+        readOnly={false}
+        additionalButtons={[
+          {
+            iconComponent: (<i className="fa fa-search"></i>),
+            handleButtonPress({ value, insertAtCursorPosition }) {
+              insertAtCursorPosition('#Product.new');
+            },
+            label: 'Product'
+          },
+        ]}
+      />);
+
+      let wrapper = shallow(component);
+      let wrapperInstance = wrapper.instance();
+      wrapperInstance.handleAdditionalButtonsClick(additionalButtons[0].handleButtonPress);
+      let newState = wrapper.state('editorState');
+      expect(Plain.serialize(newState)).to.equal('#Product.newtext');
+    });
+  });
+
   describe('handleMouseDown()', () => {
     it('handleMouseDown', () => {
       let nodeText = 'text';
@@ -668,6 +900,28 @@ describe('<PlainMarkdownInput />', () => {
       wrapperInstance.forceUpdate = sinon.spy();
       wrapperInstance.handleMouseDown();
       expect(wrapperInstance.forceUpdate.callCount).to.equal(1);
+    });
+  });
+
+  describe('handleMouseUp ()', () => {
+    it('handleMouseUp ', () => {
+      let nodeText = 'text';
+      let component = (<PlainMarkdownInput
+        value={nodeText}
+        fullScreen={false}
+        readOnly={false}
+      />);
+
+      let wrapper = shallow(component);
+      let editorState = wrapper.state('editorState');
+      let change = editorState.change();
+      change.blur();
+      expect(change.state.isFocused).to.equal(false);
+      wrapper.setState({ editorState: change.state });
+      let wrapperInstance = wrapper.instance();
+      wrapperInstance.handleMouseUp();
+      editorState = wrapper.state('editorState');
+      expect(editorState.isFocused).to.equal(true);
     });
   });
 
@@ -817,6 +1071,32 @@ describe('<PlainMarkdownInput />', () => {
       linkButton.simulate('click');
       editorState = wrapper.state('editorState');
       expect(Plain.serialize(editorState)).to.equal('[text](http://example.com)');
+    });
+
+    it('AdditionalButton', () => {
+      let nodeText = 'text';
+      let component = (<PlainMarkdownInput
+        value={nodeText}
+        fullScreen={false}
+        readOnly={false}
+        additionalButtons={[
+          {
+            iconComponent: (<i className="fa fa-search"></i>),
+            handleButtonPress({ value, insertAtCursorPosition }) {
+              insertAtCursorPosition('#Product.new');
+            },
+            label: 'Product'
+          },
+        ]}
+      />);
+
+      let wrapper = shallow(component);
+      const additionalButtons = wrapper.find(`AdditionalButton`);
+      expect(additionalButtons).to.have.length(1);
+      let additionalButton = additionalButtons.at(0).shallow();
+      additionalButton.simulate('click');
+      let editorState = wrapper.state('editorState');
+      expect(Plain.serialize(editorState)).to.equal('#Product.newtext');
     });
 
     it('FullScreenButton hide', () => {

@@ -7,10 +7,11 @@ MarkdownInputModal
 | Name               | Type            | Description                                                                                      |
 | ------------------ | :-------------- | ------------------------------------------------------------------------------------------------ |
 | onChange           | func            | Callback: `(value) => {}`                                                                        |
-| onFullScreen       | func            | Callback: `(bool isFullSceen) => {}`                                                    |
+| onFullScreen       | func            | Callback: `(bool isFullSceen) => {}`                                                             |
 | value              | string          | Raw markdown                                                                                     |
 | locale             | string          | Locale                                                                                           |
 | extensions         | array           | See "Extension definition" section bellow.                                                       |
+| additionalButtons  | array           | See "Additional buttons definition" section bellow.                                              |
 | readOnly           | bool            | Disables toolbar and makes markdown text not editable.                                           |
 
 ### Extension definition
@@ -19,12 +20,34 @@ Configurable extensions with autocomplete for **products**, **terms**, etc.
 
 | Name               | Type            | Description                                                                                      |
 | ------------------ | :-------------- | ------------------------------------------------------------------------------------------------ |
-| objectClassName    | string         | Object class name displayed on buttons ('Product', 'Term', etc.)                                 |
-| specialCharacter   | string         | Is used for inserting it into plain markdown input on button ('Term', 'Product', etc.) click.   |
-| color              | string         | Color of object reference element in rich markdown input.                                       |
-| termRegex          | regex          | Is used to check if item can be inserted after caret position in plain markdown input.          |
-| searchItems        | func           | Is used to search items by input term.                                                           |
-| markdownText       | func           | Is used to get text for markdown input based on selected item.                            |
+| objectClassName    | string         | Object class name displayed on buttons ('Product', 'Term', etc.)                                  |
+| specialCharacter   | string         | Is used for inserting it into plain markdown input on button ('Term', 'Product', etc.) click.     |
+| color              | string         | Color of object reference element in rich markdown input.                                         |
+| termRegex          | regex          | Is used to check if item can be inserted after caret position in plain markdown input.            |
+| searchItems        | func           | Is used to search items by input term.                                                            |
+| markdownText       | func           | Is used to get text for markdown input based on selected item.                                    |
+
+### Additional button definition
+
+Configurable buttons in toolbar.
+
+| Name               | Type            | Description                                                                                      |
+| ------------------ | :-------------- | ------------------------------------------------------------------------------------------------ |
+| iconElement        | React Element   |                                                                                                  |
+| label              | string          | (optional) button text, usually in required language.                                            |
+| handleButtonPress  | func            | (optional) See "handleButtonPress definition" section bellow.                                    |
+
+### handleButtonPress definition
+
+function (optional) that is called on when the user presses the button, the function gets the object as a parameter 
+(see description below) that contains the following info:
+
+| Name                    | Type            | Description                                                                                 |
+| ----------------------- | :-------------- | ------------------------------------------------------------------------------------------- |
+| value                   | string          | Current markdown text inside the editor.                                                    |
+| insertAtCursorPosition  | func            | function that accepts object {String, additional markup}                                    |
+|                         |                 | that could be called to update current markdown by inserting new text at current            |
+|                         |                 | cursor position, if position is not available, then text is added to the end of markdown .  |
 
 ### Code Example
 
@@ -36,6 +59,22 @@ Configurable extensions with autocomplete for **products**, **terms**, etc.
     value={_scope.state.markdownExample}
     readOnly={false}
     locale='de'
+    additionalButtons={[
+      {
+        iconElement: (<i className="fa fa-search"></i>),
+        handleButtonPress({ value, insertAtCursorPosition }) {
+          insertAtCursorPosition('#Product.new');                 
+        },
+        label: 'Product'
+      },
+      {
+        iconElement: (<i className="fa fa-search"></i>),
+        handleButtonPress({ value, insertAtCursorPosition }) {
+          insertAtCursorPosition('$Term.new');                 
+        },
+        label: 'Term'
+      }
+    ]}
     extensions={[
       {
         objectClassName: 'Product',
