@@ -1,3 +1,76 @@
+## [v1.2.0](https://github.com/OpusCapita/react-markdown/compare/v1.1.12...v1.2.0) (Mon, 11 Dec 2017 08:36:57 GMT)
+ - Increment minor package version number (Kirill Volkovich <kirill.volkovich@jcatalog.com>, b51b2a7)
+ - Enhancement/additional buttons/#107 (#110)
+    
+    * Add property additionalButtons to <MarkdownInput/>
+    
+    * Add icon to additionalButtons
+    
+    * Add additionalButtons to right edge
+    
+    * Set start focus
+    
+    * Fix bug 'shouldComponentUpdate in AutocompleteContainer.js'
+    
+    * Change MarkdownInputModal
+    
+    * Add tests
+    
+    * Add an asynchronous call of the insertAtCursorPosition function to MarkdownInput.DOCUMENTATION.md
+    
+    * Change iconComponent to iconElement
+    
+    * Fix test (Aleksandr Baliunov <abaliunov-sc@users.noreply.github.com>, 1c6221f)
+ - Hide fullScreen button (#108) (Aleksandr Baliunov <abaliunov-sc@users.noreply.github.com>, d5a1231)
+ - Fix bug 'term out of brackets' (#104) (Aleksandr Baliunov <abaliunov-sc@users.noreply.github.com>, 8a6ef5f)
+ - Fix bug "IndexSizeError" in IE11 & FF (#100) (Aleksandr Baliunov <abaliunov-sc@users.noreply.github.com>, 40925ec)
+ - Fix autocomplete bugs #85 and #86 (#93)
+    
+    * Fix bug 'Type error: item is undefined'
+    
+    * Fix bug 'Inserting `#` symbol before bracket'
+    
+    * Search token after symbols ' ', '[', '('
+    
+    * Refactor AutocompleteContainer.getSymbolPos()
+    
+    * Fix merge's errors (Aleksandr Baliunov <abaliunov-sc@users.noreply.github.com>, b7b289b)
+ - Merge pull request #92 from OpusCapita/bug/unset-item-list/#84
+    
+    Bugs #79 and #84 (3071c83 fd035e0, c5bed0b)
+ - Merge branch 'master' into bug/unset-item-list/#84
+    
+    > Conflicts:
+    > src/client/components/PlainMarkdownInput/PlainMarkdownInput.react.js (ecaefef 3071c83, fd035e0)
+ - Fix cursor disappears #95 (#97)
+    
+    * Fix bug 'Text cursor disappears after autocomplete hide'
+    
+    * Tmp commit
+    
+    * Change PlainMarkdownInput.react.js
+    
+    * Change PlainMarkdownInput.react.js (Aleksandr Baliunov <abaliunov-sc@users.noreply.github.com>, 3071c83)
+ - Merge branch 'master' into bug/unset-item-list/#84 (074970c 3aa10f9, ecaefef)
+ - FullScreen mode (#94)
+    
+    * FullScreen mode
+    
+    * Change fullscreen className
+    
+    * Change styles for fullscreen modal
+    
+    * Update README.md (Aleksandr Baliunov <abaliunov-sc@users.noreply.github.com>, 3aa10f9)
+ - Merge branch 'master' into bug/unset-item-list/#84 (7a780af 0e97e6c, 074970c)
+ - Fix bug 'Local demo in IE11' (baliunov <baliunov@scand.com>, 0e97e6c)
+ - Fix bug 'Unset numbering item list' in IE11 and FF (baliunov <baliunov@scand.com>, 7a780af)
+ - Fix bug 'Insert multiline text' in IE11 (baliunov <baliunov@scand.com>, 3e9ac82)
+ - Fix bug 'Array.includes' in local IE11 (baliunov <baliunov@scand.com>, c185f68)
+ - Change example.md (baliunov <baliunov@scand.com>, b9075ce)
+ - Merge branch 'master' into bug/cursor-ie11/#79 (ac96da5 88a4249, 07f34ac)
+ - Fix bug in Chrome (baliunov <baliunov@scand.com>, ac96da5)
+ - Fix cursor bug in IE11 (baliunov <baliunov@scand.com>, ee70ecd)
+
 ## [v1.1.12](Tue, 21 Nov 2017 13:12:36 GMT)
  - Fixing version. (Dmitriy Sanko <dsanko@scand.com>, 642f448)
  - Added polyfills for MarkdownInput (Dmitriy Sanko <dsanko@scand.com>, 60383b9)
