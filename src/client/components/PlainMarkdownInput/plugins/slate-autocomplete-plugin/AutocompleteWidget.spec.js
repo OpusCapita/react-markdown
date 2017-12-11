@@ -1,6 +1,6 @@
 import React from 'react';
 import { expect } from 'chai';
-import { shallow } from 'enzyme';
+import { mount } from 'enzyme';
 import sinon from 'sinon';
 import AutocompleteWidget from './AutocompleteWidget';
 
@@ -82,7 +82,7 @@ describe('<AutocompleteWidget />', () => {
         onScroll={handler}
       />
     );
-    let wrapper = shallow(component);
+    let wrapper = mount(component);
     let wrapperInstance = wrapper.instance();
     wrapperInstance.adjustPosition = sinon.spy();
     wrapperInstance['items-ref'] = { addEventListener: listener };
@@ -100,7 +100,7 @@ describe('<AutocompleteWidget />', () => {
         onMouseDown={() => {}}
       />
     );
-    let wrapper = shallow(component);
+    let wrapper = mount(component);
     let wrapperInstance = wrapper.instance();
     wrapperInstance.cancelAdjustPosition = sinon.spy();
     wrapperInstance.adjustPosition = sinon.spy();
@@ -117,7 +117,7 @@ describe('<AutocompleteWidget />', () => {
         onMouseDown={() => {}}
       />
     );
-    let wrapper = shallow(component);
+    let wrapper = mount(component);
     let wrapperInstance = wrapper.instance();
     wrapperInstance['items-ref'] = { scrollTop: 25 };
     wrapperInstance['item-ref-2'] = { offsetTop: 50 };
@@ -144,7 +144,7 @@ describe('<AutocompleteWidget />', () => {
         onMouseDown={() => {}}
       />
     );
-    let wrapper = shallow(component);
+    let wrapper = mount(component);
     let wrapperInstance = wrapper.instance();
     wrapperInstance._animationFrame = sinon.spy();
     wrapperInstance.componentWillUnmount();
@@ -168,7 +168,7 @@ describe('<AutocompleteWidget />', () => {
         onMouseDown={() => {}}
       />
     );
-    let wrapper = shallow(component);
+    let wrapper = mount(component);
     wrapper.setProps({ restrictorRef });
     let wrapperInstance = wrapper.instance();
     wrapperInstance['items-ref'] = {
@@ -210,7 +210,7 @@ describe('<AutocompleteWidget />', () => {
         onMouseDown={() => {}}
       />
     );
-    let wrapper = shallow(component);
+    let wrapper = mount(component);
     let wrapperInstance = wrapper.instance();
     wrapperInstance.requestAnimationFrame = sinon.spy();
     wrapperInstance.adjustPosition();
@@ -224,7 +224,7 @@ describe('<AutocompleteWidget />', () => {
         onMouseDown={() => {}}
       />
     );
-    let wrapper = shallow(component);
+    let wrapper = mount(component);
     let wrapperInstance = wrapper.instance();
     wrapperInstance.cancelAdjustPosition();
     wrapperInstance._animationFrame = sinon.spy();
@@ -242,7 +242,7 @@ describe('<AutocompleteWidget />', () => {
         onSelectItem={handler}
       />
     );
-    let wrapper = shallow(component);
+    let wrapper = mount(component);
     let wrapperInstance = wrapper.instance();
     wrapperInstance.handleSelectItem(index);
     expect(handler.callCount).to.equal(1);
