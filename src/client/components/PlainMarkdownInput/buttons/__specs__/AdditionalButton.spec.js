@@ -17,7 +17,7 @@ describe('<AdditionalButton/>', () => {
 
   it('click on the button', () => {
     let settings = {
-      iconComponent: (<i className="fa fa-search"></i>),
+      iconElement: (<i className="fa fa-search"></i>),
       handleButtonPress({ value, insertAtCursorPosition }) {
         insertAtCursorPosition('#Product.new');
       },
