@@ -22,8 +22,8 @@ class AdditionalButton extends React.Component {
         disabled={disabled}
         onClick={e => (settings.handleButtonPress ? onClick(settings.handleButtonPress) : null)}
       >
-        {settings.iconComponent ? settings.iconComponent : ``}
-        {(settings.iconComponent ? ' ' : '') + (settings.label ? settings.label : '')}
+        {settings.iconElement ? settings.iconElement : ``}
+        {(settings.iconElement ? ' ' : '') + (settings.label ? settings.label : '')}
       </button>
     );
   }

@@ -33,7 +33,7 @@ Configurable buttons in toolbar.
 
 | Name               | Type            | Description                                                                                      |
 | ------------------ | :-------------- | ------------------------------------------------------------------------------------------------ |
-| iconComponent      | React Component |                                                                                                  |
+| iconElement        | React Element   |                                                                                                  |
 | label              | string          | (optional) button text, usually in required language.                                            |
 | handleButtonPress  | func            | (optional) See "handleButtonPress definition" section bellow.                                    |
 
@@ -61,14 +61,14 @@ function (optional) that is called on when the user presses the button, the func
     locale='de'
     additionalButtons={[
       {
-        iconComponent: (<i className="fa fa-search"></i>),
+        iconElement: (<i className="fa fa-search"></i>),
         handleButtonPress({ value, insertAtCursorPosition }) {
           insertAtCursorPosition('#Product.new');                 
         },
         label: 'Product'
       },
       {
-        iconComponent: (<i className="fa fa-search"></i>),
+        iconElement: (<i className="fa fa-search"></i>),
         handleButtonPress({ value, insertAtCursorPosition }) {
           insertAtCursorPosition('$Term.new');                 
         },
