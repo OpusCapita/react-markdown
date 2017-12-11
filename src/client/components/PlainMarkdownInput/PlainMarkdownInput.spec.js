@@ -293,7 +293,7 @@ describe('<PlainMarkdownInput />', () => {
   });
 
   describe('toggleAccent(state, accent)', () => {
-    it.skip('strikethrough', () => {
+    it('strikethrough', () => {
       let nodeText = '~~strikethrough text~~';
       let component = (<PlainMarkdownInput
         value={nodeText}
@@ -307,11 +307,13 @@ describe('<PlainMarkdownInput />', () => {
       change.moveOffsetsTo(2, nodeText.length - 2);
       editorState = change.state;
       let wrapperInstance = wrapper.instance();
-      wrapperInstance.setState = sinon.spy();
+      wrapperInstance.handleChange = sinon.spy();
       wrapperInstance.toggleAccent(editorState, 'strikethrough');
-      expect(wrapperInstance.setState.callCount).to.equal(1);
-      let newState = wrapperInstance.setState.getCall(0).args[0];
-      expect(Plain.serialize(newState.editorState)).to.equal('strikethrough text');
+      expect(wrapperInstance.handleChange.callCount).to.equal(1);
+      let newState = wrapperInstance.handleChange.getCall(0).args[0];
+      let isSetFocus = wrapperInstance.handleChange.getCall(0).args[1];
+      expect(Plain.serialize(newState)).to.equal('strikethrough text');
+      expect(isSetFocus).to.equal(true);
 
       nodeText = 'strikethrough text';
       component = (<PlainMarkdownInput
@@ -320,17 +322,101 @@ describe('<PlainMarkdownInput />', () => {
         readOnly={false}
       />);
 
-      wrapper = shallow(component);
+      wrapper = mount(component);
       editorState = wrapper.state('editorState');
       change = editorState.change();
       change.moveOffsetsTo(0, nodeText.length);
       editorState = change.state;
       wrapperInstance = wrapper.instance();
-      wrapperInstance.setState = sinon.spy();
+      wrapperInstance.handleChange = sinon.spy();
       wrapperInstance.toggleAccent(editorState, 'strikethrough');
-      expect(wrapperInstance.setState.callCount).to.equal(1);
-      newState = wrapperInstance.setState.getCall(0).args[0];
-      expect(Plain.serialize(newState.editorState)).to.equal('~~strikethrough text~~');
+      expect(wrapperInstance.handleChange.callCount).to.equal(1);
+      newState = wrapperInstance.handleChange.getCall(0).args[0];
+      expect(Plain.serialize(newState)).to.equal('~~strikethrough text~~');
+    });
+
+    it('bold', () => {
+      let nodeText = '**bold text**';
+      let component = (<PlainMarkdownInput
+        value={nodeText}
+        fullScreen={false}
+        readOnly={false}
+      />);
+
+      let wrapper = mount(component);
+      let editorState = wrapper.state('editorState');
+      let change = editorState.change();
+      change.moveOffsetsTo(2, nodeText.length - 2);
+      editorState = change.state;
+      let wrapperInstance = wrapper.instance();
+      wrapperInstance.handleChange = sinon.spy();
+      wrapperInstance.toggleAccent(editorState, 'bold');
+      expect(wrapperInstance.handleChange.callCount).to.equal(1);
+      let newState = wrapperInstance.handleChange.getCall(0).args[0];
+      let isSetFocus = wrapperInstance.handleChange.getCall(0).args[1];
+      expect(Plain.serialize(newState)).to.equal('bold text');
+      expect(isSetFocus).to.equal(true);
+
+      nodeText = 'bold text';
+      component = (<PlainMarkdownInput
+        value={nodeText}
+        fullScreen={false}
+        readOnly={false}
+      />);
+
+      wrapper = mount(component);
+      editorState = wrapper.state('editorState');
+      change = editorState.change();
+      change.moveOffsetsTo(0, nodeText.length);
+      editorState = change.state;
+      wrapperInstance = wrapper.instance();
+      wrapperInstance.handleChange = sinon.spy();
+      wrapperInstance.toggleAccent(editorState, 'bold');
+      expect(wrapperInstance.handleChange.callCount).to.equal(1);
+      newState = wrapperInstance.handleChange.getCall(0).args[0];
+      expect(Plain.serialize(newState)).to.equal('**bold text**');
+    });
+
+    it('italic', () => {
+      let nodeText = '_italic text_';
+      let component = (<PlainMarkdownInput
+        value={nodeText}
+        fullScreen={false}
+        readOnly={false}
+      />);
+
+      let wrapper = mount(component);
+      let editorState = wrapper.state('editorState');
+      let change = editorState.change();
+      change.moveOffsetsTo(1, nodeText.length - 1);
+      editorState = change.state;
+      let wrapperInstance = wrapper.instance();
+      wrapperInstance.handleChange = sinon.spy();
+      wrapperInstance.toggleAccent(editorState, 'italic');
+      expect(wrapperInstance.handleChange.callCount).to.equal(1);
+      let newState = wrapperInstance.handleChange.getCall(0).args[0];
+      let isSetFocus = wrapperInstance.handleChange.getCall(0).args[1];
+      expect(Plain.serialize(newState)).to.equal('italic text');
+      expect(isSetFocus).to.equal(true);
+
+      nodeText = 'italic text';
+      component = (<PlainMarkdownInput
+        value={nodeText}
+        fullScreen={false}
+        readOnly={false}
+      />);
+
+      wrapper = mount(component);
+      editorState = wrapper.state('editorState');
+      change = editorState.change();
+      change.moveOffsetsTo(0, nodeText.length);
+      editorState = change.state;
+      wrapperInstance = wrapper.instance();
+      wrapperInstance.handleChange = sinon.spy();
+      wrapperInstance.toggleAccent(editorState, 'italic');
+      expect(wrapperInstance.handleChange.callCount).to.equal(1);
+      newState = wrapperInstance.handleChange.getCall(0).args[0];
+      expect(Plain.serialize(newState)).to.equal('_italic text_');
     });
   });
 
@@ -530,135 +616,6 @@ describe('<PlainMarkdownInput />', () => {
       expect(accent).to.equal('bold');
     });
 
-
-    it.skip('bold', () => {
-      let nodeText = '**bold text**';
-      let component = (<PlainMarkdownInput
-        value={nodeText}
-        fullScreen={false}
-        readOnly={false}
-      />);
-
-      let wrapper = mount(component);
-      let editorState = wrapper.state('editorState');
-      let change = editorState.change();
-      change.moveOffsetsTo(2, nodeText.length - 2);
-      let wrapperInstance = wrapper.instance();
-      wrapperInstance.setState = sinon.spy();
-      wrapperInstance.handleKeyDown(event, {
-        key: 'b',
-        isMod: true
-      }, change);
-      expect(wrapperInstance.setState.callCount).to.equal(1);
-      let newState = wrapperInstance.setState.getCall(0).args[0];
-      expect(Plain.serialize(newState.editorState)).to.equal('bold text');
-
-      nodeText = 'bold text';
-      component = (<PlainMarkdownInput
-        value={nodeText}
-        fullScreen={false}
-        readOnly={false}
-      />);
-
-      wrapper = mount(component);
-      editorState = wrapper.state('editorState');
-      change = editorState.change();
-      change.moveOffsetsTo(0, nodeText.length);
-      wrapperInstance = wrapper.instance();
-      wrapperInstance.setState = sinon.spy();
-      wrapperInstance.handleKeyDown(event, {
-        key: 'b',
-        isMod: true
-      }, change);
-      expect(wrapperInstance.setState.callCount).to.equal(1);
-      newState = wrapperInstance.setState.getCall(0).args[0];
-      expect(Plain.serialize(newState.editorState)).to.equal('**bold text**');
-    });
-
-    it.skip('strikethrough', () => {
-      let eventData = {
-        key: 's',
-        isMod: true
-      };
-      let nodeText = '~~strikethrough text~~';
-      let component = (<PlainMarkdownInput
-        value={nodeText}
-        fullScreen={false}
-        readOnly={false}
-      />);
-
-      let wrapper = mount(component);
-      let editorState = wrapper.state('editorState');
-      let change = editorState.change();
-      change.moveOffsetsTo(2, nodeText.length - 2);
-      let wrapperInstance = wrapper.instance();
-      wrapperInstance.setState = sinon.spy();
-      wrapperInstance.handleKeyDown(event, eventData, change);
-      expect(wrapperInstance.setState.callCount).to.equal(1);
-      let newState = wrapperInstance.setState.getCall(0).args[0];
-      expect(Plain.serialize(newState.editorState)).to.equal('strikethrough text');
-
-      nodeText = 'strikethrough text';
-      component = (<PlainMarkdownInput
-        value={nodeText}
-        fullScreen={false}
-        readOnly={false}
-      />);
-
-      wrapper = mount(component);
-      editorState = wrapper.state('editorState');
-      change = editorState.change();
-      change.moveOffsetsTo(0, nodeText.length);
-      wrapperInstance = wrapper.instance();
-      wrapperInstance.setState = sinon.spy();
-      wrapperInstance.handleKeyDown(event, eventData, change);
-      expect(wrapperInstance.setState.callCount).to.equal(1);
-      newState = wrapperInstance.setState.getCall(0).args[0];
-      expect(Plain.serialize(newState.editorState)).to.equal('~~strikethrough text~~');
-    });
-
-    it.skip('italic', () => {
-      let eventData = {
-        key: 'i',
-        isMod: true
-      };
-      let nodeText = '_italic text_';
-      let component = (<PlainMarkdownInput
-        value={nodeText}
-        fullScreen={false}
-        readOnly={false}
-      />);
-
-      let wrapper = mount(component);
-      let editorState = wrapper.state('editorState');
-      let change = editorState.change();
-      change.moveOffsetsTo(1, nodeText.length - 1);
-      let wrapperInstance = wrapper.instance();
-      wrapperInstance.setState = sinon.spy();
-      wrapperInstance.handleKeyDown(event, eventData, change);
-      expect(wrapperInstance.setState.callCount).to.equal(1);
-      let newState = wrapperInstance.setState.getCall(0).args[0];
-      expect(Plain.serialize(newState.editorState)).to.equal('italic text');
-
-      nodeText = 'italic text';
-      component = (<PlainMarkdownInput
-        value={nodeText}
-        fullScreen={false}
-        readOnly={false}
-      />);
-
-      wrapper = mount(component);
-      editorState = wrapper.state('editorState');
-      change = editorState.change();
-      change.moveOffsetsTo(0, nodeText.length);
-      wrapperInstance = wrapper.instance();
-      wrapperInstance.setState = sinon.spy();
-      wrapperInstance.handleKeyDown(event, eventData, change);
-      expect(wrapperInstance.setState.callCount).to.equal(1);
-      newState = wrapperInstance.setState.getCall(0).args[0];
-      expect(Plain.serialize(newState.editorState)).to.equal('_italic text_');
-    });
-
     it('without mod', () => {
       let eventData = {
         key: 'i',
@@ -726,40 +683,64 @@ describe('<PlainMarkdownInput />', () => {
   }
 
   describe('handleActionButtonClick(accent)', () => {
-    it.skip('bold', () => {
+    it('bold', () => {
       let nodeText = '**bold text**';
-      let wrapperInstance = initIt(nodeText, { start: 2, end: nodeText.length - 2 });
-      wrapperInstance.handleActionButtonClick('bold');
-      checkIt(wrapperInstance, 'bold text');
+      let component = (<PlainMarkdownInput
+        value={nodeText}
+        fullScreen={false}
+        readOnly={false}
+      />);
 
-      nodeText = 'bold text';
-      wrapperInstance = initIt(nodeText, { start: 0, end: nodeText.length });
+      let wrapper = shallow(component);
+      let editorState = wrapper.state('editorState');
+      let wrapperInstance = wrapper.instance();
+      wrapperInstance.toggleAccent = sinon.spy();
       wrapperInstance.handleActionButtonClick('bold');
-      checkIt(wrapperInstance, '**bold text**');
+      expect(wrapperInstance.toggleAccent.callCount).to.equal(1);
+      let newState = wrapperInstance.toggleAccent.getCall(0).args[0];
+      let accent = wrapperInstance.toggleAccent.getCall(0).args[1];
+      expect(newState).to.deep.equal(editorState);
+      expect(accent).to.equal('bold');
     });
 
-    it.skip('italic', () => {
+    it('italic', () => {
       let nodeText = '_italic text_';
-      let wrapperInstance = initIt(nodeText, { start: 1, end: nodeText.length - 1 });
-      wrapperInstance.handleActionButtonClick('italic');
-      checkIt(wrapperInstance, 'italic text');
+      let component = (<PlainMarkdownInput
+        value={nodeText}
+        fullScreen={false}
+        readOnly={false}
+      />);
 
-      nodeText = 'italic text';
-      wrapperInstance = initIt(nodeText, { start: 0, end: nodeText.length });
+      let wrapper = shallow(component);
+      let editorState = wrapper.state('editorState');
+      let wrapperInstance = wrapper.instance();
+      wrapperInstance.toggleAccent = sinon.spy();
       wrapperInstance.handleActionButtonClick('italic');
-      checkIt(wrapperInstance, '_italic text_');
+      expect(wrapperInstance.toggleAccent.callCount).to.equal(1);
+      let newState = wrapperInstance.toggleAccent.getCall(0).args[0];
+      let accent = wrapperInstance.toggleAccent.getCall(0).args[1];
+      expect(newState).to.deep.equal(editorState);
+      expect(accent).to.equal('italic');
     });
 
-    it.skip('strikethrough', () => {
+    it('strikethrough', () => {
       let nodeText = '~~strikethrough text~~';
-      let wrapperInstance = initIt(nodeText, { start: 2, end: nodeText.length - 2 });
-      wrapperInstance.handleActionButtonClick('strikethrough');
-      checkIt(wrapperInstance, 'strikethrough text');
+      let component = (<PlainMarkdownInput
+        value={nodeText}
+        fullScreen={false}
+        readOnly={false}
+      />);
 
-      nodeText = 'strikethrough text';
-      wrapperInstance = initIt(nodeText, { start: 0, end: nodeText.length });
+      let wrapper = shallow(component);
+      let editorState = wrapper.state('editorState');
+      let wrapperInstance = wrapper.instance();
+      wrapperInstance.toggleAccent = sinon.spy();
       wrapperInstance.handleActionButtonClick('strikethrough');
-      checkIt(wrapperInstance, '~~strikethrough text~~');
+      expect(wrapperInstance.toggleAccent.callCount).to.equal(1);
+      let newState = wrapperInstance.toggleAccent.getCall(0).args[0];
+      let accent = wrapperInstance.toggleAccent.getCall(0).args[1];
+      expect(newState).to.deep.equal(editorState);
+      expect(accent).to.equal('strikethrough');
     });
 
     it('unordered list', () => {
@@ -926,7 +907,7 @@ describe('<PlainMarkdownInput />', () => {
   });
 
   describe('Button click', () => {
-    it.skip('ActionButton', () => {
+    it('ActionButton', () => {
       let nodeText = 'text';
       let component = (<PlainMarkdownInput
         value={nodeText}
@@ -935,6 +916,10 @@ describe('<PlainMarkdownInput />', () => {
       />);
 
       let wrapper = shallow(component);
+      let editorState = wrapper.state('editorState');
+      let wrapperInstance = wrapper.instance();
+      wrapperInstance.toggleAccent = sinon.spy();
+
       const actionButtons = wrapper.find(`ActionButton`);
       expect(actionButtons).to.have.length(5);
       let boldButton = actionButtons.at(0).shallow();
@@ -943,45 +928,40 @@ describe('<PlainMarkdownInput />', () => {
       let olButton = actionButtons.at(3).shallow();
       let ulButton = actionButtons.at(4).shallow();
 
-      let editorState = wrapper.state('editorState');
-      let change = editorState.change();
-      change.moveOffsetsTo(0, nodeText.length);
-      wrapper.setState({ editorState: change.state });
-
       boldButton.simulate('click');
-      editorState = wrapper.state('editorState');
-      expect(Plain.serialize(editorState)).to.equal('**text**');
-      boldButton.simulate('click');
-      editorState = wrapper.state('editorState');
-      expect(Plain.serialize(editorState)).to.equal('text');
+      expect(wrapperInstance.toggleAccent.callCount).to.equal(1);
+      let newState = wrapperInstance.toggleAccent.getCall(0).args[0];
+      let accent = wrapperInstance.toggleAccent.getCall(0).args[1];
+      expect(newState).to.deep.equal(editorState);
+      expect(accent).to.equal('bold');
 
       italicButton.simulate('click');
-      editorState = wrapper.state('editorState');
-      expect(Plain.serialize(editorState)).to.equal('_text_');
-      italicButton.simulate('click');
-      editorState = wrapper.state('editorState');
-      expect(Plain.serialize(editorState)).to.equal('text');
+      expect(wrapperInstance.toggleAccent.callCount).to.equal(2);
+      newState = wrapperInstance.toggleAccent.getCall(1).args[0];
+      accent = wrapperInstance.toggleAccent.getCall(1).args[1];
+      expect(newState).to.deep.equal(editorState);
+      expect(accent).to.equal('italic');
 
       strikethroughButton.simulate('click');
-      editorState = wrapper.state('editorState');
-      expect(Plain.serialize(editorState)).to.equal('~~text~~');
-      strikethroughButton.simulate('click');
-      editorState = wrapper.state('editorState');
-      expect(Plain.serialize(editorState)).to.equal('text');
+      expect(wrapperInstance.toggleAccent.callCount).to.equal(3);
+      newState = wrapperInstance.toggleAccent.getCall(2).args[0];
+      accent = wrapperInstance.toggleAccent.getCall(2).args[1];
+      expect(newState).to.deep.equal(editorState);
+      expect(accent).to.equal('strikethrough');
 
       olButton.simulate('click');
-      editorState = wrapper.state('editorState');
-      expect(Plain.serialize(editorState)).to.equal('1. text');
-      olButton.simulate('click');
-      editorState = wrapper.state('editorState');
-      expect(Plain.serialize(editorState)).to.equal('text');
+      expect(wrapperInstance.toggleAccent.callCount).to.equal(4);
+      newState = wrapperInstance.toggleAccent.getCall(3).args[0];
+      accent = wrapperInstance.toggleAccent.getCall(3).args[1];
+      expect(newState).to.deep.equal(editorState);
+      expect(accent).to.equal('ol');
 
       ulButton.simulate('click');
-      editorState = wrapper.state('editorState');
-      expect(Plain.serialize(editorState)).to.equal('* text');
-      ulButton.simulate('click');
-      editorState = wrapper.state('editorState');
-      expect(Plain.serialize(editorState)).to.equal('text');
+      expect(wrapperInstance.toggleAccent.callCount).to.equal(5);
+      newState = wrapperInstance.toggleAccent.getCall(4).args[0];
+      accent = wrapperInstance.toggleAccent.getCall(4).args[1];
+      expect(newState).to.deep.equal(editorState);
+      expect(accent).to.equal('ul');
     });
 
     it('HeaderButton', () => {

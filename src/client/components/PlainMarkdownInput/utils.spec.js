@@ -1,13 +1,8 @@
-import React from 'react';
-import { shallow } from 'enzyme';
 import { expect } from 'chai';
-import PlainMarkdownInput from '../PlainMarkdownInput';
-import Plain from 'slate-plain-serializer';
 import {
   autoScrollToTop,
   getSlateEditor,
-  getClosestElemFromClass,
-  // addSpecialCharacter
+  getClosestElemFromClass
 } from './utils';
 
 function contains(className) {
@@ -95,26 +90,5 @@ describe('plain editor utils', () => {
     } else {
       delete window.getSelection;
     }
-  });
-
-  it.skip('addSpecialCharacter(specialCharacter, state)', () => {
-    let specialCharacter = '#';
-    let nodeText = 'Simple text';
-    let component = (<PlainMarkdownInput
-      value={nodeText}
-      fullScreen={false}
-      readOnly={false}
-    />);
-
-    let wrapper = shallow(component);
-    let editorState = wrapper.state('editorState');
-    let change = editorState.change();
-    change.moveOffsetsTo(nodeText.length - 1, nodeText.length - 1);
-    let newState = addSpecialCharacter(specialCharacter, change.state);
-    expect(Plain.serialize(newState)).to.equal('Simple #text');
-
-    change.moveOffsetsTo(nodeText.length, nodeText.length);
-    newState = addSpecialCharacter(specialCharacter, change.state);
-    expect(Plain.serialize(newState)).to.equal('Simple text #');
   });
 });

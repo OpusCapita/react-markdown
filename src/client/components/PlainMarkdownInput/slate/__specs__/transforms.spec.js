@@ -13,7 +13,8 @@ import {
   wrapHeader,
   unwrapHeader,
   wrapLink,
-  hasMultiLineSelection
+  hasMultiLineSelection,
+  addSpecialCharacter
 } from '../transforms';
 
 describe('plain editor transform', () => {
@@ -2779,5 +2780,26 @@ Item 5`;
       newState = wrapLink(change.state);
       expect(Plain.serialize(newState)).to.equal('[link text](http://example.com) other text');
     });
+  });
+
+  it('addSpecialCharacter(specialCharacter, state)', () => {
+    let specialCharacter = '#';
+    let nodeText = 'Simple text';
+    let component = (<PlainMarkdownInput
+      value={nodeText}
+      fullScreen={false}
+      readOnly={false}
+    />);
+
+    let wrapper = shallow(component);
+    let editorState = wrapper.state('editorState');
+    let change = editorState.change();
+    change.moveOffsetsTo(nodeText.length - 1, nodeText.length - 1);
+    let newState = addSpecialCharacter(specialCharacter, change.state);
+    expect(Plain.serialize(newState)).to.equal('Simple #text');
+
+    change.moveOffsetsTo(nodeText.length, nodeText.length);
+    newState = addSpecialCharacter(specialCharacter, change.state);
+    expect(Plain.serialize(newState)).to.equal('Simple text #');
   });
 });

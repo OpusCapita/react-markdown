@@ -1,6 +1,6 @@
 import React from 'react';
 import { expect } from 'chai';
-import { shallow } from 'enzyme';
+import { mount } from 'enzyme';
 import sinon from 'sinon';
 import AutocompleteWidget from './AutocompleteWidget';
 
@@ -72,7 +72,7 @@ window.cancelAnimationFrame = callback => {
 window.requestAnimationFrame = callback => callback;
 
 describe('<AutocompleteWidget />', () => {
-  it.skip('+ componentDidMount()', () => {
+  it('componentDidMount()', () => {
     const handler = sinon.spy();
     const listener = sinon.spy();
     let component = (
@@ -82,7 +82,7 @@ describe('<AutocompleteWidget />', () => {
         onScroll={handler}
       />
     );
-    let wrapper = shallow(component);
+    let wrapper = mount(component);
     let wrapperInstance = wrapper.instance();
     wrapperInstance.adjustPosition = sinon.spy();
     wrapperInstance['items-ref'] = { addEventListener: listener };
@@ -93,14 +93,14 @@ describe('<AutocompleteWidget />', () => {
     expect(listener.getCall(0).args[2]).to.equal(false);
   });
 
-  it.skip('+ componentWillReceiveProps(nextProps)', () => {
+  it('componentWillReceiveProps(nextProps)', () => {
     let component = (
       <AutocompleteWidget
         selectedIndex={0}
         onMouseDown={() => {}}
       />
     );
-    let wrapper = shallow(component);
+    let wrapper = mount(component);
     let wrapperInstance = wrapper.instance();
     wrapperInstance.cancelAdjustPosition = sinon.spy();
     wrapperInstance.adjustPosition = sinon.spy();
@@ -109,7 +109,7 @@ describe('<AutocompleteWidget />', () => {
     expect(wrapperInstance.adjustPosition.callCount).to.equal(1);
   });
 
-  it.skip('+ componentWillUpdate(nextProps)', () => {
+  it('componentWillUpdate(nextProps)', () => {
     const selectedIndex = 2;
     let component = (
       <AutocompleteWidget
@@ -117,7 +117,7 @@ describe('<AutocompleteWidget />', () => {
         onMouseDown={() => {}}
       />
     );
-    let wrapper = shallow(component);
+    let wrapper = mount(component);
     let wrapperInstance = wrapper.instance();
     wrapperInstance['items-ref'] = { scrollTop: 25 };
     wrapperInstance['item-ref-2'] = { offsetTop: 50 };
@@ -137,21 +137,21 @@ describe('<AutocompleteWidget />', () => {
     expect(wrapperInstance['items-ref'].scrollTop).to.equal(44);
   });
 
-  it.skip('+ componentWillUnmount()', () => {
+  it('componentWillUnmount()', () => {
     let component = (
       <AutocompleteWidget
         selectedIndex={0}
         onMouseDown={() => {}}
       />
     );
-    let wrapper = shallow(component);
+    let wrapper = mount(component);
     let wrapperInstance = wrapper.instance();
     wrapperInstance._animationFrame = sinon.spy();
     wrapperInstance.componentWillUnmount();
     expect(wrapperInstance._animationFrame.callCount).to.equal(1);
   });
 
-  it.skip('+ setPosition(selection)', () => {
+  it('setPosition(selection)', () => {
     window.requestAnimationFrame = sinon.spy();
     let restrictorRef = {
       offsetWidth: 800,
@@ -168,7 +168,7 @@ describe('<AutocompleteWidget />', () => {
         onMouseDown={() => {}}
       />
     );
-    let wrapper = shallow(component);
+    let wrapper = mount(component);
     wrapper.setProps({ restrictorRef });
     let wrapperInstance = wrapper.instance();
     wrapperInstance['items-ref'] = {
@@ -203,28 +203,28 @@ describe('<AutocompleteWidget />', () => {
     expect(wrapper.state('top')).to.equal(`192px`);
   });
 
-  it.skip('+ adjustPosition()', () => {
+  it('adjustPosition()', () => {
     let component = (
       <AutocompleteWidget
         selectedIndex={0}
         onMouseDown={() => {}}
       />
     );
-    let wrapper = shallow(component);
+    let wrapper = mount(component);
     let wrapperInstance = wrapper.instance();
     wrapperInstance.requestAnimationFrame = sinon.spy();
     wrapperInstance.adjustPosition();
     expect(wrapperInstance.requestAnimationFrame.callCount).to.equal(0);
   });
 
-  it.skip('+ cancelAdjustPosition()', () => {
+  it('cancelAdjustPosition()', () => {
     let component = (
       <AutocompleteWidget
         selectedIndex={0}
         onMouseDown={() => {}}
       />
     );
-    let wrapper = shallow(component);
+    let wrapper = mount(component);
     let wrapperInstance = wrapper.instance();
     wrapperInstance.cancelAdjustPosition();
     wrapperInstance._animationFrame = sinon.spy();
@@ -232,7 +232,7 @@ describe('<AutocompleteWidget />', () => {
     expect(wrapperInstance._animationFrame.callCount).to.equal(1);
   });
 
-  it.skip('+ handleSelectItem(index)', () => {
+  it('handleSelectItem(index)', () => {
     let handler = sinon.spy();
     let index = 2;
     let component = (
@@ -242,7 +242,7 @@ describe('<AutocompleteWidget />', () => {
         onSelectItem={handler}
       />
     );
-    let wrapper = shallow(component);
+    let wrapper = mount(component);
     let wrapperInstance = wrapper.instance();
     wrapperInstance.handleSelectItem(index);
     expect(handler.callCount).to.equal(1);

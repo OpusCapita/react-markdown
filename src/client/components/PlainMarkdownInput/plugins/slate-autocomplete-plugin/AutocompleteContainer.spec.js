@@ -82,9 +82,18 @@ const extensions = [
 ];
 
 describe('<AutocompleteContainer />', () => {
-  it.skip('+ creation by default', () => {
+  it('creation by default', () => {
+    const nodeText = '';
+    let inputComponent = (<PlainMarkdownInput
+      value={nodeText}
+      extensions={extensions}
+    />);
+    let inputWrapper = shallow(inputComponent);
+    let editorState = inputWrapper.state('editorState');
+
     let component = (<AutocompleteContainer
       options={{ extensions }}
+      state={editorState}
     />);
     expect(component.props.options.extensions).to.deep.equal(extensions);
     let wrapper = shallow(component);
@@ -96,7 +105,7 @@ describe('<AutocompleteContainer />', () => {
     expect(currState.ref).to.equal(null);
   });
 
-  it.skip('componentWillReceiveProps(nextProps)', () => {
+  it('componentWillReceiveProps(nextProps)', () => {
     const nodeText = '# Header1 ';
     let inputComponent = (<PlainMarkdownInput
       value={nodeText}
@@ -114,16 +123,23 @@ describe('<AutocompleteContainer />', () => {
     />);
     let wrapper = mount(component);
     let wrapperInstance = wrapper.instance();
-    wrapperInstance.handleSelectItem = sinon.spy();
     wrapperInstance.searchItems = sinon.spy();
     wrapperInstance.componentWillReceiveProps({ state: editorState });
-    expect(wrapperInstance.handleSelectItem.callCount).to.equal(1);
     expect(wrapperInstance.searchItems.callCount).to.equal(1);
   });
 
-  it.skip('+ matchExtension(extensions, token)', () => {
+  it('matchExtension(extensions, token)', () => {
+    const nodeText = '';
+    let inputComponent = (<PlainMarkdownInput
+      value={nodeText}
+      extensions={extensions}
+    />);
+    let inputWrapper = shallow(inputComponent);
+    let editorState = inputWrapper.state('editorState');
+
     let component = (<AutocompleteContainer
       options={{ extensions }}
+      state={editorState}
     />);
     let wrapper = shallow(component);
     let wrapperInstance = wrapper.instance();
@@ -136,7 +152,7 @@ describe('<AutocompleteContainer />', () => {
     expect(extension).to.deep.equal(undefined);
   });
 
-  it.skip('+ getSearchToken(state)', () => {
+  it('getSearchToken(state)', () => {
     const nodeText = '# Header1 ';
     let inputComponent = (<PlainMarkdownInput
       value={nodeText}
@@ -150,6 +166,7 @@ describe('<AutocompleteContainer />', () => {
 
     let component = (<AutocompleteContainer
       options={{ extensions }}
+      state={editorState}
     />);
     let wrapper = shallow(component);
     let wrapperInstance = wrapper.instance();
@@ -166,9 +183,17 @@ describe('<AutocompleteContainer />', () => {
     expect(res.offset).to.equal(-1);
   });
 
-  it.skip('+ handleSelectedIndexChange(selectedIndex)', () => {
+  it('handleSelectedIndexChange(selectedIndex)', () => {
+    let inputComponent = (<PlainMarkdownInput
+      value=""
+      extensions={extensions}
+    />);
+    let inputWrapper = shallow(inputComponent);
+    let editorState = inputWrapper.state('editorState');
+
     let component = (<AutocompleteContainer
       options={{ extensions }}
+      state={editorState}
     />);
     let wrapper = shallow(component);
     let wrapperInstance = wrapper.instance();
@@ -177,9 +202,17 @@ describe('<AutocompleteContainer />', () => {
     expect(wrapper.state('selectedIndex')).to.equal(3);
   });
 
-  it.skip('+ handleKeyDown(e)', (done) => {
+  it('handleKeyDown(e)', (done) => {
+    let inputComponent = (<PlainMarkdownInput
+      value=""
+      extensions={extensions}
+    />);
+    let inputWrapper = shallow(inputComponent);
+    let editorState = inputWrapper.state('editorState');
+
     let component = (<AutocompleteContainer
       options={{ extensions }}
+      state={editorState}
     />);
     let wrapper = shallow(component);
     let wrapperInstance = wrapper.instance();
@@ -249,7 +282,7 @@ describe('<AutocompleteContainer />', () => {
     });
   });
 
-  it.skip('+ handleSelectItem(index)', (done) => {
+  it('handleSelectItem(index)', (done) => {
     const nodeText = '# bi2 #ba';
     let inputComponent = (<PlainMarkdownInput
       value={nodeText}
@@ -341,9 +374,17 @@ describe('<AutocompleteContainer />', () => {
     }, 100);
   });
 
-  it.skip('+ handleRef(ref)', () => {
+  it('handleRef(ref)', () => {
+    let inputComponent = (<PlainMarkdownInput
+      value=""
+      extensions={extensions}
+    />);
+    let inputWrapper = shallow(inputComponent);
+    let editorState = inputWrapper.state('editorState');
+
     let component = (<AutocompleteContainer
       options={{ extensions }}
+      state={editorState}
     />);
     let wrapper = shallow(component);
     let wrapperInstance = wrapper.instance();
