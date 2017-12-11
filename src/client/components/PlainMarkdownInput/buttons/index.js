@@ -1,14 +1,14 @@
 import ActionButton from './ActionButton';
+import AdditionalButton from './AdditionalButton';
 import HeaderButton from './HeaderButton';
 import LinkButton from './LinkButton';
-import ObjectReferenceButton from './ObjectReferenceButton';
 import FullScreenButton from './FullScreenButton';
 
 
 export {
   ActionButton,
+  AdditionalButton,
   HeaderButton,
   LinkButton,
-  ObjectReferenceButton,
   FullScreenButton
 }
