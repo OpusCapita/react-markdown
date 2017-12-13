@@ -1,3 +1,6 @@
+## [v2.0.1](https://github.com/OpusCapita/react-markdown/compare/v2.0.0...v2.0.1) (Wed, 13 Dec 2017 09:11:36 GMT)
+ - Fix bug #98 (#112) (Aleksandr Baliunov <abaliunov-sc@users.noreply.github.com>, 146397e)
+
 ## [v2.0.0](https://github.com/OpusCapita/react-markdown/compare/v1.2.0...v2.0.0) (Mon, 11 Dec 2017 14:27:48 GMT)
  - Enhancement/migrate react 16/#99 (#111)
     
