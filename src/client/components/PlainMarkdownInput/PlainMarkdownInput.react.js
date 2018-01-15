@@ -332,21 +332,139 @@ class PlainMarkdownInput extends React.Component {
     handleButtonPress({ value: this.getCurrentText(), insertAtCursorPosition: this.insertAtCursorPosition });
   }
 
+  /**
+   * Create additional buttons
+   *
+   * @param readOnly
+   */
+  getAdditionalButtons(readOnly) {
+    return (
+      <div className="btn-group react-markdown--plain-markdown-input__right-buttons">
+        {this.props.additionalButtons.map((buttonData, ind) => (
+          <AdditionalButton
+            key={ind}
+            onClick={this.handleAdditionalButtonsClick}
+            settings={buttonData}
+            disabled={readOnly}
+          />
+        ))}
+      </div>
+    );
+  }
+
+  /**
+   * Create buttons' group for accents
+   *
+   * @param editorValue
+   * @param disabled
+   * @param locale
+   * @param accents
+   * @returns {*}
+   */
+  getAccentButtons({ editorValue, disabled, locale, accents }) {
+    return this.wrapButtonGroup(accents.map((accent, ind) => (
+      <ActionButton
+        key={ind}
+        onClick={this.handleActionButtonClick}
+        disabled={disabled}
+        locale={locale}
+        accent={accent}
+        active={hasAccent(editorValue, accent)}
+      />
+    )));
+  }
+
+  /**
+   * Create buttons' group for links
+   *
+   * @param disabled
+   * @param locale
+   * @returns {*}
+   */
+  getLinkButton({ disabled, locale }) {
+    return this.wrapButtonGroup(<LinkButton
+      onClick={this.handleLinkButtonClick}
+      disabled={disabled}
+      locale={locale}
+    />)
+  }
+
+  /**
+   * Create buttons' group for headers
+   *
+   * @param disabled
+   * @param locale
+   * @returns {*}
+   */
+  getHeaderButtons({ disabled, locale }) {
+    return (
+      <div className="btn-group" title={getMessage(locale, 'insertHeader')}>
+        <DropdownButton
+          id="oc-md--toolbar__headers-dropdown"
+          title={<i className="fa fa-header"/>}
+          disabled={disabled}
+        >
+          {[1, 2, 3, 4, 5, 6].map((level, ind) => (
+            <HeaderButton
+              key={ind}
+              onClick={this.handleHeaderButtonClick}
+              level={level}
+            />
+          ))}
+        </DropdownButton>
+      </div>
+    );
+  }
+
+  /**
+   * Create buttons' group for fullScreenButton
+   *
+   * @param readOnly
+   * @param locale
+   * @param fullScreen
+   * @returns {string}
+   */
+  getFullScreenButton({ readOnly, locale, fullScreen }) {
+    return this.props.showFullScreenButton ?
+      (<div className="btn-group react-markdown--plain-markdown-input__left-border">
+        <FullScreenButton
+          onClick={this.handleFullScreen}
+          locale={locale}
+          fullScreen={fullScreen}
+          disabled={readOnly}
+        />
+      </div>) :
+      '';
+  }
+
+  /**
+   * Wrap buttons' group
+   *
+   * @param children
+   * @returns {*}
+   */
+  wrapButtonGroup(children) {
+    return (<div className="btn-group">
+      {children}
+    </div>);
+  }
+
   render() {
     const { editorState, fullScreen } = this.state;
     const { children, extensions, readOnly, locale } = this.props;
     const disabled = readOnly || hasMultiLineSelection(editorState);
 
-    let additionalButtons = this.props.additionalButtons.map((buttonData, ind) => {
-      return (
-        <AdditionalButton
-          key={ind}
-          onClick={this.handleAdditionalButtonsClick}
-          settings={buttonData}
-          disabled={readOnly}
-        />
-      );
+    // Create buttons for toolbar
+    let emphasisButtons = this.getAccentButtons({
+      editorValue: editorState, disabled, locale, accents: ['bold', 'italic', 'strikethrough']
     });
+    let linkButton = this.getLinkButton({ disabled, locale });
+    let headerButtons = this.getHeaderButtons({ disabled, locale });
+    let listButtons = this.getAccentButtons({
+      editorValue: editorState, disabled, locale, accents: ['ol', 'ul']
+    });
+    let additionalButtons = this.getAdditionalButtons(readOnly);
+    let fullScreenButton = this.getFullScreenButton({ readOnly, locale, fullScreen });
 
     return (
       <div
@@ -356,71 +474,12 @@ class PlainMarkdownInput extends React.Component {
         )}
       >
         <div className="react-markdown--toolbar">
-          <div className="btn-group">
-            {['bold', 'italic', 'strikethrough'].map((accent, ind) => (
-              <ActionButton
-                key={ind}
-                onClick={this.handleActionButtonClick}
-                disabled={disabled}
-                locale={locale}
-                accent={accent}
-                active={hasAccent(editorState, accent)}
-              />
-            ))}
-          </div>
-
-          <div className="btn-group">
-            <LinkButton
-              onClick={this.handleLinkButtonClick}
-              disabled={disabled}
-              locale={locale}
-            />
-          </div>
-
-          <div className="btn-group" title={getMessage(locale, 'insertHeader')}>
-            <DropdownButton
-              id="oc-md--toolbar__headers-dropdown"
-              title={<i className="fa fa-header"/>}
-              disabled={disabled}
-            >
-              {[1, 2, 3, 4, 5, 6].map((level, ind) => (
-                <HeaderButton
-                  key={ind}
-                  onClick={this.handleHeaderButtonClick}
-                  level={level}
-                />
-              ))}
-            </DropdownButton>
-          </div>
-
-          <div className="btn-group">
-            {['ol', 'ul'].map((accent, ind) => (
-              <ActionButton
-                key={ind}
-                onClick={this.handleActionButtonClick}
-                disabled={readOnly}
-                locale={locale}
-                accent={accent}
-                active={hasAccent(editorState, accent)}
-              />
-            ))}
-          </div>
-
-          <div className="btn-group react-markdown--plain-markdown-input__right-buttons">
-            {additionalButtons}
-          </div>
-
-          {this.props.showFullScreenButton ?
-            (<div className="btn-group react-markdown--plain-markdown-input__left-border">
-              <FullScreenButton
-                onClick={this.handleFullScreen}
-                locale={locale}
-                fullScreen={fullScreen}
-                disabled={readOnly}
-              />
-            </div>) :
-            ''
-          }
+          {emphasisButtons}
+          {linkButton}
+          {headerButtons}
+          {listButtons}
+          {additionalButtons}
+          {fullScreenButton}
         </div>
         <div className={'react-markdown--slate-content'}>
           <Editor
