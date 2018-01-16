@@ -39,6 +39,25 @@ jobs:
 
       - store_artifacts:
           path: junit
+
+      - run:
+          name: install-dependencies-react-16
+          command: yarn add react@16.2.0 react-dom@16.2.0 react-test-renderer@16.2.0 enzyme-adapter-react-16@1.1.0
+
+      - run:
+          name: test-for-react-16
+          command: |
+            mkdir junit16
+            npm test -- --reporter mocha-junit-reporter
+
+          environment:
+            MOCHA_FILE: junit16/test-results.xml
+
+      - store_test_results:
+          path: junit16
+
+      - store_artifacts:
+          path: junit16
   update-gh-pages:
     docker:
       - image: circleci/node:6
