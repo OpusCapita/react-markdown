@@ -104,6 +104,11 @@ class PlainMarkdownInput extends React.Component {
     }
   }
 
+  /**
+   * handleNewValue
+   *
+   * @param {string} value - Editor's text. The line's ends in a text editor should be \n - Unix mode(LF)
+   */
   handleNewValue(value) {
     let editorState = Plain.deserialize(value);
     let nodes = editorState.document.nodes.asMutable();
@@ -123,6 +128,7 @@ class PlainMarkdownInput extends React.Component {
       tokens: parse(text),
       toJSON: () => this.text
     };
+
     nodes.set(numBlock, currNode.asImmutable());
   }
 
