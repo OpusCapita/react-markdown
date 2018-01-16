@@ -17,14 +17,14 @@ const IS_LINK_MODE = NODE_ENV === 'link';
 const WEBPACK_BUNDLE_ANALYZE = process.env.WEBPACK_BUNDLE_ANALYZE;
 
 let plugins = [
-    new ProgressBarPlugin(),
-    new webpack.NoEmitOnErrorsPlugin(),
-    new webpack.DefinePlugin({
-      'process.env.HOST': JSON.stringify(HOST),
-      'process.env.PORT': JSON.stringify(PORT),
-      'process.env.NODE_ENV': `"${NODE_ENV}"`
-    }),
-    new LodashModuleReplacementPlugin()
+  new ProgressBarPlugin(),
+  new webpack.NoEmitOnErrorsPlugin(),
+  new webpack.DefinePlugin({
+    'process.env.HOST': JSON.stringify(HOST),
+    'process.env.PORT': JSON.stringify(PORT),
+    'process.env.NODE_ENV': `"${NODE_ENV}"`
+  }),
+  new LodashModuleReplacementPlugin()
 ];
 
 if(IS_LINK_MODE) {
@@ -47,15 +47,17 @@ if(WEBPACK_BUNDLE_ANALYZE && IS_PRODUCTION_MODE) {
 
   plugins.push(bundleAnalyzerPlugin);
 }
-
+const polyfillEntries = [
+  // IE11 - "String.prototype.startsWith" and endsWith methods (local code)
+  "core-js/es6/string.js",
+  // IE11 - "Promise"s - required for autocompletes
+  "core-js/es6/promise.js",
+  // IE11 - Used in "slate-js" dependency code
+  "core-js/es7/array.js",
+];
 const prod = {
   entry: [
-    // IE11 - "String.prototype.startsWith" and endsWith methods (local code)
-    "core-js/es6/string.js",
-    // IE11 - "Promise"s - required for autocompletes
-    "core-js/es6/promise.js",
-    // IE11 - Used in "slate-js" dependency code
-    "core-js/es7/array.js",
+    ...polyfillEntries,
     path.resolve(__dirname, '../src/client/components/MarkdownInput')
   ],
   output: {
@@ -69,12 +71,7 @@ const prod = {
 
 const demo = {
   entry: [
-    // IE11 - "String.prototype.startsWith" and endsWith methods (local code)
-    "core-js/es6/string.js",
-    // IE11 - "Promise"s - required for autocompletes
-    "core-js/es6/promise.js",
-    // IE11 - Used in "slate-js" dependency code
-    "core-js/es7/array.js",
+    ...polyfillEntries,
     path.resolve(__dirname, '../www/index-page.js')
   ],
   output: {

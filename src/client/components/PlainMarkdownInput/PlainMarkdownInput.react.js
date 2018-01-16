@@ -467,7 +467,7 @@ class PlainMarkdownInput extends React.Component {
     let linkButton = this.getLinkButton({ disabled, locale });
     let headerButtons = this.getHeaderButtons({ disabled, locale });
     let listButtons = this.getAccentButtons({
-      editorValue: editorState, disabled, locale, accents: ['ol', 'ul']
+      editorValue: editorState, readOnly, locale, accents: ['ol', 'ul']
     });
     let additionalButtons = this.getAdditionalButtons(readOnly);
     let fullScreenButton = this.getFullScreenButton({ readOnly, locale, fullScreen });
