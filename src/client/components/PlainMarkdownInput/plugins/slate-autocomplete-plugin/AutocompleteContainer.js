@@ -18,6 +18,7 @@ class AutocompleteContainer extends React.Component {
     onChange: Types.func,
     onScroll: Types.func,
     onMouseUp: Types.func,
+    onToggle: Types.func,
   };
 
   static defaultProps = {
@@ -26,7 +27,8 @@ class AutocompleteContainer extends React.Component {
     options: {},
     onChange: () => {},
     onScroll: () => {},
-    onMouseUp: () => {}
+    onMouseUp: () => {},
+    onToggle: () => {}
   };
 
   constructor(props) {
@@ -202,13 +204,18 @@ class AutocompleteContainer extends React.Component {
       const { extensions } = options;
       const extension = this.matchExtension(extensions, term);
       if (extension) {
-        this.setState({ show: true });
+        this.toggleWidget(true);
         extension.searchItems(term).then((items) => this.setState({ items, selectedIndex: 0 }));
         return true;
       }
     }
 
     return false;
+  };
+
+  toggleWidget = flag => {
+    this.props.onToggle(flag);
+    this.setState({ show: flag });
   };
 
   /**
@@ -219,12 +226,12 @@ class AutocompleteContainer extends React.Component {
     // Check of the event's target is necessary for IE11
     // XXX FOR IE11. Issue #78@opuscapita/react-markdown
     if (show && this.currEventTarget !== 'widget' && this.currEventTarget !== 'item-move') {
-      this.setState({ show: false });
+      this.toggleWidget(false);
     }
   };
 
   forceHide = () => {
-    this.setState({ show: false });
+    this.toggleWidget(false);
   };
 
   searchItems = props => {
