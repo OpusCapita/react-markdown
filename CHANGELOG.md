@@ -1,3 +1,17 @@
+## [v2.0.2](Fri, 09 Feb 2018 09:58:32 GMT)
+ - (#120) Fix bug "Click on Enter after term or product in list" (#122) (Aleksandr Baliunov <abaliunov-sc@users.noreply.github.com>, 3b21a8c)
+ - Update package.json (Kirill Volkovich <kvolkovich-sc@users.noreply.github.com>, 93ae849)
+ - Add CODEOWNERS file (Issue-#117) #118 (Aleksandr Baliunov <abaliunov-sc@users.noreply.github.com>, db90b46)
+ - Run tests for react-15 and react-16 in CircleCI (Issue-#115) (PR-#116)
+    
+    * (#115) Use in building of tests for react-a5 and react-a6
+    
+    * (#115) Change line's end CRLF to LF
+    
+    * (#115) Change config.yml for CircleCI
+    
+    * (#115) Add multiline selection for lists (Aleksandr Baliunov <abaliunov-sc@users.noreply.github.com>, de56236)
+
 ## [v2.0.1](https://github.com/OpusCapita/react-markdown/compare/v2.0.0...v2.0.1) (Wed, 13 Dec 2017 09:11:36 GMT)
  - Fix bug #98 (#112) (Aleksandr Baliunov <abaliunov-sc@users.noreply.github.com>, 146397e)
 
