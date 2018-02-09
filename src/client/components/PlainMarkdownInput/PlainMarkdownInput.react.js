@@ -84,6 +84,7 @@ class PlainMarkdownInput extends React.Component {
       editorState: '',
       fullScreen: false
     };
+    this.isAutocompleteShow = false;
     this.handleRef = this.handleRef.bind(this);
     this.handleScroll = this.handleScroll.bind(this);
     this.handleAdditionalButtonsClick = this.handleAdditionalButtonsClick.bind(this);
@@ -131,6 +132,10 @@ class PlainMarkdownInput extends React.Component {
 
     nodes.set(numBlock, currNode.asImmutable());
   }
+
+  handleAutocompleteToggle = flag => {
+    this.isAutocompleteShow = flag;
+  };
 
   handleMouseDown = () => {
     this.forceUpdate();
@@ -260,7 +265,7 @@ class PlainMarkdownInput extends React.Component {
       return this.toggleAccent(change.state, ACCENTS[data.key]);
     }
 
-    if (data.key === 'enter') {
+    if (data.key === 'enter' && !this.isAutocompleteShow) {
       let state = change.state;
       if (hasAccent(state, 'ul')) {
         return this.handleEnterFromListDown(change, 'ul');
@@ -504,7 +509,8 @@ class PlainMarkdownInput extends React.Component {
                 locale: locale,
                 onChange: this.handleChange,
                 onScroll: this.handleScroll,
-                onMouseUp: this.handleMouseUp
+                onMouseUp: this.handleMouseUp,
+                onToggle: this.handleAutocompleteToggle
               })
             ]}
             readOnly={readOnly}
