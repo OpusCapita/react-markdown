@@ -1,3 +1,5 @@
+## [v2.0.3](https://github.com/OpusCapita/react-markdown/compare/v2.0.2...v2.0.3) (Fri, 09 Feb 2018 11:27:21 GMT)
+
 ## [v2.0.2](Fri, 09 Feb 2018 09:58:32 GMT)
  - (#120) Fix bug "Click on Enter after term or product in list" (#122) (Aleksandr Baliunov <abaliunov-sc@users.noreply.github.com>, 3b21a8c)
  - Update package.json (Kirill Volkovich <kvolkovich-sc@users.noreply.github.com>, 93ae849)
