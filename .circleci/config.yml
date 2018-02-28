@@ -1,28 +1,37 @@
+defaults: &defaults
+  docker:
+    - image: opuscapita/minsk-core-ci:grails-2.4.4-jdk-8u131-nodejs-8.9.4-maven-3.3.9
+  working_directory: ~/build
+
 version: 2
 jobs:
   build:
-    docker:
-      - image: circleci/node:6
-    working_directory: ~/repo
+    <<: *defaults
     steps:
+      - run:
+          name: Environment inject.
+          command: env_inject.sh
+
       - checkout
+
       - restore_cache:
           keys:
-          - v1-dependencies-{{ checksum "package.json" }}
-          # fallback to using the latest cache if no exact match is found
-          - v1-dependencies-
+            - react-markdown-{{ .Branch }}-{{ checksum "package.json" }}
+            - react-markdown-{{ .Branch }}
+            - react-markdown
 
       - run:
-          name: install-dependencies
+          name: "Installing dependencies."
           command: yarn install
 
       - save_cache:
+          key: react-markdown-{{ .Branch }}-{{ checksum "package.json" }}
           paths:
-            - node_modules
-          key: v1-dependencies-{{ checksum "package.json" }}
+              - ./node_modules
+              - ./yarn.lock
 
       - run:
-          name: lint
+          name: "Running lint."
           command: npm run lint
 
       - run:
@@ -58,26 +67,31 @@ jobs:
 
       - store_artifacts:
           path: junit16
+
   update-gh-pages:
-    docker:
-      - image: circleci/node:6
-    working_directory: ~/repo
+    <<: *defaults
     steps:
+      - run:
+          name: Environment inject
+          command: /bin/env_inject.sh
+
       - checkout
+
       - restore_cache:
           keys:
-          - v1-dependencies-{{ checksum "package.json" }}
-          # fallback to using the latest cache if no exact match is found
-          - v1-dependencies-
+            - react-markdown-{{ .Branch }}-{{ checksum "package.json" }}
+            - react-markdown-{{ .Branch }}
+            - react-markdown
 
       - run:
-          name: install-dependencies
+          name: "Installing dependencies."
           command: yarn install
 
       - save_cache:
+          key: react-markdown-{{ .Branch }}-{{ checksum "package.json" }}
           paths:
-            - node_modules
-          key: v1-dependencies-{{ checksum "package.json" }}
+              - ./node_modules
+              - ./yarn.lock
 
       - run:
           name: build-gh-pages
@@ -87,19 +101,112 @@ jobs:
           name: deploy-gh-pages
           command: ./scripts/gh-pages/deploy.sh .gh-pages-tmp
 
+  build_release:
+    <<: *defaults
+    steps:
+      - run:
+          name: Environment inject
+          command: /bin/env_inject.sh
+
+      - checkout
+
+      - restore_cache:
+          keys:
+            - react-markdown-{{ .Branch }}-{{ checksum "package.json" }}
+            - react-markdown-{{ .Branch }}
+            - react-markdown
+
+      - run:
+          name: "Installing dependencies."
+          command: yarn install
+
+      - save_cache:
+          key: react-markdown-{{ .Branch }}-{{ checksum "package.json" }}
+          paths:
+              - ./node_modules
+              - ./yarn.lock
+
+      - run:
+          name: "Running lint."
+          command: npm run lint
+
+      - run:
+          name: test
+          command: |
+            mkdir junit
+            npm test -- --reporter mocha-junit-reporter
+
+          environment:
+            MOCHA_FILE: junit/test-results.xml
+
+      - store_test_results:
+          path: junit
+
+      - store_artifacts:
+          path: junit
+
+      - run:
+          name: install-dependencies-react-16
+          command: yarn add react@16.2.0 react-dom@16.2.0 react-test-renderer@16.2.0 enzyme-adapter-react-16@1.1.0
+
+      - run:
+          name: test-for-react-16
+          command: |
+            mkdir junit16
+            npm test -- --reporter mocha-junit-reporter
+
+          environment:
+            MOCHA_FILE: junit16/test-results.xml
+
+      - store_test_results:
+          path: junit16
+
+      - store_artifacts:
+          path: junit16
+
+
+      - run:
+          name: "Deploy."
+          command: npm run publish-release
+
+  release:
+    <<: *defaults
+    steps:
+
+      - run:
+          name: Environment inject
+          command: env_inject.sh
+
+      - checkout
+
+      - run:
+          name: Executing release scrtipt.
+          command: .circleci/release.sh
+
 workflows:
   version: 2
-  build-all:
+  release-and-build:
     jobs:
+      - release:
+          filters:
+            branches:
+              only: release
       - build:
           filters:
             branches:
               ignore:
                 - gh-pages
+                - release
       - update-gh-pages:
           requires:
             - build
           filters:
             branches:
-              ignore:
-                - gh-pages
+              only:
+                - master
+      - build_release:
+          filters:
+            tags:
+              only: /.*/
+            branches:
+              ignore: /.*/
