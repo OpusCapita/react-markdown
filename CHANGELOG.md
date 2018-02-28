@@ -1,3 +1,12 @@
+
+Release 2.0.4 Wed Feb 28 2018 13:56:18 GMT+0000 (UTC)
+=======================================================
+
+- Updated build process. (Dmitry Shienok dshienok@scand.com, 2018-02-28 16:40:01 +0300)
+- Updated build process. (Dmitry Shienok dshienok@scand.com, 2018-02-28 16:37:32 +0300)
+- Updated build process. (Dmitry Shienok dshienok@scand.com, 2018-02-28 16:36:48 +0300)
+-  (Issue #123) Remove 'lodash-webpack-plugin' usage (#124) (GitHub kvolkovich-sc@users.noreply.github.com, 2018-02-28 16:18:00 +0300)
+- Updating to a version to  2.0.4 (Dmitriy Sanko dsanko@scand.com, 2018-02-09 14:27:33 +0300)
 ## [v2.0.3](https://github.com/OpusCapita/react-markdown/compare/v2.0.2...v2.0.3) (Fri, 09 Feb 2018 11:27:21 GMT)
 
 ## [v2.0.2](Fri, 09 Feb 2018 09:58:32 GMT)
