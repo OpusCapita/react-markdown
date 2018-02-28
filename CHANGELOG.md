@@ -1,4 +1,10 @@
 
+Release 2.0.5 Wed Feb 28 2018 14:07:26 GMT+0000 (UTC)
+=======================================================
+
+- Merge branch 'master' of github.com:OpusCapita/react-markdown (Dmitry Shienok dshienok@scand.com, 2018-02-28 17:05:42 +0300)
+- Updated build process. (Dmitry Shienok dshienok@scand.com, 2018-02-28 17:05:14 +0300)
+
 Release 2.0.4 Wed Feb 28 2018 13:56:18 GMT+0000 (UTC)
 =======================================================
 
