@@ -29,7 +29,7 @@ SAFE_GIT_BRANCH=`urlencode $GIT_BRANCH`
 echo "Current branch is $SAFE_GIT_BRANCH"
 
 # now lets setup a new repo so we can update the gh-pages branch
-git config --global user.email "$GH_EMAIL" > /dev/null 2>&1
+git config --global user.email "$GH_MAIL" > /dev/null 2>&1
 git config --global user.name "$GH_NAME" > /dev/null 2>&1
 
 # switch into the the gh-pages branch
