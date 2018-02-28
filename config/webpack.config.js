@@ -5,7 +5,6 @@ const webpack = require('webpack');
 const WriteFilePlugin = require('write-file-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const ProgressBarPlugin = require('progress-bar-webpack-plugin');
-const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
 
 const PACKAGE_VERSION = require('../package.json').version;
 const PACKAGE_NAME = require('../package.json').name;
@@ -23,8 +22,7 @@ let plugins = [
     'process.env.HOST': JSON.stringify(HOST),
     'process.env.PORT': JSON.stringify(PORT),
     'process.env.NODE_ENV': `"${NODE_ENV}"`
-  }),
-  new LodashModuleReplacementPlugin()
+  })
 ];
 
 if(IS_LINK_MODE) {
