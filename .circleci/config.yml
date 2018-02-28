@@ -202,8 +202,9 @@ workflows:
             - build
           filters:
             branches:
-              only:
-                - master
+              ignore:
+                - gh-pages
+                - release
       - build_release:
           filters:
             tags:
