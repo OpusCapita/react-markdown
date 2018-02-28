@@ -1,6 +1,5 @@
 const path = require('path');
 const webpack = require('webpack');
-const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
 
 const PACKAGE_VERSION = require('../../package.json').version;
 const PACKAGE_NAME = require('../../package.json').name;
@@ -29,8 +28,7 @@ module.exports = {
   plugins: [
       new webpack.DefinePlugin({
         'process.env.NODE_ENV': '"production"'
-      }),
-      new LodashModuleReplacementPlugin()
+      })
   ],
   externals: {
     react: {
