@@ -10,7 +10,8 @@
     "start": "cross-env NODE_ENV=development showroom-scan src && babel-node --presets es2015,stage-0 www/index",
     "npm-build": "rimraf lib && cross-env NODE_ENV=production webpack --config ./config/webpack.config.js --hide-modules",
     "npm-publish": "npm run npm-build && npm publish",
-    "publish-release": "npm run npm-publish"
+    "grails-plugin-deploy": "npm run grails-plugin-package -- --release && grails-plugin-deploy --release",
+    "publish-release": "npm run grails-plugin-deploy && npm run npm-publish"
   },
   "license": "Apache-2.0",
   "repository": "OpusCapita/react-markdown",
