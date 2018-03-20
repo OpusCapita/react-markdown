@@ -22,7 +22,7 @@
     "registry": "https://registry.npmjs.org/",
     "access": "public"
   },
-  "main": "lib/index.js",
+  "main": "lib/components/MarkdownInput.js",
   "files": [
     "lib",
     "README.md"
