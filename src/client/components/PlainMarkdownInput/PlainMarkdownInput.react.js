@@ -462,7 +462,7 @@ class PlainMarkdownInput extends React.Component {
 
   render() {
     const { editorState, fullScreen } = this.state;
-    const { children, extensions, readOnly, locale } = this.props;
+    const { children, extensions, readOnly, locale, autoFocus } = this.props;
     const disabled = readOnly || hasMultiLineSelection(editorState);
 
     // Create buttons for toolbar
@@ -497,7 +497,7 @@ class PlainMarkdownInput extends React.Component {
             spellCheck={false}
             state={editorState}
             fullScreen={fullScreen}
-            autoFocus={true}
+            autoFocus={autoFocus}
             schema={schema}
             onChange={this.handleChange}
             onCopy={this.handleCopy}
@@ -532,6 +532,7 @@ PlainMarkdownInput.propTypes = {
   onChange: Types.func,
   onFullScreen: Types.func,
   readOnly: Types.bool,
+  autoFocus: Types.bool,
   showFullScreenButton: Types.bool,
   locale: Types.string
 };
@@ -543,6 +544,7 @@ PlainMarkdownInput.defaultProps = {
   onFullScreen: () => {},
   onChange: () => {},
   readOnly: false,
+  autoFocus: true,
   showFullScreenButton: false,
   locale: 'en'
 };
