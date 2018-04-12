@@ -12,6 +12,7 @@ MarkdownInput
 | locale             | string          | Locale                                                                                           |
 | extensions         | array           | See "Extension definition" section bellow.                                                       |
 | additionalButtons  | array           | See "Additional buttons definition" section bellow.                                              |
+| autoFocus          | bool            | Set focus automatically on mount (default: true)                                                 |
 | readOnly           | bool            | Disables toolbar and makes markdown text not editable.                                           |
 
 ### Extension definition
@@ -56,6 +57,7 @@ function (optional) that is called on when the user presses the button, the func
   <MarkdownInput
     onChange={_scope.handleValueChange}
     value={_scope.state.markdownExample}
+    autoFocus={false}
     readOnly={false}
     showFullScreenButton={true}
     locale='en'
