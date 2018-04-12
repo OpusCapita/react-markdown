@@ -1,4 +1,10 @@
 
+Release 2.1.0 Thu Apr 12 2018 10:56:27 GMT+0000 (UTC)
+=======================================================
+
+- Add "autoFocus" property to examples (Kirill Volkovich kirill.volkovich@opuscapita.com, 2018-04-12 13:53:56 +0300)
+- Allow passing `autoFocus` down to the `Editor` component (Issue [#126](https://github.com/OpusCapita/react-markdown/issues/126)) (PR [#127](https://github.com/OpusCapita/react-markdown/issues/127)) (Kirill Volkovich AubreyHewes@users.noreply.github.com, 2018-04-12 12:47:17 +0200)
+
 Release 2.0.7 Tue Mar 20 2018 07:55:51 GMT+0000 (UTC)
 =======================================================
 
