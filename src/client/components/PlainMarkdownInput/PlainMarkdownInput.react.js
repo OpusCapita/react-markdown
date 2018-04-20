@@ -513,8 +513,8 @@ class PlainMarkdownInput extends React.Component {
             onKeyDown={this.handleKeyDown.bind(this)}
             plugins={[
               AutocompletePlugin({
-                extensions: extensions,
-                locale: locale,
+                extensions,
+                locale,
                 onChange: this.handleChange,
                 onScroll: this.handleScroll,
                 onMouseUp: this.handleMouseUp,
