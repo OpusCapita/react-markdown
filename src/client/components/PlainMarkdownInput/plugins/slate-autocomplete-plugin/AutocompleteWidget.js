@@ -3,6 +3,7 @@ import './Autocomplete.less';
 import Types from 'prop-types';
 import { getSlateEditor } from '../../utils';
 import getMessage from '../../../translations';
+import DefaultAutocompleteItem from './DefaultAutocompleteItem.react';
 
 const propTypes = {
   isMouseIndexSelected: Types.bool,
@@ -32,7 +33,6 @@ const defaultProps = {
 };
 
 const maxHeight = 240;
-const maxItemLength = 15;
 
 class AutocompleteWidget extends React.Component {
   constructor(props) {
@@ -130,7 +130,9 @@ class AutocompleteWidget extends React.Component {
 
   render() {
     const { left, top, transform } = this.state;
-    const { items, locale, selectedIndex, onSelectedIndexChange } = this.props;
+    const { items, locale, selectedIndex, onSelectedIndexChange, renderItem: CustomRender, loading } = this.props;
+
+    const ItemComponent = CustomRender ? CustomRender : DefaultAutocompleteItem;
 
     if (items) {
       return (
@@ -155,8 +157,6 @@ class AutocompleteWidget extends React.Component {
           }}
         >
           {items.map((item, index) => {
-            const itemLabel = item._objectLabel;
-            const itemLength = itemLabel.length;
             return (
               <div
                 key={index}
@@ -164,24 +164,25 @@ class AutocompleteWidget extends React.Component {
                 onClick={() => this.handleSelectItem(index)}
                 onMouseMove={() => onSelectedIndexChange(index)}
                 onMouseDown={e => {
-                  this.props.onMouseDown('item');
                   e.stopPropagation(); // Isolate event target
+                  this.props.onMouseDown('item');
                 }}
-                className={`
-                  react-markdown--autocomplete-widget__item
-                  ${selectedIndex === index ? 'react-markdown--autocomplete-widget__item--active' : ''}
-                `}
-                title={itemLength > maxItemLength ? itemLabel : ''}
-                style={item.style}
               >
-                {itemLength > maxItemLength ? `${itemLabel.substr(0, maxItemLength)}…` : itemLabel}
+                <ItemComponent
+                  item={item}
+                  isSelected={selectedIndex === index}
+                />
               </div>
             );
           })}
 
-          {!items.length ? (
+          {items.length === 0 && !loading && (
             <div className="react-markdown--autocomplete-widget__item">{getMessage(locale, 'noMatchesFound')}</div>
-          ) : null}
+          )}
+
+          {loading && (
+            <div className="react-markdown--autocomplete-widget__item">Searching</div>
+          )}
         </div>
       );
     }

@@ -110,8 +110,17 @@ function (optional) that is called on when the user presses the button, the func
           return new Promise(resolve => setTimeout(_ => resolve(items.filter(({ _objectLabel }) => _objectLabel.indexOf(term.substring(1)) === 0)), 1000));
         },
         markdownText(item) {
-          return '#' + item._objectLabel;
-        }
+          return '#' + item._objectLabel + ' ';
+        },
+        renderItem: ({ item, isSelected }) => (
+          <div
+            className={`
+              react-markdown--autocomplete-widget__item${isSelected ? ' react-markdown--autocomplete-widget__item--active' : ''}
+            `}
+          >
+            <span style={isSelected ? { color: 'red' } : { color: 'green' }}>{item._objectLabel}</span>
+          </div>
+        )
       },
       {
         objectClassName: 'Term',
@@ -137,7 +146,7 @@ function (optional) that is called on when the user presses the button, the func
           return Promise.resolve(items.filter(({_objectLabel}) => _objectLabel.startsWith(term.substring(1))));
         },
         markdownText(item) {
-          return '$' + item._objectLabel;
+          return '$' + item._objectLabel + ' ';
         }
       }
     ]}
