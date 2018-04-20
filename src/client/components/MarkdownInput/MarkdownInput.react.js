@@ -12,7 +12,8 @@ class MarkdownInput extends React.Component {
     readOnly: Types.bool,
     autoFocus: Types.bool,
     showFullScreenButton: Types.bool,
-    locale: Types.string
+    locale: Types.string,
+    hideToolbar: Types.bool
   };
 
   static defaultProps = {
@@ -24,7 +25,8 @@ class MarkdownInput extends React.Component {
     readOnly: false,
     autoFocus: true,
     showFullScreenButton: false,
-    locale: 'en'
+    locale: 'en',
+    hideToolbar: false
   };
 
   handleChangeValue = (value) => {
@@ -36,7 +38,16 @@ class MarkdownInput extends React.Component {
   };
 
   render() {
-    const { value, extensions, additionalButtons, readOnly, showFullScreenButton, locale, autoFocus } = this.props;
+    const {
+      value,
+      extensions,
+      additionalButtons,
+      readOnly,
+      showFullScreenButton,
+      locale,
+      autoFocus,
+      hideToolbar
+    } = this.props;
 
     return (
       <PlainMarkdownInput
@@ -49,6 +60,7 @@ class MarkdownInput extends React.Component {
         showFullScreenButton={showFullScreenButton}
         locale={locale}
         autoFocus={autoFocus}
+        hideToolbar={hideToolbar}
       />
     );
   }

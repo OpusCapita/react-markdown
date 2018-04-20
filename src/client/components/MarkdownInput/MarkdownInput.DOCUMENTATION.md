@@ -40,7 +40,7 @@ Configurable buttons in toolbar.
 
 ### handleButtonPress definition
 
-function (optional) that is called on when the user presses the button, the function gets the object as a parameter 
+function (optional) that is called on when the user presses the button, the function gets the object as a parameter
 (see description below) that contains the following info:
 
 | Name                    | Type            | Description                                                                                 |
@@ -60,26 +60,27 @@ function (optional) that is called on when the user presses the button, the func
     autoFocus={false}
     readOnly={false}
     showFullScreenButton={true}
+    hideToolbar={true}
     locale='en'
     additionalButtons={[
       {
         iconElement: (<i className="fa fa-search"></i>),
         handleButtonPress({ value, insertAtCursorPosition }) {
           setTimeout(() => {
-            insertAtCursorPosition('#Product.new');    
-          }, 100);             
+            insertAtCursorPosition('#Product.new');
+          }, 100);
         },
       },
       {
         handleButtonPress({ value, insertAtCursorPosition }) {
-          insertAtCursorPosition('#Product.old');                 
+          insertAtCursorPosition('#Product.old');
         },
         label: 'Product'
       },
       {
         iconElement: (<i className="fa fa-search"></i>),
         handleButtonPress({ value, insertAtCursorPosition }) {
-          insertAtCursorPosition('$Term.new');                 
+          insertAtCursorPosition('$Term.new');
         },
         label: 'Term'
       }
@@ -106,7 +107,7 @@ function (optional) that is called on when the user presses the button, the func
             {_objectLabel: 'ba256'},
             {_objectLabel: 'ba257'}
           ];
-          return Promise.resolve(items.filter(({_objectLabel}) => _objectLabel.startsWith(term.substring(1))));
+          return new Promise(resolve => setTimeout(_ => resolve(items.filter(({ _objectLabel }) => _objectLabel.indexOf(term.substring(1)) === 0)), 1000));
         },
         markdownText(item) {
           return '#' + item._objectLabel;
