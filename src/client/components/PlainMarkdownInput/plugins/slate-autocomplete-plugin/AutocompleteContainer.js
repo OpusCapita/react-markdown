@@ -262,8 +262,8 @@ class AutocompleteContainer extends React.Component {
   getItemRenderFunc = _ => {
     const { state, options: { extensions } } = this.props;
     const { term } = this.getSearchToken(state);
-    const extension = this.matchExtension(extensions, term);
-    return extension.renderItem
+    const extension = this.matchExtension(extensions, term || '');
+    return (extension || {}).renderItem
   }
 
   render() {
