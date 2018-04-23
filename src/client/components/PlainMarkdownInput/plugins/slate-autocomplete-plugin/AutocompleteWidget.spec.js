@@ -244,7 +244,7 @@ describe('<AutocompleteWidget />', () => {
     );
     let wrapper = mount(component);
     let wrapperInstance = wrapper.instance();
-    wrapperInstance.handleSelectItem(index);
+    wrapperInstance.handleSelectItem(index)();
     expect(handler.callCount).to.equal(1);
     expect(handler.getCall(0).args[0]).to.equal(index);
   });
