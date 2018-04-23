@@ -172,7 +172,7 @@ export default class AutocompleteWidget extends React.Component {
       return (
         <div {...commonProps}>
           <div className="react-markdown--autocomplete-widget__item">
-            <span>Searching&hellip;</span>
+            <span>Searching</span>
             <i className="fa fa-spinner fa-spin pull-right" style={{ marginTop: '3px' }}></i>
           </div>
         </div>
