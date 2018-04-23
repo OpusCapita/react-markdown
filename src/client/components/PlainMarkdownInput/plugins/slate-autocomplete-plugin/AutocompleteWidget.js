@@ -5,36 +5,38 @@ import { getSlateEditor } from '../../utils';
 import getMessage from '../../../translations';
 import DefaultAutocompleteItem from './DefaultAutocompleteItem.react';
 
-const propTypes = {
-  isMouseIndexSelected: Types.bool,
-  onSelectedIndexChange: Types.func,
-  items: Types.array,
-  locale: Types.string,
-  onMouseDown: Types.func,
-  onMouseUp: Types.func,
-  onScroll: Types.func,
-  onSelectItem: Types.func,
-  selectedIndex: Types.number,
-  style: Types.object,
-  restrictorRef: Types.object
-};
-
-const defaultProps = {
-  isMouseIndexSelected: false,
-  onSelectedIndexChange: () => {},
-  items: [],
-  locale: 'en',
-  onMouseDown: () => {},
-  onMouseUp: () => {},
-  onScroll: () => {},
-  onSelectItem: () => {},
-  style: {},
-  restrictorRef: null
-};
-
 const maxHeight = 240;
 
-class AutocompleteWidget extends React.Component {
+export default class AutocompleteWidget extends React.Component {
+  static propTypes = {
+    isMouseIndexSelected: Types.bool,
+    onSelectedIndexChange: Types.func,
+    items: Types.array,
+    locale: Types.string,
+    onMouseDown: Types.func,
+    onMouseUp: Types.func,
+    onScroll: Types.func,
+    onSelectItem: Types.func,
+    selectedIndex: Types.number,
+    style: Types.object,
+    restrictorRef: Types.object,
+    renderItem: Types.func,
+    loading: Types.bool
+  }
+
+  static defaultProps = {
+    isMouseIndexSelected: false,
+    onSelectedIndexChange: () => {},
+    items: [],
+    locale: 'en',
+    onMouseDown: () => {},
+    onMouseUp: () => {},
+    onScroll: () => {},
+    onSelectItem: () => {},
+    style: {},
+    restrictorRef: null
+  };
+
   constructor(props) {
     super(props);
     this.state = {
@@ -79,7 +81,7 @@ class AutocompleteWidget extends React.Component {
     }
   };
 
-  handleSelectItem = (index) => {
+  handleSelectItem = index => _ => {
     this.props.onSelectItem(index);
   };
 
@@ -128,45 +130,70 @@ class AutocompleteWidget extends React.Component {
     }
   };
 
+  saveRef = ref => (this['items-ref'] = ref);
+
+  handleMouseDown = e => {
+    e.preventDefault(); // XXX Not work in IE11
+    e.stopPropagation(); // Isolate event target
+    this.props.onMouseDown('widget');
+  }
+
+  handleMouseUp = e => {
+    e.stopPropagation(); // Isolate event target
+    this.props.onMouseUp();
+  }
+
+  handleItemMouseMove = index => _ => this.props.onSelectedIndexChange(index);
+
+  handleItemMouseDown = e => {
+    e.stopPropagation(); // Isolate event target
+    this.props.onMouseDown('item');
+  }
+
   render() {
     const { left, top, transform } = this.state;
-    const { items, locale, selectedIndex, onSelectedIndexChange, renderItem: CustomRender, loading } = this.props;
+    const { items, locale, selectedIndex, renderItem: CustomRender, loading } = this.props;
 
     const ItemComponent = CustomRender ? CustomRender : DefaultAutocompleteItem;
+
+    const commonProps = {
+      className: "react-markdown--autocomplete-widget",
+      ref: this.saveRef,
+      style: {
+        left,
+        top,
+        transform,
+        maxHeight: `${maxHeight}px`,
+        ...this.props.style
+      }
+    }
+
+    if (loading) {
+      return (
+        <div {...commonProps}>
+          <div className="react-markdown--autocomplete-widget__item">
+            <span>Searching&hellip;</span>
+            <i className="fa fa-spinner fa-spin pull-right" style={{ marginTop: '3px' }}></i>
+          </div>
+        </div>
+      )
+    }
 
     if (items) {
       return (
         <div
-          className="react-markdown--autocomplete-widget"
-          ref={ref => (this['items-ref'] = ref)}
-          onMouseDown={e => {
-            e.preventDefault(); // XXX Not work in IE11
-            e.stopPropagation(); // Isolate event target
-            this.props.onMouseDown('widget');
-          }}
-          onMouseUp={e => {
-            e.stopPropagation(); // Isolate event target
-            this.props.onMouseUp();
-          }}
-          style={{
-            left,
-            top,
-            transform,
-            maxHeight: `${maxHeight}px`,
-            ...this.props.style
-          }}
+          {...commonProps}
+          onMouseDown={this.handleMouseDown}
+          onMouseUp={this.handleMouseUp}
         >
           {items.map((item, index) => {
             return (
               <div
                 key={index}
                 ref={ref => (this[`item-ref-${index}`] = ref)}
-                onClick={() => this.handleSelectItem(index)}
-                onMouseMove={() => onSelectedIndexChange(index)}
-                onMouseDown={e => {
-                  e.stopPropagation(); // Isolate event target
-                  this.props.onMouseDown('item');
-                }}
+                onClick={this.handleSelectItem(index)}
+                onMouseMove={this.handleItemMouseMove(index)}
+                onMouseDown={this.handleItemMouseDown}
               >
                 <ItemComponent
                   item={item}
@@ -179,10 +206,6 @@ class AutocompleteWidget extends React.Component {
           {items.length === 0 && !loading && (
             <div className="react-markdown--autocomplete-widget__item">{getMessage(locale, 'noMatchesFound')}</div>
           )}
-
-          {loading && (
-            <div className="react-markdown--autocomplete-widget__item">Searching</div>
-          )}
         </div>
       );
     }
@@ -191,7 +214,3 @@ class AutocompleteWidget extends React.Component {
   }
 }
 
-AutocompleteWidget.propTypes = propTypes;
-AutocompleteWidget.defaultProps = defaultProps;
-
-export default AutocompleteWidget;

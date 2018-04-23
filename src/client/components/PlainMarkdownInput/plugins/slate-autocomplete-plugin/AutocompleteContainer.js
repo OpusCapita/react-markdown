@@ -198,17 +198,26 @@ class AutocompleteContainer extends React.Component {
   };
 
   addTerm = ({ state, options }) => {
-    let { term } = this.getSearchToken(state);
-    console.log('addTerm', { term })
+    const { term } = this.getSearchToken(state);
+
     if (term) {
       const { extensions } = options;
       const extension = this.matchExtension(extensions, term);
       if (extension) {
         this.setState({ items: [], loading: true });
         this.toggleWidget(true);
-        extension.searchItems(term).
-          then(items => this.setState({ items, selectedIndex: 0, loading: false })).
-          catch(err => this.setState({ items: [], loading: false }));
+        const request = extension.searchItems(term).
+          then(items => {
+            if (this.currentRequest === request) {
+              this.setState({ items, selectedIndex: 0, loading: false })
+            }
+          }).
+          catch(err => {
+            if (this.currentRequest === request) {
+              this.setState({ items: [], loading: false })
+            }
+          });
+        this.currentRequest = request;
         return true;
       }
     }
@@ -251,8 +260,7 @@ class AutocompleteContainer extends React.Component {
   };
 
   getItemRenderFunc = _ => {
-    const { state, options } = this.props;
-    const { extensions } = options;
+    const { state, options: { extensions } } = this.props;
     const { term } = this.getSearchToken(state);
     const extension = this.matchExtension(extensions, term);
     return extension.renderItem
