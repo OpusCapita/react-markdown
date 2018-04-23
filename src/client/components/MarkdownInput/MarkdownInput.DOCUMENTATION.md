@@ -62,7 +62,7 @@ function (optional) that is called on when the user presses the button, the func
     autoFocus={false}
     readOnly={false}
     showFullScreenButton={true}
-    hideToolbar={true}
+    hideToolbar={false}
     locale='en'
     additionalButtons={[
       {
@@ -120,7 +120,7 @@ function (optional) that is called on when the user presses the button, the func
               react-markdown--autocomplete-widget__item${isSelected ? ' react-markdown--autocomplete-widget__item--active' : ''}
             `}
           >
-            <span style={isSelected ? { color: 'red' } : { color: 'green' }}>{item._objectLabel}</span>
+            <span>{item._objectLabel}</span>
           </div>
         )
       },

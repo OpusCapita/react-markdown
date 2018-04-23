@@ -81,7 +81,7 @@ export default class AutocompleteWidget extends React.Component {
     }
   };
 
-  handleSelectItem = index => _ => {
+  handleSelectItem = index => {
     this.props.onSelectItem(index);
   };
 
@@ -143,8 +143,6 @@ export default class AutocompleteWidget extends React.Component {
     this.props.onMouseUp();
   }
 
-  handleItemMouseMove = index => _ => this.props.onSelectedIndexChange(index);
-
   handleItemMouseDown = e => {
     e.stopPropagation(); // Isolate event target
     this.props.onMouseDown('item');
@@ -152,7 +150,7 @@ export default class AutocompleteWidget extends React.Component {
 
   render() {
     const { left, top, transform } = this.state;
-    const { items, locale, selectedIndex, renderItem: CustomRender, loading } = this.props;
+    const { items, locale, selectedIndex, onSelectedIndexChange, renderItem: CustomRender, loading } = this.props;
 
     const ItemComponent = CustomRender ? CustomRender : DefaultAutocompleteItem;
 
@@ -191,8 +189,8 @@ export default class AutocompleteWidget extends React.Component {
               <div
                 key={index}
                 ref={ref => (this[`item-ref-${index}`] = ref)}
-                onClick={this.handleSelectItem(index)}
-                onMouseMove={this.handleItemMouseMove(index)}
+                onClick={_ => this.handleSelectItem(index)}
+                onMouseMove={_ => onSelectedIndexChange(index)}
                 onMouseDown={this.handleItemMouseDown}
               >
                 <ItemComponent
