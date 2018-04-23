@@ -150,9 +150,17 @@ export default class AutocompleteWidget extends React.Component {
 
   render() {
     const { left, top, transform } = this.state;
-    const { items, locale, selectedIndex, onSelectedIndexChange, renderItem: CustomRender, loading } = this.props;
+    const {
+      items,
+      locale,
+      selectedIndex,
+      onSelectedIndexChange,
+      onSelectItem,
+      renderItem: CustomItemComponent,
+      loading
+    } = this.props;
 
-    const ItemComponent = CustomRender ? CustomRender : DefaultAutocompleteItem;
+    const ItemComponent = CustomItemComponent ? CustomItemComponent : DefaultAutocompleteItem;
 
     const commonProps = {
       className: "react-markdown--autocomplete-widget",
@@ -189,7 +197,7 @@ export default class AutocompleteWidget extends React.Component {
               <div
                 key={index}
                 ref={ref => (this[`item-ref-${index}`] = ref)}
-                onClick={_ => this.handleSelectItem(index)}
+                onClick={_ => onSelectItem(index)}
                 onMouseMove={_ => onSelectedIndexChange(index)}
                 onMouseDown={this.handleItemMouseDown}
               >
