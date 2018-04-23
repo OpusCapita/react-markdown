@@ -104,7 +104,7 @@
   "grails": {
     "buildDir": "lib",
     "standaloneFiles": {
-      "components/MarkdownInput.min.js": "web-app/components/MarkdownInput.js"
+      "components/grails-plugin-markdown-input.js": "web-app/components/MarkdownInput.js"
     }
   },
   "keywords": [

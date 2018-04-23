@@ -6,7 +6,7 @@ const build = require('./webpack.build.config');
 module.exports = merge(build, {
   output: {
     path: path.resolve(__dirname, '../lib/components'),
-    filename: `MarkdownInput.min.js`,
+    filename: `grails-plugin-markdown-input.js`,
     library: `MarkdownInput`,
     libraryTarget: 'umd'
   },
