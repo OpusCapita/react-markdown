@@ -43,6 +43,7 @@ class AutocompleteContainer extends React.Component {
   }
 
   componentDidMount = () => {
+    this._isMounted = true;
     this.searchItems(this.props);
   };
 
@@ -59,6 +60,10 @@ class AutocompleteContainer extends React.Component {
   shouldComponentUpdate = (newProps, newState) => {
     return !this.state.show || !!this.currEventTarget && this.currEventTarget !== 'widget';
   };
+
+  componentWillUnmount() {
+    this._isMounted = false;
+  }
 
   matchExtension = (extensions, token) => {
     for (let i = 0, count = extensions.length; i < count; i++) {
@@ -208,12 +213,12 @@ class AutocompleteContainer extends React.Component {
         this.toggleWidget(true);
         const request = extension.searchItems(term).
           then(items => {
-            if (this.currentRequest === request) {
+            if (this.currentRequest === request && this._isMounted) {
               this.setState({ items, selectedIndex: 0, loading: false })
             }
           }).
           catch(err => {
-            if (this.currentRequest === request) {
+            if (this.currentRequest === request && this._isMounted) {
               this.setState({ items: [], loading: false })
             }
           });
