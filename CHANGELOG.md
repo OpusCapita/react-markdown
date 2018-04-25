@@ -1,4 +1,11 @@
 
+Release 2.2.1-dev Tue Apr 24 2018 08:16:10 GMT+0000 (UTC)
+=======================================================
+
+- setState only on mounted autocomplete (Egor Stambakio stambakio@scand.com, 2018-04-24 11:12:19 +0300)
+- Merge branch 'issue-130' of github.com:OpusCapita/react-markdown into issue-130 (Egor Stambakio stambakio@scand.com, 2018-04-23 16:31:57 +0300)
+- Renamed grails plugin artifact to more clear file name [ci skip] (Egor Stambakio stambakio@scand.com, 2018-04-23 16:31:03 +0300)
+
 Release 2.2.0-dev Mon Apr 23 2018 12:55:50 GMT+0000 (UTC)
 =======================================================
 
