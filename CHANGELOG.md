@@ -1,4 +1,9 @@
 
+Release 2.2.1 Wed Apr 25 2018 07:28:28 GMT+0000 (UTC)
+=======================================================
+
+- Hideable toolbar, different trailing space behavior, loading indicator for extensions ([#131](https://github.com/OpusCapita/react-markdown/issues/131)) (GitHub 31243790+estambakio-sc@users.noreply.github.com, 2018-04-25 09:59:29 +0300)
+
 Release 2.2.1-dev Tue Apr 24 2018 08:16:10 GMT+0000 (UTC)
 =======================================================
 
