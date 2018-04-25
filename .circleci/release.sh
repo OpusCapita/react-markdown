@@ -74,7 +74,7 @@ creating_github_release(){
     echo "[INFO] ================================================================================================="
 
     GITHUB_RELEASE=$(curl -sS --user "$GH_NAME:$GH_TOKEN" -X POST -w "%{http_code}" -o /dev/null --data \
-    '{"tag_name": "v'${RELEASE_VERSION}'","name": "'${RELEASE_VERSION}'","body": "'${DRAFT_BODY}'"' \
+    '{"tag_name": "v'${RELEASE_VERSION}'","name": "'${RELEASE_VERSION}'","body": "'${DRAFT_BODY}'"}' \
     $REPO_URL)
 
     if [ $GITHUB_RELEASE == 201 ]; then
@@ -82,13 +82,16 @@ creating_github_release(){
     else
         printf "[ERROR] Failed to create draft for release: \"$RELEASE_VERSION\".\n"
         curl -sS --user "$GH_NAME:$GH_TOKEN" -X POST -w "%{http_code}" --data \
-        '{"tag_name": "v'${RELEASE_VERSION}'","name": "v'${RELEASE_VERSION}'"' $REPO_URL
+        '{"tag_name": "v'${RELEASE_VERSION}'","name": "v'${RELEASE_VERSION}'"}' $REPO_URL
         echo "[INFO] Json request: {"tag_name": v"${RELEASE_VERSION}","name": "${RELEASE_VERSION}", \
-"body": "${DRAFT_BODY}""
+"body": "${DRAFT_BODY}"}"
     fi
 
 }
 
+########################################## Script initialization #################################################
+echo "[INFO] ================================================================================================="
+echo "[INFO] Starting release script."
 echo "[INFO] ================================================================================================="
 echo "[INFO] Getting arguments from commit message."
 echo "[INFO] ================================================================================================="
@@ -114,9 +117,20 @@ echo -e "\n[INFO] ==============================================================
 echo "[INFO] Setting git user attributes."
 echo "[INFO] ================================================================================================="
 git config --global user.name "$(git log -1 --pretty=%an)"
-echo "[INFO] User name: $(git config user.name)"
+if [ -z "$(git config --global user.name)" ]; then
+  echo "[ERROR] Undefined git user name."
+  exit 1
+else
+  echo "[INFO] User name: $(git config user.name)"
+fi
+
 git config --global user.email $(git log -1 --pretty=%ae)
-echo "[INFO] User email: $(git config user.email)"
+if [ -z "$(git config --global user.email)" ]; then
+  echo "[ERROR] Undefined git user email address."
+  exit 1
+else
+  echo "[INFO] User email: $(git config user.email)"
+fi
 
 echo -e "\n[INFO] ================================================================================================="
 echo "[INFO] Checkout for release branch: ${RELEASE_BRANCH}."
