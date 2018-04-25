@@ -462,7 +462,7 @@ class PlainMarkdownInput extends React.Component {
 
   render() {
     const { editorState, fullScreen } = this.state;
-    const { children, extensions, readOnly, locale, autoFocus } = this.props;
+    const { children, extensions, readOnly, locale, autoFocus, hideToolbar } = this.props;
     const disabled = readOnly || hasMultiLineSelection(editorState);
 
     // Create buttons for toolbar
@@ -484,15 +484,23 @@ class PlainMarkdownInput extends React.Component {
           { 'react-markdown--slate-editor--fulscreen': fullScreen }
         )}
       >
-        <div className="react-markdown--toolbar">
-          {emphasisButtons}
-          {linkButton}
-          {headerButtons}
-          {listButtons}
-          {additionalButtons}
-          {fullScreenButton}
-        </div>
-        <div className={'react-markdown--slate-content'}>
+        {
+          !hideToolbar && (
+            <div className="react-markdown--toolbar">
+              {emphasisButtons}
+              {linkButton}
+              {headerButtons}
+              {listButtons}
+              {additionalButtons}
+              {fullScreenButton}
+            </div>
+          )
+        }
+
+        <div
+          className={'react-markdown--slate-content'}
+          {...(hideToolbar && { style: { borderTop: '0' } })}
+        >
           <Editor
             spellCheck={false}
             state={editorState}
@@ -505,8 +513,8 @@ class PlainMarkdownInput extends React.Component {
             onKeyDown={this.handleKeyDown.bind(this)}
             plugins={[
               AutocompletePlugin({
-                extensions: extensions,
-                locale: locale,
+                extensions,
+                locale,
                 onChange: this.handleChange,
                 onScroll: this.handleScroll,
                 onMouseUp: this.handleMouseUp,
@@ -534,7 +542,8 @@ PlainMarkdownInput.propTypes = {
   readOnly: Types.bool,
   autoFocus: Types.bool,
   showFullScreenButton: Types.bool,
-  locale: Types.string
+  locale: Types.string,
+  hideToolbar: Types.bool
 };
 
 PlainMarkdownInput.defaultProps = {

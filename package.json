@@ -1,6 +1,6 @@
 {
   "name": "@opuscapita/react-markdown",
-  "version": "2.1.1",
+  "version": "2.2.1",
   "description": "React markdown editor component",
   "scripts": {
     "link-mode": "cross-env NODE_ENV=link webpack --config ./config/webpack.config.js",
@@ -8,7 +8,7 @@
     "upload-coverage": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
     "test": "rimraf ./.nyc_output ./coverage && cross-env nyc --reporter=lcov --reporter=text mocha --require config/test/mocha-setup.js --recursive src/**/*.spec.js --require ignore-styles",
     "start": "cross-env NODE_ENV=development showroom-scan src && babel-node --presets es2015,stage-0 www/index",
-    "npm-build": "rimraf lib && cross-env NODE_ENV=production webpack --config ./config/webpack.config.js --hide-modules",
+    "npm-build": "rimraf lib && cross-env NODE_ENV=production webpack --config ./config/webpack.build.config.js && cross-env NODE_ENV=production webpack --config ./config/webpack.build-min.config.js",
     "npm-publish": "npm run npm-build && npm publish",
     "grails-plugin-build": "rimraf build && npm run npm-build",
     "grails-plugin-package": "npm run grails-plugin-build && grails-plugin-package",
@@ -86,6 +86,7 @@
     "webpack": "2.2.1",
     "webpack-bundle-analyzer": "2.8.2",
     "webpack-dev-middleware": "1.10.1",
+    "webpack-merge": "4.1.2",
     "write-file-webpack-plugin": "3.4.2"
   },
   "dependencies": {
@@ -103,7 +104,7 @@
   "grails": {
     "buildDir": "lib",
     "standaloneFiles": {
-      "components/MarkdownInput.js": "web-app/components/MarkdownInput.js"
+      "components/grails-plugin-markdown-input.js": "web-app/components/MarkdownInput.js"
     }
   },
   "keywords": [

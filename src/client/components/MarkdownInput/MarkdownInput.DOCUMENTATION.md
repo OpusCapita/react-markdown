@@ -14,6 +14,7 @@ MarkdownInput
 | additionalButtons  | array           | See "Additional buttons definition" section bellow.                                              |
 | autoFocus          | bool            | Set focus automatically on mount (default: true)                                                 |
 | readOnly           | bool            | Disables toolbar and makes markdown text not editable.                                           |
+| hideToolbar        | bool            | Default: `false`. If `true`, input renders without a toolbar.                                           |
 
 ### Extension definition
 
@@ -25,8 +26,9 @@ Configurable extensions with autocomplete for **products**, **terms**, etc.
 | specialCharacter   | string          | Is used for inserting it into plain markdown input on button ('Term', 'Product', etc.) click.    |
 | color              | string          | Color of object reference element in rich markdown input.                                        |
 | termRegex          | regex           | Is used to check if item can be inserted after caret position in plain markdown input.           |
-| searchItems        | func            | Is used to search items by input term.                                                           |
-| markdownText       | func            | Is used to get text for markdown input based on selected item.                                   |
+| searchItems        | func            | Is used to search items by input term. **Must return a Promise**.                                |
+| markdownText       | func            | Is used to get text for markdown input based on selected item. **You can use this function in order to add a trailing space, etc.** |
+| renderItem         | func            | React component used to render an item in autocomplete box. Receives an `item` of the array returned by `searchItems` function, and `isSelected` boolean prop, indicating weither this item is currently selected. **If omitted, default render is used.** In order to mimic default look, assign `react-markdown--autocomplete-widget__item` class to a returned `div`, and if item is selected, add `react-markdown--autocomplete-widget__item--active` class also. |
 
 ### Additional button definition
 
@@ -40,7 +42,7 @@ Configurable buttons in toolbar.
 
 ### handleButtonPress definition
 
-function (optional) that is called on when the user presses the button, the function gets the object as a parameter 
+function (optional) that is called on when the user presses the button, the function gets the object as a parameter
 (see description below) that contains the following info:
 
 | Name                    | Type            | Description                                                                                 |
@@ -60,26 +62,27 @@ function (optional) that is called on when the user presses the button, the func
     autoFocus={false}
     readOnly={false}
     showFullScreenButton={true}
+    hideToolbar={false}
     locale='en'
     additionalButtons={[
       {
         iconElement: (<i className="fa fa-search"></i>),
         handleButtonPress({ value, insertAtCursorPosition }) {
           setTimeout(() => {
-            insertAtCursorPosition('#Product.new');    
-          }, 100);             
+            insertAtCursorPosition('#Product.new');
+          }, 100);
         },
       },
       {
         handleButtonPress({ value, insertAtCursorPosition }) {
-          insertAtCursorPosition('#Product.old');                 
+          insertAtCursorPosition('#Product.old');
         },
         label: 'Product'
       },
       {
         iconElement: (<i className="fa fa-search"></i>),
         handleButtonPress({ value, insertAtCursorPosition }) {
-          insertAtCursorPosition('$Term.new');                 
+          insertAtCursorPosition('$Term.new');
         },
         label: 'Term'
       }
@@ -106,11 +109,20 @@ function (optional) that is called on when the user presses the button, the func
             {_objectLabel: 'ba256'},
             {_objectLabel: 'ba257'}
           ];
-          return Promise.resolve(items.filter(({_objectLabel}) => _objectLabel.startsWith(term.substring(1))));
+          return new Promise(resolve => setTimeout(_ => resolve(items.filter(({ _objectLabel }) => _objectLabel.indexOf(term.substring(1)) === 0)), 1000));
         },
         markdownText(item) {
-          return '#' + item._objectLabel;
-        }
+          return '#' + item._objectLabel + ' ';
+        },
+        renderItem: ({ item, isSelected }) => (
+          <div
+            className={`
+              react-markdown--autocomplete-widget__item${isSelected ? ' react-markdown--autocomplete-widget__item--active' : ''}
+            `}
+          >
+            <span>{item._objectLabel}</span>
+          </div>
+        )
       },
       {
         objectClassName: 'Term',
@@ -136,7 +148,7 @@ function (optional) that is called on when the user presses the button, the func
           return Promise.resolve(items.filter(({_objectLabel}) => _objectLabel.startsWith(term.substring(1))));
         },
         markdownText(item) {
-          return '$' + item._objectLabel;
+          return '$' + item._objectLabel + ' ';
         }
       }
     ]}

@@ -13,6 +13,7 @@ const translations = {
     Term: 'Term',
     Maximize: 'Maximize',
     Minimize: 'Minimize',
+    searching: 'Searching'
   },
   de: {
     insertHeader: 'Kopfzeile einfügen',
@@ -28,6 +29,7 @@ const translations = {
     Term: 'Term',
     Maximize: 'Maximieren',
     Minimize: 'Minimieren',
+    searching: 'Suchen'
   }
 };
 

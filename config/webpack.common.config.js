@@ -25,11 +25,11 @@ let plugins = [
   })
 ];
 
-if(IS_LINK_MODE) {
+if (IS_LINK_MODE) {
   plugins.push(new WriteFilePlugin());
 }
 
-if(WEBPACK_BUNDLE_ANALYZE && IS_PRODUCTION_MODE) {
+if (WEBPACK_BUNDLE_ANALYZE && IS_PRODUCTION_MODE) {
   let bundleAnalyzerPlugin = new BundleAnalyzerPlugin({
     analyzerMode: 'static',
     analyzerHost: '127.0.0.1',
@@ -45,6 +45,7 @@ if(WEBPACK_BUNDLE_ANALYZE && IS_PRODUCTION_MODE) {
 
   plugins.push(bundleAnalyzerPlugin);
 }
+
 const polyfillEntries = [
   // IE11 - "String.prototype.startsWith" and endsWith methods (local code)
   "core-js/es6/string.js",
@@ -53,41 +54,13 @@ const polyfillEntries = [
   // IE11 - Used in "slate-js" dependency code
   "core-js/es7/array.js",
 ];
-const prod = {
-  entry: [
-    ...polyfillEntries,
-    path.resolve(__dirname, '../src/client/components/MarkdownInput')
-  ],
-  output: {
-    publicPath: '/',
-    path: path.resolve(__dirname, '../lib/components'),
-    filename: `MarkdownInput.js`,
-    library: `MarkdownInput`,
-    libraryTarget: 'umd'
-  }
-};
-
-const demo = {
-  entry: [
-    ...polyfillEntries,
-    path.resolve(__dirname, '../www/index-page.js')
-  ],
-  output: {
-    publicPath: `/`,
-    filename: 'index.js',
-    library: 'MarkdownInput',
-    libraryTarget: 'umd'
-  }
-};
 
 module.exports = {
-  entry: (IS_PRODUCTION_MODE || IS_LINK_MODE) ? prod.entry : demo.entry,
+  entry: polyfillEntries,
   context: path.resolve(__dirname),
-  output: (IS_PRODUCTION_MODE || IS_LINK_MODE) ? prod.output : demo.output,
-  devtool: IS_PRODUCTION_MODE ? false : 'inline-source-map',
-  watch: !IS_PRODUCTION_MODE,
+  devtool: false,
   bail: true,
-  plugins: plugins,
+  plugins,
   externals: {
     react: {
       root: 'React',
@@ -112,8 +85,8 @@ module.exports = {
   module: {
     rules: [
       {
-        test   : /\.(png|jpg|jpeg|gif|ttf|eot|svg|woff(2)?)(\?[a-z0-9=&.]+)?$/,
-        use : ['file-loader']
+        test: /\.(png|jpg|jpeg|gif|ttf|eot|svg|woff(2)?)(\?[a-z0-9=&.]+)?$/,
+        use: ['file-loader']
       },
       {
         test: /\.md$/,

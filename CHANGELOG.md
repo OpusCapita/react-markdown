@@ -1,4 +1,28 @@
 
+Release 2.2.1-dev Tue Apr 24 2018 08:16:10 GMT+0000 (UTC)
+=======================================================
+
+- setState only on mounted autocomplete (Egor Stambakio stambakio@scand.com, 2018-04-24 11:12:19 +0300)
+- Merge branch 'issue-130' of github.com:OpusCapita/react-markdown into issue-130 (Egor Stambakio stambakio@scand.com, 2018-04-23 16:31:57 +0300)
+- Renamed grails plugin artifact to more clear file name [ci skip] (Egor Stambakio stambakio@scand.com, 2018-04-23 16:31:03 +0300)
+
+Release 2.2.0-dev Mon Apr 23 2018 12:55:50 GMT+0000 (UTC)
+=======================================================
+
+- Setting proper version for demo release in package.json (Egor Stambakio stambakio@scand.com, 2018-04-23 15:45:45 +0300)
+- Refactored build process. (Egor Stambakio stambakio@scand.com, 2018-04-23 15:43:16 +0300)
+- Edited CODEOWNERS files (Egor Stambakio stambakio@scand.com, 2018-04-23 12:17:16 +0300)
+- Minor fixes (Egor Stambakio stambakio@scand.com, 2018-04-23 12:15:53 +0300)
+- Fixed according to review (Egor Stambakio stambakio@scand.com, 2018-04-23 12:10:58 +0300)
+- Removed hellip in loading indicator (Egor Stambakio stambakio@scand.com, 2018-04-23 10:30:42 +0300)
+- Minor fixes (Egor Stambakio stambakio@scand.com, 2018-04-23 10:13:10 +0300)
+- Fixed a test (Egor Stambakio stambakio@scand.com, 2018-04-23 10:05:53 +0300)
+- Added documentation for changed/added props [#130](https://github.com/OpusCapita/react-markdown/issues/130) (Egor Stambakio stambakio@scand.com, 2018-04-23 10:00:14 +0300)
+- Added loading indicator and requests concurrency [#130](https://github.com/OpusCapita/react-markdown/issues/130) (Egor Stambakio stambakio@scand.com, 2018-04-23 09:43:13 +0300)
+- Adding a loading indicator, in process [ci skip] (Egor Stambakio stambakio@scand.com, 2018-04-20 16:45:02 +0300)
+- Removed trailing space in autocomplete. [ci skip] (Egor Stambakio stambakio@scand.com, 2018-04-20 14:03:00 +0300)
+- Added hideToolbar prop [ci skip] (Egor Stambakio stambakio@scand.com, 2018-04-20 13:33:18 +0300)
+
 Release 2.1.0 Thu Apr 12 2018 10:56:27 GMT+0000 (UTC)
 =======================================================
 

@@ -3,38 +3,40 @@ import './Autocomplete.less';
 import Types from 'prop-types';
 import { getSlateEditor } from '../../utils';
 import getMessage from '../../../translations';
-
-const propTypes = {
-  isMouseIndexSelected: Types.bool,
-  onSelectedIndexChange: Types.func,
-  items: Types.array,
-  locale: Types.string,
-  onMouseDown: Types.func,
-  onMouseUp: Types.func,
-  onScroll: Types.func,
-  onSelectItem: Types.func,
-  selectedIndex: Types.number,
-  style: Types.object,
-  restrictorRef: Types.object
-};
-
-const defaultProps = {
-  isMouseIndexSelected: false,
-  onSelectedIndexChange: () => {},
-  items: [],
-  locale: 'en',
-  onMouseDown: () => {},
-  onMouseUp: () => {},
-  onScroll: () => {},
-  onSelectItem: () => {},
-  style: {},
-  restrictorRef: null
-};
+import DefaultAutocompleteItem from './DefaultAutocompleteItem.react';
 
 const maxHeight = 240;
-const maxItemLength = 15;
 
-class AutocompleteWidget extends React.Component {
+export default class AutocompleteWidget extends React.Component {
+  static propTypes = {
+    isMouseIndexSelected: Types.bool,
+    onSelectedIndexChange: Types.func,
+    items: Types.array,
+    locale: Types.string,
+    onMouseDown: Types.func,
+    onMouseUp: Types.func,
+    onScroll: Types.func,
+    onSelectItem: Types.func,
+    selectedIndex: Types.number,
+    style: Types.object,
+    restrictorRef: Types.object,
+    renderItem: Types.func,
+    loading: Types.bool
+  }
+
+  static defaultProps = {
+    isMouseIndexSelected: false,
+    onSelectedIndexChange: () => {},
+    items: [],
+    locale: 'en',
+    onMouseDown: () => {},
+    onMouseUp: () => {},
+    onScroll: () => {},
+    onSelectItem: () => {},
+    style: {},
+    restrictorRef: null
+  };
+
   constructor(props) {
     super(props);
     this.state = {
@@ -79,7 +81,7 @@ class AutocompleteWidget extends React.Component {
     }
   };
 
-  handleSelectItem = (index) => {
+  handleSelectItem = index => {
     this.props.onSelectItem(index);
   };
 
@@ -128,60 +130,88 @@ class AutocompleteWidget extends React.Component {
     }
   };
 
+  saveRef = ref => (this['items-ref'] = ref);
+
+  handleMouseDown = e => {
+    e.preventDefault(); // XXX Not work in IE11
+    e.stopPropagation(); // Isolate event target
+    this.props.onMouseDown('widget');
+  }
+
+  handleMouseUp = e => {
+    e.stopPropagation(); // Isolate event target
+    this.props.onMouseUp();
+  }
+
+  handleItemMouseDown = e => {
+    e.stopPropagation(); // Isolate event target
+    this.props.onMouseDown('item');
+  }
+
   render() {
     const { left, top, transform } = this.state;
-    const { items, locale, selectedIndex, onSelectedIndexChange } = this.props;
+    const {
+      items,
+      locale,
+      selectedIndex,
+      onSelectedIndexChange,
+      onSelectItem,
+      renderItem: CustomItemComponent,
+      loading
+    } = this.props;
+
+    const ItemComponent = CustomItemComponent ? CustomItemComponent : DefaultAutocompleteItem;
+
+    const commonProps = {
+      className: "react-markdown--autocomplete-widget",
+      ref: this.saveRef,
+      style: {
+        left,
+        top,
+        transform,
+        maxHeight: `${maxHeight}px`,
+        ...this.props.style
+      }
+    }
+
+    if (loading) {
+      return (
+        <div {...commonProps}>
+          <div className="react-markdown--autocomplete-widget__item">
+            <span>{getMessage(locale, 'searching')}</span>
+            <i className="fa fa-spinner fa-spin pull-right" style={{ marginTop: '3px' }}></i>
+          </div>
+        </div>
+      )
+    }
 
     if (items) {
       return (
         <div
-          className="react-markdown--autocomplete-widget"
-          ref={ref => (this['items-ref'] = ref)}
-          onMouseDown={e => {
-            e.preventDefault(); // XXX Not work in IE11
-            e.stopPropagation(); // Isolate event target
-            this.props.onMouseDown('widget');
-          }}
-          onMouseUp={e => {
-            e.stopPropagation(); // Isolate event target
-            this.props.onMouseUp();
-          }}
-          style={{
-            left,
-            top,
-            transform,
-            maxHeight: `${maxHeight}px`,
-            ...this.props.style
-          }}
+          {...commonProps}
+          onMouseDown={this.handleMouseDown}
+          onMouseUp={this.handleMouseUp}
         >
           {items.map((item, index) => {
-            const itemLabel = item._objectLabel;
-            const itemLength = itemLabel.length;
             return (
               <div
                 key={index}
                 ref={ref => (this[`item-ref-${index}`] = ref)}
-                onClick={() => this.handleSelectItem(index)}
-                onMouseMove={() => onSelectedIndexChange(index)}
-                onMouseDown={e => {
-                  this.props.onMouseDown('item');
-                  e.stopPropagation(); // Isolate event target
-                }}
-                className={`
-                  react-markdown--autocomplete-widget__item
-                  ${selectedIndex === index ? 'react-markdown--autocomplete-widget__item--active' : ''}
-                `}
-                title={itemLength > maxItemLength ? itemLabel : ''}
-                style={item.style}
+                onClick={_ => onSelectItem(index)}
+                onMouseMove={_ => onSelectedIndexChange(index)}
+                onMouseDown={this.handleItemMouseDown}
               >
-                {itemLength > maxItemLength ? `${itemLabel.substr(0, maxItemLength)}…` : itemLabel}
+                <ItemComponent
+                  item={item}
+                  isSelected={selectedIndex === index}
+                />
               </div>
             );
           })}
 
-          {!items.length ? (
+          {items.length === 0 && !loading && (
             <div className="react-markdown--autocomplete-widget__item">{getMessage(locale, 'noMatchesFound')}</div>
-          ) : null}
+          )}
         </div>
       );
     }
@@ -190,7 +220,3 @@ class AutocompleteWidget extends React.Component {
   }
 }
 
-AutocompleteWidget.propTypes = propTypes;
-AutocompleteWidget.defaultProps = defaultProps;
-
-export default AutocompleteWidget;

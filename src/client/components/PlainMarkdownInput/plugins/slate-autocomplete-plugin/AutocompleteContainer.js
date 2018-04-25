@@ -43,6 +43,7 @@ class AutocompleteContainer extends React.Component {
   }
 
   componentDidMount = () => {
+    this._isMounted = true;
     this.searchItems(this.props);
   };
 
@@ -59,6 +60,10 @@ class AutocompleteContainer extends React.Component {
   shouldComponentUpdate = (newProps, newState) => {
     return !this.state.show || !!this.currEventTarget && this.currEventTarget !== 'widget';
   };
+
+  componentWillUnmount() {
+    this._isMounted = false;
+  }
 
   matchExtension = (extensions, token) => {
     for (let i = 0, count = extensions.length; i < count; i++) {
@@ -185,7 +190,7 @@ class AutocompleteContainer extends React.Component {
 
       if (extension && item) {
         let change = state.change();
-        change.deleteBackward(term.length).insertText(extension.markdownText(item) + ' ').focus();
+        change.deleteBackward(term.length).insertText(extension.markdownText(item)).focus();
         this.props.onChange(change.state, true);
       }
 
@@ -198,14 +203,26 @@ class AutocompleteContainer extends React.Component {
   };
 
   addTerm = ({ state, options }) => {
-    let { term } = this.getSearchToken(state);
+    const { term } = this.getSearchToken(state);
 
     if (term) {
       const { extensions } = options;
       const extension = this.matchExtension(extensions, term);
       if (extension) {
+        this.setState({ items: [], loading: true });
         this.toggleWidget(true);
-        extension.searchItems(term).then((items) => this.setState({ items, selectedIndex: 0 }));
+        const request = extension.searchItems(term).
+          then(items => {
+            if (this.currentRequest === request && this._isMounted) {
+              this.setState({ items, selectedIndex: 0, loading: false })
+            }
+          }).
+          catch(err => {
+            if (this.currentRequest === request && this._isMounted) {
+              this.setState({ items: [], loading: false })
+            }
+          });
+        this.currentRequest = request;
         return true;
       }
     }
@@ -247,8 +264,15 @@ class AutocompleteContainer extends React.Component {
     this.setState({ ref });
   };
 
+  getItemRenderFunc = _ => {
+    const { state, options: { extensions } } = this.props;
+    const { term } = this.getSearchToken(state);
+    const extension = this.matchExtension(extensions, term || '');
+    return (extension || {}).renderItem
+  }
+
   render() {
-    const { show, selectedIndex, items, isMouseIndexSelected, ref } = this.state;
+    const { show, selectedIndex, items, isMouseIndexSelected, ref, loading } = this.state;
     const { children, state, locale } = this.props;
 
     let selection = window.getSelection();
@@ -271,6 +295,8 @@ class AutocompleteContainer extends React.Component {
         {show && (state.isFocused || this.currEventTarget === 'item-move') ? (
           <AutocompleteWidget
             items={items}
+            renderItem={this.getItemRenderFunc()}
+            loading={loading}
             selectedIndex={selectedIndex}
             locale={locale}
             onScroll={this.props.onScroll}
