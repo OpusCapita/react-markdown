@@ -39,7 +39,7 @@ Configurable buttons in toolbar.
 
 ### handleButtonPress definition
 
-function (optional) that is called on when the user presses the button, the function gets the object as a parameter 
+function (optional) that is called on when the user presses the button, the function gets the object as a parameter
 (see description below) that contains the following info:
 
 | Name                    | Type            | Description                                                                                 |
@@ -58,19 +58,29 @@ function (optional) that is called on when the user presses the button, the func
     onFullScreen={_scope.handleFullScreen}
     value={_scope.state.markdownExample}
     readOnly={false}
+    autoFocus={false}
+    showFullScreenButton={true}
+    hideToolbar={false}
     locale='de'
     additionalButtons={[
       {
         iconElement: (<i className="fa fa-search"></i>),
         handleButtonPress({ value, insertAtCursorPosition }) {
-          insertAtCursorPosition('#Product.new');                 
+          setTimeout(() => {
+            insertAtCursorPosition('#Product.new');
+          }, 100);
+        },
+      },
+      {
+        handleButtonPress({ value, insertAtCursorPosition }) {
+          insertAtCursorPosition('#Product.old');
         },
         label: 'Product'
       },
       {
         iconElement: (<i className="fa fa-search"></i>),
         handleButtonPress({ value, insertAtCursorPosition }) {
-          insertAtCursorPosition('$Term.new');                 
+          insertAtCursorPosition('$Term.new');
         },
         label: 'Term'
       }
@@ -97,11 +107,20 @@ function (optional) that is called on when the user presses the button, the func
             {_objectLabel: 'ba256'},
             {_objectLabel: 'ba257'}
           ];
-          return Promise.resolve(items.filter(({_objectLabel}) => _objectLabel.startsWith(term.substring(1))));
+          return new Promise(resolve => setTimeout(_ => resolve(items.filter(({ _objectLabel }) => _objectLabel.indexOf(term.substring(1)) === 0)), 1000));
         },
         markdownText(item) {
-          return '#' + item._objectLabel;
-        }
+          return '#' + item._objectLabel + ' ';
+        },
+        renderItem: ({ item, isSelected }) => (
+          <div
+            className={`
+              react-markdown--autocomplete-widget__item${isSelected ? ' react-markdown--autocomplete-widget__item--active' : ''}
+            `}
+          >
+            <span>{item._objectLabel}</span>
+          </div>
+        )
       },
       {
         objectClassName: 'Term',
@@ -110,7 +129,7 @@ function (optional) that is called on when the user presses the button, the func
         termRegex: /^\$(\w*)$/,
         searchItems(term) {
           const items = [
-            {_objectLabel: 'a1ckjgfcjfchfcytgjtgityuyitcfdtyfitcfitycfitcfitygckiyucviyuhvkyu'},
+            {_objectLabel: 'a1'},
             {_objectLabel: 'a2'},
             {_objectLabel: 'a23'},
             {_objectLabel: 'b1'},
@@ -127,7 +146,7 @@ function (optional) that is called on when the user presses the button, the func
           return Promise.resolve(items.filter(({_objectLabel}) => _objectLabel.startsWith(term.substring(1))));
         },
         markdownText(item) {
-          return '$' + item._objectLabel;
+          return '$' + item._objectLabel + ' ';
         }
       }
     ]}
