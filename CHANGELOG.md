@@ -1,4 +1,11 @@
 
+Release 2.2.2 Mon May 07 2018 12:59:00 GMT+0300 (MSK)
+=======================================================
+
+-  [#133](https://github.com/OpusCapita/react-markdown/issues/133) Fix - Tollbar header dropdown overflow if MarkdownInput has not enough height ([#134](https://github.com/OpusCapita/react-markdown/issues/134)) (GitHub kvolkovich-sc@users.noreply.github.com, 2018-05-07 12:47:42 +0300)
+- Adding an issue template file [ci skip] (Egor Stambakio egor.stambakio@opuscapita.com, 2018-05-02 12:26:26 +0300)
+- Updated example props for modal input. (Egor Stambakio stambakio@scand.com, 2018-04-27 09:17:01 +0300)
+
 Release 2.2.1 Wed Apr 25 2018 07:28:28 GMT+0000 (UTC)
 =======================================================
 
