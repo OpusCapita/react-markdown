@@ -171,5 +171,5 @@ node_version ${SNAPSHOT_VERSION}
 echo -e "\n[INFO] ================================================================================================="
 echo "[INFO] Committing changes."
 echo "[INFO] ================================================================================================="
-git commit -am "Advancing project version to the next development - $SNAPSHOT_VERSION"
+git commit -am "Advancing project version to the next development - $SNAPSHOT_VERSION. [ci skip]"
 push
