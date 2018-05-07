@@ -1,4 +1,10 @@
 
+Release 2.2.3 Mon May 07 2018 13:38:09 GMT+0300 (MSK)
+=======================================================
+
+- Merge branch 'master' of github.com:OpusCapita/react-markdown (Kirill Volkovich kirill.volkovich@opuscapita.com, 2018-05-07 13:31:45 +0300)
+- Fix - Tollbar z-index (Kirill Volkovich kirill.volkovich@opuscapita.com, 2018-05-07 13:31:14 +0300)
+
 Release 2.2.2 Mon May 07 2018 12:59:00 GMT+0300 (MSK)
 =======================================================
 
