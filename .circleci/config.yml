@@ -181,7 +181,7 @@ jobs:
 
       - run:
           name: Executing release scrtipt.
-          command: .circleci/release.sh
+          command: release.sh node
 
 workflows:
   version: 2
