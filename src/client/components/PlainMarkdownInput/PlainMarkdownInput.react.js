@@ -463,14 +463,14 @@ class PlainMarkdownInput extends React.Component {
   render() {
     const { editorState, fullScreen } = this.state;
     const { children, extensions, readOnly, locale, autoFocus, hideToolbar } = this.props;
-    const disabled = readOnly || hasMultiLineSelection(editorState);
+    const disabled = readOnly;
 
     // Create buttons for toolbar
     let emphasisButtons = this.getAccentButtons({
       editorValue: editorState, disabled, locale, accents: ['bold', 'italic', 'strikethrough']
     });
     let linkButton = this.getLinkButton({ disabled, locale });
-    let headerButtons = this.getHeaderButtons({ disabled, locale });
+    let headerButtons = this.getHeaderButtons({ disabled: readOnly || hasMultiLineSelection(editorState), locale });
     let listButtons = this.getAccentButtons({
       editorValue: editorState, readOnly, locale, accents: ['ol', 'ul']
     });
