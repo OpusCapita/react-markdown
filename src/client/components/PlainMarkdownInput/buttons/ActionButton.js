@@ -12,19 +12,17 @@ const CLASSNAMES = {
   ol: 'list-ol',
 };
 
-const ActionButton = ({ onClick, disabled, locale, accent, active }) => {
-  return (
-    <button
-      className={classnames('btn btn-default', { active })}
-      disabled={disabled}
-      onClick={e => onClick(accent)}
-      type="button"
-      title={getMessage(locale, TITLES[accent] ? TITLES[accent] : accent)}
-    >
-      <i className={`fa fa-${CLASSNAMES[accent] ? CLASSNAMES[accent] : accent}`}/>
-    </button>
-  );
-};
+const ActionButton = ({ onClick, disabled, locale, accent, active }) => (
+  <button
+    className={classnames('btn btn-default', { active })}
+    disabled={disabled}
+    onClick={e => onClick(accent)}
+    type="button"
+    title={getMessage(locale, TITLES[accent] ? TITLES[accent] : accent)}
+  >
+    <i className={`fa fa-${CLASSNAMES[accent] ? CLASSNAMES[accent] : accent}`}/>
+  </button>
+)
 
 ActionButton.propTypes = {
   accent: Types.string,

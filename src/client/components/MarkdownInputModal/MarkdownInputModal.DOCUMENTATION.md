@@ -126,8 +126,9 @@ function (optional) that is called on when the user presses the button, the func
         objectClassName: 'Term',
         specialCharacter: '$',
         color: '#f396c3',
-        termRegex: /^\$(\w*)$/,
+        termRegex: /^\$(\w*|\[\w*\]?)$/,
         searchItems(term) {
+          const termId = term.replace(/^\$(?:\[(\w*)\]|\[?(\w*))$/, '$1$2');
           const items = [
             {_objectLabel: 'a1'},
             {_objectLabel: 'a2'},
@@ -143,10 +144,12 @@ function (optional) that is called on when the user presses the button, the func
             {_objectLabel: 'ba256'},
             {_objectLabel: 'ba257'}
           ];
-          return Promise.resolve(items.filter(({_objectLabel}) => _objectLabel.startsWith(term.substring(1))));
+          return Promise.resolve(items.filter(({_objectLabel}) => _objectLabel.startsWith(termId)));
         },
-        markdownText(item) {
-          return '$' + item._objectLabel + ' ';
+        markdownText(item, term) {
+          return term[1] === '[' ?
+            '$[' + item._objectLabel + '] ' :
+            '$' + item._objectLabel + ' ';
         }
       }
     ]}

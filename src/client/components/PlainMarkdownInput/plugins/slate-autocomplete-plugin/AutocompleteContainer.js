@@ -31,15 +31,12 @@ class AutocompleteContainer extends React.Component {
     onToggle: () => {}
   };
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      show: false,
-      selectedIndex: 0,
-      isMouseIndexSelected: false,
-      items: [],
-      ref: null
-    };
+  state = {
+    show: false,
+    selectedIndex: 0,
+    isMouseIndexSelected: false,
+    items: [],
+    ref: null
   }
 
   componentDidMount = () => {
@@ -78,8 +75,8 @@ class AutocompleteContainer extends React.Component {
 
   getSymbolPos = term => {
     let offset = [' ', '[', '('].
-    map(symbol => term.lastIndexOf(symbol)).
-    reduce((offset, currOffset) => (offset < currOffset ? currOffset : offset), -1);
+      map(symbol => term.lastIndexOf(symbol)).
+      reduce((offset, currOffset) => (offset < currOffset ? currOffset : offset), -1);
 
     if (offset !== -1) {
       offset++;
@@ -88,9 +85,9 @@ class AutocompleteContainer extends React.Component {
     return offset;
   };
 
-  getSearchToken = (state) => {
+  getSearchToken = state => {
     const text = state.focusBlock.text;
-    const { anchorOffset } = state.selection;
+    const { anchorOffset } = state.selection; // FIXME: works differently for different directions of selecting.
 
     let term;
     let offset = -1;
@@ -98,9 +95,9 @@ class AutocompleteContainer extends React.Component {
     if (text && anchorOffset > 0) {
       term = text.substring(0, anchorOffset);
 
-      if (!term.endsWith(' ')) {
-        offset = this.getSymbolPos(term);
-
+      if (!term.endsWith(' ')) { // FIXME: ending with TAB should behave similarly.
+        offset = term.lastIndexOf(' ');
+        if (offset !== -1) { offset++ }
         const accents = getAccents(state);
         if (accents.length > 0) { // this position has some accent
           let currLeftPos = getPosAfterEmphasis(state, accents);
@@ -190,7 +187,7 @@ class AutocompleteContainer extends React.Component {
 
       if (extension && item) {
         let change = state.change();
-        change.deleteBackward(term.length).insertText(extension.markdownText(item)).focus();
+        change.deleteBackward(term.length).insertText(extension.markdownText(item, term)).focus();
         this.props.onChange(change.state, true);
       }
 
@@ -204,30 +201,27 @@ class AutocompleteContainer extends React.Component {
 
   addTerm = ({ state, options }) => {
     const { term } = this.getSearchToken(state);
+    const extension = term && this.matchExtension(options.extensions, term);
 
-    if (term) {
-      const { extensions } = options;
-      const extension = this.matchExtension(extensions, term);
-      if (extension) {
-        this.setState({ items: [], loading: true });
-        this.toggleWidget(true);
-        const request = extension.searchItems(term).
-          then(items => {
-            if (this.currentRequest === request && this._isMounted) {
-              this.setState({ items, selectedIndex: 0, loading: false })
-            }
-          }).
-          catch(err => {
-            if (this.currentRequest === request && this._isMounted) {
-              this.setState({ items: [], loading: false })
-            }
-          });
-        this.currentRequest = request;
-        return true;
-      }
+    if (!extension) {
+      return false;
     }
 
-    return false;
+    this.setState({ items: [], loading: true });
+    this.toggleWidget(true);
+    const request = extension.searchItems(term).
+      then(items => {
+        if (this.currentRequest === request && this._isMounted) {
+          this.setState({ items, selectedIndex: 0, loading: false })
+        }
+      }).
+      catch(err => {
+        if (this.currentRequest === request && this._isMounted) {
+          this.setState({ items: [], loading: false })
+        }
+      });
+    this.currentRequest = request;
+    return true;
   };
 
   toggleWidget = flag => {
@@ -252,12 +246,9 @@ class AutocompleteContainer extends React.Component {
   };
 
   searchItems = props => {
-    const hasTerm = this.addTerm(props);
-    if (hasTerm) {
-      return;
+    if (!this.addTerm(props)) {
+      this.hideWidget();
     }
-
-    this.hideWidget();
   };
 
   handleRef = (ref) => {
@@ -267,8 +258,8 @@ class AutocompleteContainer extends React.Component {
   getItemRenderFunc = _ => {
     const { state, options: { extensions } } = this.props;
     const { term } = this.getSearchToken(state);
-    const extension = this.matchExtension(extensions, term || '');
-    return (extension || {}).renderItem
+    const extension = term && this.matchExtension(extensions, term);
+    return (extension || {}).renderItem;
   }
 
   render() {

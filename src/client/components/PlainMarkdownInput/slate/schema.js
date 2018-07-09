@@ -54,19 +54,15 @@ function markdownDecorator(text, block) {
   return text.characters;
 }
 
-let rendererComponent = props => {
-  let isLine = props.node.type === 'line';
-  let hasMarks = props.mark;
-
-  if (isLine) {
-    return (<div className="oc-md-hl-block">{props.children}</div>);
+let rendererComponent = ({ node, mark, children }) => {
+  if (node.type === 'line') {
+    return <div className="oc-md-hl-block">{children}</div>;
   }
 
-  if (hasMarks) {
-    const className = props.mark.type ? 'oc-md-hl-' + props.mark.type : '';
+  if (mark) {
     return (
-      <span className={className}>
-        {props.children}
+      <span className={mark.type ? `oc-md-hl-${mark.type}` : ''}>
+        {children}
       </span>
     );
   }

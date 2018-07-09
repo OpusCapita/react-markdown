@@ -863,27 +863,6 @@ describe('<PlainMarkdownInput />', () => {
     });
   });
 
-  describe('handleMouseDown()', () => {
-    it('handleMouseDown', () => {
-      let nodeText = 'text';
-      let component = (<PlainMarkdownInput
-        value={nodeText}
-        fullScreen={false}
-        readOnly={false}
-      />);
-
-      let wrapper = shallow(component);
-      let editorState = wrapper.state('editorState');
-      let change = editorState.change();
-      change.moveOffsetsTo(0, nodeText.length);
-      wrapper.setState({ editorState: change.state });
-      let wrapperInstance = wrapper.instance();
-      wrapperInstance.forceUpdate = sinon.spy();
-      wrapperInstance.handleMouseDown();
-      expect(wrapperInstance.forceUpdate.callCount).to.equal(1);
-    });
-  });
-
   describe('handleMouseUp ()', () => {
     it('handleMouseUp ', () => {
       let nodeText = 'text';

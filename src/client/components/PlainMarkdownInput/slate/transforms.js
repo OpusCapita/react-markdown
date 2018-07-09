@@ -512,8 +512,7 @@ function unwrapBlock(removedLength, state) {
  * @param {Object} state - editor state
  * @param {number} numLine
  */
-function hasListLine(accent, state, numLine = 0) {
-  let { texts } = state;
+function hasListLine(accent, { texts }, numLine = 0) {
   let text = texts.get(numLine).text;
   return MATCH_SINGLE_RULE[accent].test(text);
 }
@@ -537,14 +536,7 @@ function hasList(type, state) {
   }
 }
 
-export const getUlMarker = function(text) {
-  let res = ulRegExp.exec(text);
-  if (res) {
-    return res[0];
-  }
-
-  return false;
-};
+export const getUlMarker = text => (ulRegExp.exec(text) || [''])[0];
 
 export const getOlNum = function(text) {
   let res = olRegExp.exec(text);
@@ -821,13 +813,7 @@ const activities = {
   }
 };
 
-export const hasAccent = (state, accent) => {
-  if (activities.has[accent]) {
-    return activities.has[accent](state);
-  }
-
-  return false;
-};
+export const hasAccent = (state, accent) => !!activities.has[accent] && activities.has[accent](state);
 
 export const getAccents = state => {
   const accents = [];
