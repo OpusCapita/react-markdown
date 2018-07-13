@@ -1,4 +1,10 @@
 
+[Release 2.3.0](https://github.com/OpusCapita/react-markdown/releases/tag/v2.3.0) Fri Jul 13 2018 15:46:53 GMT+0300 (MSK)
+=======================================================
+
+- [issue [#139](https://github.com/OpusCapita/react-markdown/issues/139)] Braces support in autocomplete plugin ([#140](https://github.com/OpusCapita/react-markdown/issues/140)) (GitHub amourzenkov-sc@users.noreply.github.com, 2018-07-13 15:39:15 +0300)
+- Update README.md [ci skip] (GitHub 31243790+estambakio-sc@users.noreply.github.com, 2018-07-06 14:30:36 +0300)
+
 Release 2.2.3 Mon May 07 2018 13:38:09 GMT+0300 (MSK)
 =======================================================
 
