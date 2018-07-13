@@ -33,12 +33,5 @@ const translations = {
   }
 };
 
-export default function getMessage(locale, key) {
-  let translationExists = (translations[locale] && translations[locale][key]);
+export default (locale, key) => translations[locale] && translations[locale][key] || translations['en'][key];
 
-  if (!translationExists) {
-    return translations['en'][key];
-  }
-
-  return translations[locale][key];
-}

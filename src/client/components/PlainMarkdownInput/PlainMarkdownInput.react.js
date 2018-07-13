@@ -5,15 +5,12 @@ import classnames from 'classnames';
 import DropdownButton from 'react-bootstrap/lib/DropdownButton';
 import { Editor } from 'slate-react';
 import Plain from 'slate-plain-serializer';
+
 import schema from './slate/schema';
 import './PlainMarkdownInput.less';
 import { parse } from './slate/tokenizer';
 import getMessage from '../translations';
-
-import {
-  autoScrollToTop
-} from './utils';
-
+import { autoScrollToTop } from './utils';
 import { AutocompletePlugin } from './plugins';
 
 import {
@@ -45,53 +42,60 @@ const ACCENTS = {
   s: 'strikethrough'
 };
 
-export const getCopyText = state => {
-  const { startKey, startOffset, endKey, endOffset, texts } = state;
-  let resText;
-
-  if (startKey === endKey) {
-    resText = texts.get(0).text.slice(startOffset, endOffset);
-  } else {
-    let resTextArr = texts.map((el, ind) => {
-      if (ind === 0) {
+export const getCopyText = ({ startKey, startOffset, endKey, endOffset, texts }) => startKey === endKey ?
+  texts.get(0).text.slice(startOffset, endOffset) :
+  texts.
+    map((el, i) => {
+      if (i === 0) {
         return el.text.slice(startOffset);
-      } else if (ind === texts.size - 1) {
+      } else if (i === texts.size - 1) {
         return el.text.slice(0, endOffset);
       } else {
         return el.text;
       }
-    });
-    resText = resTextArr.join('\n');
-  }
-  return resText;
-};
+    }).
+    join('\n');
 
-function copySelectionToClipboard(event, change) {
+function copySelectionToClipboard(event, { state }) {
   event.preventDefault();
-  const { state } = change;
-  const resText = getCopyText(state);
+  const copyText = getCopyText(state);
+
   if (window.clipboardData) {
-    window.clipboardData.setData("Text", resText);
+    window.clipboardData.setData("Text", copyText);
   } else {
-    event.clipboardData.setData('text/plain', resText);
+    event.clipboardData.setData('text/plain', copyText);
   }
 }
 
 class PlainMarkdownInput extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      editorState: '',
-      fullScreen: false
-    };
-    this.isAutocompleteShow = false;
-    this.handleRef = this.handleRef.bind(this);
-    this.handleScroll = this.handleScroll.bind(this);
-    this.handleAdditionalButtonsClick = this.handleAdditionalButtonsClick.bind(this);
-    this.handleActionButtonClick = this.handleActionButtonClick.bind(this);
-    this.handleHeaderButtonClick = this.handleHeaderButtonClick.bind(this);
-    this.handleLinkButtonClick = this.handleLinkButtonClick.bind(this);
-    this.insertAtCursorPosition = this.insertAtCursorPosition.bind(this);
+  static propTypes = {
+    extensions: Types.array,
+    additionalButtons: Types.array,
+    value: Types.string,
+    onChange: Types.func,
+    onFullScreen: Types.func,
+    readOnly: Types.bool,
+    autoFocus: Types.bool,
+    showFullScreenButton: Types.bool,
+    locale: Types.string,
+    hideToolbar: Types.bool
+  }
+
+  static defaultProps = {
+    extensions: [],
+    additionalButtons: [],
+    value: '',
+    onFullScreen: () => {},
+    onChange: () => {},
+    readOnly: false,
+    autoFocus: true,
+    showFullScreenButton: false,
+    locale: 'en'
+  }
+
+  state = {
+    editorState: '',
+    fullScreen: false
   }
 
   componentWillMount() {
@@ -105,12 +109,14 @@ class PlainMarkdownInput extends React.Component {
     }
   }
 
+  isAutocompleteShow = false
+
   /**
    * handleNewValue
    *
    * @param {string} value - Editor's text. The line's ends in a text editor should be \n - Unix mode(LF)
    */
-  handleNewValue(value) {
+  handleNewValue = value => {
     let editorState = Plain.deserialize(value);
     let nodes = editorState.document.nodes.asMutable();
     let nodesSize = nodes.size;
@@ -121,13 +127,13 @@ class PlainMarkdownInput extends React.Component {
     this.setState({ editorState });
   }
 
-  setDataToNode(nodes, numBlock, text) {
+  setDataToNode = (nodes, numBlock, text) => {
     const currNode = nodes.get(numBlock).asMutable();
     text = text || currNode.nodes.get(0).text; // eslint-disable-line
     currNode.data = {
       text,
       tokens: parse(text),
-      toJSON: () => this.text
+      toJSON: () => text
     };
 
     nodes.set(numBlock, currNode.asImmutable());
@@ -135,10 +141,6 @@ class PlainMarkdownInput extends React.Component {
 
   handleAutocompleteToggle = flag => {
     this.isAutocompleteShow = flag;
-  };
-
-  handleMouseDown = () => {
-    this.forceUpdate();
   };
 
   handleMouseUp = () => {
@@ -198,21 +200,17 @@ class PlainMarkdownInput extends React.Component {
     this.props.onFullScreen(fullScreen);
   };
 
-  toggleAccent(state, accent) {
-    const active = hasAccent(state, accent);
-    return this.handleChange(active ? unwrapAccent(state, accent) : wrapAccent(state, accent), true);
-  }
+  toggleAccent = (state, accent) => this.handleChange(
+    hasAccent(state, accent) ? unwrapAccent(state, accent) : wrapAccent(state, accent),
+    true
+  );
 
   handleEnterFromListDown(change, accent) { // eslint-disable-line
     let lineText = change.state.texts.get(0).text;
     let text, listMarker, pref, itemNum, div;
     if (accent === 'ul') {
       listMarker = getUlMarker(lineText);
-      if (listMarker) {
-        text = listMarker;
-      } else {
-        text = '* ';
-      }
+      text = listMarker || '* ';
     } else {
       ({ pref, itemNum, div, listMarker } = getOlNum(lineText));
       text = `${pref}${++itemNum}${div} `;
@@ -253,7 +251,7 @@ class PlainMarkdownInput extends React.Component {
     return this.handleChange(change.state);
   }
 
-  handleKeyDown(event, data, change) {
+  handleKeyDown = (event, data, change) => {
     if (data.isMod && data.key === 'v') {
       return this.handlePaste(event, change);
     }
@@ -277,29 +275,22 @@ class PlainMarkdownInput extends React.Component {
     return undefined;
   }
 
-  handleCopy(event, data, change) {
+  handleCopy = (event, data, change) => {
     copySelectionToClipboard(event, change);
     return change;
   }
 
-  handleCut(event, data, change) {
+  handleCut = (event, data, change) => {
     copySelectionToClipboard(event, change);
-    let { state } = change;
-    let { selection } = state;
-    change.deleteAtRange(selection);
+    change.deleteAtRange(change.state.selection);
     return change;
   }
 
-  handleRef(ref) {
+  handleRef = ref => {
     this.slateContentRef = ref;
   }
 
-  setFocus() {
-    let refEl = findDOMNode(this.slateContentRef);
-    refEl.getElementsByClassName('react-markdown--slate-content__editor')[0].focus();
-  }
-
-  handleScroll() {
+  handleScroll = () => {
     if (navigator.userAgent.match(/msie/i) || navigator.userAgent.match(/trident/i)) {
       // Works in the modal mode only in IE
       // In other browsers interception of focus does not work in the modal mode
@@ -308,38 +299,35 @@ class PlainMarkdownInput extends React.Component {
       this.slateContentRef.focus();
     } else {
       // This code in case of execution in IE as a ghost effect scrolls the content of the block to the top
-      this.setFocus();
+      findDOMNode(this.slateContentRef).
+        getElementsByClassName('react-markdown--slate-content__editor')[0].
+        focus();
     }
   }
 
-  handleActionButtonClick(accent) {
+  handleActionButtonClick = accent => this.toggleAccent(this.state.editorState, accent);
+
+  handleHeaderButtonClick = level => {
     const state = this.state.editorState;
-    return this.toggleAccent(state, accent);
+    return this.handleChange(hasHeader(state, level) ?
+      unwrapHeader(state, level) :
+      wrapHeader(state, level)
+    );
   }
 
-  handleHeaderButtonClick(level) {
-    const state = this.state.editorState;
-    const active = hasHeader(state, level);
-    return this.handleChange(active ? unwrapHeader(state, level) : wrapHeader(state, level));
-  }
+  handleLinkButtonClick = () => this.handleChange(wrapLink(this.state.editorState));
 
-  handleLinkButtonClick() {
-    const state = this.state.editorState;
-    return this.handleChange(wrapLink(state));
-  }
+  getCurrentText = () => this.state.editorState.document.nodes.toArray().
+    map(block => block.text).
+    join('\n')
 
-  getCurrentText() {
-    let arrNodes = this.state.editorState.document.nodes.toArray();
-    return arrNodes.map(block => block.text).join('\n');
-  }
-
-  insertAtCursorPosition(insertedText) {
+  insertAtCursorPosition = insertedText => {
     let change = this.state.editorState.change();
     change.delete().insertText(insertedText).focus();
     return this.handleChange(change.state, true);
   }
 
-  handleAdditionalButtonsClick(handleButtonPress) {
+  handleAdditionalButtonsClick = handleButtonPress => {
     handleButtonPress({ value: this.getCurrentText(), insertAtCursorPosition: this.insertAtCursorPosition });
   }
 
@@ -351,9 +339,9 @@ class PlainMarkdownInput extends React.Component {
   getAdditionalButtons(readOnly) {
     return (
       <div className="btn-group react-markdown--plain-markdown-input__right-buttons">
-        {this.props.additionalButtons.map((buttonData, ind) => (
+        {this.props.additionalButtons.map((buttonData, i) => (
           <AdditionalButton
-            key={ind}
+            key={i}
             onClick={this.handleAdditionalButtonsClick}
             settings={buttonData}
             disabled={readOnly}
@@ -372,18 +360,16 @@ class PlainMarkdownInput extends React.Component {
    * @param accents
    * @returns {*}
    */
-  getAccentButtons({ editorValue, disabled, locale, accents }) {
-    return this.wrapButtonGroup(accents.map((accent, ind) => (
-      <ActionButton
-        key={ind}
-        onClick={this.handleActionButtonClick}
-        disabled={disabled}
-        locale={locale}
-        accent={accent}
-        active={hasAccent(editorValue, accent)}
-      />
-    )));
-  }
+  getAccentButtons = ({ editorValue, disabled, locale, accents }) => this.wrapButtonGroup(accents.map((accent, i) => (
+    <ActionButton
+      key={i}
+      onClick={this.handleActionButtonClick}
+      disabled={disabled}
+      locale={locale}
+      accent={accent}
+      active={hasAccent(editorValue, accent)}
+    />
+  )))
 
   /**
    * Create buttons' group for links
@@ -392,13 +378,13 @@ class PlainMarkdownInput extends React.Component {
    * @param locale
    * @returns {*}
    */
-  getLinkButton({ disabled, locale }) {
-    return this.wrapButtonGroup(<LinkButton
+  getLinkButton = ({ disabled, locale }) => this.wrapButtonGroup(
+    <LinkButton
       onClick={this.handleLinkButtonClick}
       disabled={disabled}
       locale={locale}
-    />)
-  }
+    />
+  )
 
   /**
    * Create buttons' group for headers
@@ -407,25 +393,23 @@ class PlainMarkdownInput extends React.Component {
    * @param locale
    * @returns {*}
    */
-  getHeaderButtons({ disabled, locale }) {
-    return (
-      <div className="btn-group" title={getMessage(locale, 'insertHeader')}>
-        <DropdownButton
-          id="oc-md--toolbar__headers-dropdown"
-          title={<i className="fa fa-header"/>}
-          disabled={disabled}
-        >
-          {[1, 2, 3, 4, 5, 6].map((level, ind) => (
-            <HeaderButton
-              key={ind}
-              onClick={this.handleHeaderButtonClick}
-              level={level}
-            />
-          ))}
-        </DropdownButton>
-      </div>
-    );
-  }
+  getHeaderButtons = ({ disabled, locale }) => (
+    <div className="btn-group" title={getMessage(locale, 'insertHeader')}>
+      <DropdownButton
+        id="oc-md--toolbar__headers-dropdown"
+        title={<i className="fa fa-header"/>}
+        disabled={disabled}
+      >
+        {[1, 2, 3, 4, 5, 6].map((level, i) => (
+          <HeaderButton
+            key={i}
+            onClick={this.handleHeaderButtonClick}
+            level={level}
+          />
+        ))}
+      </DropdownButton>
+    </div>
+  )
 
   /**
    * Create buttons' group for fullScreenButton
@@ -435,18 +419,18 @@ class PlainMarkdownInput extends React.Component {
    * @param fullScreen
    * @returns {string}
    */
-  getFullScreenButton({ readOnly, locale, fullScreen }) {
-    return this.props.showFullScreenButton ?
-      (<div className="btn-group react-markdown--plain-markdown-input__left-border">
+  getFullScreenButton = ({ readOnly, locale, fullScreen }) => this.props.showFullScreenButton ?
+    (
+      <div className="btn-group react-markdown--plain-markdown-input__left-border">
         <FullScreenButton
           onClick={this.handleFullScreen}
           locale={locale}
           fullScreen={fullScreen}
           disabled={readOnly}
         />
-      </div>) :
-      '';
-  }
+      </div>
+    ) :
+    ''
 
   /**
    * Wrap buttons' group
@@ -454,11 +438,11 @@ class PlainMarkdownInput extends React.Component {
    * @param children
    * @returns {*}
    */
-  wrapButtonGroup(children) {
-    return (<div className="btn-group">
+  wrapButtonGroup = children => (
+    <div className="btn-group">
       {children}
-    </div>);
-  }
+    </div>
+  )
 
   render() {
     const { editorState, fullScreen } = this.state;
@@ -510,7 +494,7 @@ class PlainMarkdownInput extends React.Component {
             onChange={this.handleChange}
             onCopy={this.handleCopy}
             onCut={this.handleCut}
-            onKeyDown={this.handleKeyDown.bind(this)}
+            onKeyDown={this.handleKeyDown}
             plugins={[
               AutocompletePlugin({
                 extensions,
@@ -532,30 +516,5 @@ class PlainMarkdownInput extends React.Component {
     );
   }
 }
-
-PlainMarkdownInput.propTypes = {
-  extensions: Types.array,
-  additionalButtons: Types.array,
-  value: Types.string,
-  onChange: Types.func,
-  onFullScreen: Types.func,
-  readOnly: Types.bool,
-  autoFocus: Types.bool,
-  showFullScreenButton: Types.bool,
-  locale: Types.string,
-  hideToolbar: Types.bool
-};
-
-PlainMarkdownInput.defaultProps = {
-  extensions: [],
-  additionalButtons: [],
-  value: '',
-  onFullScreen: () => {},
-  onChange: () => {},
-  readOnly: false,
-  autoFocus: true,
-  showFullScreenButton: false,
-  locale: 'en'
-};
 
 export default PlainMarkdownInput;
