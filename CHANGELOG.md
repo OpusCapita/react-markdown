@@ -1,4 +1,9 @@
 
+[Release 2.3.1.beta](https://github.com/OpusCapita/react-markdown/releases/tag/v2.3.1.beta) Wed Aug 08 2018 09:33:45 GMT+0300 (MSK)
+=======================================================
+
+- Fix not displaying entered characters [#142](https://github.com/OpusCapita/react-markdown/issues/142) (Egor Stambakio stambakio@scand.com, 2018-08-08 09:27:27 +0300)
+
 [Release 2.3.0](https://github.com/OpusCapita/react-markdown/releases/tag/v2.3.0) Fri Jul 13 2018 15:46:53 GMT+0300 (MSK)
 =======================================================
 
