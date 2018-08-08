@@ -1,4 +1,9 @@
 
+[Release 2.3.1](https://github.com/OpusCapita/react-markdown/releases/tag/v2.3.1) Wed Aug 08 2018 14:28:29 GMT+0300 (MSK)
+=======================================================
+
+- Allow autocomplete widget update when search resolves ([#143](https://github.com/OpusCapita/react-markdown/issues/143)) (GitHub 31243790+estambakio-sc@users.noreply.github.com, 2018-08-08 14:25:55 +0300)
+
 [Release 2.3.1-beta](https://github.com/OpusCapita/react-markdown/releases/tag/v2.3.1-beta) Wed Aug 08 2018 09:51:54 GMT+0300 (MSK)
 =======================================================
 
