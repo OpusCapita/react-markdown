@@ -1,4 +1,8 @@
 
+[Release 2.3.1-beta](https://github.com/OpusCapita/react-markdown/releases/tag/v2.3.1-beta) Wed Aug 08 2018 09:51:54 GMT+0300 (MSK)
+=======================================================
+
+
 [Release 2.3.1.beta](https://github.com/OpusCapita/react-markdown/releases/tag/v2.3.1.beta) Wed Aug 08 2018 09:33:45 GMT+0300 (MSK)
 =======================================================
 
