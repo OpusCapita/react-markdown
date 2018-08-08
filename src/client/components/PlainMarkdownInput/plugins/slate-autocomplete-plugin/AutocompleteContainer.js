@@ -55,7 +55,7 @@ class AutocompleteContainer extends React.Component {
    * @returns {boolean}
    */
   shouldComponentUpdate = (newProps, newState) => {
-    return !this.state.show || !!this.currEventTarget && this.currEventTarget !== 'widget';
+    return newState.show || (!!this.currEventTarget && this.currEventTarget !== 'widget');
   };
 
   componentWillUnmount() {
