@@ -5,7 +5,6 @@ import classnames from 'classnames';
 import DropdownButton from 'react-bootstrap/lib/DropdownButton';
 import { Editor } from 'slate-react';
 import Plain from 'slate-plain-serializer';
-
 import schema from './slate/schema';
 import './PlainMarkdownInput.less';
 import { parse } from './slate/tokenizer';
@@ -73,6 +72,8 @@ class PlainMarkdownInput extends React.Component {
     additionalButtons: Types.array,
     value: Types.string,
     onChange: Types.func,
+    onBlur: Types.func,
+    onFocus: Types.func,
     onFullScreen: Types.func,
     readOnly: Types.bool,
     autoFocus: Types.bool,
@@ -87,6 +88,8 @@ class PlainMarkdownInput extends React.Component {
     value: '',
     onFullScreen: () => {},
     onChange: () => {},
+    onBlur: () => {},
+    onFocus: () => {},
     readOnly: false,
     autoFocus: true,
     showFullScreenButton: false,
@@ -95,7 +98,8 @@ class PlainMarkdownInput extends React.Component {
 
   state = {
     editorState: '',
-    fullScreen: false
+    fullScreen: false,
+    isFocused: false
   }
 
   componentWillMount() {
@@ -103,10 +107,36 @@ class PlainMarkdownInput extends React.Component {
     this.handleNewValue(this.props.value);
   }
 
+  componentDidMount() {
+    /**
+     * This setup is needed to create proper `blur` handler.
+     * Slate-react Editor has `onBlur` prop, but if we just supply it to Editor component,
+     * `blur` will fire when a user clicks buttons B, I etc. But we need `blur` to fire only when
+     * component loses focus, and not when we operate with internal elements of editor.
+     */
+    this.selfDOMNode = findDOMNode(this)
+    this.selfDOMNode.addEventListener('focusin', this.handleFocusIn)
+    this.selfDOMNode.addEventListener('focusout', this.handleFocusOut)
+  }
+
   componentWillReceiveProps(nextProps) {
     if (this.props.value !== nextProps.value) {
       this.handleNewValue(nextProps.value);
     }
+  }
+
+  handleFocusIn = event => !this.state.isFocused && this.setState({ isFocused: true }, _ => this.props.onFocus(event));
+
+  handleFocusOut = event => {
+    const data = { timeout: null };
+    const abortFocusOut = _ => clearTimeout(data.timeout);
+
+    data.timeout = setTimeout(_ => {
+      this.selfDOMNode.removeEventListener('focusin', abortFocusOut);
+      this.setState({ isFocused: false }, _ => this.props.onBlur(event));
+    })
+
+    this.selfDOMNode.addEventListener('focusin', abortFocusOut)
   }
 
   isAutocompleteShow = false
@@ -492,6 +522,7 @@ class PlainMarkdownInput extends React.Component {
             autoFocus={autoFocus}
             schema={schema}
             onChange={this.handleChange}
+            // onBlur={this.props.onBlur}
             onCopy={this.handleCopy}
             onCut={this.handleCut}
             onKeyDown={this.handleKeyDown}
