@@ -58,6 +58,7 @@ function (optional) that is called on when the user presses the button, the func
 <div style={{ height: '70vh' }}>
   <MarkdownInput
     onChange={_scope.handleValueChange}
+    onBlur={() => console.log('blur')}
     value={_scope.state.markdownExample}
     autoFocus={false}
     readOnly={false}
