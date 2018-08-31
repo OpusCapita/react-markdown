@@ -7,6 +7,7 @@ MarkdownInput
 | Name               | Type            | Description                                                                                      |
 | ------------------ | :-------------- | ------------------------------------------------------------------------------------------------ |
 | onChange           | func            | Callback: `(value) => {}`                                                                        |
+| onBlur             | func            | Fires when component loses focus                                                                 |
 | onFullScreen       | func            | Callback: `(bool isFullSceen) => {}`                                                             |
 | value              | string          | Raw markdown                                                                                     |
 | locale             | string          | Locale                                                                                           |
@@ -14,7 +15,7 @@ MarkdownInput
 | additionalButtons  | array           | See "Additional buttons definition" section bellow.                                              |
 | autoFocus          | bool            | Set focus automatically on mount (default: true)                                                 |
 | readOnly           | bool            | Disables toolbar and makes markdown text not editable.                                           |
-| hideToolbar        | bool            | Default: `false`. If `true`, input renders without a toolbar.                                           |
+| hideToolbar        | bool            | Default: `false`. If `true`, input renders without a toolbar.                                    |
 
 ### Extension definition
 
@@ -57,6 +58,7 @@ function (optional) that is called on when the user presses the button, the func
 ```
 <div style={{ height: '70vh' }}>
   <MarkdownInput
+    onBlur={_ => console.log('blur')}
     onChange={_scope.handleValueChange}
     value={_scope.state.markdownExample}
     autoFocus={false}
