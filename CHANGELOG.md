@@ -1,4 +1,9 @@
 
+[Release 2.3.3](https://github.com/OpusCapita/react-markdown/releases/tag/v2.3.3) Tue Sep 04 2018 18:08:07 GMT+0300 (MSK)
+=======================================================
+
+-  [#148](https://github.com/OpusCapita/react-markdown/issues/148) Fix - readOnly=true prop don't work for ordered and unordered list buttons ([#149](https://github.com/OpusCapita/react-markdown/issues/149)) (GitHub kvolkovich-sc@users.noreply.github.com, 2018-09-04 18:02:36 +0300)
+
 [Release 2.3.2](https://github.com/OpusCapita/react-markdown/releases/tag/v2.3.2) Tue Sep 04 2018 15:31:05 GMT+0300 (MSK)
 =======================================================
 
