@@ -1,4 +1,9 @@
 
+[Release 2.3.2](https://github.com/OpusCapita/react-markdown/releases/tag/v2.3.2) Tue Sep 04 2018 15:31:05 GMT+0300 (MSK)
+=======================================================
+
+- Add blur via HOC provider (PR [#147](https://github.com/OpusCapita/react-markdown/issues/147), ISSUE [#145](https://github.com/OpusCapita/react-markdown/issues/145)) (Kirill Volkovich 31243790+estambakio-sc@users.noreply.github.com, 2018-09-04 15:19:02 +0300)
+
 [Release 2.3.1](https://github.com/OpusCapita/react-markdown/releases/tag/v2.3.1) Wed Aug 08 2018 14:28:29 GMT+0300 (MSK)
 =======================================================
 
