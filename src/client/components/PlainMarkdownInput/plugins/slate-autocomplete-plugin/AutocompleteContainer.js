@@ -11,6 +11,7 @@ const escapeCode = 27;
 const arrowUpCode = 38;
 const arrowDownCode = 40;
 const enterCode = 13;
+const tabCode = 9;
 
 @clickOutside
 class AutocompleteContainer extends React.Component {
@@ -116,15 +117,25 @@ class AutocompleteContainer extends React.Component {
   handleKeyDown = (e) => {
     let { show, items, selectedItem } = this.state;
 
-    if (show && items) {
+    if (e.keyCode === tabCode) {
+      e.preventDefault();
+      e.stopPropagation();
+      this.hideWidget();
+    }
+
+    if (show) {
       if (e.keyCode === escapeCode) {
         e.preventDefault();
         e.stopPropagation();
-        this.forceHide();
-      } else if (e.keyCode === enterCode) {
+        this.hideWidget();
+      }
+    }
+
+    if (show && items) {
+      if (e.keyCode === enterCode) {
         e.preventDefault();
         this.handleSelectItem(selectedItem, e);
-        this.forceHide();
+        this.hideWidget();
       } else if (e.keyCode === arrowUpCode || e.keyCode === arrowDownCode) {
         e.preventDefault();
         const length = items.length;
@@ -148,7 +159,6 @@ class AutocompleteContainer extends React.Component {
   };
 
   handleSelectItem = (index, event = null) => {
-    console.log('iiii', index);
     const { items } = this.state;
     const { state, options } = this.props;
     const { term } = this.getSearchToken(state);
@@ -204,11 +214,6 @@ class AutocompleteContainer extends React.Component {
   };
 
   hideWidget = () => {
-    const { show } = this.state;
-    this.toggleWidget(false);
-  };
-
-  forceHide = () => {
     this.toggleWidget(false);
   };
 

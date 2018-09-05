@@ -52,6 +52,19 @@ export default class AutocompleteWidget extends React.Component {
     this.cancelAdjustPosition();
   };
 
+  componentWillUpdate = (nextProps) => {
+    let containerRef = this.containerRef;
+    let itemRef = this[`itemRef${nextProps.selectedItem}`];
+    if (containerRef && itemRef) { // calculating scrolling with keyboard up and down arrows
+      if ((this.props.selectedItem < nextProps.selectedItem) && (itemRef.offsetTop - containerRef.scrollTop > 156)) {
+        containerRef.scrollTop = (itemRef.offsetTop - 156);
+      }
+      if ((this.props.selectedItem > nextProps.selectedItem) && (itemRef.offsetTop - containerRef.scrollTop < 26)) {
+        containerRef.scrollTop = (itemRef.offsetTop - 26);
+      }
+    }
+  };
+
   cancelAdjustPosition = () => {
     if (this._animationFrame) {
       window.cancelAnimationFrame(this._animationFrame); // XXX
