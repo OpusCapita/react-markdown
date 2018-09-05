@@ -1,6 +1,5 @@
 import React from 'react';
 import Types from 'prop-types';
-import isEqual from 'lodash/isEqual';
 import clickOutside from 'react-click-outside';
 
 import AutocompleteWidget from './AutocompleteWidget';
@@ -236,7 +235,7 @@ class AutocompleteContainer extends React.Component {
 
   render() {
     const { show, selectedItem, items, ref, loading } = this.state;
-    const { children, state, locale } = this.props;
+    const { children, locale } = this.props;
 
     let selection = window.getSelection();
     if (selection.anchorNode) {

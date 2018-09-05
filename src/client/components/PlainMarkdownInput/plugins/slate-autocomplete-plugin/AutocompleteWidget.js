@@ -48,10 +48,6 @@ export default class AutocompleteWidget extends React.Component {
     this.adjustPosition();
   };
 
-  componentWillUnmount = () => {
-    this.cancelAdjustPosition();
-  };
-
   componentWillUpdate = (nextProps) => {
     let containerRef = this.containerRef;
     let itemRef = this[`itemRef${nextProps.selectedItem}`];
@@ -63,6 +59,10 @@ export default class AutocompleteWidget extends React.Component {
         containerRef.scrollTop = (itemRef.offsetTop - 26);
       }
     }
+  };
+
+  componentWillUnmount = () => {
+    this.cancelAdjustPosition();
   };
 
   cancelAdjustPosition = () => {
@@ -127,7 +127,6 @@ export default class AutocompleteWidget extends React.Component {
       items,
       locale,
       selectedItem,
-      onChange,
       itemRenderer,
       loading
     } = this.props;
@@ -183,7 +182,7 @@ export default class AutocompleteWidget extends React.Component {
             ...this.props.style
           }}
           className="react-markdown--autocomplete-widget"
-       >
+        >
           <fieldset>
             {itemsElement}
           </fieldset>
