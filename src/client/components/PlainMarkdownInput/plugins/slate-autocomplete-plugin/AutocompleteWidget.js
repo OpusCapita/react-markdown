@@ -156,15 +156,15 @@ export default class AutocompleteWidget extends React.Component {
     ) : null;
 
     let itemsElement = items.map((item, index) => {
-      const selected = selectedItem === index;
+      const isSelected = selectedItem === index;
       return (
         <div
           key={index}
           ref={ref => (this[`itemRef${index}`] = ref)}
           onMouseDown={_ => this.handleItemMouseDown(index)}
         >
-          <input type="radio" style={{ display: 'none' }} selected={selected} />
-          {itemRenderer({ item, selected })}
+          <input type="radio" style={{ display: 'none' }} selected={isSelected} />
+          {itemRenderer({ item, isSelected })}
         </div>
       );
     });

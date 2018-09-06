@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 const maxItemLength = 15;
 
-export default function DefaultAutocompleteItem({ item, selected }) {
+export default function DefaultAutocompleteItem({ item, isSelected }) {
   const itemLabel = item._objectLabel;
   const itemLength = itemLabel.length;
 
@@ -11,7 +11,7 @@ export default function DefaultAutocompleteItem({ item, selected }) {
     <div
       className={`
         react-markdown--autocomplete-widget__item
-        ${selected ? 'react-markdown--autocomplete-widget__item--active' : ''}
+        ${isSelected ? 'react-markdown--autocomplete-widget__item--active' : ''}
       `}
       title={itemLength > maxItemLength ? itemLabel : ''}
     >
@@ -22,5 +22,5 @@ export default function DefaultAutocompleteItem({ item, selected }) {
 
 DefaultAutocompleteItem.propTypes = {
   item: PropTypes.object.isRequired,
-  selected: PropTypes.bool.isRequired
+  isSelected: PropTypes.bool.isRequired
 };
