@@ -1,6 +1,6 @@
 {
   "name": "@opuscapita/react-markdown",
-  "version": "2.3.3-beta.0",
+  "version": "2.3.3-beta.1",
   "description": "React markdown editor component",
   "scripts": {
     "link-mode": "cross-env NODE_ENV=link webpack --config ./config/webpack.config.js",
