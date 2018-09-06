@@ -84,11 +84,11 @@ const extensions = [
 describe('<AutocompleteContainer />', () => {
   it('creation by default', () => {
     const nodeText = '';
-    let inputComponent = (<PlainMarkdownInput
+    let markdownInputElement = (<PlainMarkdownInput
       value={nodeText}
       extensions={extensions}
     />);
-    let inputWrapper = shallow(inputComponent);
+    let inputWrapper = mount(markdownInputElement);
     let editorState = inputWrapper.state('editorState');
 
     let component = (<AutocompleteContainer
@@ -96,22 +96,22 @@ describe('<AutocompleteContainer />', () => {
       state={editorState}
     />);
     expect(component.props.options.extensions).to.deep.equal(extensions);
-    let wrapper = shallow(component);
-    let currState = wrapper.state();
-    expect(currState.show).to.equal(false);
-    expect(currState.selectedIndex).to.equal(0);
-    expect(currState.isMouseIndexSelected).to.equal(false);
-    expect(currState.items).to.deep.equal([]);
-    expect(currState.ref).to.equal(null);
+    let wrapper = mount(component);
+    let autocompleteContainerElement = wrapper.find(AutocompleteContainer).at(0).childAt(0).instance();
+
+    let state = autocompleteContainerElement.state;
+    expect(state.show).to.equal(false);
+    expect(state.selectedItem).to.equal(0);
+    expect(state.items).to.deep.equal([]);
   });
 
   it('componentWillReceiveProps(nextProps)', () => {
     const nodeText = '# Header1 ';
-    let inputComponent = (<PlainMarkdownInput
+    let markdownInputElement = (<PlainMarkdownInput
       value={nodeText}
       extensions={extensions}
     />);
-    let inputWrapper = shallow(inputComponent);
+    let inputWrapper = mount(markdownInputElement);
     let editorState = inputWrapper.state('editorState');
     let editorChange = editorState.change();
     editorChange.moveOffsetsTo(nodeText.length - 1, nodeText.length - 1);
@@ -122,43 +122,45 @@ describe('<AutocompleteContainer />', () => {
       state={editorState}
     />);
     let wrapper = mount(component);
-    let wrapperInstance = wrapper.instance();
-    wrapperInstance.searchItems = sinon.spy();
-    wrapperInstance.componentWillReceiveProps({ state: editorState });
-    expect(wrapperInstance.searchItems.callCount).to.equal(1);
+    let autocompleteContainerElement = wrapper.find(AutocompleteContainer).at(0).childAt(0).instance();
+
+    autocompleteContainerElement.searchItems = sinon.spy();
+    autocompleteContainerElement.componentWillReceiveProps({ state: editorState });
+    expect(autocompleteContainerElement.searchItems.callCount).to.equal(1);
   });
 
   it('matchExtension(extensions, token)', () => {
     const nodeText = '';
-    let inputComponent = (<PlainMarkdownInput
+    let markdownInputElement = (<PlainMarkdownInput
       value={nodeText}
       extensions={extensions}
     />);
-    let inputWrapper = shallow(inputComponent);
+    let inputWrapper = mount(markdownInputElement);
     let editorState = inputWrapper.state('editorState');
 
     let component = (<AutocompleteContainer
       options={{ extensions }}
       state={editorState}
     />);
-    let wrapper = shallow(component);
-    let wrapperInstance = wrapper.instance();
+    let wrapper = mount(component);
+    let autocompleteContainerElement = wrapper.find(AutocompleteContainer).at(0).childAt(0).instance();
+
     let token = '#ba';
-    let extension = wrapperInstance.matchExtension(extensions, token);
+    let extension = autocompleteContainerElement.matchExtension(extensions, token);
     expect(extension).to.deep.equal(extensions[0]);
 
     token = 'ba';
-    extension = wrapperInstance.matchExtension(extensions, token);
+    extension = autocompleteContainerElement.matchExtension(extensions, token);
     expect(extension).to.deep.equal(undefined);
   });
 
   it('getSearchToken(state)', () => {
     const nodeText = '# Header1 ';
-    let inputComponent = (<PlainMarkdownInput
+    let markdownInputElement = (<PlainMarkdownInput
       value={nodeText}
       extensions={extensions}
     />);
-    let inputWrapper = shallow(inputComponent);
+    let inputWrapper = mount(markdownInputElement);
     let editorState = inputWrapper.state('editorState');
     let editorChange = editorState.change();
     editorChange.moveOffsetsTo(nodeText.length - 1, nodeText.length - 1);
@@ -168,110 +170,91 @@ describe('<AutocompleteContainer />', () => {
       options={{ extensions }}
       state={editorState}
     />);
-    let wrapper = shallow(component);
-    let wrapperInstance = wrapper.instance();
-    let { term, text, offset } = wrapperInstance.getSearchToken(editorState);
+    let wrapper = mount(component);
+    let autocompleteContainerElement = wrapper.find(AutocompleteContainer).at(0).childAt(0).instance();
+    let { term, text, offset } = autocompleteContainerElement.getSearchToken(editorState);
     expect(term).to.equal('Header1');
     expect(text).to.equal(nodeText);
     expect(offset).to.equal(2);
 
     editorChange.moveOffsetsTo(nodeText.length, nodeText.length);
     editorState = editorChange.state;
-    let res = wrapperInstance.getSearchToken(editorState);
+    let res = autocompleteContainerElement.getSearchToken(editorState);
     expect(res.term).to.equal('# Header1 ');
     expect(res.text).to.equal(nodeText);
     expect(res.offset).to.equal(-1);
   });
 
-  it('handleSelectedIndexChange(selectedIndex)', () => {
-    let inputComponent = (<PlainMarkdownInput
-      value=""
-      extensions={extensions}
-    />);
-    let inputWrapper = shallow(inputComponent);
-    let editorState = inputWrapper.state('editorState');
-
-    let component = (<AutocompleteContainer
-      options={{ extensions }}
-      state={editorState}
-    />);
-    let wrapper = shallow(component);
-    let wrapperInstance = wrapper.instance();
-    wrapperInstance.handleSelectedIndexChange(3);
-    expect(wrapper.state('isMouseIndexSelected')).to.equal(true);
-    expect(wrapper.state('selectedIndex')).to.equal(3);
-  });
-
   it('handleKeyDown(e)', (done) => {
-    let inputComponent = (<PlainMarkdownInput
+    let markdownInputElement = (<PlainMarkdownInput
       value=""
       extensions={extensions}
     />);
-    let inputWrapper = shallow(inputComponent);
+    let inputWrapper = mount(markdownInputElement);
     let editorState = inputWrapper.state('editorState');
 
     let component = (<AutocompleteContainer
       options={{ extensions }}
       state={editorState}
     />);
-    let wrapper = shallow(component);
-    let wrapperInstance = wrapper.instance();
+    let wrapper = mount(component);
+    let autocompleteContainerElement = wrapper.find(AutocompleteContainer).at(0).childAt(0).instance();
 
     // is not shown
     event.keyCode = arrowDownCode;
-    wrapperInstance.handleKeyDown(event);
-    expect(wrapper.state('show')).to.equal(false);
-    expect(wrapper.state('selectedIndex')).to.equal(0);
+    autocompleteContainerElement.handleKeyDown(event);
+    expect(autocompleteContainerElement.state.show).to.equal(false);
+    expect(autocompleteContainerElement.state.selectedItem).to.equal(0);
 
     let extension = extensions[0];
     extension.searchItems('#ba').
     then((items) => {
-      wrapper.setState({ items, selectedIndex: 2, show: true });
+      autocompleteContainerElement.setState({ items, selectedItem: 2, show: true });
 
-      expect(wrapper.state('show')).to.equal(true);
-      expect(wrapper.state('selectedIndex')).to.equal(2);
+      expect(autocompleteContainerElement.state.show).to.equal(true);
+      expect(autocompleteContainerElement.state.selectedItem).to.equal(2);
 
       // escape
       event.keyCode = escapeCode;
-      wrapperInstance.handleKeyDown(event);
-      expect(wrapper.state('show')).to.equal(false);
+      autocompleteContainerElement.handleKeyDown(event);
+      expect(autocompleteContainerElement.state.show).to.equal(false);
 
       // enter
-      wrapper.setState({ show: true });
-      let backupHandleSelectItem = wrapperInstance.handleSelectItem;
-      wrapperInstance.handleSelectItem = sinon.spy();
+      autocompleteContainerElement.setState({ show: true });
+      let backupHandleSelectItem = autocompleteContainerElement.handleSelectItem;
+      autocompleteContainerElement.handleSelectItem = sinon.spy();
       event.keyCode = enterCode;
-      wrapperInstance.handleKeyDown(event);
-      expect(wrapperInstance.handleSelectItem.getCall(0).args[0]).to.equal(2);
-      expect(wrapperInstance.handleSelectItem.callCount).to.equal(1);
-      wrapperInstance.handleSelectItem = backupHandleSelectItem;
+      autocompleteContainerElement.handleKeyDown(event);
+      expect(autocompleteContainerElement.handleSelectItem.getCall(0).args[0]).to.equal(2);
+      expect(autocompleteContainerElement.handleSelectItem.callCount).to.equal(1);
+      autocompleteContainerElement.handleSelectItem = backupHandleSelectItem;
 
       // arrowUpCode
-      wrapper.setState({ show: true });
+      autocompleteContainerElement.setState({ show: true });
       event.keyCode = arrowUpCode;
-      wrapperInstance.handleKeyDown(event);
-      expect(wrapper.state('selectedIndex')).to.equal(1);
-      wrapperInstance.handleKeyDown(event);
-      expect(wrapper.state('selectedIndex')).to.equal(0);
-      wrapperInstance.handleKeyDown(event);
-      expect(wrapper.state('selectedIndex')).to.equal(0);
+      autocompleteContainerElement.handleKeyDown(event);
+      expect(autocompleteContainerElement.state.selectedItem).to.equal(1);
+      autocompleteContainerElement.handleKeyDown(event);
+      expect(autocompleteContainerElement.state.selectedItem).to.equal(0);
+      autocompleteContainerElement.handleKeyDown(event);
+      expect(autocompleteContainerElement.state.selectedItem).to.equal(0);
 
       // arrowDownCode
-      wrapper.setState({ selectedIndex: 6 });
+      autocompleteContainerElement.setState({ selectedItem: 6 });
       event.keyCode = arrowDownCode;
-      wrapperInstance.handleKeyDown(event);
-      expect(wrapper.state('selectedIndex')).to.equal(7);
-      wrapperInstance.handleKeyDown(event);
-      expect(wrapper.state('selectedIndex')).to.equal(8);
-      wrapperInstance.handleKeyDown(event);
-      expect(wrapper.state('selectedIndex')).to.equal(8);
+      autocompleteContainerElement.handleKeyDown(event);
+      expect(autocompleteContainerElement.state.selectedItem).to.equal(7);
+      autocompleteContainerElement.handleKeyDown(event);
+      expect(autocompleteContainerElement.state.selectedItem).to.equal(8);
+      autocompleteContainerElement.handleKeyDown(event);
+      expect(autocompleteContainerElement.state.selectedItem).to.equal(8);
 
       // other
-      wrapper.setState({ selectedIndex: 6 });
+      autocompleteContainerElement.setState({ selectedItem: 6 });
       event.keyCode = 200;
-      wrapperInstance.handleKeyDown(event);
-      expect(wrapper.state('selectedIndex')).to.equal(6);
-      expect(wrapper.state('show')).to.equal(true);
+      autocompleteContainerElement.handleKeyDown(event);
+      expect(autocompleteContainerElement.state.selectedItem).to.equal(6);
+      expect(autocompleteContainerElement.state.show).to.equal(true);
 
       delete event.keyCode;
       done();
@@ -284,11 +267,11 @@ describe('<AutocompleteContainer />', () => {
 
   it.skip('handleSelectItem(index)', (done) => {
     const nodeText = '# bi2 #ba';
-    let inputComponent = (<PlainMarkdownInput
+    let markdownInputElement = (<PlainMarkdownInput
       value={nodeText}
       extensions={extensions}
     />);
-    let inputWrapper = shallow(inputComponent);
+    let inputWrapper = shallow(markdownInputElement);
     inputWrapper.setState({ isFocused: true });
     let editorState = inputWrapper.state('editorState');
     let editorChange = editorState.change();
@@ -315,7 +298,7 @@ describe('<AutocompleteContainer />', () => {
     let extension = extensions[0];
     extension.searchItems('#ba').
     then((items) => {
-      wrapper.setState({ items, selectedIndex: 2, show: true });
+      wrapper.setState({ items, selectedItem: 2, show: true });
       expect(wrapper.state('show')).to.equal(true);
       wrapperInstance.handleSelectItem(2);
       expect(handlerChange.callCount).to.equal(1);
@@ -328,11 +311,11 @@ describe('<AutocompleteContainer />', () => {
 
   it('searchItems({ state, options })', (done) => {
     const nodeText = '# open #ba';
-    let inputComponent = (<PlainMarkdownInput
+    let markdownInputElement = (<PlainMarkdownInput
       value={nodeText}
       extensions={extensions}
     />);
-    let inputWrapper = shallow(inputComponent);
+    let inputWrapper = mount(markdownInputElement);
     let editorState = inputWrapper.state('editorState');
     let editorChange = editorState.change();
     editorChange.moveOffsetsTo(nodeText.length, nodeText.length);
@@ -342,22 +325,22 @@ describe('<AutocompleteContainer />', () => {
       options={{ extensions }}
       state={editorState}
     />);
-    let wrapper = shallow(component);
-    let wrapperInstance = wrapper.instance();
+    let wrapper = mount(component);
+    let autocompleteContainerElement = wrapper.find(AutocompleteContainer).at(0).childAt(0).instance();
 
-    wrapper.setState({ show: true });
+    autocompleteContainerElement.setState({ show: true });
     editorChange.moveOffsetsTo('# open'.length, '# open'.length);
     editorState = editorChange.state;
-    wrapperInstance.searchItems({ state: editorState, options: { extensions } });
-    expect(wrapper.state('show')).to.equal(false);
-    expect(wrapper.state('items')).to.deep.equal([]);
+    autocompleteContainerElement.searchItems({ state: editorState, options: { extensions } });
+    expect(autocompleteContainerElement.state.show).to.equal(false);
+    expect(autocompleteContainerElement.state.items).to.deep.equal([]);
 
     editorChange.moveOffsetsTo(nodeText.length, nodeText.length);
     editorState = editorChange.state;
-    wrapperInstance.searchItems({ state: editorState, options: { extensions } });
+    autocompleteContainerElement.searchItems({ state: editorState, options: { extensions } });
 
     setTimeout(() => {
-      expect(wrapper.state('show')).to.equal(true);
+      expect(autocompleteContainerElement.state.show).to.equal(true);
       const pattern = [
         { _objectLabel: "ba2" },
         { _objectLabel: "ba21" },
@@ -369,27 +352,8 @@ describe('<AutocompleteContainer />', () => {
         { _objectLabel: "ba256" },
         { _objectLabel: "ba257" }
       ];
-      expect(wrapper.state('items')).to.deep.equal(pattern);
+      expect(autocompleteContainerElement.state.items).to.deep.equal(pattern);
       done();
     }, 100);
-  });
-
-  it('handleRef(ref)', () => {
-    let inputComponent = (<PlainMarkdownInput
-      value=""
-      extensions={extensions}
-    />);
-    let inputWrapper = shallow(inputComponent);
-    let editorState = inputWrapper.state('editorState');
-
-    let component = (<AutocompleteContainer
-      options={{ extensions }}
-      state={editorState}
-    />);
-    let wrapper = shallow(component);
-    let wrapperInstance = wrapper.instance();
-    let ref = { name: 'ref' };
-    wrapperInstance.handleRef(ref);
-    expect(wrapper.state('ref')).to.equal(ref);
   });
 });

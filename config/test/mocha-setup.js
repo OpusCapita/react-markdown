@@ -20,3 +20,7 @@ chai.use(require('chai-enzyme')());
 global.document = jsdom('<!doctype html><html><body></body></html>');
 global.window = document.defaultView;
 global.navigator = global.window.navigator;
+
+global.window.getSelection = function() {
+  return { anchorNode: null };
+};

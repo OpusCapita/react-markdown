@@ -117,7 +117,6 @@ export default class AutocompleteWidget extends React.Component {
   };
 
   handleItemMouseDown = (index) => {
-    console.log('click');
     this.props.onChange(index);
   }
 

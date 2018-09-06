@@ -72,31 +72,10 @@ window.cancelAnimationFrame = callback => {
 window.requestAnimationFrame = callback => callback;
 
 describe('<AutocompleteWidget />', () => {
-  it('componentDidMount()', () => {
-    const handler = sinon.spy();
-    const listener = sinon.spy();
-    let component = (
-      <AutocompleteWidget
-        selectedIndex={0}
-        onMouseDown={() => {}}
-        onScroll={handler}
-      />
-    );
-    let wrapper = mount(component);
-    let wrapperInstance = wrapper.instance();
-    wrapperInstance.adjustPosition = sinon.spy();
-    wrapperInstance['items-ref'] = { addEventListener: listener };
-    wrapperInstance.componentDidMount();
-    expect(listener.callCount).to.equal(1);
-    expect(listener.getCall(0).args[0]).to.equal('scroll');
-    expect(listener.getCall(0).args[1]).to.equal(handler);
-    expect(listener.getCall(0).args[2]).to.equal(false);
-  });
-
   it('componentWillReceiveProps(nextProps)', () => {
     let component = (
       <AutocompleteWidget
-        selectedIndex={0}
+        selectedItem={0}
         onMouseDown={() => {}}
       />
     );
@@ -110,37 +89,37 @@ describe('<AutocompleteWidget />', () => {
   });
 
   it('componentWillUpdate(nextProps)', () => {
-    const selectedIndex = 2;
+    const selectedItem = 2;
     let component = (
       <AutocompleteWidget
-        selectedIndex={0}
+        selectedItem={0}
         onMouseDown={() => {}}
       />
     );
     let wrapper = mount(component);
     let wrapperInstance = wrapper.instance();
-    wrapperInstance['items-ref'] = { scrollTop: 25 };
-    wrapperInstance['item-ref-2'] = { offsetTop: 50 };
-    wrapperInstance.componentWillUpdate({ selectedIndex });
-    expect(wrapperInstance['items-ref'].scrollTop).to.equal(25);
+    wrapperInstance.containerRef = { scrollTop: 25 };
+    wrapperInstance['itemRef2'] = { offsetTop: 50 };
+    wrapperInstance.componentWillUpdate({ selectedItem });
+    expect(wrapperInstance.containerRef.scrollTop).to.equal(25);
 
-    wrapper.setProps({ selectedIndex: 3 });
-    wrapperInstance['items-ref'] = { scrollTop: 25 };
-    wrapperInstance['item-ref-2'] = { offsetTop: 50 };
-    wrapperInstance.componentWillUpdate({ selectedIndex });
-    expect(wrapperInstance['items-ref'].scrollTop).to.equal(24);
+    wrapper.setProps({ selectedItem: 3 });
+    wrapperInstance.containerRef = { scrollTop: 25 };
+    wrapperInstance['itemRef2'] = { offsetTop: 50 };
+    wrapperInstance.componentWillUpdate({ selectedItem });
+    expect(wrapperInstance.containerRef.scrollTop).to.equal(24);
 
-    wrapper.setProps({ selectedIndex: 1 });
-    wrapperInstance['items-ref'] = { scrollTop: 25 };
-    wrapperInstance['item-ref-2'] = { offsetTop: 200 };
-    wrapperInstance.componentWillUpdate({ selectedIndex });
-    expect(wrapperInstance['items-ref'].scrollTop).to.equal(44);
+    wrapper.setProps({ selectedItem: 1 });
+    wrapperInstance.containerRef = { scrollTop: 25 };
+    wrapperInstance['itemRef2'] = { offsetTop: 200 };
+    wrapperInstance.componentWillUpdate({ selectedItem });
+    expect(wrapperInstance.containerRef.scrollTop).to.equal(44);
   });
 
   it('componentWillUnmount()', () => {
     let component = (
       <AutocompleteWidget
-        selectedIndex={0}
+        selectedItem={0}
         onMouseDown={() => {}}
       />
     );
@@ -159,19 +138,19 @@ describe('<AutocompleteWidget />', () => {
         return {
           left: 255,
           top: 500
-        }
+        };
       }
     };
     let component = (
       <AutocompleteWidget
-        selectedIndex={0}
+        selectedItem={0}
         onMouseDown={() => {}}
       />
     );
     let wrapper = mount(component);
     wrapper.setProps({ restrictorRef });
     let wrapperInstance = wrapper.instance();
-    wrapperInstance['items-ref'] = {
+    wrapperInstance.containerRef = {
       offsetHeight: 500,
       offsetWidth: 300
     };
@@ -206,7 +185,7 @@ describe('<AutocompleteWidget />', () => {
   it('adjustPosition()', () => {
     let component = (
       <AutocompleteWidget
-        selectedIndex={0}
+        selectedItem={0}
         onMouseDown={() => {}}
       />
     );
@@ -220,7 +199,7 @@ describe('<AutocompleteWidget />', () => {
   it('cancelAdjustPosition()', () => {
     let component = (
       <AutocompleteWidget
-        selectedIndex={0}
+        selectedItem={0}
         onMouseDown={() => {}}
       />
     );
@@ -232,28 +211,11 @@ describe('<AutocompleteWidget />', () => {
     expect(wrapperInstance._animationFrame.callCount).to.equal(1);
   });
 
-  it('handleSelectItem(index)', () => {
-    let handler = sinon.spy();
-    let index = 2;
-    let component = (
-      <AutocompleteWidget
-        selectedIndex={0}
-        onMouseDown={() => {}}
-        onSelectItem={handler}
-      />
-    );
-    let wrapper = mount(component);
-    let wrapperInstance = wrapper.instance();
-    wrapperInstance.handleSelectItem(index);
-    expect(handler.callCount).to.equal(1);
-    expect(handler.getCall(0).args[0]).to.equal(index);
-  });
-
   it('render() with empty items', () => {
     let component = (
       <AutocompleteWidget
         items={null}
-        selectedIndex={0}
+        selectedItem={0}
         onMouseDown={() => {}}
       />
     );
