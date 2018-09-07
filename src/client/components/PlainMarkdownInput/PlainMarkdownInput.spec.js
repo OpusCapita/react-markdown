@@ -29,12 +29,6 @@ describe('<PlainMarkdownInput />', () => {
 ###### header *italic*
 `;
 
-  before(() => {
-    window.getSelection = function() {
-      return { anchorNode: null };
-    };
-  });
-
   it('should have default props', () => {
     let component = <PlainMarkdownInput />;
     expect(component.props.extensions).to.deep.equal([]);

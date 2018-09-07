@@ -17,10 +17,10 @@ export default function DefaultAutocompleteItem({ item, isSelected }) {
     >
       {itemLength > maxItemLength ? `${itemLabel.substr(0, maxItemLength)}…` : itemLabel}
     </div>
-  )
+  );
 }
 
 DefaultAutocompleteItem.propTypes = {
   item: PropTypes.object.isRequired,
   isSelected: PropTypes.bool.isRequired
-}
+};

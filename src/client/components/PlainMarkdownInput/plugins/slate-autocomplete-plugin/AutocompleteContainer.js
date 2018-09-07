@@ -1,5 +1,6 @@
 import React from 'react';
 import Types from 'prop-types';
+import clickOutside from 'react-click-outside';
 
 import AutocompleteWidget from './AutocompleteWidget';
 import { getSlateEditor } from '../../utils';
@@ -9,7 +10,9 @@ const escapeCode = 27;
 const arrowUpCode = 38;
 const arrowDownCode = 40;
 const enterCode = 13;
+const tabCode = 9;
 
+@clickOutside
 class AutocompleteContainer extends React.Component {
   static propTypes = {
     state: Types.object,
@@ -33,8 +36,7 @@ class AutocompleteContainer extends React.Component {
 
   state = {
     show: false,
-    selectedIndex: 0,
-    isMouseIndexSelected: false,
+    selectedItem: 0,
     items: [],
     ref: null
   }
@@ -46,16 +48,6 @@ class AutocompleteContainer extends React.Component {
 
   componentWillReceiveProps = (nextProps) => {
     this.searchItems(nextProps);
-  };
-
-  /**
-   * update a component in all cases, except pressing on a scroll of a widget
-   * XXX FOR IE11. Issue #78@opuscapita/react-markdown
-   *
-   * @returns {boolean}
-   */
-  shouldComponentUpdate = (newProps, newState) => {
-    return newState.show || (!!this.currEventTarget && this.currEventTarget !== 'widget');
   };
 
   componentWillUnmount() {
@@ -115,52 +107,43 @@ class AutocompleteContainer extends React.Component {
     return { term, text, offset };
   };
 
-  /**
-   * handleSelectedIndexChange
-   * @param {number} selectedIndex
-   */
-  handleSelectedIndexChange = (selectedIndex) => {
-    // This value is necessary in order that the mouseMove event has been processed and the component was rerendered
-    this.currEventTarget = 'item-move';
-    this.setState({ isMouseIndexSelected: true, selectedIndex });
-  };
+  handleClickOutside = () => {
+    if (this.state.show) {
+      this.hideWidget();
+    }
+  }
 
   handleKeyDown = (e) => {
-    let { show, items, selectedIndex } = this.state;
+    let { show, items, selectedItem } = this.state;
 
-    if (show && items) {
+    if (e.keyCode === tabCode) {
+      e.preventDefault();
+      e.stopPropagation();
+      this.hideWidget();
+    }
+
+    if (show) {
       if (e.keyCode === escapeCode) {
         e.preventDefault();
         e.stopPropagation();
-        this.forceHide();
-      } else if (e.keyCode === enterCode) {
+        this.hideWidget();
+      }
+    }
+
+    if (show && items) {
+      if (e.keyCode === enterCode) {
         e.preventDefault();
-        this.handleSelectItem(selectedIndex, e);
-        this.forceHide();
+        this.handleSelectItem(selectedItem, e);
+        this.hideWidget();
       } else if (e.keyCode === arrowUpCode || e.keyCode === arrowDownCode) {
         e.preventDefault();
         const length = items.length;
-        selectedIndex = e.keyCode === arrowDownCode ? selectedIndex + 1 : selectedIndex - 1;
-        if (e.keyCode === arrowDownCode && selectedIndex < length ||
-          e.keyCode === arrowUpCode && selectedIndex >= 0) {
-          this.setState({ isMouseIndexSelected: false, selectedIndex });
+        selectedItem = e.keyCode === arrowDownCode ? selectedItem + 1 : selectedItem - 1;
+        if (e.keyCode === arrowDownCode && selectedItem < length ||
+          e.keyCode === arrowUpCode && selectedItem >= 0) {
+          this.setState({ selectedItem });
         }
       }
-    }
-  };
-
-  /**
-   * handleMouseDown
-   *
-   *  Is called for a container, for a widget and for an item
-   *  Get and save the event's target
-   *  If there was a click on item, call handleSelectItem for one
-   * @param {string} currTarget
-   */
-  handleMouseDown = currTarget => {
-    this.currEventTarget = currTarget;
-    if (this.currEventTarget === 'item') {
-      this.handleSelectItem(this.state.selectedIndex);
     }
   };
 
@@ -179,7 +162,7 @@ class AutocompleteContainer extends React.Component {
     const { state, options } = this.props;
     const { term } = this.getSearchToken(state);
 
-    if (term && this.currEventTarget !== 'widget') {
+    if (term) {
       const item = items[index];
 
       const { extensions } = options;
@@ -212,7 +195,7 @@ class AutocompleteContainer extends React.Component {
     const request = extension.searchItems(term).
       then(items => {
         if (this.currentRequest === request && this._isMounted) {
-          this.setState({ items, selectedIndex: 0, loading: false })
+          this.setState({ items, selectedItem: 0, loading: false })
         }
       }).
       catch(err => {
@@ -229,19 +212,7 @@ class AutocompleteContainer extends React.Component {
     this.setState({ show: flag });
   };
 
-  /**
-   * hideWidget
-   */
   hideWidget = () => {
-    const { show } = this.state;
-    // Check of the event's target is necessary for IE11
-    // XXX FOR IE11. Issue #78@opuscapita/react-markdown
-    if (show && this.currEventTarget !== 'widget' && this.currEventTarget !== 'item-move') {
-      this.toggleWidget(false);
-    }
-  };
-
-  forceHide = () => {
     this.toggleWidget(false);
   };
 
@@ -263,8 +234,8 @@ class AutocompleteContainer extends React.Component {
   }
 
   render() {
-    const { show, selectedIndex, items, isMouseIndexSelected, ref, loading } = this.state;
-    const { children, state, locale } = this.props;
+    const { show, selectedItem, items, ref, loading } = this.state;
+    const { children, locale } = this.props;
 
     let selection = window.getSelection();
     if (selection.anchorNode) {
@@ -278,24 +249,15 @@ class AutocompleteContainer extends React.Component {
       <div className="AutocompleteContainer"
         onKeyDown={this.handleKeyDown}
         ref={this.handleRef}
-        onMouseDown={e => {
-          this.handleMouseDown('container');
-          e.stopPropagation(); // Isolate event target
-        }}
       >
-        {show && (state.isFocused || this.currEventTarget === 'item-move') ? (
+        {show ? (
           <AutocompleteWidget
             items={items}
-            renderItem={this.getItemRenderFunc()}
+            itemRenderer={this.getItemRenderFunc()}
             loading={loading}
-            selectedIndex={selectedIndex}
+            selectedItem={selectedItem}
             locale={locale}
-            onScroll={this.props.onScroll}
-            onSelectItem={this.handleSelectItem}
-            onSelectedIndexChange={this.handleSelectedIndexChange}
-            isMouseIndexSelected={isMouseIndexSelected}
-            onMouseDown={this.handleMouseDown.bind(this)}
-            onMouseUp={this.props.onMouseUp}
+            onChange={this.handleSelectItem}
             restrictorRef={ref}
           />
         ) : null}

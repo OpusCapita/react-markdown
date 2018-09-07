@@ -38,6 +38,7 @@ class MarkdownInputModal extends React.Component {
 
     return (
       <PlainMarkdownInput
+        ref={ref => ref && (this.focus = ref.focus.bind(ref))}
         value={value}
         onChange={this.handleChangeValue}
         onFullScreen={this.handleFullScreen}

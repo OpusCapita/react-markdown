@@ -33,6 +33,10 @@ class MarkdownInputModalScope extends React.Component {
     this.setState({ fullScreen });
   };
 
+  handleModalAnimationEnd = () => {
+    window.markdownInputModalRef.focus();
+  }
+
   render() {
     const modalClasses = classNames({
       'markdown-input_fullscreen': this.state.fullScreen,
@@ -48,6 +52,8 @@ class MarkdownInputModalScope extends React.Component {
           className={modalClasses}
           show={this.state.show}
           onHide={this.handleHideModal}
+          animation={true}
+          onEntered={this.handleModalAnimationEnd}
         >
           <Modal.Header closeButton={true}>
             Modal Test

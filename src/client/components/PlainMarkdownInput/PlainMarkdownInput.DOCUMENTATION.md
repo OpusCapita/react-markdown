@@ -2,6 +2,12 @@
 
 PlainMarkdownInput
 
+### Methods reference
+
+| Name  | Description                                                                                                                                                             |
+| ----  | ----                                                                                                                                                                    |
+| focus | Force element focus. Can be useful in case of using within react-bootstrap Modal component with animation. Should be called as `onEntered` callback (on animation end). |
+
 ### Props Reference
 
 | Name                           | Type                    | Description                                                 |

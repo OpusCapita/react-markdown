@@ -1,4 +1,14 @@
 
+[Release 2.3.3-beta.0](https://github.com/OpusCapita/react-markdown/releases/tag/v2.3.3-beta.0) Thu Sep 06 2018 21:24:34 GMT+0300 (MSK)
+=======================================================
+
+-  [#150](https://github.com/OpusCapita/react-markdown/issues/150) Fix selected autocomplete item highlighting (Kirill Volkovich kirill.volkovich@opuscapita.com, 2018-09-06 21:07:20 +0300)
+- Update unit tests (Kirill Volkovich kirill.volkovich@opuscapita.com, 2018-09-06 16:18:05 +0300)
+- Fix lint (Kirill Volkovich kirill.volkovich@opuscapita.com, 2018-09-05 21:23:18 +0300)
+- Refactor "autocomplete plugin" (Kirill Volkovich kirill.volkovich@opuscapita.com, 2018-09-05 21:19:28 +0300)
+- Refactor "autocomplete plugin" (Kirill Volkovich kirill.volkovich@opuscapita.com, 2018-09-05 20:48:54 +0300)
+-  [#150](https://github.com/OpusCapita/react-markdown/issues/150) Add alternative solution to focus MarkdownInput within modal (Kirill Volkovich kirill.volkovich@opuscapita.com, 2018-09-05 18:17:19 +0300)
+
 [Release 2.3.3](https://github.com/OpusCapita/react-markdown/releases/tag/v2.3.3) Tue Sep 04 2018 18:08:07 GMT+0300 (MSK)
 =======================================================
 

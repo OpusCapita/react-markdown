@@ -54,7 +54,7 @@ function (optional) that is called on when the user presses the button, the func
 ```
 <div style={{ height: '70vh' }}>
   <MarkdownInputModal
-    onChange={_scope.handleValueChange}
+    ref={ref => (window.markdownInputModalRef = ref)}
     onFullScreen={_scope.handleFullScreen}
     value={_scope.state.markdownExample}
     readOnly={false}

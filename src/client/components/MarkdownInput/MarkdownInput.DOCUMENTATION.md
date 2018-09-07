@@ -2,7 +2,13 @@
 
 MarkdownInput
 
-### Props Reference
+### Methods reference
+
+| Name  | Description                                                                                                                                                             |
+| ----  | ----                                                                                                                                                                    |
+| focus | Force element focus. Can be useful in case of using within react-bootstrap Modal component with animation. Should be called as `onEntered` callback (on animation end). |
+
+### Props reference
 
 | Name               | Type            | Description                                                                                      |
 | ------------------ | :-------------- | ------------------------------------------------------------------------------------------------ |
@@ -12,7 +18,7 @@ MarkdownInput
 | locale             | string          | Locale                                                                                           |
 | extensions         | array           | See "Extension definition" section bellow.                                                       |
 | additionalButtons  | array           | See "Additional buttons definition" section bellow.                                              |
-| autoFocus          | bool            | Set focus automatically on mount (default: true)                                                 |
+| autoFocus          | bool            | Set focus automatically on mount (default: true). May not work within react-bootstrap modal. See `focus()` method.                                                 |
 | readOnly           | bool            | Disables toolbar and makes markdown text not editable.                                           |
 | hideToolbar        | bool            | Default: `false`. If `true`, input renders without a toolbar.                                           |
 
