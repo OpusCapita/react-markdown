@@ -1,4 +1,10 @@
 
+[Release 2.3.4](https://github.com/OpusCapita/react-markdown/releases/tag/v2.3.4) Fri Sep 07 2018 15:34:39 GMT+0300 (MSK)
+=======================================================
+
+- [#150](https://github.com/OpusCapita/react-markdown/issues/150) Add alternative solution to focus MarkdownInput within modal ([#151](https://github.com/OpusCapita/react-markdown/issues/151)) (GitHub kvolkovich-sc@users.noreply.github.com, 2018-09-07 15:31:53 +0300)
+- Using docker image opuscapita/minsk-core-ci tag grails-2.4.4-jdk-8u131-nodejs-6.9.4-maven-3.3.9 [ci skip] (Alexey Sergeev alexey.sergeev@opuscapita.com, 2018-09-07 09:08:37 +0300)
+
 [Release 2.3.3-beta.0](https://github.com/OpusCapita/react-markdown/releases/tag/v2.3.3-beta.0) Thu Sep 06 2018 21:24:34 GMT+0300 (MSK)
 =======================================================
 
