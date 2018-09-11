@@ -1,4 +1,9 @@
 
+[Release 2.3.5](https://github.com/OpusCapita/react-markdown/releases/tag/v2.3.5) Tue Sep 11 2018 15:00:53 GMT+0300 (MSK)
+=======================================================
+
+- Emit onChange only if text has changed ([#153](https://github.com/OpusCapita/react-markdown/issues/153)) (GitHub 31243790+estambakio-sc@users.noreply.github.com, 2018-09-11 14:47:45 +0300)
+
 [Release 2.3.4](https://github.com/OpusCapita/react-markdown/releases/tag/v2.3.4) Fri Sep 07 2018 15:34:39 GMT+0300 (MSK)
 =======================================================
 
