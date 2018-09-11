@@ -28,9 +28,7 @@ Configurable extensions with autocomplete for **products**, **terms**, etc.
 
 | Name               | Type            | Description                                                                                      |
 | ------------------ | :-------------- | ------------------------------------------------------------------------------------------------ |
-| objectClassName    | string          | Object class name displayed on buttons ('Product', 'Term', etc.)                                 |
 | specialCharacter   | string          | Is used for inserting it into plain markdown input on button ('Term', 'Product', etc.) click.    |
-| color              | string          | Color of object reference element in rich markdown input.                                        |
 | termRegex          | regex           | Is used to check if item can be inserted after caret position in plain markdown input.           |
 | searchItems        | func            | Is used to search items by input term. **Must return a Promise**.                                |
 | markdownText       | func            | Is used to get text for markdown input based on selected item. **You can use this function in order to add a trailing space, etc.** |
@@ -96,9 +94,7 @@ function (optional) that is called on when the user presses the button, the func
     ]}
     extensions={[
       {
-        objectClassName: 'Product',
         specialCharacter: '#',
-        color: '#9ed69e',
         termRegex: /^\#(\w*)$/,
         searchItems(term) {
           const items = [
@@ -132,9 +128,7 @@ function (optional) that is called on when the user presses the button, the func
         )
       },
       {
-        objectClassName: 'Term',
         specialCharacter: '$',
-        color: '#f396c3',
         termRegex: /^\$(\w*|\[\w*\]?)$/,
         searchItems(term) {
           const termId = term.replace(/^\$(?:\[(\w*)\]|\[?(\w*))$/, '$1$2');

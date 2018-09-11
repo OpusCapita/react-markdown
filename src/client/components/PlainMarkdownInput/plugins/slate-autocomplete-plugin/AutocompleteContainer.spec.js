@@ -18,9 +18,7 @@ const enterCode = 13;
 
 const extensions = [
   {
-    objectClassName: 'Product',
     specialCharacter: '#',
-    color: '#9ed69e',
     termRegex: /^\#(\w*)$/,
     searchItems(term) {
       const items = [
@@ -49,9 +47,7 @@ const extensions = [
     }
   },
   {
-    objectClassName: 'Term',
     specialCharacter: '$',
-    color: '#f396c3',
     termRegex: /^\$(\w*)$/,
     searchItems(term) {
       const items = [

@@ -178,7 +178,16 @@ class PlainMarkdownInput extends React.Component {
       this.setDataToNode(nodes, numBlock, text);
       editorState = this.setNodesToState(editorState, nodes);
     }
-    this.props.onChange(Plain.serialize(editorState));
+
+    // Slate emits onChange not only when text changes,
+    // but also when caret changes position or editor gains/loses focus.
+    // Slate needs this because it's inner state essentially changes,
+    // (cursor position, focused status, etc), but we need to emit only real changes in text value.
+    const oldValue = Plain.serialize(this.state.editorState);
+    const newValue = Plain.serialize(editorState);
+    if (oldValue !== newValue) {
+      this.props.onChange(newValue);
+    }
 
     this.setState({ editorState });
 

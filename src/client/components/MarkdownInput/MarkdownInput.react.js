@@ -32,14 +32,6 @@ class MarkdownInput extends React.Component {
     hideToolbar: false
   };
 
-  handleChangeValue = (value) => {
-    this.props.onChange(value);
-  };
-
-  handleFullScreen = (fullScreen) => {
-    this.props.onFullScreen(fullScreen);
-  };
-
   render() {
     const {
       value,
@@ -49,16 +41,18 @@ class MarkdownInput extends React.Component {
       showFullScreenButton,
       locale,
       autoFocus,
-      hideToolbar
+      hideToolbar,
+      onChange,
+      onFullScreen,
+      onBlur
     } = this.props;
 
     return (
-      <ProvideBlur onBlur={this.props.onBlur}>
+      <ProvideBlur onBlur={onBlur}>
         <PlainMarkdownInput
-          ref={el => (this.selfDOMNode = el)}
           value={value}
-          onChange={this.handleChangeValue}
-          onFullScreen={this.handleFullScreen}
+          onChange={onChange}
+          onFullScreen={onFullScreen}
           extensions={extensions}
           additionalButtons={additionalButtons}
           readOnly={readOnly}
