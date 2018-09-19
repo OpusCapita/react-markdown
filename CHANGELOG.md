@@ -1,4 +1,9 @@
 
+[Release 2.3.6](https://github.com/OpusCapita/react-markdown/releases/tag/v2.3.6) Wed Sep 19 2018 12:31:24 GMT+0300 (MSK)
+=======================================================
+
+- Fix - can't toggle multiline ordered/unordered(Issue  [#154](https://github.com/OpusCapita/react-markdown/issues/154), PR [#155](https://github.com/OpusCapita/react-markdown/issues/155)) (Kirill Volkovich kvolkovich-sc@users.noreply.github.com, 2018-09-19 12:28:08 +0300)
+
 [Release 2.3.5](https://github.com/OpusCapita/react-markdown/releases/tag/v2.3.5) Tue Sep 11 2018 15:00:53 GMT+0300 (MSK)
 =======================================================
 
