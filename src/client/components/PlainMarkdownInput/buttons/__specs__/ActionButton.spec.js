@@ -30,7 +30,7 @@ describe('<ActionButton/>', () => {
 
   it('click on the button', () => {
     const accent = 'bold';
-    let handleClick = sinon.spy();
+    const handleClick = sinon.spy();
     const component = <ActionButton active={true} accent={accent} onClick={handleClick} />;
     const wrapper = shallow(component);
     wrapper.find('button').simulate('click');

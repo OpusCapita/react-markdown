@@ -16,7 +16,7 @@ describe('<AdditionalButton/>', () => {
   });
 
   it('click on the button', () => {
-    let settings = {
+    const settings = {
       iconElement: (<i className="fa fa-search"></i>),
       handleButtonPress({ value, insertAtCursorPosition }) {
         insertAtCursorPosition('#Product.new');
@@ -24,7 +24,7 @@ describe('<AdditionalButton/>', () => {
       label: 'Product'
     };
 
-    let handleClick = sinon.spy();
+    const handleClick = sinon.spy();
     const component = <AdditionalButton settings={settings} onClick={handleClick}/>;
     const wrapper = shallow(component);
     wrapper.find('button').simulate('click');

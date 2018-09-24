@@ -20,7 +20,7 @@ describe('<LinkButton/>', () => {
   });
 
   it('click on the button', () => {
-    let handleClick = sinon.spy();
+    const handleClick = sinon.spy();
     const component = <LinkButton onClick={handleClick} />;
     const wrapper = shallow(component);
     wrapper.find('button').simulate('click');

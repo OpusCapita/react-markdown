@@ -59,8 +59,8 @@ export const hasMultiLineSelection = ({ selection: { startKey, endKey } }) => st
  * @returns {boolean}
  */
 function hasMarkOnChar(character, mark) {
-  let arrChars = character.marks.toJS();
-  let marksSize = arrChars.length;
+  const arrChars = character.marks.toJS();
+  const marksSize = arrChars.length;
   for (let i = 0; i < marksSize; i++) {
     if (arrChars[i].type === mark) {
       return true;
@@ -77,13 +77,13 @@ function hasMarkOnChar(character, mark) {
  * @returns {boolean}
  */
 function hasEmphasis(mark, state) {
-  let { startKey, endKey, startOffset, endOffset, texts } = state;
+  const { startKey, endKey, startOffset, endOffset, texts } = state;
 
   if (startKey === endKey) {
-    let focusText = texts.get(0).text;
-    let textLength = focusText.length;
+    const focusText = texts.get(0).text;
+    const textLength = focusText.length;
     if (texts.get(0).charsData) {
-      let characters = texts.get(0).charsData.characters;
+      const characters = texts.get(0).charsData.characters;
       // not selection
       if (startOffset === endOffset) {
         // string's edge
@@ -100,8 +100,8 @@ function hasEmphasis(mark, state) {
             // between pairs of markers
           } else if ((mark === 'bold' || mark === 'strikethrough') &&
             startOffset > 1 && startOffset < textLength - 1) {
-            let leftPart = focusText.substr(startOffset - 2, 2);
-            let rightPart = focusText.substr(startOffset, 2);
+            const leftPart = focusText.substr(startOffset - 2, 2);
+            const rightPart = focusText.substr(startOffset, 2);
             if (leftPart === rightPart &&
               (mark === 'bold' && (leftPart === '**' || leftPart === '__') ||
                 mark === 'strikethrough' && leftPart === '~~')) {
@@ -155,15 +155,15 @@ export const getRightEmphEdge = (accent, characters, startPos, maxPos) => {
 };
 
 export const getLeftSelectionEdgeData = ({ accent, characters, startOffset }) => {
-  let leftInChar = characters.get(startOffset);
-  let hasLeftInMark = hasMarkOnChar(leftInChar, accent);
+  const leftInChar = characters.get(startOffset);
+  const hasLeftInMark = hasMarkOnChar(leftInChar, accent);
   let leftOutChar = null;
   let hasLeftOutMark = false;
   if (startOffset > 0) {
     leftOutChar = characters.get(startOffset - 1);
     hasLeftOutMark = hasMarkOnChar(leftOutChar, accent);
   }
-  let hasLeftOnEmphasis = hasLeftInMark || startOffset > 0 && hasLeftOutMark;
+  const hasLeftOnEmphasis = hasLeftInMark || startOffset > 0 && hasLeftOutMark;
   return {
     leftInChar,
     hasLeftInMark,
@@ -174,15 +174,15 @@ export const getLeftSelectionEdgeData = ({ accent, characters, startOffset }) =>
 };
 
 export const getRightSelectionEdgeData = ({ accent, characters, endOffset, text }) => {
-  let rightInChar = characters.get(endOffset - 1);
-  let hasRightInMark = hasMarkOnChar(rightInChar, accent);
+  const rightInChar = characters.get(endOffset - 1);
+  const hasRightInMark = hasMarkOnChar(rightInChar, accent);
   let rightOutChar = null;
   let hasRightOutMark = false;
   if (endOffset < text.length) {
     rightOutChar = characters.get(endOffset);
     hasRightOutMark = hasMarkOnChar(rightOutChar, accent);
   }
-  let hasRightOnEmphasis = hasRightInMark || endOffset < text.length && hasRightOutMark;
+  const hasRightOnEmphasis = hasRightInMark || endOffset < text.length && hasRightOutMark;
   return {
     rightInChar,
     hasRightInMark,
@@ -194,9 +194,9 @@ export const getRightSelectionEdgeData = ({ accent, characters, endOffset, text 
 
 function delInternalMarkers({ change, focusKey, characters, accent, startPos, endPos }) {
   const marker = EMPHASIS[accent];
-  let markerLength = marker.length;
-  let accentEdgePositions = [];
-  let hasAccents = [];
+  const markerLength = marker.length;
+  const accentEdgePositions = [];
+  const hasAccents = [];
   hasAccents[startPos] = hasMarkOnChar(characters.get(startPos), accent);
   for (let i = startPos; i < endPos - 1; i++) {
     hasAccents[i + 1] = hasMarkOnChar(characters.get(i + 1), accent);
@@ -236,12 +236,12 @@ function delInternalMarkersBind({ change, focusKey, characters, accent }) {
  * @param markerLength
  */
 function unionEmphasis({ change, focusKey, characters, accent, text, startOffset, endOffset, markerLength }) {
-  let leftEmphEdge = getLeftEmphEdge(accent, characters, startOffset);
-  let rightEmphEdge = getRightEmphEdge(accent, characters, endOffset - 1, text.length);
-  let leftMarker = text.substr(leftEmphEdge, markerLength);
+  const leftEmphEdge = getLeftEmphEdge(accent, characters, startOffset);
+  const rightEmphEdge = getRightEmphEdge(accent, characters, endOffset - 1, text.length);
+  const leftMarker = text.substr(leftEmphEdge, markerLength);
   let rightMarkerPos = rightEmphEdge - markerLength;
-  let rightMarker = text.substr(rightMarkerPos, markerLength);
-  let delCount = delInternalMarkers({
+  const rightMarker = text.substr(rightMarkerPos, markerLength);
+  const delCount = delInternalMarkers({
     change,
     focusKey,
     characters,
@@ -252,7 +252,7 @@ function unionEmphasis({ change, focusKey, characters, accent, text, startOffset
   rightMarkerPos -= delCount * markerLength - 1;
   if (leftMarker !== rightMarker) {
     change.removeTextByKey(focusKey, rightMarkerPos, markerLength).
-    insertTextByKey(focusKey, rightMarkerPos, leftMarker);
+      insertTextByKey(focusKey, rightMarkerPos, leftMarker);
   }
   return change;
 }
@@ -265,7 +265,7 @@ function unionEmphasis({ change, focusKey, characters, accent, text, startOffset
  */
 function wrapEmphasis(accent, state) {
   const marker = EMPHASIS[accent];
-  let markerLength = marker.length;
+  const markerLength = marker.length;
   const { startOffset, endOffset, focusText, texts } = state;
   const { text } = focusText;
   const focusKey = focusText.key;
@@ -274,12 +274,12 @@ function wrapEmphasis(accent, state) {
   // #1 no selection
   if (startOffset === endOffset) {
     change.insertText(`${marker}${marker}`).
-    move(-markerLength);
+      move(-markerLength);
 
     // selection (this edge is selection edge)
   } else {
-    let characters = texts.get(0).charsData.characters;
-    let delMarkers = delInternalMarkersBind({ change, focusKey, characters, accent });
+    const characters = texts.get(0).charsData.characters;
+    const delMarkers = delInternalMarkersBind({ change, focusKey, characters, accent });
     const {
       hasLeftOnEmphasis
     } = getLeftSelectionEdgeData({ accent, characters, startOffset });
@@ -295,16 +295,16 @@ function wrapEmphasis(accent, state) {
         });
       } else {
         // #3 left edge on emphasis, right edge beyond markers
-        let leftEmphEdge = getLeftEmphEdge(accent, characters, startOffset);
-        let leftMarker = text.substr(leftEmphEdge, markerLength);
+        const leftEmphEdge = getLeftEmphEdge(accent, characters, startOffset);
+        const leftMarker = text.substr(leftEmphEdge, markerLength);
         delMarkers({ startPos: leftEmphEdge, endPos: endOffset - 1 });
         change.insertTextByKey(focusKey, endOffset - 1, leftMarker);
       }
     } else {
       if (hasRightOnEmphasis) {
         // #4 left edge beyond markers, right edge on emphasis
-        let rightEmphEdge = getRightEmphEdge(accent, characters, endOffset - 1, text.length);
-        let rightMarker = text.substr(rightEmphEdge - markerLength + 1, markerLength);
+        const rightEmphEdge = getRightEmphEdge(accent, characters, endOffset - 1, text.length);
+        const rightMarker = text.substr(rightEmphEdge - markerLength + 1, markerLength);
         delMarkers({ startPos: startOffset, endPos: rightEmphEdge });
         change.insertTextByKey(focusKey, startOffset, rightMarker);
       } else {
@@ -327,11 +327,11 @@ function wrapEmphasis(accent, state) {
  * @param state - editor state
  */
 function unwrapEmphasis(accent, state) {
-  let markerLength = EMPHASIS[accent].length;
+  const markerLength = EMPHASIS[accent].length;
   const { startOffset, endOffset, focusText, texts } = state;
   const change = state.change();
   const focusKey = focusText.key;
-  let characters = texts.get(0).charsData.characters;
+  const characters = texts.get(0).charsData.characters;
   const { text } = focusText;
   const leftEmphEdge = getLeftEmphEdge(accent, characters, startOffset);
   const rightEmphEdge = getRightEmphEdge(accent, characters, startOffset, text.length);
@@ -340,12 +340,12 @@ function unwrapEmphasis(accent, state) {
   // no selection
   if (startOffset === endOffset) {
     if (startOffset > markerLength - 1 && startOffset < text.length - markerLength + 1) {
-      let leftMarker = text.substr(startOffset - markerLength, markerLength);
-      let rightMarker = text.substr(startOffset, markerLength);
+      const leftMarker = text.substr(startOffset - markerLength, markerLength);
+      const rightMarker = text.substr(startOffset, markerLength);
       // #1 the cursor is wrapped in markers, delete markers
       if (leftMarker === rightMarker && EMPHASIS_ALL[accent].indexOf(leftMarker) !== -1) {
         change.removeTextByKey(focusKey, endOffset, markerLength).
-        removeTextByKey(focusKey, startOffset - markerLength, markerLength).focus();
+          removeTextByKey(focusKey, startOffset - markerLength, markerLength).focus();
         return change.state;
       }
     }
@@ -387,7 +387,7 @@ function unwrapEmphasis(accent, state) {
     if (leftEmphEdge <= startOffset && startOffset <= leftEmphEdge + markerLength &&
       rightEmphEdge - markerLength + 1 <= endOffset && endOffset <= rightEmphEdge + 1) {
       change.removeTextByKey(focusKey, rightEmphEdge - markerLength + 1, markerLength).
-      removeTextByKey(focusKey, leftEmphEdge, markerLength).focus();
+        removeTextByKey(focusKey, leftEmphEdge, markerLength).focus();
       return change.state;
     }
 
@@ -395,16 +395,16 @@ function unwrapEmphasis(accent, state) {
     // remove accent from the left part of a wrapper
     if (leftEmphEdge <= startOffset && startOffset <= leftEmphEdge + markerLength) {
       change.insertTextByKey(focusKey, endOffset, marker).
-      removeTextByKey(focusKey, leftEmphEdge, markerLength).
-      moveOffsetsTo(leftEmphEdge, endOffset - markerLength).focus();
+        removeTextByKey(focusKey, leftEmphEdge, markerLength).
+        moveOffsetsTo(leftEmphEdge, endOffset - markerLength).focus();
       return change.state;
     }
 
     // #9 startOffset between markers, endOffset on right marker,
     // remove accent from the right part of a wrapper
     change.removeTextByKey(focusKey, rightEmphEdge - markerLength + 1, markerLength).
-    insertTextByKey(focusKey, startOffset, marker).
-    moveOffsetsTo(startOffset + markerLength, rightEmphEdge + 1).focus();
+      insertTextByKey(focusKey, startOffset, marker).
+      moveOffsetsTo(startOffset + markerLength, rightEmphEdge + 1).focus();
     return change.state;
   }
 }
@@ -489,7 +489,7 @@ const unwrapBlockForChange = function(removedLength, change) {
   const startPos = Math.max(startOffset - removedLength, 0);
   const endPos = Math.max(endOffset - removedLength, 0);
   change.moveOffsetsTo(0).deleteForward(removedLength).
-  moveOffsetsTo(startPos, endPos).focus();
+    moveOffsetsTo(startPos, endPos).focus();
   return change;
 };
 
@@ -513,7 +513,7 @@ function unwrapBlock(removedLength, state) {
  * @param {number} numLine
  */
 function hasListLine(accent, { texts }, numLine = 0) {
-  let text = texts.get(numLine).text;
+  const text = texts.get(numLine).text;
   return MATCH_SINGLE_RULE[accent].test(text);
 }
 
@@ -539,7 +539,7 @@ function hasList(type, state) {
 export const getUlMarker = text => (ulRegExp.exec(text) || [''])[0];
 
 export const getOlNum = function(text) {
-  let res = olRegExp.exec(text);
+  const res = olRegExp.exec(text);
   let pref = '';
   let itemNum = 1;
   let div = '.';
@@ -568,23 +568,23 @@ function getTextLength(change) {
 const wrapList = function(accent, state) {
   let text = accent === 'ul' ? '* ' : '1. ';
   if (hasMultiLineSelection(state)) {
-    let {
+    const {
       anchorKey,
       anchorOffset,
       focusKey,
       focusOffset,
       isBackward
     } = state.selection;
-    let keys = [];
+    const keys = [];
     let firstBefore, firstAfter, lastBefore, lastAfter;
     for (let i = 0; i < state.texts.size; i++) {
       keys.push(state.texts.get(i).key);
     }
 
-    let lineText = state.texts.get(0).text;
+    const lineText = state.texts.get(0).text;
     let pref, itemNum, div;
     if (accent === 'ul') {
-      let ulMarker = getUlMarker(lineText);
+      const ulMarker = getUlMarker(lineText);
       if (ulMarker) {
         text = ulMarker;
       } else {
@@ -595,10 +595,10 @@ const wrapList = function(accent, state) {
     }
 
     let change = state.change();
-    let keysLength = keys.length;
-    let lastNum = keysLength - 1;
+    const keysLength = keys.length;
+    const lastNum = keysLength - 1;
     for (let i = 0; i < keysLength; i++) {
-      moveSelectionToLine(change, keys[i]);
+      moveSelectionToLine(change, keys[i]); // eslint-disable-line no-use-before-define
       if (i === 0) {
         firstBefore = getTextLength(change);
       } else if (i === lastNum) {
@@ -697,22 +697,22 @@ function moveSelectionToLine(change, key) {
  */
 const unwrapList = function(accent, state) {
   if (hasMultiLineSelection(state)) {
-    let {
+    const {
       anchorKey,
       anchorOffset,
       focusKey,
       focusOffset,
       isBackward
     } = state.selection;
-    let keys = [];
+    const keys = [];
     let firstBefore, firstAfter, lastBefore, lastAfter;
     for (let i = 0; i < state.texts.size; i++) {
       keys.push(state.texts.get(i).key);
     }
 
     let change = state.change();
-    let keysLength = keys.length;
-    let lastNum = keysLength - 1;
+    const keysLength = keys.length;
+    const lastNum = keysLength - 1;
     for (let i = 0; i < keysLength; i++) {
       moveSelectionToLine(change, keys[i]);
       if (i === 0) {
@@ -727,8 +727,8 @@ const unwrapList = function(accent, state) {
         lastAfter = getTextLength(change);
       }
     }
-    let newAnchorOffset = anchorOffset - (isBackward ? lastBefore - lastAfter : firstBefore - firstAfter);
-    let newFocusOffset = focusOffset - (isBackward ? firstBefore - firstAfter : lastBefore - lastAfter);
+    const newAnchorOffset = anchorOffset - (isBackward ? lastBefore - lastAfter : firstBefore - firstAfter);
+    const newFocusOffset = focusOffset - (isBackward ? firstBefore - firstAfter : lastBefore - lastAfter);
     change.select({
       anchorKey,
       anchorOffset: newAnchorOffset < 0 ? 0 : newAnchorOffset,
@@ -818,7 +818,7 @@ export const hasAccent = (state, accent) => !!activities.has[accent] && activiti
 export const getAccents = state => {
   const accents = [];
   for (let i = 0; i < EMPHASIS_NAMES.length; i++) {
-    let accent = EMPHASIS_NAMES[i];
+    const accent = EMPHASIS_NAMES[i];
     if (hasAccent(state, accent)) {
       accents.push(accent);
     }
@@ -876,17 +876,17 @@ export const unwrapHeader = (state, level) => {
  * @returns {{leftPos: number, rightPos: number}}
  */
 export const getBracketsPos = (text, pos) => {
-  let leftPart = text.substr(0, pos);
-  let rightPart = text.substr(pos);
+  const leftPart = text.substr(0, pos);
+  const rightPart = text.substr(pos);
 
   // find brackets of the next to the cursor
-  let leftBracketPos = leftPart.lastIndexOf('(');
-  let rightBracketPos = rightPart.indexOf(')');
-  let leftSquareBracketPos = leftPart.lastIndexOf('[');
-  let rightSquareBracketPos = rightPart.indexOf(']');
+  const leftBracketPos = leftPart.lastIndexOf('(');
+  const rightBracketPos = rightPart.indexOf(')');
+  const leftSquareBracketPos = leftPart.lastIndexOf('[');
+  const rightSquareBracketPos = rightPart.indexOf(']');
 
   // checks which brackets closer to the cursor: round or square
-  let isBrackets = leftBracketPos >= leftSquareBracketPos &&
+  const isBrackets = leftBracketPos >= leftSquareBracketPos &&
     (leftBracketPos !== -1 && rightBracketPos !== -1 ||
       leftSquareBracketPos === -1 || rightSquareBracketPos === -1) ||
     leftBracketPos < leftSquareBracketPos &&
@@ -905,7 +905,7 @@ export const getBracketsPos = (text, pos) => {
 const insertText = ({ state, insertedText, insertedPos, endOffset }) => {
   const change = state.change();
   change.moveOffsetsTo(insertedPos).insertText(insertedText).
-  moveOffsetsTo(endOffset + insertedText.length).focus();
+    moveOffsetsTo(endOffset + insertedText.length).focus();
   return change.state;
 };
 
@@ -913,10 +913,10 @@ export const getPosAfterEmphasis = (state, accents) => {
   let maxPos = -1;
   const { texts, startOffset } = state;
   const accentsCount = accents.length;
-  let characters = texts.get(0).charsData.characters;
+  const characters = texts.get(0).charsData.characters;
   for (let i = 0; i < accentsCount; i++) {
-    let accent = accents[i];
-    let currLeftPos = getLeftEmphEdge(accent, characters, startOffset) + EMPHASIS[accent].length;
+    const accent = accents[i];
+    const currLeftPos = getLeftEmphEdge(accent, characters, startOffset) + EMPHASIS[accent].length;
     if (maxPos < currLeftPos) {
       maxPos = currLeftPos;
     }
@@ -926,21 +926,21 @@ export const getPosAfterEmphasis = (state, accents) => {
 
 export const addSpecialCharacter = (specialCharacter, state) => {
   const { startBlock, startOffset, endOffset } = state;
-  let text = startBlock.text;
+  const text = startBlock.text;
   let insertedPos = -1;
   let insertedText = specialCharacter;
 
   // get right position of the left accent closer to the cursor
   const accents = getAccents(state);
   if (accents.length > 0) { // this position has some accent
-    let currLeftPos = getPosAfterEmphasis(state, accents);
+    const currLeftPos = getPosAfterEmphasis(state, accents);
     if (insertedPos < currLeftPos) {
       insertedPos = currLeftPos;
     }
   }
 
   // get the position of the left open bracket closer to the cursor
-  let { leftPos, rightPos } = getBracketsPos(text, startOffset);
+  const { leftPos, rightPos } = getBracketsPos(text, startOffset);
   // this position is between brackets
   if (leftPos !== false && rightPos !== false && leftPos > insertedPos) {
     insertedPos = leftPos;
@@ -949,7 +949,7 @@ export const addSpecialCharacter = (specialCharacter, state) => {
   // found left emphasis or left bracket
   if (insertedPos > -1) {
     // get the position of the left space closer to the cursor
-    let spacePos = text.substring(insertedPos, startOffset).lastIndexOf(' ');
+    const spacePos = text.substring(insertedPos, startOffset).lastIndexOf(' ');
     if (spacePos === -1) { // space not found
       return insertText({ state, insertedText, insertedPos, endOffset });
     }
@@ -983,7 +983,7 @@ export const copySelection = state => {
 };
 
 export const setSelectionToState = (state, selectBackup, isFocused = true) => {
-  let change = state.change();
+  const change = state.change();
   change.select({
     ...selectBackup,
     isFocused

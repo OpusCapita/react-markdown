@@ -118,8 +118,8 @@ class PlainMarkdownInput extends React.Component {
    */
   handleNewValue = value => {
     let editorState = Plain.deserialize(value);
-    let nodes = editorState.document.nodes.asMutable();
-    let nodesSize = nodes.size;
+    const nodes = editorState.document.nodes.asMutable();
+    const nodesSize = nodes.size;
     for (let i = 0; i < nodesSize; i++) {
       this.setDataToNode(nodes, i);
     }
@@ -144,13 +144,13 @@ class PlainMarkdownInput extends React.Component {
   };
 
   handleMouseUp = () => {
-    let change = this.state.editorState.change();
+    const change = this.state.editorState.change();
     change.focus();
     this.setState({ editorState: change.state });
   };
 
   setNodesToState(editorState, nodes) {
-    let editorStateMutable = editorState.asMutable();
+    const editorStateMutable = editorState.asMutable();
     editorStateMutable.document = editorStateMutable.document.asMutable();
     editorStateMutable.document.nodes = nodes.asImmutable();
     editorStateMutable.document = editorStateMutable.document.asImmutable();
@@ -161,10 +161,10 @@ class PlainMarkdownInput extends React.Component {
     // XXX Slate "Editor.props.onChange" behavior changed
     // https://github.com/ianstormtaylor/slate/blob/master/packages/slate/Changelog.md#0220--september-5-2017
     let editorState = obj.state || obj;
-    let selection = copySelection(editorState);
+    const selection = copySelection(editorState);
     let numBlock = -1;
-    let key = editorState.blocks.get(0).key;
-    let nodesSize = editorState.document.nodes.size;
+    const key = editorState.blocks.get(0).key;
+    const nodesSize = editorState.document.nodes.size;
     for (let i = 0; i < nodesSize; i++) {
       if (key === editorState.document.nodes.get(i).key) {
         numBlock = i;
@@ -173,8 +173,8 @@ class PlainMarkdownInput extends React.Component {
     }
 
     if (numBlock !== -1) {
-      let text = editorState.texts.get(0).text;
-      let nodes = editorState.document.nodes.asMutable();
+      const text = editorState.texts.get(0).text;
+      const nodes = editorState.document.nodes.asMutable();
       this.setDataToNode(nodes, numBlock, text);
       editorState = this.setNodesToState(editorState, nodes);
     }
@@ -194,14 +194,14 @@ class PlainMarkdownInput extends React.Component {
     setTimeout(() => {
       autoScrollToTop();
       if (isSetFocus) {
-        let editorState = setSelectionToState(this.state.editorState, selection);
+        const editorState = setSelectionToState(this.state.editorState, selection);
         this.setState({ editorState });
       }
     }, 0);
   };
 
   handleFullScreen = () => {
-    let fullScreen = !this.state.fullScreen;
+    const fullScreen = !this.state.fullScreen;
 
     document.body.style.overflow = fullScreen ? 'hidden' : this.initialBodyOverflowStyle;
 
@@ -215,7 +215,7 @@ class PlainMarkdownInput extends React.Component {
   );
 
   handleEnterFromListDown(change, accent) { // eslint-disable-line
-    let lineText = change.state.texts.get(0).text;
+    const lineText = change.state.texts.get(0).text;
     let text, listMarker, pref, itemNum, div;
     if (accent === 'ul') {
       listMarker = getUlMarker(lineText);
@@ -244,8 +244,8 @@ class PlainMarkdownInput extends React.Component {
     }
 
     event.preventDefault();
-    let pasteText = window.clipboardData.getData("Text");
-    let txtArr = pasteText.split('\n');
+    const pasteText = window.clipboardData.getData("Text");
+    const txtArr = pasteText.split('\n');
     if (txtArr.length > 1) { // insert multiline text
       for (let i = 0; i < txtArr.length; i++) {
         change.insertText(txtArr[i]);
@@ -273,7 +273,7 @@ class PlainMarkdownInput extends React.Component {
     }
 
     if (data.key === 'enter' && !this.isAutocompleteShow) {
-      let state = change.state;
+      const state = change.state;
       if (hasAccent(state, 'ul')) {
         return this.handleEnterFromListDown(change, 'ul');
       } else if (hasAccent(state, 'ol')) {
@@ -337,7 +337,7 @@ class PlainMarkdownInput extends React.Component {
     join('\n')
 
   insertAtCursorPosition = insertedText => {
-    let change = this.state.editorState.change();
+    const change = this.state.editorState.change();
     change.delete().insertText(insertedText).focus();
     return this.handleChange(change.state, true);
   }
@@ -465,16 +465,16 @@ class PlainMarkdownInput extends React.Component {
     const disabled = readOnly || hasMultiLineSelection(editorState);
 
     // Create buttons for toolbar
-    let emphasisButtons = this.getAccentButtons({
+    const emphasisButtons = this.getAccentButtons({
       editorValue: editorState, disabled, locale, accents: ['bold', 'italic', 'strikethrough']
     });
-    let linkButton = this.getLinkButton({ disabled, locale });
-    let headerButtons = this.getHeaderButtons({ disabled, locale });
-    let listButtons = this.getAccentButtons({
+    const linkButton = this.getLinkButton({ disabled, locale });
+    const headerButtons = this.getHeaderButtons({ disabled, locale });
+    const listButtons = this.getAccentButtons({
       editorValue: editorState, disabled: readOnly, locale, accents: ['ol', 'ul']
     });
-    let additionalButtons = this.getAdditionalButtons(readOnly);
-    let fullScreenButton = this.getFullScreenButton({ readOnly, locale, fullScreen });
+    const additionalButtons = this.getAdditionalButtons(readOnly);
+    const fullScreenButton = this.getFullScreenButton({ readOnly, locale, fullScreen });
 
     return (
       <div

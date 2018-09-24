@@ -21,17 +21,17 @@ describe('plain editor transform', () => {
   describe('Has Lists', () => {
     it('Unordered', () => {
       const nodeText = '* List item 1';
-      let component = (<PlainMarkdownInput
+      const component = (<PlainMarkdownInput
         value={nodeText}
         fullScreen={true}
         readOnly={true}
       />);
 
-      let wrapper = mount(component);
+      const wrapper = mount(component);
       let editorState = wrapper.state('editorState');
-      let change = editorState.change();
+      const change = editorState.change();
       change.moveOffsetsTo(0, nodeText.length);
-      let newState = change.state;
+      const newState = change.state;
 
       expect(hasAccent(newState, 'ul')).to.equal(true);
       expect(hasAccent(newState, 'ol')).to.equal(false);
@@ -77,17 +77,17 @@ describe('plain editor transform', () => {
 
     it('Unordered Multiline Selection', () => {
       const nodeText = '* List item 1\n* List item 2';
-      let component = (<PlainMarkdownInput
+      const component = (<PlainMarkdownInput
         value={nodeText}
         fullScreen={true}
         readOnly={true}
       />);
 
-      let wrapper = mount(component);
-      let editorState = wrapper.state('editorState');
-      let change = editorState.change();
+      const wrapper = mount(component);
+      const editorState = wrapper.state('editorState');
+      const change = editorState.change();
       change.selectAll();
-      let newState = change.state;
+      const newState = change.state;
 
       expect(hasAccent(newState, 'ul')).to.equal(true);
       expect(hasAccent(newState, 'ol')).to.equal(false);
@@ -95,17 +95,17 @@ describe('plain editor transform', () => {
 
     it('Ordered', () => {
       const nodeText = '1. List item 1';
-      let component = (<PlainMarkdownInput
+      const component = (<PlainMarkdownInput
         value={nodeText}
         fullScreen={true}
         readOnly={true}
       />);
 
-      let wrapper = mount(component);
+      const wrapper = mount(component);
       let editorState = wrapper.state('editorState');
-      let change = editorState.change();
+      const change = editorState.change();
       change.moveOffsetsTo(0, nodeText.length);
-      let newState = change.state;
+      const newState = change.state;
 
       expect(hasAccent(newState, 'ul')).to.equal(false);
       expect(hasAccent(newState, 'ol')).to.equal(true);
@@ -139,17 +139,17 @@ describe('plain editor transform', () => {
 
     it('Ordered Multiline Selection', () => {
       const nodeText = '1. List item 1\n2. List item 2';
-      let component = (<PlainMarkdownInput
+      const component = (<PlainMarkdownInput
         value={nodeText}
         fullScreen={true}
         readOnly={true}
       />);
 
-      let wrapper = mount(component);
-      let editorState = wrapper.state('editorState');
-      let change = editorState.change();
+      const wrapper = mount(component);
+      const editorState = wrapper.state('editorState');
+      const change = editorState.change();
       change.selectAll();
-      let newState = change.state;
+      const newState = change.state;
 
       expect(hasAccent(newState, 'ul')).to.equal(false);
       expect(hasAccent(newState, 'ol')).to.equal(true);
@@ -159,17 +159,17 @@ describe('plain editor transform', () => {
   describe('Has Headers', () => {
     it('# Header1', () => {
       const nodeText = '# Header1';
-      let component = (<PlainMarkdownInput
+      const component = (<PlainMarkdownInput
         value={nodeText}
         fullScreen={true}
         readOnly={true}
       />);
 
-      let wrapper = shallow(component);
-      let editorState = wrapper.state('editorState');
-      let change = editorState.change();
+      const wrapper = shallow(component);
+      const editorState = wrapper.state('editorState');
+      const change = editorState.change();
       change.moveOffsetsTo(0, nodeText.length);
-      let newState = change.state;
+      const newState = change.state;
 
       expect(hasAccent(newState, 'ul')).to.equal(false);
       expect(hasAccent(newState, 'ol')).to.equal(false);
@@ -183,17 +183,17 @@ describe('plain editor transform', () => {
 
     it('## Header2', () => {
       const nodeText = '## Header2';
-      let component = (<PlainMarkdownInput
+      const component = (<PlainMarkdownInput
         value={nodeText}
         fullScreen={true}
         readOnly={true}
       />);
 
-      let wrapper = shallow(component);
-      let editorState = wrapper.state('editorState');
-      let change = editorState.change();
+      const wrapper = shallow(component);
+      const editorState = wrapper.state('editorState');
+      const change = editorState.change();
       change.moveOffsetsTo(0, nodeText.length);
-      let newState = change.state;
+      const newState = change.state;
 
       expect(hasAccent(newState, 'ul')).to.equal(false);
       expect(hasAccent(newState, 'ol')).to.equal(false);
@@ -207,17 +207,17 @@ describe('plain editor transform', () => {
 
     it('### Header3', () => {
       const nodeText = '### Header3';
-      let component = (<PlainMarkdownInput
+      const component = (<PlainMarkdownInput
         value={nodeText}
         fullScreen={true}
         readOnly={true}
       />);
 
-      let wrapper = shallow(component);
-      let editorState = wrapper.state('editorState');
-      let change = editorState.change();
+      const wrapper = shallow(component);
+      const editorState = wrapper.state('editorState');
+      const change = editorState.change();
       change.moveOffsetsTo(0, nodeText.length);
-      let newState = change.state;
+      const newState = change.state;
 
       expect(hasAccent(newState, 'ul')).to.equal(false);
       expect(hasAccent(newState, 'ol')).to.equal(false);
@@ -231,17 +231,17 @@ describe('plain editor transform', () => {
 
     it('#### Header4', () => {
       const nodeText = '#### Header4';
-      let component = (<PlainMarkdownInput
+      const component = (<PlainMarkdownInput
         value={nodeText}
         fullScreen={true}
         readOnly={true}
       />);
 
-      let wrapper = shallow(component);
-      let editorState = wrapper.state('editorState');
-      let change = editorState.change();
+      const wrapper = shallow(component);
+      const editorState = wrapper.state('editorState');
+      const change = editorState.change();
       change.moveOffsetsTo(0, nodeText.length);
-      let newState = change.state;
+      const newState = change.state;
 
       expect(hasAccent(newState, 'ul')).to.equal(false);
       expect(hasAccent(newState, 'ol')).to.equal(false);
@@ -255,17 +255,17 @@ describe('plain editor transform', () => {
 
     it('##### Header5', () => {
       const nodeText = '##### Header5';
-      let component = (<PlainMarkdownInput
+      const component = (<PlainMarkdownInput
         value={nodeText}
         fullScreen={true}
         readOnly={true}
       />);
 
-      let wrapper = shallow(component);
-      let editorState = wrapper.state('editorState');
-      let change = editorState.change();
+      const wrapper = shallow(component);
+      const editorState = wrapper.state('editorState');
+      const change = editorState.change();
       change.moveOffsetsTo(0, nodeText.length);
-      let newState = change.state;
+      const newState = change.state;
 
       expect(hasAccent(newState, 'ul')).to.equal(false);
       expect(hasAccent(newState, 'ol')).to.equal(false);
@@ -279,17 +279,17 @@ describe('plain editor transform', () => {
 
     it('###### Header6', () => {
       const nodeText = '###### Header6';
-      let component = (<PlainMarkdownInput
+      const component = (<PlainMarkdownInput
         value={nodeText}
         fullScreen={true}
         readOnly={true}
       />);
 
-      let wrapper = shallow(component);
-      let editorState = wrapper.state('editorState');
-      let change = editorState.change();
+      const wrapper = shallow(component);
+      const editorState = wrapper.state('editorState');
+      const change = editorState.change();
       change.moveOffsetsTo(0, nodeText.length);
-      let newState = change.state;
+      const newState = change.state;
 
       expect(hasAccent(newState, 'ul')).to.equal(false);
       expect(hasAccent(newState, 'ol')).to.equal(false);
@@ -305,16 +305,16 @@ describe('plain editor transform', () => {
   describe('Has accent', () => {
     it('just a text', () => {
       const nodeText = 'just a text';
-      let component = (<PlainMarkdownInput
+      const component = (<PlainMarkdownInput
         value={nodeText}
         fullScreen={true}
         readOnly={true}
       />);
 
-      let wrapper = shallow(component);
-      let editorState = wrapper.state('editorState');
+      const wrapper = shallow(component);
+      const editorState = wrapper.state('editorState');
 
-      let change = editorState.change();
+      const change = editorState.change();
       change.moveOffsetsTo(1, nodeText.length - 1);
       let newState = change.state;
       expect(hasAccent(newState, 'italic')).to.equal(false);
@@ -365,15 +365,15 @@ describe('plain editor transform', () => {
 
     it('_italic_', () => {
       const nodeText = '_italic_';
-      let component = (<PlainMarkdownInput
+      const component = (<PlainMarkdownInput
         value={nodeText}
         fullScreen={true}
         readOnly={true}
       />);
 
-      let wrapper = mount(component);
-      let editorState = wrapper.state('editorState');
-      let change = editorState.change();
+      const wrapper = mount(component);
+      const editorState = wrapper.state('editorState');
+      const change = editorState.change();
       change.moveOffsetsTo(1, nodeText.length - 1);
       let newState = change.state;
       expect(hasAccent(newState, 'italic')).to.equal(true);
@@ -393,15 +393,15 @@ describe('plain editor transform', () => {
 
     it('**bold**', () => {
       const nodeText = '**bold**';
-      let component = (<PlainMarkdownInput
+      const component = (<PlainMarkdownInput
         value={nodeText}
         fullScreen={true}
         readOnly={true}
       />);
 
-      let wrapper = mount(component);
-      let editorState = wrapper.state('editorState');
-      let change = editorState.change();
+      const wrapper = mount(component);
+      const editorState = wrapper.state('editorState');
+      const change = editorState.change();
       change.moveOffsetsTo(2, nodeText.length - 2);
       let newState = change.state;
       expect(hasAccent(newState, 'italic')).to.equal(false);
@@ -421,15 +421,15 @@ describe('plain editor transform', () => {
 
     it('~~strikethrough~~', () => {
       const nodeText = '~~strikethrough~~';
-      let component = (<PlainMarkdownInput
+      const component = (<PlainMarkdownInput
         value={nodeText}
         fullScreen={true}
         readOnly={true}
       />);
 
-      let wrapper = mount(component);
-      let editorState = wrapper.state('editorState');
-      let change = editorState.change();
+      const wrapper = mount(component);
+      const editorState = wrapper.state('editorState');
+      const change = editorState.change();
       change.moveOffsetsTo(2, nodeText.length - 2);
       let newState = change.state;
       expect(hasAccent(newState, 'italic')).to.equal(false);
@@ -449,15 +449,15 @@ describe('plain editor transform', () => {
 
     it('_**bold italic**_', () => {
       const nodeText = '_**bold italic**_';
-      let component = (<PlainMarkdownInput
+      const component = (<PlainMarkdownInput
         value={nodeText}
         fullScreen={true}
         readOnly={true}
       />);
 
-      let wrapper = mount(component);
-      let editorState = wrapper.state('editorState');
-      let change = editorState.change();
+      const wrapper = mount(component);
+      const editorState = wrapper.state('editorState');
+      const change = editorState.change();
       change.moveOffsetsTo(1, nodeText.length - 1);
       let newState = change.state;
       expect(hasAccent(newState, 'italic')).to.equal(true);
@@ -485,15 +485,15 @@ describe('plain editor transform', () => {
 
     it('**_bold italic_**', () => {
       const nodeText = '**_bold italic_**';
-      let component = (<PlainMarkdownInput
+      const component = (<PlainMarkdownInput
         value={nodeText}
         fullScreen={true}
         readOnly={true}
       />);
 
-      let wrapper = mount(component);
-      let editorState = wrapper.state('editorState');
-      let change = editorState.change();
+      const wrapper = mount(component);
+      const editorState = wrapper.state('editorState');
+      const change = editorState.change();
       change.moveOffsetsTo(2, nodeText.length - 2);
       let newState = change.state;
       expect(hasAccent(newState, 'italic')).to.equal(true);
@@ -521,15 +521,15 @@ describe('plain editor transform', () => {
 
     it('_~~strikethrough italic~~_', () => {
       const nodeText = '_~~strikethrough italic~~_';
-      let component = (<PlainMarkdownInput
+      const component = (<PlainMarkdownInput
         value={nodeText}
         fullScreen={true}
         readOnly={true}
       />);
 
-      let wrapper = mount(component);
-      let editorState = wrapper.state('editorState');
-      let change = editorState.change();
+      const wrapper = mount(component);
+      const editorState = wrapper.state('editorState');
+      const change = editorState.change();
       change.moveOffsetsTo(1, nodeText.length - 1);
       let newState = change.state;
       expect(hasAccent(newState, 'italic')).to.equal(true);
@@ -557,15 +557,15 @@ describe('plain editor transform', () => {
 
     it('~~_strikethrough italic_~~', () => {
       const nodeText = '~~_strikethrough italic_~~';
-      let component = (<PlainMarkdownInput
+      const component = (<PlainMarkdownInput
         value={nodeText}
         fullScreen={true}
         readOnly={true}
       />);
 
-      let wrapper = mount(component);
-      let editorState = wrapper.state('editorState');
-      let change = editorState.change();
+      const wrapper = mount(component);
+      const editorState = wrapper.state('editorState');
+      const change = editorState.change();
       change.moveOffsetsTo(2, nodeText.length - 2);
       let newState = change.state;
       expect(hasAccent(newState, 'italic')).to.equal(true);
@@ -593,15 +593,15 @@ describe('plain editor transform', () => {
 
     it('**~~strikethrough bold~~**', () => {
       const nodeText = '**~~strikethrough bold~~**';
-      let component = (<PlainMarkdownInput
+      const component = (<PlainMarkdownInput
         value={nodeText}
         fullScreen={true}
         readOnly={true}
       />);
 
-      let wrapper = mount(component);
-      let editorState = wrapper.state('editorState');
-      let change = editorState.change();
+      const wrapper = mount(component);
+      const editorState = wrapper.state('editorState');
+      const change = editorState.change();
       change.moveOffsetsTo(2, nodeText.length - 2);
       let newState = change.state;
       expect(hasAccent(newState, 'italic')).to.equal(false);
@@ -629,15 +629,15 @@ describe('plain editor transform', () => {
 
     it('~~**strikethrough bold**~~', () => {
       const nodeText = '~~**strikethrough bold**~~';
-      let component = (<PlainMarkdownInput
+      const component = (<PlainMarkdownInput
         value={nodeText}
         fullScreen={true}
         readOnly={true}
       />);
 
-      let wrapper = mount(component);
-      let editorState = wrapper.state('editorState');
-      let change = editorState.change();
+      const wrapper = mount(component);
+      const editorState = wrapper.state('editorState');
+      const change = editorState.change();
       change.moveOffsetsTo(2, nodeText.length - 2);
       let newState = change.state;
       expect(hasAccent(newState, 'italic')).to.equal(false);
@@ -665,15 +665,15 @@ describe('plain editor transform', () => {
 
     it('_~~**italic strikethrough bold**~~_', () => {
       const nodeText = '_~~**italic strikethrough bold**~~_';
-      let component = (<PlainMarkdownInput
+      const component = (<PlainMarkdownInput
         value={nodeText}
         fullScreen={true}
         readOnly={true}
       />);
 
-      let wrapper = mount(component);
-      let editorState = wrapper.state('editorState');
-      let change = editorState.change();
+      const wrapper = mount(component);
+      const editorState = wrapper.state('editorState');
+      const change = editorState.change();
       change.moveOffsetsTo(1, nodeText.length - 1);
       let newState = change.state;
       expect(hasAccent(newState, 'italic')).to.equal(true);
@@ -709,15 +709,15 @@ describe('plain editor transform', () => {
   describe('nonexistent accents or levels', () => {
     it('hasAccent', () => {
       const nodeText = '_italic text_';
-      let component = (<PlainMarkdownInput
+      const component = (<PlainMarkdownInput
         value={nodeText}
         fullScreen={true}
         readOnly={true}
       />);
 
-      let wrapper = mount(component);
-      let editorState = wrapper.state('editorState');
-      let change = editorState.change();
+      const wrapper = mount(component);
+      const editorState = wrapper.state('editorState');
+      const change = editorState.change();
       change.moveOffsetsTo(1, nodeText.length - 1);
       let result = hasAccent(change.state, 'italic');
       expect(result).to.equal(true);
@@ -727,15 +727,15 @@ describe('plain editor transform', () => {
 
     it('hasHeader', () => {
       const nodeText = '## Header';
-      let component = (<PlainMarkdownInput
+      const component = (<PlainMarkdownInput
         value={nodeText}
         fullScreen={true}
         readOnly={true}
       />);
 
-      let wrapper = shallow(component);
-      let editorState = wrapper.state('editorState');
-      let change = editorState.change();
+      const wrapper = shallow(component);
+      const editorState = wrapper.state('editorState');
+      const change = editorState.change();
       change.moveOffsetsTo(1, nodeText.length - 1);
       let result = hasHeader(change.state, 2);
       expect(result).to.equal(true);
@@ -745,65 +745,65 @@ describe('plain editor transform', () => {
 
     it('wrapAccent', () => {
       const nodeText = 'simple text';
-      let component = (<PlainMarkdownInput
+      const component = (<PlainMarkdownInput
         value={nodeText}
         fullScreen={true}
         readOnly={true}
       />);
 
-      let wrapper = shallow(component);
-      let editorState = wrapper.state('editorState');
-      let change = editorState.change();
+      const wrapper = shallow(component);
+      const editorState = wrapper.state('editorState');
+      const change = editorState.change();
       change.moveOffsetsTo(0, nodeText.length);
-      let newState = wrapAccent(change.state, 'bold_new');
+      const newState = wrapAccent(change.state, 'bold_new');
       expect(Plain.serialize(newState)).to.equal(nodeText);
     });
 
     it('wrapHeader', () => {
       const nodeText = 'simple text';
-      let component = (<PlainMarkdownInput
+      const component = (<PlainMarkdownInput
         value={nodeText}
         fullScreen={true}
         readOnly={true}
       />);
 
-      let wrapper = shallow(component);
-      let editorState = wrapper.state('editorState');
-      let change = editorState.change();
+      const wrapper = shallow(component);
+      const editorState = wrapper.state('editorState');
+      const change = editorState.change();
       change.moveOffsetsTo(0, nodeText.length);
-      let newState = wrapHeader(change.state, 10);
+      const newState = wrapHeader(change.state, 10);
       expect(Plain.serialize(newState)).to.equal(nodeText);
     });
 
     it('unwrapAccent', () => {
       const nodeText = '**simple text**';
-      let component = (<PlainMarkdownInput
+      const component = (<PlainMarkdownInput
         value={nodeText}
         fullScreen={true}
         readOnly={true}
       />);
 
-      let wrapper = shallow(component);
-      let editorState = wrapper.state('editorState');
-      let change = editorState.change();
+      const wrapper = shallow(component);
+      const editorState = wrapper.state('editorState');
+      const change = editorState.change();
       change.moveOffsetsTo(2, nodeText.length - 1);
-      let newState = unwrapAccent(change.state, 'bold_new');
+      const newState = unwrapAccent(change.state, 'bold_new');
       expect(Plain.serialize(newState)).to.equal(nodeText);
     });
 
     it('unwrapHeader', () => {
       const nodeText = '# Header 1';
-      let component = (<PlainMarkdownInput
+      const component = (<PlainMarkdownInput
         value={nodeText}
         fullScreen={true}
         readOnly={true}
       />);
 
-      let wrapper = shallow(component);
-      let editorState = wrapper.state('editorState');
-      let change = editorState.change();
+      const wrapper = shallow(component);
+      const editorState = wrapper.state('editorState');
+      const change = editorState.change();
       change.moveOffsetsTo(0, nodeText.length);
-      let newState = unwrapHeader(change.state, 10);
+      const newState = unwrapHeader(change.state, 10);
       expect(Plain.serialize(newState)).to.equal(nodeText);
     });
   });
@@ -811,15 +811,15 @@ describe('plain editor transform', () => {
   describe('multiline selection', () => {
     it('Has multiline selection', () => {
       const nodeText = 'some **text**\nnext line';
-      let component = (<PlainMarkdownInput
+      const component = (<PlainMarkdownInput
         value={nodeText}
         fullScreen={true}
         readOnly={true}
       />);
 
-      let wrapper = shallow(component);
-      let editorState = wrapper.state('editorState');
-      let change = editorState.change();
+      const wrapper = shallow(component);
+      const editorState = wrapper.state('editorState');
+      const change = editorState.change();
       change.selectAll();
       expect(hasMultiLineSelection(change.state)).to.equal(true);
 
@@ -832,15 +832,15 @@ describe('plain editor transform', () => {
 
     it('Has not multiline selection', () => {
       const nodeText = 'some **text**\nnext line';
-      let component = (<PlainMarkdownInput
+      const component = (<PlainMarkdownInput
         value={nodeText}
         fullScreen={true}
         readOnly={true}
       />);
 
-      let wrapper = shallow(component);
-      let editorState = wrapper.state('editorState');
-      let change = editorState.change();
+      const wrapper = shallow(component);
+      const editorState = wrapper.state('editorState');
+      const change = editorState.change();
       change.moveOffsetsTo('some'.length, 'some **text**'.length);
       expect(hasMultiLineSelection(change.state)).to.equal(false);
 
@@ -853,13 +853,13 @@ describe('plain editor transform', () => {
     describe('Wrap bold', () => {
       it('#1 no selection', () => {
         const nodeText = 'bold text';
-        let component = (<PlainMarkdownInput
+        const component = (<PlainMarkdownInput
           value={nodeText}
           fullScreen={true}
           readOnly={true}
         />);
 
-        let wrapper = mount(component);
+        const wrapper = mount(component);
         let editorState = wrapper.state('editorState');
         let change = editorState.change();
         change.moveOffsetsTo(5, 5);
@@ -1080,15 +1080,15 @@ new line`);
 
       it('#5 both edges beyond markers', () => {
         let nodeText = 'text __bold__ text';
-        let component = (<PlainMarkdownInput
+        const component = (<PlainMarkdownInput
           value={nodeText}
           fullScreen={true}
           readOnly={true}
         />);
 
-        let wrapper = mount(component);
+        const wrapper = mount(component);
         let editorState = wrapper.state('editorState');
-        let change = editorState.change();
+        const change = editorState.change();
         change.moveOffsetsTo(0, nodeText.length);
         let newState = wrapAccent(change.state, 'bold');
         expect(Plain.serialize(newState)).to.equal('**text bold text**');
@@ -1105,13 +1105,13 @@ new line`);
     describe('Wrap italic', () => {
       it('#1 no selection', () => {
         const nodeText = 'italic text';
-        let component = (<PlainMarkdownInput
+        const component = (<PlainMarkdownInput
           value={nodeText}
           fullScreen={true}
           readOnly={true}
         />);
 
-        let wrapper = mount(component);
+        const wrapper = mount(component);
         let editorState = wrapper.state('editorState');
         let change = editorState.change();
         change.moveOffsetsTo('italic '.length, 'italic '.length);
@@ -1311,15 +1311,15 @@ new line`);
 
       it('#5 both edges beyond markers', () => {
         let nodeText = 'text _italic_ text';
-        let component = (<PlainMarkdownInput
+        const component = (<PlainMarkdownInput
           value={nodeText}
           fullScreen={true}
           readOnly={true}
         />);
 
-        let wrapper = mount(component);
+        const wrapper = mount(component);
         let editorState = wrapper.state('editorState');
-        let change = editorState.change();
+        const change = editorState.change();
         change.moveOffsetsTo(0, nodeText.length);
         let newState = wrapAccent(change.state, 'italic');
         expect(Plain.serialize(newState)).to.equal('_text italic text_');
@@ -1336,13 +1336,13 @@ new line`);
     describe('Wrap strikethrough', () => {
       it('#1 no selection', () => {
         const nodeText = 'strikethrough text';
-        let component = (<PlainMarkdownInput
+        const component = (<PlainMarkdownInput
           value={nodeText}
           fullScreen={true}
           readOnly={true}
         />);
 
-        let wrapper = mount(component);
+        const wrapper = mount(component);
         let editorState = wrapper.state('editorState');
         let change = editorState.change();
         change.moveOffsetsTo('strikethrough '.length, 'strikethrough '.length);
@@ -1387,20 +1387,20 @@ new line`);
         change.moveOffsetsTo(0, nodeText.length);
         newState = wrapAccent(change.state, 'strikethrough');
         expect(Plain.serialize(newState)).
-        to.equal('~~strikethrough text strikethrough strikethrough~~');
+          to.equal('~~strikethrough text strikethrough strikethrough~~');
       });
 
       it('#3 left edge on emphasis, right edge beyond markers', () => {
-        let nodeText = '~~strikethrough~~ text';
-        let component = (<PlainMarkdownInput
+        const nodeText = '~~strikethrough~~ text';
+        const component = (<PlainMarkdownInput
           value={nodeText}
           fullScreen={true}
           readOnly={true}
         />);
 
-        let wrapper = mount(component);
-        let editorState = wrapper.state('editorState');
-        let change = editorState.change();
+        const wrapper = mount(component);
+        const editorState = wrapper.state('editorState');
+        const change = editorState.change();
         change.moveOffsetsTo(0, nodeText.length);
         let newState = wrapAccent(change.state, 'strikethrough');
         expect(Plain.serialize(newState)).to.equal('~~strikethrough text~~');
@@ -1411,16 +1411,16 @@ new line`);
       });
 
       it('#4 right edge on emphasis, left edge beyond markers', () => {
-        let nodeText = 'text ~~strikethrough~~';
-        let component = (<PlainMarkdownInput
+        const nodeText = 'text ~~strikethrough~~';
+        const component = (<PlainMarkdownInput
           value={nodeText}
           fullScreen={true}
           readOnly={true}
         />);
 
-        let wrapper = mount(component);
-        let editorState = wrapper.state('editorState');
-        let change = editorState.change();
+        const wrapper = mount(component);
+        const editorState = wrapper.state('editorState');
+        const change = editorState.change();
         change.moveOffsetsTo(0, nodeText.length);
         let newState = wrapAccent(change.state, 'strikethrough');
         expect(Plain.serialize(newState)).to.equal('~~text strikethrough~~');
@@ -1431,18 +1431,18 @@ new line`);
       });
 
       it('#5 both edges beyond markers', () => {
-        let nodeText = 'text ~~strikethrough~~ text';
-        let component = (<PlainMarkdownInput
+        const nodeText = 'text ~~strikethrough~~ text';
+        const component = (<PlainMarkdownInput
           value={nodeText}
           fullScreen={true}
           readOnly={true}
         />);
 
-        let wrapper = mount(component);
-        let editorState = wrapper.state('editorState');
-        let change = editorState.change();
+        const wrapper = mount(component);
+        const editorState = wrapper.state('editorState');
+        const change = editorState.change();
         change.moveOffsetsTo(0, nodeText.length);
-        let newState = wrapAccent(change.state, 'strikethrough');
+        const newState = wrapAccent(change.state, 'strikethrough');
         expect(Plain.serialize(newState)).to.equal('~~text strikethrough text~~');
       });
     });
@@ -1494,16 +1494,16 @@ new line`);
       });
 
       it('#2 the cursor on a marker, do nothing', () => {
-        let nodeText = '**bold text**';
-        let component = (<PlainMarkdownInput
+        const nodeText = '**bold text**';
+        const component = (<PlainMarkdownInput
           value={nodeText}
           fullScreen={true}
           readOnly={true}
         />);
 
-        let wrapper = mount(component);
-        let editorState = wrapper.state('editorState');
-        let change = editorState.change();
+        const wrapper = mount(component);
+        const editorState = wrapper.state('editorState');
+        const change = editorState.change();
 
         change.moveOffsetsTo('*'.length, '*'.length);
         let newState = unwrapAccent(change.state, 'bold');
@@ -1892,16 +1892,16 @@ new line`);
       });
 
       it('#2 the cursor on a marker, do nothing', () => {
-        let nodeText = '~~strikethrough text~~';
-        let component = (<PlainMarkdownInput
+        const nodeText = '~~strikethrough text~~';
+        const component = (<PlainMarkdownInput
           value={nodeText}
           fullScreen={true}
           readOnly={true}
         />);
 
-        let wrapper = mount(component);
-        let editorState = wrapper.state('editorState');
-        let change = editorState.change();
+        const wrapper = mount(component);
+        const editorState = wrapper.state('editorState');
+        const change = editorState.change();
 
         change.moveOffsetsTo('~'.length, '~'.length);
         let newState = unwrapAccent(change.state, 'strikethrough');
@@ -1921,16 +1921,16 @@ new line`);
       });
 
       it('#3 the between markers, add markers to the place of the cursor', () => {
-        let nodeText = '~~strikethrough text~~';
-        let component = (<PlainMarkdownInput
+        const nodeText = '~~strikethrough text~~';
+        const component = (<PlainMarkdownInput
           value={nodeText}
           fullScreen={true}
           readOnly={true}
         />);
 
-        let wrapper = mount(component);
-        let editorState = wrapper.state('editorState');
-        let change = editorState.change();
+        const wrapper = mount(component);
+        const editorState = wrapper.state('editorState');
+        const change = editorState.change();
 
         change.moveOffsetsTo('~~s'.length, '~~s'.length);
         let newState = unwrapAccent(change.state, 'strikethrough');
@@ -1946,16 +1946,16 @@ new line`);
       });
 
       it('#4 - #5 the selection on the left or right edge, do nothing', () => {
-        let nodeText = '~~strikethrough text~~';
-        let component = (<PlainMarkdownInput
+        const nodeText = '~~strikethrough text~~';
+        const component = (<PlainMarkdownInput
           value={nodeText}
           fullScreen={true}
           readOnly={true}
         />);
 
-        let wrapper = mount(component);
-        let editorState = wrapper.state('editorState');
-        let change = editorState.change();
+        const wrapper = mount(component);
+        const editorState = wrapper.state('editorState');
+        const change = editorState.change();
 
         change.moveOffsetsTo(0, '~'.length);
         let newState = unwrapAccent(change.state, 'strikethrough');
@@ -1983,16 +1983,16 @@ new line`);
       });
 
       it('#6 the selection between markers, wrap selection in additional markers', () => {
-        let nodeText = '~~strikethrough text~~';
-        let component = (<PlainMarkdownInput
+        const nodeText = '~~strikethrough text~~';
+        const component = (<PlainMarkdownInput
           value={nodeText}
           fullScreen={true}
           readOnly={true}
         />);
 
-        let wrapper = mount(component);
-        let editorState = wrapper.state('editorState');
-        let change = editorState.change();
+        const wrapper = mount(component);
+        const editorState = wrapper.state('editorState');
+        const change = editorState.change();
 
         change.moveOffsetsTo('~~s'.length, '~~strikethrough '.length);
         let newState = unwrapAccent(change.state, 'strikethrough');
@@ -2008,16 +2008,16 @@ new line`);
       });
 
       it('#7 the selection on markers, delete markers', () => {
-        let nodeText = '~~strikethrough text~~';
-        let component = (<PlainMarkdownInput
+        const nodeText = '~~strikethrough text~~';
+        const component = (<PlainMarkdownInput
           value={nodeText}
           fullScreen={true}
           readOnly={true}
         />);
 
-        let wrapper = mount(component);
-        let editorState = wrapper.state('editorState');
-        let change = editorState.change();
+        const wrapper = mount(component);
+        const editorState = wrapper.state('editorState');
+        const change = editorState.change();
 
         change.moveOffsetsTo(0, nodeText.length);
         let newState = unwrapAccent(change.state, 'strikethrough');
@@ -2033,16 +2033,16 @@ new line`);
       });
 
       it('#8 startOffset on left marker, endOffset between markers', () => {
-        let nodeText = '~~strikethrough text~~';
-        let component = (<PlainMarkdownInput
+        const nodeText = '~~strikethrough text~~';
+        const component = (<PlainMarkdownInput
           value={nodeText}
           fullScreen={true}
           readOnly={true}
         />);
 
-        let wrapper = mount(component);
-        let editorState = wrapper.state('editorState');
-        let change = editorState.change();
+        const wrapper = mount(component);
+        const editorState = wrapper.state('editorState');
+        const change = editorState.change();
 
         change.moveOffsetsTo(0, '~~strikethrough '.length);
         let newState = unwrapAccent(change.state, 'strikethrough');
@@ -2062,16 +2062,16 @@ new line`);
       });
 
       it('#9 startOffset between markers, endOffset on right marker', () => {
-        let nodeText = '~~strikethrough text~~';
-        let component = (<PlainMarkdownInput
+        const nodeText = '~~strikethrough text~~';
+        const component = (<PlainMarkdownInput
           value={nodeText}
           fullScreen={true}
           readOnly={true}
         />);
 
-        let wrapper = mount(component);
-        let editorState = wrapper.state('editorState');
-        let change = editorState.change();
+        const wrapper = mount(component);
+        const editorState = wrapper.state('editorState');
+        const change = editorState.change();
 
         change.moveOffsetsTo('~~strikethrough'.length, '~~strikethrough text'.length);
         let newState = unwrapAccent(change.state, 'strikethrough');
@@ -2136,16 +2136,16 @@ new line`);
       });
 
       it('#2 the cursor on a marker, do nothing', () => {
-        let nodeText = '_italic text_';
-        let component = (<PlainMarkdownInput
+        const nodeText = '_italic text_';
+        const component = (<PlainMarkdownInput
           value={nodeText}
           fullScreen={true}
           readOnly={true}
         />);
 
-        let wrapper = mount(component);
-        let editorState = wrapper.state('editorState');
-        let change = editorState.change();
+        const wrapper = mount(component);
+        const editorState = wrapper.state('editorState');
+        const change = editorState.change();
 
         change.moveOffsetsTo('_'.length, '_'.length);
         let newState = unwrapAccent(change.state, 'italic');
@@ -2157,16 +2157,16 @@ new line`);
       });
 
       it('#3 the between markers, add markers to the place of the cursor', () => {
-        let nodeText = '_italic text_';
-        let component = (<PlainMarkdownInput
+        const nodeText = '_italic text_';
+        const component = (<PlainMarkdownInput
           value={nodeText}
           fullScreen={true}
           readOnly={true}
         />);
 
-        let wrapper = mount(component);
-        let editorState = wrapper.state('editorState');
-        let change = editorState.change();
+        const wrapper = mount(component);
+        const editorState = wrapper.state('editorState');
+        const change = editorState.change();
 
         change.moveOffsetsTo('_i'.length, '_i'.length);
         let newState = unwrapAccent(change.state, 'italic');
@@ -2182,16 +2182,16 @@ new line`);
       });
 
       it('#4 - #5 the selection on the left or right edge, do nothing', () => {
-        let nodeText = '_italic text_';
-        let component = (<PlainMarkdownInput
+        const nodeText = '_italic text_';
+        const component = (<PlainMarkdownInput
           value={nodeText}
           fullScreen={true}
           readOnly={true}
         />);
 
-        let wrapper = mount(component);
-        let editorState = wrapper.state('editorState');
-        let change = editorState.change();
+        const wrapper = mount(component);
+        const editorState = wrapper.state('editorState');
+        const change = editorState.change();
 
         change.moveOffsetsTo(0, '_'.length);
         let newState = unwrapAccent(change.state, 'italic');
@@ -2203,16 +2203,16 @@ new line`);
       });
 
       it('#6 the selection between markers, wrap selection in additional markers', () => {
-        let nodeText = '_italic text_';
-        let component = (<PlainMarkdownInput
+        const nodeText = '_italic text_';
+        const component = (<PlainMarkdownInput
           value={nodeText}
           fullScreen={true}
           readOnly={true}
         />);
 
-        let wrapper = mount(component);
-        let editorState = wrapper.state('editorState');
-        let change = editorState.change();
+        const wrapper = mount(component);
+        const editorState = wrapper.state('editorState');
+        const change = editorState.change();
 
         change.moveOffsetsTo('_i'.length, '_italic '.length);
         let newState = unwrapAccent(change.state, 'italic');
@@ -2277,16 +2277,16 @@ new line`);
       });
 
       it('#8 startOffset on left marker, endOffset between markers', () => {
-        let nodeText = '_italic text_';
-        let component = (<PlainMarkdownInput
+        const nodeText = '_italic text_';
+        const component = (<PlainMarkdownInput
           value={nodeText}
           fullScreen={true}
           readOnly={true}
         />);
 
-        let wrapper = mount(component);
-        let editorState = wrapper.state('editorState');
-        let change = editorState.change();
+        const wrapper = mount(component);
+        const editorState = wrapper.state('editorState');
+        const change = editorState.change();
 
         change.moveOffsetsTo(0, '_italic '.length);
         let newState = unwrapAccent(change.state, 'italic');
@@ -2302,16 +2302,16 @@ new line`);
       });
 
       it('#9 startOffset between markers, endOffset on right marker', () => {
-        let nodeText = '_italic text_';
-        let component = (<PlainMarkdownInput
+        const nodeText = '_italic text_';
+        const component = (<PlainMarkdownInput
           value={nodeText}
           fullScreen={true}
           readOnly={true}
         />);
 
-        let wrapper = mount(component);
-        let editorState = wrapper.state('editorState');
-        let change = editorState.change();
+        const wrapper = mount(component);
+        const editorState = wrapper.state('editorState');
+        const change = editorState.change();
 
         change.moveOffsetsTo('_italic'.length, '_italic text'.length);
         let newState = unwrapAccent(change.state, 'italic');
@@ -2330,15 +2330,15 @@ new line`);
 
   describe('Wrap-unwrap Headers', () => {
     it('Wrap-unwrap', () => {
-      let nodeText = 'Header';
-      let component = (<PlainMarkdownInput
+      const nodeText = 'Header';
+      const component = (<PlainMarkdownInput
         value={nodeText}
         fullScreen={true}
         readOnly={true}
       />);
 
-      let wrapper = shallow(component);
-      let editorState = wrapper.state('editorState');
+      const wrapper = shallow(component);
+      const editorState = wrapper.state('editorState');
       let change = editorState.change();
 
       change.moveOffsetsTo(3, 3);
@@ -2392,15 +2392,15 @@ new line`);
     });
 
     it('Change', () => {
-      let nodeText = '# Header';
-      let component = (<PlainMarkdownInput
+      const nodeText = '# Header';
+      const component = (<PlainMarkdownInput
         value={nodeText}
         fullScreen={true}
         readOnly={true}
       />);
 
-      let wrapper = shallow(component);
-      let editorState = wrapper.state('editorState');
+      const wrapper = shallow(component);
+      const editorState = wrapper.state('editorState');
       let change = editorState.change();
 
       change.moveOffsetsTo(5, 5);
@@ -2431,14 +2431,14 @@ new line`);
 
   describe('Wrap-unwrap lists', () => {
     it('wrap', () => {
-      let nodeText = 'Item 1';
-      let component = (<PlainMarkdownInput
+      const nodeText = 'Item 1';
+      const component = (<PlainMarkdownInput
         value={nodeText}
         fullScreen={true}
         readOnly={true}
       />);
-      let wrapper = shallow(component);
-      let editorState = wrapper.state('editorState');
+      const wrapper = shallow(component);
+      const editorState = wrapper.state('editorState');
       let newState = wrapAccent(editorState, 'ol');
       expect(Plain.serialize(newState)).to.equal('1. Item 1');
 
@@ -2474,20 +2474,20 @@ Item 5`,
 * Item 3
 * Item 4
 * Item 5`;
-      let component = (<PlainMarkdownInput
+      const component = (<PlainMarkdownInput
         value=""
         fullScreen={true}
         readOnly={true}
       />);
 
-      let wrapper = shallow(component);
+      const wrapper = shallow(component);
 
       for (let i = 0; i < lists.length; i++) {
         wrapper.setProps({ value: lists[i] });
-        let editorState = wrapper.state('editorState');
-        let change = editorState.change();
+        const editorState = wrapper.state('editorState');
+        const change = editorState.change();
         change.selectAll();
-        let newState = wrapAccent(change.state, 'ul');
+        const newState = wrapAccent(change.state, 'ul');
         expect(Plain.serialize(newState)).to.equal(pattern);
       }
 
@@ -2516,10 +2516,10 @@ Item 5`,
 
       for (let i = 0; i < lists.length; i++) {
         wrapper.setProps({ value: lists[i] });
-        let editorState = wrapper.state('editorState');
-        let change = editorState.change();
+        const editorState = wrapper.state('editorState');
+        const change = editorState.change();
         change.selectAll();
-        let newState = wrapAccent(change.state, 'ol');
+        const newState = wrapAccent(change.state, 'ol');
         expect(Plain.serialize(newState)).to.equal(pattern);
       }
 
@@ -2538,22 +2538,22 @@ Item 5`,
 
       for (let i = 0; i < lists.length; i++) {
         wrapper.setProps({ value: lists[i] });
-        let editorState = wrapper.state('editorState');
-        let change = editorState.change();
+        const editorState = wrapper.state('editorState');
+        const change = editorState.change();
         change.selectAll();
-        let newState = wrapAccent(change.state, 'ol');
+        const newState = wrapAccent(change.state, 'ol');
         expect(Plain.serialize(newState)).to.equal(pattern);
       }
     });
 
     it('unwrap', () => {
-      let component = (<PlainMarkdownInput
+      const component = (<PlainMarkdownInput
         value=""
         fullScreen={true}
         readOnly={true}
       />);
 
-      let wrapper = shallow(component);
+      const wrapper = shallow(component);
 
       let items = [
         '1. Item 1',
@@ -2566,9 +2566,9 @@ Item 5`,
 
       for (let i = 0; i < items.length; i++) {
         wrapper.setProps({ value: items[i] });
-        let editorState = wrapper.state('editorState');
-        let change = editorState.change();
-        let newState = unwrapAccent(change.state, 'ol');
+        const editorState = wrapper.state('editorState');
+        const change = editorState.change();
+        const newState = unwrapAccent(change.state, 'ol');
         expect(Plain.serialize(newState)).to.equal('Item 1');
       }
 
@@ -2586,9 +2586,9 @@ Item 5`,
 
       for (let i = 0; i < items.length; i++) {
         wrapper.setProps({ value: items[i] });
-        let editorState = wrapper.state('editorState');
-        let change = editorState.change();
-        let newState = unwrapAccent(change.state, 'ul');
+        const editorState = wrapper.state('editorState');
+        const change = editorState.change();
+        const newState = unwrapAccent(change.state, 'ul');
         expect(Plain.serialize(newState)).to.equal('Item 1');
       }
     });
@@ -2611,25 +2611,25 @@ Item 5`,
   4) Item 4
   5) Item 5`,
       ];
-      let pattern = `Item 1
+      const pattern = `Item 1
 Item 2
 Item 3
 Item 4
 Item 5`;
-      let component = (<PlainMarkdownInput
+      const component = (<PlainMarkdownInput
         value=""
         fullScreen={true}
         readOnly={true}
       />);
 
-      let wrapper = shallow(component);
+      const wrapper = shallow(component);
 
       for (let i = 0; i < lists.length; i++) {
         wrapper.setProps({ value: lists[i] });
-        let editorState = wrapper.state('editorState');
-        let change = editorState.change();
+        const editorState = wrapper.state('editorState');
+        const change = editorState.change();
         change.selectAll();
-        let newState = unwrapAccent(change.state, 'ol');
+        const newState = unwrapAccent(change.state, 'ol');
         expect(Plain.serialize(newState)).to.equal(pattern);
       }
 
@@ -2648,24 +2648,24 @@ Item 5`;
 
       for (let i = 0; i < lists.length; i++) {
         wrapper.setProps({ value: lists[i] });
-        let editorState = wrapper.state('editorState');
-        let change = editorState.change();
+        const editorState = wrapper.state('editorState');
+        const change = editorState.change();
         change.selectAll();
-        let newState = unwrapAccent(change.state, 'ul');
+        const newState = unwrapAccent(change.state, 'ul');
         expect(Plain.serialize(newState)).to.equal(pattern);
       }
     });
 
     it('Wrap-unwrap', () => {
-      let nodeText = 'Item';
-      let component = (<PlainMarkdownInput
+      const nodeText = 'Item';
+      const component = (<PlainMarkdownInput
         value={nodeText}
         fullScreen={true}
         readOnly={true}
       />);
 
-      let wrapper = shallow(component);
-      let editorState = wrapper.state('editorState');
+      const wrapper = shallow(component);
+      const editorState = wrapper.state('editorState');
       let change = editorState.change();
 
       change.moveOffsetsTo(3, 3);
@@ -2687,14 +2687,14 @@ Item 5`;
     });
 
     it('Change', () => {
-      let nodeText = 'Item';
-      let component = (<PlainMarkdownInput
+      const nodeText = 'Item';
+      const component = (<PlainMarkdownInput
         value={nodeText}
         fullScreen={true}
         readOnly={true}
       />);
 
-      let wrapper = shallow(component);
+      const wrapper = shallow(component);
       let editorState = wrapper.state('editorState');
       let change = editorState.change();
 
@@ -2783,17 +2783,17 @@ Item 5`;
   });
 
   it('addSpecialCharacter(specialCharacter, state)', () => {
-    let specialCharacter = '#';
-    let nodeText = 'Simple text';
-    let component = (<PlainMarkdownInput
+    const specialCharacter = '#';
+    const nodeText = 'Simple text';
+    const component = (<PlainMarkdownInput
       value={nodeText}
       fullScreen={false}
       readOnly={false}
     />);
 
-    let wrapper = shallow(component);
-    let editorState = wrapper.state('editorState');
-    let change = editorState.change();
+    const wrapper = shallow(component);
+    const editorState = wrapper.state('editorState');
+    const change = editorState.change();
     change.moveOffsetsTo(nodeText.length - 1, nodeText.length - 1);
     let newState = addSpecialCharacter(specialCharacter, change.state);
     expect(Plain.serialize(newState)).to.equal('Simple #text');

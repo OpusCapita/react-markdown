@@ -29,17 +29,17 @@ function getText(charactersList, text, key) {
 describe('plain editor schema', () => {
   it('call markdownDecorator', () => {
     const nodeText = '# Header1';
-    let component = (<PlainMarkdownInput
+    const component = (<PlainMarkdownInput
       value={nodeText}
       fullScreen={true}
       readOnly={true}
     />);
 
-    let wrapper = mount(component);
-    let editorState = wrapper.state('editorState');
+    const wrapper = mount(component);
+    const editorState = wrapper.state('editorState');
 
-    let nodes = editorState.document.nodes.asMutable();
-    let nodesSize = nodes.size;
+    const nodes = editorState.document.nodes.asMutable();
+    const nodesSize = nodes.size;
     expect(nodesSize).to.equal(1);
 
     const currNode = nodes.get(0).asMutable();
@@ -47,10 +47,10 @@ describe('plain editor schema', () => {
     expect(currNode.data.tokens).to.deep.equal(parse(nodeText));
     expect(currNode.text).to.equal(nodeText);
 
-    let nodeTextArr = nodeText.split('');
-    let charactersList = nodeTextArr.map(el => getCharacter(el));
+    const nodeTextArr = nodeText.split('');
+    const charactersList = nodeTextArr.map(el => getCharacter(el));
 
-    let text = getText(charactersList, nodeText, '1');
+    const text = getText(charactersList, nodeText, '1');
 
     let characters = decorate(text, currNode);
     expect(text.charsData.text).to.equal(nodeText);
@@ -93,24 +93,24 @@ describe('plain editor schema', () => {
 
   it('call markdownDecorator for block without data.text #1', () => {
     const nodeText = '# Header1';
-    let component = (<PlainMarkdownInput
+    const component = (<PlainMarkdownInput
       value={nodeText}
       fullScreen={true}
       readOnly={true}
     />);
 
-    let wrapper = mount(component);
-    let editorState = wrapper.state('editorState');
+    const wrapper = mount(component);
+    const editorState = wrapper.state('editorState');
 
-    let nodes = editorState.document.nodes.asMutable();
+    const nodes = editorState.document.nodes.asMutable();
     const currNode = nodes.get(0).asMutable();
     currNode.data = undefined;
 
-    let nodeTextArr = nodeText.split('');
-    let charactersList = nodeTextArr.map(el => getCharacter(el));
+    const nodeTextArr = nodeText.split('');
+    const charactersList = nodeTextArr.map(el => getCharacter(el));
 
-    let text = getText(charactersList, nodeText, '1');
-    let characters = decorate(text, currNode);
+    const text = getText(charactersList, nodeText, '1');
+    const characters = decorate(text, currNode);
     nodeTextArr.forEach((el, ind) => {
       expect(characters.get(ind).toJSON()).to.deep.equal({
         "kind": "character",
@@ -122,27 +122,27 @@ describe('plain editor schema', () => {
 
   it('call markdownDecorator for block without data.text #2 (use after paste multiline text', () => {
     const nodeText = '# Header1';
-    let component = (<PlainMarkdownInput
+    const component = (<PlainMarkdownInput
       value={nodeText}
       fullScreen={true}
       readOnly={true}
     />);
 
-    let wrapper = mount(component);
-    let editorState = wrapper.state('editorState');
+    const wrapper = mount(component);
+    const editorState = wrapper.state('editorState');
 
-    let nodes = editorState.document.nodes.asMutable();
+    const nodes = editorState.document.nodes.asMutable();
     const currNode = nodes.get(0).asMutable();
     currNode.data = {
       text: '',
       tokens: []
     };
 
-    let nodeTextArr = nodeText.split('');
-    let charactersList = nodeTextArr.map(el => getCharacter(el));
+    const nodeTextArr = nodeText.split('');
+    const charactersList = nodeTextArr.map(el => getCharacter(el));
 
-    let text = getText(charactersList, nodeText, '1');
-    let characters = decorate(text, currNode);
+    const text = getText(charactersList, nodeText, '1');
+    const characters = decorate(text, currNode);
     nodeTextArr.forEach((el, ind) => {
       expect(characters.get(ind).toJSON()).to.deep.equal({
         "kind": "character",
@@ -154,22 +154,22 @@ describe('plain editor schema', () => {
 
   it('call markdownDecorator for Simple text', () => {
     const nodeText = 'Simple text';
-    let component = (<PlainMarkdownInput
+    const component = (<PlainMarkdownInput
       value={nodeText}
       fullScreen={true}
       readOnly={true}
     />);
 
-    let wrapper = mount(component);
-    let editorState = wrapper.state('editorState');
+    const wrapper = mount(component);
+    const editorState = wrapper.state('editorState');
 
-    let nodes = editorState.document.nodes.asMutable();
+    const nodes = editorState.document.nodes.asMutable();
     const currNode = nodes.get(0).asMutable();
-    let nodeTextArr = nodeText.split('');
-    let charactersList = nodeTextArr.map(el => getCharacter(el));
+    const nodeTextArr = nodeText.split('');
+    const charactersList = nodeTextArr.map(el => getCharacter(el));
 
-    let text = getText(charactersList, nodeText, '1');
-    let characters = decorate(text, currNode);
+    const text = getText(charactersList, nodeText, '1');
+    const characters = decorate(text, currNode);
     nodeTextArr.forEach((el, ind) => {
       expect(characters.get(ind).toJSON()).to.deep.equal({
         "kind": "character",
@@ -181,23 +181,23 @@ describe('plain editor schema', () => {
 
   it('call markdownDecorator for emphasis in url text #1)', () => {
     const nodeText = '[*url*](uefasdfs)';
-    let component = (<PlainMarkdownInput
+    const component = (<PlainMarkdownInput
       value={nodeText}
       fullScreen={true}
       readOnly={true}
     />);
 
-    let wrapper = mount(component);
-    let editorState = wrapper.state('editorState');
+    const wrapper = mount(component);
+    const editorState = wrapper.state('editorState');
 
-    let nodes = editorState.document.nodes.asMutable();
+    const nodes = editorState.document.nodes.asMutable();
     const currNode = nodes.get(0).asMutable();
-    let nodeTextArr = nodeText.split('');
-    let charactersList = nodeTextArr.map(el => getCharacter(el));
+    const nodeTextArr = nodeText.split('');
+    const charactersList = nodeTextArr.map(el => getCharacter(el));
 
-    let text = getText(charactersList, nodeText, '1');
-    let characters = decorate(text, currNode);
-    let marks = [
+    const text = getText(charactersList, nodeText, '1');
+    const characters = decorate(text, currNode);
+    const marks = [
       [ // [
         { "data": {}, "kind": "mark", "type": "punctuation" },
         { "data": {}, "kind": "mark", "type": "url" },
@@ -278,23 +278,23 @@ describe('plain editor schema', () => {
 
   it('call markdownDecorator for emphasis in url text #2)', () => {
     const nodeText = '[**url*](uefasdfs)';
-    let component = (<PlainMarkdownInput
+    const component = (<PlainMarkdownInput
       value={nodeText}
       fullScreen={true}
       readOnly={true}
     />);
 
-    let wrapper = mount(component);
-    let editorState = wrapper.state('editorState');
+    const wrapper = mount(component);
+    const editorState = wrapper.state('editorState');
 
-    let nodes = editorState.document.nodes.asMutable();
+    const nodes = editorState.document.nodes.asMutable();
     const currNode = nodes.get(0).asMutable();
-    let nodeTextArr = nodeText.split('');
-    let charactersList = nodeTextArr.map(el => getCharacter(el));
+    const nodeTextArr = nodeText.split('');
+    const charactersList = nodeTextArr.map(el => getCharacter(el));
 
-    let text = getText(charactersList, nodeText, '1');
-    let characters = decorate(text, currNode);
-    let marks = [
+    const text = getText(charactersList, nodeText, '1');
+    const characters = decorate(text, currNode);
+    const marks = [
       [ // [
         { "data": {}, "kind": "mark", "type": "punctuation" },
         { "data": {}, "kind": "mark", "type": "url" },
@@ -384,8 +384,8 @@ describe('plain editor schema', () => {
         type: 'line'
       }
     };
-    let component = render(props);
-    let wrapper = shallow(component);
+    const component = render(props);
+    const wrapper = shallow(component);
     expect(wrapper.hasClass('oc-md-hl-block')).to.equal(true);
     expect(wrapper.html()).to.equal('<div class="oc-md-hl-block">**bold**</div>');
   });
@@ -400,8 +400,8 @@ describe('plain editor schema', () => {
         type: 'range'
       }
     };
-    let component = render(props);
-    let wrapper = shallow(component);
+    const component = render(props);
+    const wrapper = shallow(component);
     expect(wrapper.hasClass('oc-md-hl-bold')).to.equal(true);
     expect(wrapper.html()).to.equal('<span class="oc-md-hl-bold">**bold**</span>');
   });
@@ -416,8 +416,8 @@ describe('plain editor schema', () => {
         type: 'range'
       }
     };
-    let component = render(props);
-    let wrapper = shallow(component);
+    const component = render(props);
+    const wrapper = shallow(component);
     expect(wrapper.html()).to.equal('<span class="">**bold**</span>');
   });
 
@@ -429,7 +429,7 @@ describe('plain editor schema', () => {
         type: 'range'
       }
     };
-    let component = render(props);
+    const component = render(props);
     expect(component).to.equal(null);
   });
 });

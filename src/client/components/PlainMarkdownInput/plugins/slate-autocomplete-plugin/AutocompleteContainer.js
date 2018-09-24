@@ -92,7 +92,7 @@ class AutocompleteContainer extends React.Component {
         if (offset !== -1) { offset++ }
         const accents = getAccents(state);
         if (accents.length > 0) { // this position has some accent
-          let currLeftPos = getPosAfterEmphasis(state, accents);
+          const currLeftPos = getPosAfterEmphasis(state, accents);
           if (offset < currLeftPos) {
             offset = currLeftPos;
           }
@@ -114,7 +114,7 @@ class AutocompleteContainer extends React.Component {
   }
 
   handleKeyDown = (e) => {
-    let { show, items, selectedItem } = this.state;
+    let { show, items, selectedItem } = this.state; // eslint-disable-line prefer-const
 
     if (e.keyCode === tabCode) {
       e.preventDefault();
@@ -148,12 +148,12 @@ class AutocompleteContainer extends React.Component {
   };
 
   removeSpecialCharacter = (state, specialCharacter) => {
-    let change = state.change();
-    let text = state.startBlock.text;
-    let charLength = specialCharacter.length;
-    let specialCharPos = text.lastIndexOf(specialCharacter, state.endOffset);
+    const change = state.change();
+    const text = state.startBlock.text;
+    const charLength = specialCharacter.length;
+    const specialCharPos = text.lastIndexOf(specialCharacter, state.endOffset);
     change.moveOffsetsTo(specialCharPos).deleteForward(charLength).
-    moveOffsetsTo(state.endOffset - charLength).focus();
+      moveOffsetsTo(state.endOffset - charLength).focus();
     this.props.onChange(change.state);
   };
 
@@ -169,7 +169,7 @@ class AutocompleteContainer extends React.Component {
       const extension = this.matchExtension(extensions, term);
 
       if (extension && item) {
-        let change = state.change();
+        const change = state.change();
         change.deleteBackward(term.length).insertText(extension.markdownText(item, term)).focus();
         this.props.onChange(change.state, true);
       }
@@ -237,9 +237,9 @@ class AutocompleteContainer extends React.Component {
     const { show, selectedItem, items, ref, loading } = this.state;
     const { children, locale } = this.props;
 
-    let selection = window.getSelection();
+    const selection = window.getSelection();
     if (selection.anchorNode) {
-      let slateEditor = getSlateEditor(selection);
+      const slateEditor = getSlateEditor(selection);
       if (slateEditor && !show) {
         slateEditor.style.overflow = 'auto';
       }
