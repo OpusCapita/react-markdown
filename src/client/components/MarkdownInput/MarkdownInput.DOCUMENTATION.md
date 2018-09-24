@@ -68,7 +68,7 @@ function (optional) that is called on when the user presses the button, the func
   <MarkdownInput
     onChange={_scope.handleValueChange}
     onBlur={() => console.log('blur')}
-    value={_scope.state.markdownExample}
+    value={_scope.state.updatedMarkdown}
     autoFocus={false}
     readOnly={false}
     showFullScreenButton={true}

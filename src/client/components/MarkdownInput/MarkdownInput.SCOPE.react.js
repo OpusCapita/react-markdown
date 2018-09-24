@@ -13,14 +13,20 @@ export default
 class MarkdownInputScope extends React.Component {
   state = {
     markdownExample: text,
-    updatedMarkdown: ''
+    updatedMarkdown: text
   };
 
   handleValueChange = (value) => {
+    console.log('handleValueChange', { value });
     this.setState({ updatedMarkdown: value });
   };
 
   render() {
-    return this._renderChildren();
+    return (
+      <div>
+        <button onClick={_ => this.handleValueChange(text)}>Reset</button>
+        {this._renderChildren()}
+      </div>
+    )
   }
 }

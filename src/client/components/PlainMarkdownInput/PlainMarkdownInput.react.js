@@ -5,7 +5,6 @@ import classnames from 'classnames';
 import DropdownButton from 'react-bootstrap/lib/DropdownButton';
 import { Editor } from 'slate-react';
 import Plain from 'slate-plain-serializer';
-
 import schema from './slate/schema';
 import './PlainMarkdownInput.less';
 import { parse } from './slate/tokenizer';
@@ -103,9 +102,18 @@ class PlainMarkdownInput extends React.Component {
     this.handleNewValue(this.props.value);
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (this.props.value !== nextProps.value) {
-      this.handleNewValue(nextProps.value);
+  // componentWillReceiveProps(nextProps) {
+  //   if (this.props.value !== nextProps.value) {
+  //     this.handleNewValue(nextProps.value);
+  //   }
+  // }
+
+  componentDidUpdate() {
+    if (this.props.value !== Plain.serialize(this.state.editorState)) {
+      // console.log('cdu: >>>>> NOT <<<<<< equal');
+      this.handleNewValue(this.props.value);
+    } else {
+      // console.log('cdu: equal, skip');
     }
   }
 
@@ -332,9 +340,11 @@ class PlainMarkdownInput extends React.Component {
 
   handleLinkButtonClick = () => this.handleChange(wrapLink(this.state.editorState));
 
-  getCurrentText = () => this.state.editorState.document.nodes.toArray().
-    map(block => block.text).
-    join('\n')
+  // getCurrentText = () => this.state.editorState.document.nodes.toArray(). // TODO replace with Plain.serialize ?
+  //   map(block => block.text).
+  //   join('\n')
+
+  getCurrentText = _ => Plain.serialize(this.state.editorState);
 
   insertAtCursorPosition = insertedText => {
     const change = this.state.editorState.change();
