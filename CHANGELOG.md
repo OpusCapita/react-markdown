@@ -1,4 +1,9 @@
 
+[Release 2.3.7](https://github.com/OpusCapita/react-markdown/releases/tag/v2.3.7) Mon Sep 24 2018 15:24:17 GMT+0300 (MSK)
+=======================================================
+
+- Expose insertAtCursorPosition function ([#157](https://github.com/OpusCapita/react-markdown/issues/157)) (GitHub 31243790+estambakio-sc@users.noreply.github.com, 2018-09-24 12:55:45 +0300)
+
 [Release 2.3.6](https://github.com/OpusCapita/react-markdown/releases/tag/v2.3.6) Wed Sep 19 2018 12:31:24 GMT+0300 (MSK)
 =======================================================
 
