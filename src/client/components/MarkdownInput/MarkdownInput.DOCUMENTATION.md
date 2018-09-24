@@ -22,6 +22,11 @@ MarkdownInput
 | readOnly           | bool            | Disables toolbar and makes markdown text not editable.                                           |
 | hideToolbar        | bool            | Default: `false`. If `true`, input renders without a toolbar.                                           |
 
+### Public API
+
+`MarkdownInput` exposes function `insertAtCursorPosition(text)` which inserts `text` into current cursor position in editor. It can be accessed via `ref` on
+mounted component, e.g. `<MArkdownInput ref={el => (this.mdRef = el)}>` and in code `this.mdRef.insertAtCursorPosition('some text')` will insert `some text` into current cursor position in editor.
+
 ### Extension definition
 
 Configurable extensions with autocomplete for **products**, **terms**, etc.

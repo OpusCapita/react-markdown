@@ -2,12 +2,12 @@ import MarkdownIt from 'markdown-it';
 import _ from 'lodash';
 
 const markdown = new MarkdownIt({
-  html: false,              // Enable HTML tags in source
-  xhtmlOut: false,          // Use '/' to close single tags (<br />).
-                            // This is only for full CommonMark compatibility.
-  breaks: false,            // Convert '\n' in paragraphs into <br>
-  langPrefix: 'language-',  // CSS language prefix for fenced blocks. Can be
-                            // useful for external highlighters.
+  html: false, // Enable HTML tags in source
+  xhtmlOut: false, // Use '/' to close single tags (<br />).
+  // This is only for full CommonMark compatibility.
+  breaks: false, // Convert '\n' in paragraphs into <br>
+  langPrefix: 'language-', // CSS language prefix for fenced blocks. Can be
+  // useful for external highlighters.
   // Enable some language-neutral replacement + quotes beautification
   typographer: false
 });
@@ -45,7 +45,7 @@ function changeText(tokens, markup = '') {
       tokens[i] = (i === 0 && markup !== '' ? `${markup} ` : '') + tokens[i].content; // eslint-disable-line
     } else if (tokens[i].type === 'code_inline') {
       let content = `${tokens[i].markup}${tokens[i].content}${tokens[i].markup}`;
-      let length = content.length;
+      const length = content.length;
       if (tokens[i].markup === '```') {
         content = [content];
       }
@@ -108,7 +108,7 @@ function getHeaderContent(tokens, type, markup) {
   } else if (tokens[1].children[0].type !== 'text') {
     tokens[1].children.unshift(getEmptyText());
   }
-  let content = changeText(tokens[1].children, markup);
+  const content = changeText(tokens[1].children, markup);
   return {
     type,
     content,
@@ -139,7 +139,7 @@ function getBlockContent(tokens, type, markup, start = false) {
 }
 
 function joinArrString(arr) {
-  let resultArr = [];
+  const resultArr = [];
   let stringArr = [];
   for (let i = 0; i < arr.length; i++) {
     if (typeof arr[i] === 'string') {
@@ -244,7 +244,7 @@ function getOneEmphasis(tokens, startPos, closePos) {
  */
 
 function getUrlToken({ tokens, intEmphasis, num }) {
-  let urlContent = `(${getAttr(tokens[num].attrs, 'href')})`;
+  const urlContent = `(${getAttr(tokens[num].attrs, 'href')})`;
   const urlLength = urlContent.length;
   const punctuation1 = {
     type: "punctuation",
@@ -261,7 +261,7 @@ function getUrlToken({ tokens, intEmphasis, num }) {
     content: urlContent,
     length: urlLength
   };
-  let content = Array.isArray(intEmphasis) ?
+  const content = Array.isArray(intEmphasis) ?
     [punctuation1, ...intEmphasis, punctuation2, urlContentObj] :
     [punctuation1, intEmphasis, punctuation2, urlContentObj];
   return {
@@ -282,12 +282,12 @@ function getUrlToken({ tokens, intEmphasis, num }) {
  */
 
 function getEmphasisToken({ tokens, intEmphasis, currTag, num }) {
-  let rawContent = joinArrString(_.flattenDeep([
+  const rawContent = joinArrString(_.flattenDeep([
     tokens[num].markup,
     intEmphasis,
     tokens[num].markup
   ]));
-  let contentLength = getTokensLength(rawContent);
+  const contentLength = getTokensLength(rawContent);
   return {
     type: getEmphasisType(currTag),
     content: rawContent,
@@ -419,7 +419,7 @@ function processEmphasis(tokens) {
 }
 
 function processBlockTokens(tokens) {
-  let tokensLen = tokens.length;
+  const tokensLen = tokens.length;
 
   if (tokensLen > 0) {
     const firstType = tokens[0].type;

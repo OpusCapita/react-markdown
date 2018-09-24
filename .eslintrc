@@ -1,3 +1,14 @@
 {
-  "extends": "opuscapita"
+  "extends": "opuscapita",
+  "env": {
+    "jasmine": true,
+    "browser": true,
+    "node": true,
+    "es6": true
+  },
+  "parserOptions": {
+    "ecmaFeatures": {
+      "legacyDecorators": true
+    }
+  }
 }

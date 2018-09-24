@@ -17,7 +17,7 @@ describe('<HeaderButton/>', () => {
 
   it('click on the button', () => {
     const level = 2;
-    let handleClick = sinon.spy();
+    const handleClick = sinon.spy();
     const component = <HeaderButton level={level} onClick={handleClick} />;
     const wrapper = shallow(component);
     wrapper.find('MenuItem').simulate('click');

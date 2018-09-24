@@ -9,7 +9,7 @@ function contains(className) {
   return this.classes.indexOf(className) !== -1;
 }
 
-let slateEditor = {
+const slateEditor = {
   id: 'react-markdown--slate-content',
   classList: {
     classes: ['react-markdown--slate-content'],
@@ -18,7 +18,7 @@ let slateEditor = {
   scrollTop: 100,
   offsetHeight: 220
 };
-let target = {
+const target = {
   id: 'target_elem',
   classList: {
     classes: ['target_elem'],
@@ -26,7 +26,7 @@ let target = {
   },
   parentElement: slateEditor
 };
-let parent1 = {
+const parent1 = {
   id: 'parent_1',
   classList: {
     classes: ['parent_1'],
@@ -34,7 +34,7 @@ let parent1 = {
   },
   parentElement: target
 };
-let parent = {
+const parent = {
   id: 'parent',
   classList: {
     classes: ['parent'],
@@ -42,11 +42,11 @@ let parent = {
   },
   parentElement: parent1
 };
-let elem = {
+const elem = {
   parentElement: parent,
   offsetTop: 500
 };
-let selection = {
+const selection = {
   anchorNode: {
     parentNode: elem
   }
@@ -57,7 +57,7 @@ describe('plain editor utils', () => {
     let targetElem = getClosestElemFromClass(elem, 'react-markdown--slate-content');
     expect(targetElem.id).to.equal('react-markdown--slate-content');
 
-    let newElem = {};
+    const newElem = {};
     targetElem = getClosestElemFromClass(newElem, 'target_elem');
     expect(targetElem).to.equal(null);
   });

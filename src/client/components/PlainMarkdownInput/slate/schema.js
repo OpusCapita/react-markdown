@@ -43,7 +43,7 @@ function markdownDecorator(text, block) {
       block.data.tokens = parse(text.text); // eslint-disable-line
     }
 
-    let characters = text.characters.asMutable();
+    const characters = text.characters.asMutable();
     addMarks(characters, block.data.tokens, 0); // Add marks to characters
     text.charsData = { // eslint-disable-line
       text: text.text,
@@ -54,7 +54,7 @@ function markdownDecorator(text, block) {
   return text.characters;
 }
 
-let rendererComponent = ({ node, mark, children }) => {
+const rendererComponent = ({ node, mark, children }) => {
   if (node.type === 'line') {
     return <div className="oc-md-hl-block">{children}</div>;
   }
