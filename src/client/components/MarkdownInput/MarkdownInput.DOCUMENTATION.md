@@ -21,6 +21,7 @@ MarkdownInput
 | autoFocus          | bool            | Set focus automatically on mount (default: true). May not work within react-bootstrap modal. See `focus()` method.                                                 |
 | readOnly           | bool            | Disables toolbar and makes markdown text not editable.                                           |
 | hideToolbar        | bool            | Default: `false`. If `true`, input renders without a toolbar.                                           |
+| render             | func            | Optional render function for advanced scenarios; look at PlainMarkdownInput source code for more info.      |
 
 ### Extension definition
 

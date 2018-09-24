@@ -18,6 +18,7 @@ PlainMarkdownInput
 | locale                         | string                  | Locale                                                      |
 | autoFocus                      | bool                    | Set focus automatically on mount (default: true)            |
 | readOnly                       | bool                    | Disables toolbar and makes markdown text not editable.      |
+| render                         | func                    | Optional render function for advanced scenarios; look at source code for more info.      |
 
 ### Code Example
 
