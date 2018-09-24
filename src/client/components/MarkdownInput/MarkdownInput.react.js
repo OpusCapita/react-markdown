@@ -15,8 +15,7 @@ class MarkdownInput extends React.Component {
     autoFocus: Types.bool,
     showFullScreenButton: Types.bool,
     locale: Types.string,
-    hideToolbar: Types.bool,
-    render: Types.func
+    hideToolbar: Types.bool
   };
 
   static defaultProps = {
@@ -33,12 +32,21 @@ class MarkdownInput extends React.Component {
     hideToolbar: false
   };
 
+  plainInputRef = el => (this.plainInput = el);
+
+  // make this function a part of public API
+  insertAtCursorPosition = text => {
+    if (this.plainInput) {
+      this.plainInput.insertAtCursorPosition(text);
+    }
+  }
+
   render() {
     const { onBlur, ...props } = this.props;
 
     return (
       <ProvideBlur onBlur={onBlur}>
-        <PlainMarkdownInput {...props}/>
+        <PlainMarkdownInput {...props} ref={this.plainInputRef}/>
       </ProvideBlur>
     );
   }

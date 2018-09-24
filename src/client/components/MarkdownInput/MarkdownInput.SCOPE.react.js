@@ -17,7 +17,6 @@ class MarkdownInputScope extends React.Component {
   };
 
   handleValueChange = (value) => {
-    console.log('handleValueChange called');
     this.setState({ updatedMarkdown: value });
   };
 

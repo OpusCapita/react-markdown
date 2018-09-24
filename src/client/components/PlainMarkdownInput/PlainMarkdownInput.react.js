@@ -78,8 +78,7 @@ class PlainMarkdownInput extends React.Component {
     autoFocus: Types.bool,
     showFullScreenButton: Types.bool,
     locale: Types.string,
-    hideToolbar: Types.bool,
-    render: Types.func
+    hideToolbar: Types.bool
   }
 
   static defaultProps = {
@@ -91,40 +90,7 @@ class PlainMarkdownInput extends React.Component {
     readOnly: false,
     autoFocus: true,
     showFullScreenButton: false,
-    locale: 'en',
-    render: ({
-      editor,
-      markdownButtons,
-      additionalButtons,
-      fullScreenButton,
-      fullScreen,
-      hideToolbar
-    }) => {
-      return (
-        <div
-          className={classnames(
-            'react-markdown--slate-editor',
-            { 'react-markdown--slate-editor--fullscreen': fullScreen }
-          )}
-        >
-          {
-            !hideToolbar && (
-              <div className="react-markdown--toolbar">
-                {markdownButtons}
-                {additionalButtons}
-                {fullScreenButton}
-              </div>
-            )
-          }
-          <div
-            className={'react-markdown--slate-content'}
-            {...(hideToolbar && { style: { borderTop: '0' } })}
-          >
-            {editor}
-          </div>
-        </div>
-      );
-    }
+    locale: 'en'
   }
 
   state = {
@@ -495,7 +461,7 @@ class PlainMarkdownInput extends React.Component {
 
   render() {
     const { editorState, fullScreen } = this.state;
-    const { children, extensions, readOnly, locale, autoFocus, hideToolbar, render } = this.props;
+    const { children, extensions, readOnly, locale, autoFocus, hideToolbar } = this.props;
     const disabled = readOnly || hasMultiLineSelection(editorState);
 
     // Create buttons for toolbar
@@ -539,37 +505,33 @@ class PlainMarkdownInput extends React.Component {
       </Editor>
     );
 
-    return render({
-      editor,
-      markdownButtons: [
-        emphasisButtons,
-        linkButton,
-        headerButtons,
-        listButtons
-      ].map((el, i) => React.cloneElement(el, { key: i })),
-      additionalButtons,
-      fullScreenButton,
-      fullScreen,
-      hideToolbar,
-      /**
-       * Also pass default render function, so that we can easily render default editor markup
-       * from within our custom render function.
-       *
-       * Usage:
-       *
-       * render(params) {
-       *  return (
-       *    <React.Fragment>
-       *      // for example render additionalButtons somewhere outside of editor node using ReactDOM.createPortal()
-       *      {ReactDOM.createPortal(params.additionalButtons, someDOMNode)}
-       *      // render editor itself
-       *      {params.defaultRender(params)}
-       *    </React.Fragment>
-       *  )
-       * }
-       */
-      defaultRender: PlainMarkdownInput.defaultProps.render
-    });
+    return (
+      <div
+        className={classnames(
+          'react-markdown--slate-editor',
+          { 'react-markdown--slate-editor--fullscreen': fullScreen }
+        )}
+      >
+        {
+          !hideToolbar && (
+            <div className="react-markdown--toolbar">
+              {emphasisButtons}
+              {linkButton}
+              {headerButtons}
+              {listButtons}
+              {additionalButtons}
+              {fullScreenButton}
+            </div>
+          )
+        }
+        <div
+          className={'react-markdown--slate-content'}
+          {...(hideToolbar && { style: { borderTop: '0' } })}
+        >
+          {editor}
+        </div>
+      </div>
+    );
   }
 }
 

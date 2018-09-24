@@ -21,7 +21,11 @@ MarkdownInput
 | autoFocus          | bool            | Set focus automatically on mount (default: true). May not work within react-bootstrap modal. See `focus()` method.                                                 |
 | readOnly           | bool            | Disables toolbar and makes markdown text not editable.                                           |
 | hideToolbar        | bool            | Default: `false`. If `true`, input renders without a toolbar.                                           |
-| render             | func            | Optional render function for advanced scenarios; look at PlainMarkdownInput source code for more info.      |
+
+### Public API
+
+`MarkdownInput` exposes function `insertAtCursorPosition(text)` which inserts `text` into current cursor position in editor. It can be accessed via `ref` on
+mounted component, e.g. `<MArkdownInput ref={el => (this.mdRef = el)}>` and in code `this.mdRef.insertAtCursorPosition('some text')` will insert `some text` into current cursor position in editor.
 
 ### Extension definition
 
