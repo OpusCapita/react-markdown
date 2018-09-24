@@ -11,10 +11,10 @@ const AutocompletePlugin = options => ({
         state={state}
         options={options}
         locale={options.locale}
-        onChange={options.onChange} // eslint-disable-line
-        onScroll={options.onScroll} // eslint-disable-line
-        onMouseUp={options.onMouseUp} // eslint-disable-line
-        onToggle={options.onToggle} // eslint-disable-line
+        onChange={options.onChange} // eslint-disable-line react/jsx-handler-names
+        onScroll={options.onScroll} // eslint-disable-line react/jsx-handler-names
+        onMouseUp={options.onMouseUp} // eslint-disable-line react/jsx-handler-names
+        onToggle={options.onToggle} // eslint-disable-line react/jsx-handler-names
       >
         {children}
       </AutocompleteContainer>

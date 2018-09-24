@@ -15,7 +15,8 @@ class MarkdownInput extends React.Component {
     autoFocus: Types.bool,
     showFullScreenButton: Types.bool,
     locale: Types.string,
-    hideToolbar: Types.bool
+    hideToolbar: Types.bool,
+    render: Types.func
   };
 
   static defaultProps = {
@@ -33,34 +34,11 @@ class MarkdownInput extends React.Component {
   };
 
   render() {
-    const {
-      value,
-      extensions,
-      additionalButtons,
-      readOnly,
-      showFullScreenButton,
-      locale,
-      autoFocus,
-      hideToolbar,
-      onChange,
-      onFullScreen,
-      onBlur
-    } = this.props;
+    const { onBlur, ...props } = this.props;
 
     return (
       <ProvideBlur onBlur={onBlur}>
-        <PlainMarkdownInput
-          value={value}
-          onChange={onChange}
-          onFullScreen={onFullScreen}
-          extensions={extensions}
-          additionalButtons={additionalButtons}
-          readOnly={readOnly}
-          showFullScreenButton={showFullScreenButton}
-          locale={locale}
-          autoFocus={autoFocus}
-          hideToolbar={hideToolbar}
-        />
+        <PlainMarkdownInput {...props}/>
       </ProvideBlur>
     );
   }
