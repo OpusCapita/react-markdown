@@ -109,9 +109,11 @@ export default class AutocompleteWidget extends React.Component {
   };
 
   adjustPosition = () => {
+    const { restrictorRef } = this.props;
     const selectedItem = window.getSelection();
-
-    if (selectedItem.anchorNode) {
+    // If user clicks outside of autocomplete then selectedItem won't be in a subtree of editor.
+    // We don't perform any editor-specific actions in this case.
+    if (selectedItem.anchorNode && restrictorRef && restrictorRef.contains(selectedItem.anchorNode)) {
       this.setPosition(selectedItem);
     }
   };
