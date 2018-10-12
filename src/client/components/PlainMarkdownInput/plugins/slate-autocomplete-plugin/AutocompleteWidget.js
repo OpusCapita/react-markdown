@@ -113,12 +113,12 @@ export default class AutocompleteWidget extends React.Component {
     const selectedItem = window.getSelection();
     // If user clicks outside of autocomplete then selectedItem won't be in a subtree of editor.
     // We don't perform any editor-specific actions in this case.
-    if (selectedItem.anchorNode && restrictorRef &&
+    if (selectedItem.anchorNode && restrictorRef && (
       restrictorRef.contains(selectedItem.anchorNode) ||
       // Fix for IE11: Node.contains() in IE11 works only with Element nodes, not with Text nodes
       // (other browsers work with both). For IE11 we walk up the tree to find a proper element.
       restrictorRef.contains(selectedItem.anchorNode.parentNode)
-    ) {
+    )) {
       this.setPosition(selectedItem);
     }
   };
