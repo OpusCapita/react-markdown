@@ -1,4 +1,9 @@
 
+[Release 2.3.8](https://github.com/OpusCapita/react-markdown/releases/tag/v2.3.8) Mon Oct 15 2018 08:42:54 GMT+0300 (MSK)
+=======================================================
+
+- Fix exception after clicking outside of autocomplete ([#159](https://github.com/OpusCapita/react-markdown/issues/159)) (GitHub 31243790+estambakio-sc@users.noreply.github.com, 2018-10-15 08:37:47 +0300)
+
 [Release 2.3.7](https://github.com/OpusCapita/react-markdown/releases/tag/v2.3.7) Mon Sep 24 2018 15:24:17 GMT+0300 (MSK)
 =======================================================
 
