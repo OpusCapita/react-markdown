@@ -36,6 +36,8 @@ import {
   setSelectionToState,
 } from './slate/transforms';
 
+import FocusBlur from './FocusBlur.react';
+
 const ACCENTS = {
   b: 'bold',
   i: 'italic',
@@ -73,6 +75,7 @@ class PlainMarkdownInput extends React.Component {
     additionalButtons: Types.array,
     value: Types.string,
     onChange: Types.func,
+    onBlur: Types.func,
     onFullScreen: Types.func,
     readOnly: Types.bool,
     autoFocus: Types.bool,
@@ -87,6 +90,7 @@ class PlainMarkdownInput extends React.Component {
     value: '',
     onFullScreen: () => {},
     onChange: () => {},
+    onBlur: () => {},
     readOnly: false,
     autoFocus: true,
     showFullScreenButton: false,
@@ -457,7 +461,12 @@ class PlainMarkdownInput extends React.Component {
     <div className="btn-group">
       {children}
     </div>
-  )
+  );
+
+  handleBlur = event => {
+    console.log('blur');
+    this.props.onBlur(event);
+  }
 
   render() {
     const { editorState, fullScreen } = this.state;
@@ -506,31 +515,33 @@ class PlainMarkdownInput extends React.Component {
     );
 
     return (
-      <div
-        className={classnames(
-          'react-markdown--slate-editor',
-          { 'react-markdown--slate-editor--fullscreen': fullScreen }
-        )}
-      >
-        {
-          !hideToolbar && (
-            <div className="react-markdown--toolbar">
-              {emphasisButtons}
-              {linkButton}
-              {headerButtons}
-              {listButtons}
-              {additionalButtons}
-              {fullScreenButton}
-            </div>
-          )
-        }
+      <FocusBlur onBlur={this.handleBlur}>
         <div
-          className={'react-markdown--slate-content'}
-          {...(hideToolbar && { style: { borderTop: '0' } })}
+          className={classnames(
+            'react-markdown--slate-editor',
+            { 'react-markdown--slate-editor--fullscreen': fullScreen }
+          )}
         >
-          {editor}
+          {
+            !hideToolbar && (
+              <div className="react-markdown--toolbar">
+                {emphasisButtons}
+                {linkButton}
+                {headerButtons}
+                {listButtons}
+                {additionalButtons}
+                {fullScreenButton}
+              </div>
+            )
+          }
+          <div
+            className={'react-markdown--slate-content'}
+            {...(hideToolbar && { style: { borderTop: '0' } })}
+          >
+            {editor}
+          </div>
         </div>
-      </div>
+      </FocusBlur>
     );
   }
 }

@@ -18,6 +18,7 @@ class MarkdownInputModalScope extends React.Component {
   state = {
     markdownExample: text,
     show: true,
+    showConfirm: false,
     fullScreen: false
   };
 
@@ -26,7 +27,7 @@ class MarkdownInputModalScope extends React.Component {
   };
 
   handleHideModal = () => {
-    this.setState({ show: false });
+    this.setState({ showConfirm: true });
   };
 
   handleFullScreen = (fullScreen) => {
@@ -38,6 +39,8 @@ class MarkdownInputModalScope extends React.Component {
   }
 
   render() {
+    const { showConfirm } = this.state;
+
     const modalClasses = classNames({
       'markdown-input_fullscreen': this.state.fullScreen,
       ...this.props.className
@@ -59,9 +62,27 @@ class MarkdownInputModalScope extends React.Component {
             Modal Test
           </Modal.Header>
           <Modal.Body>
+            <Modal
+              show={showConfirm}
+              style={{ top: '30%' }}
+            >
+              <Modal.Header>Confirmation</Modal.Header>
+              <Modal.Body>You what?</Modal.Body>
+              <Modal.Footer>
+                <button
+                  className='btn btn-primary'
+                  onClick={_ => this.setState({ show: false, showConfirm: false })}
+                >Confirm</button>
+                <button
+                  className='btn btn-default'
+                  onClick={_ => this.setState({ showConfirm: false })}
+                >Cancel</button>
+              </Modal.Footer>
+            </Modal>
             {this._renderChildren()}
           </Modal.Body>
         </Modal>
+
       </div>
     );
   }

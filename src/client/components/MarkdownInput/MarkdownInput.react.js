@@ -42,12 +42,8 @@ class MarkdownInput extends React.Component {
   }
 
   render() {
-    const { onBlur, ...props } = this.props;
-
     return (
-      <ProvideBlur onBlur={onBlur}>
-        <PlainMarkdownInput {...props} ref={this.plainInputRef}/>
-      </ProvideBlur>
+      <PlainMarkdownInput {...this.props} ref={this.plainInputRef}/>
     );
   }
 }
