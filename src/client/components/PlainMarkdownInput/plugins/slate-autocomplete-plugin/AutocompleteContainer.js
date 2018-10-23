@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
+import { createPortal } from 'react-dom';
 import Types from 'prop-types';
 import clickOutside from 'react-click-outside';
-
 import AutocompleteWidget from './AutocompleteWidget';
 import { getSlateEditor } from '../../utils';
 import { getAccents, getPosAfterEmphasis } from '../../slate/transforms';
@@ -234,7 +234,7 @@ class AutocompleteContainer extends PureComponent {
 
   render() {
     const { show, selectedItem, items, ref, loading } = this.state;
-    const { children, locale, options: { editorIsActive } } = this.props;
+    const { children, locale, options: { editorIsActive, containerRef } } = this.props;
 
     const selection = window.getSelection();
     if (selection.anchorNode) {
@@ -249,7 +249,7 @@ class AutocompleteContainer extends PureComponent {
         onKeyDown={this.handleKeyDown}
         ref={this.handleRef}
       >
-        {show && editorIsActive ? (
+        {show && editorIsActive ? createPortal(
           <AutocompleteWidget
             items={items}
             itemRenderer={this.getItemRenderFunc()}
@@ -258,7 +258,9 @@ class AutocompleteContainer extends PureComponent {
             locale={locale}
             onChange={this.handleSelectItem}
             restrictorRef={ref}
-          />
+            containerRef={containerRef}
+          />,
+          containerRef
         ) : null}
         {children}
       </div>

@@ -7,7 +7,7 @@ import DefaultAutocompleteItem from './DefaultAutocompleteItem.react';
 
 const maxHeight = 240;
 
-export default class AutocompleteWidget extends React.Component {
+export default class AutocompleteWidget extends React.PureComponent {
   static propTypes = {
     items: Types.array,
     loading: Types.bool,
@@ -15,6 +15,7 @@ export default class AutocompleteWidget extends React.Component {
     onChange: Types.func,
     itemRenderer: Types.func,
     restrictorRef: Types.object,
+    containerRef: Types.object,
     selectedItem: Types.number,
     style: Types.object
   }
@@ -49,14 +50,14 @@ export default class AutocompleteWidget extends React.Component {
   };
 
   componentWillUpdate = (nextProps) => {
-    const containerRef = this.containerRef;
+    const { widgetRef } = this;
     const itemRef = this[`itemRef${nextProps.selectedItem}`];
-    if (containerRef && itemRef) { // calculating scrolling with keyboard up and down arrows
-      if ((this.props.selectedItem < nextProps.selectedItem) && (itemRef.offsetTop - containerRef.scrollTop > 156)) {
-        containerRef.scrollTop = (itemRef.offsetTop - 156);
+    if (widgetRef && itemRef) { // calculating scrolling with keyboard up and down arrows
+      if ((this.props.selectedItem < nextProps.selectedItem) && (itemRef.offsetTop - widgetRef.scrollTop > 156)) {
+        widgetRef.scrollTop = (itemRef.offsetTop - 156);
       }
-      if ((this.props.selectedItem > nextProps.selectedItem) && (itemRef.offsetTop - containerRef.scrollTop < 26)) {
-        containerRef.scrollTop = (itemRef.offsetTop - 26);
+      if ((this.props.selectedItem > nextProps.selectedItem) && (itemRef.offsetTop - widgetRef.scrollTop < 26)) {
+        widgetRef.scrollTop = (itemRef.offsetTop - 26);
       }
     }
   };
@@ -72,28 +73,24 @@ export default class AutocompleteWidget extends React.Component {
   };
 
   setPosition = (selectedItem) => {
-    const editorWidth = this.props.restrictorRef.offsetWidth;
-    const autocompleteWidth = this['containerRef'].offsetWidth;
-    const autocompleteHeight = this['containerRef'].offsetHeight;
+    const { restrictorRef, containerRef } = this.props;
+
+    const editorWidth = restrictorRef.offsetWidth;
+    const autocompleteWidth = this.widgetRef.offsetWidth;
     const selectionRect = selectedItem.getRangeAt(0).getBoundingClientRect(); // element with cursor
     const restrictorRect = this.props.restrictorRef.getBoundingClientRect();
-    const lineHeight = selectionRect.bottom - selectionRect.top;
+    const containerRect = containerRef.getBoundingClientRect();
 
     let left = selectionRect.left - restrictorRect.left + this.props.restrictorRef.offsetLeft;
     left = editorWidth >= left + autocompleteWidth ? left : left - autocompleteWidth;
     left = left < 0 ? 0 : left;
 
-    let top = selectionRect.top - restrictorRect.top + lineHeight + 4;
-    const offsetTop = selectedItem.anchorNode.parentNode.offsetTop;
+    const top = selectionRect.bottom - containerRect.top;
+
     const slateEditor = getSlateEditor(selectedItem);
 
     slateEditor.style.overflow = 'hidden';
 
-    const showToTop = slateEditor.scrollTop + slateEditor.offsetHeight < offsetTop + autocompleteHeight;
-    if (showToTop) {
-      top -= autocompleteHeight + lineHeight;
-      top = top < 0 ? 0 : top;
-    }
     const position = {
       left: `${left}px`,
       top: `${top}px`
@@ -127,20 +124,16 @@ export default class AutocompleteWidget extends React.Component {
     this.props.onChange(index);
   }
 
+  saveWidgetRef = el => (this.widgetRef = el);
+
   render() {
     const { left, top, transform } = this.state;
-    const {
-      items,
-      locale,
-      selectedItem,
-      itemRenderer,
-      loading
-    } = this.props;
+    const { items, locale, selectedItem, itemRenderer, loading } = this.props;
 
     if (loading) {
       return (
         <div
-          ref={ref => (this.containerRef = ref)}
+          ref={this.saveWidgetRef}
           style={{
             left,
             top,
@@ -179,7 +172,7 @@ export default class AutocompleteWidget extends React.Component {
     if (items) {
       return (
         <div
-          ref={ref => (this.containerRef = ref)}
+          ref={this.saveWidgetRef}
           style={{
             left,
             top,

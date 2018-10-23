@@ -108,6 +108,10 @@ class PlainMarkdownInput extends React.Component {
     this.handleNewValue(this.props.value);
   }
 
+  componentDidMount() {
+    this.setState({ containerRef: this.container }) // eslint-disable-line react/no-did-mount-set-state
+  }
+
   componentWillReceiveProps(nextProps) {
     if (this.props.value !== nextProps.value) {
       this.handleNewValue(nextProps.value);
@@ -516,7 +520,8 @@ class PlainMarkdownInput extends React.Component {
             onScroll: this.handleScroll,
             onMouseUp: this.handleMouseUp,
             onToggle: this.handleAutocompleteToggle,
-            editorIsActive: this.state.isActive
+            editorIsActive: this.state.isActive,
+            containerRef: this.state.containerRef
           })
         ]}
         readOnly={readOnly}
@@ -534,6 +539,7 @@ class PlainMarkdownInput extends React.Component {
             'react-markdown--slate-editor',
             { 'react-markdown--slate-editor--fullscreen': fullScreen }
           )}
+          ref={el => (this.container = el)}
         >
           {
             !hideToolbar && (

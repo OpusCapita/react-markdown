@@ -98,22 +98,22 @@ describe('<AutocompleteWidget />', () => {
     );
     const wrapper = mount(component);
     const wrapperInstance = wrapper.instance();
-    wrapperInstance.containerRef = { scrollTop: 25 };
+    wrapperInstance.widgetRef = { scrollTop: 25 };
     wrapperInstance['itemRef2'] = { offsetTop: 50 };
     wrapperInstance.componentWillUpdate({ selectedItem });
-    expect(wrapperInstance.containerRef.scrollTop).to.equal(25);
+    expect(wrapperInstance.widgetRef.scrollTop).to.equal(25);
 
     wrapper.setProps({ selectedItem: 3 });
-    wrapperInstance.containerRef = { scrollTop: 25 };
+    wrapperInstance.widgetRef = { scrollTop: 25 };
     wrapperInstance['itemRef2'] = { offsetTop: 50 };
     wrapperInstance.componentWillUpdate({ selectedItem });
-    expect(wrapperInstance.containerRef.scrollTop).to.equal(24);
+    expect(wrapperInstance.widgetRef.scrollTop).to.equal(24);
 
     wrapper.setProps({ selectedItem: 1 });
-    wrapperInstance.containerRef = { scrollTop: 25 };
+    wrapperInstance.widgetRef = { scrollTop: 25 };
     wrapperInstance['itemRef2'] = { offsetTop: 200 };
     wrapperInstance.componentWillUpdate({ selectedItem });
-    expect(wrapperInstance.containerRef.scrollTop).to.equal(44);
+    expect(wrapperInstance.widgetRef.scrollTop).to.equal(44);
   });
 
   it('componentWillUnmount()', () => {
@@ -150,7 +150,7 @@ describe('<AutocompleteWidget />', () => {
     const wrapper = mount(component);
     wrapper.setProps({ restrictorRef });
     const wrapperInstance = wrapper.instance();
-    wrapperInstance.containerRef = {
+    wrapperInstance.widgetRef = {
       offsetHeight: 500,
       offsetWidth: 300
     };
