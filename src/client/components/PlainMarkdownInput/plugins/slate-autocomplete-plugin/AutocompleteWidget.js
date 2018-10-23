@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PureComponent } from 'react';
 import './Autocomplete.less';
 import Types from 'prop-types';
 import { getSlateEditor } from '../../utils';
@@ -7,7 +7,7 @@ import DefaultAutocompleteItem from './DefaultAutocompleteItem.react';
 
 const maxHeight = 240;
 
-export default class AutocompleteWidget extends React.PureComponent {
+export default class AutocompleteWidget extends PureComponent {
   static propTypes = {
     items: Types.array,
     loading: Types.bool,
@@ -78,10 +78,10 @@ export default class AutocompleteWidget extends React.PureComponent {
     const editorWidth = restrictorRef.offsetWidth;
     const autocompleteWidth = this.widgetRef.offsetWidth;
     const selectionRect = selectedItem.getRangeAt(0).getBoundingClientRect(); // element with cursor
-    const restrictorRect = this.props.restrictorRef.getBoundingClientRect();
+    const restrictorRect = restrictorRef.getBoundingClientRect();
     const containerRect = containerRef.getBoundingClientRect();
 
-    let left = selectionRect.left - restrictorRect.left + this.props.restrictorRef.offsetLeft;
+    let left = selectionRect.left - restrictorRect.left + restrictorRef.offsetLeft;
     left = editorWidth >= left + autocompleteWidth ? left : left - autocompleteWidth;
     left = left < 0 ? 0 : left;
 
