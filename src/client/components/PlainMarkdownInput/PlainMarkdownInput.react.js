@@ -99,7 +99,8 @@ class PlainMarkdownInput extends React.Component {
 
   state = {
     editorState: '',
-    fullScreen: false
+    fullScreen: false,
+    isActive: true // for fix about widget position: hide widget if editor is not focused currently
   }
 
   componentWillMount() {
@@ -464,8 +465,18 @@ class PlainMarkdownInput extends React.Component {
   );
 
   handleBlur = event => {
-    console.log('blur');
+    const { isActive } = this.state;
+    if (isActive) {
+      this.setState({ isActive: false });
+    }
     this.props.onBlur(event);
+  }
+
+  handleFocus = _ => {
+    const { isActive } = this.state;
+    if (!isActive) {
+      this.setState({ isActive: true })
+    }
   }
 
   render() {
@@ -496,6 +507,7 @@ class PlainMarkdownInput extends React.Component {
         onCopy={this.handleCopy}
         onCut={this.handleCut}
         onKeyDown={this.handleKeyDown}
+        onFocus={this.handleFocus}
         plugins={[
           AutocompletePlugin({
             extensions,
@@ -503,7 +515,8 @@ class PlainMarkdownInput extends React.Component {
             onChange: this.handleChange,
             onScroll: this.handleScroll,
             onMouseUp: this.handleMouseUp,
-            onToggle: this.handleAutocompleteToggle
+            onToggle: this.handleAutocompleteToggle,
+            editorIsActive: this.state.isActive
           })
         ]}
         readOnly={readOnly}

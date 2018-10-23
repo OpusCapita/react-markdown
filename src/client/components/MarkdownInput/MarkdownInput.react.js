@@ -1,7 +1,6 @@
 import React from 'react';
 import Types from 'prop-types';
 import PlainMarkdownInput from '../PlainMarkdownInput';
-import ProvideBlur from './ProvideBlur.react';
 
 class MarkdownInput extends React.Component {
   static propTypes = {

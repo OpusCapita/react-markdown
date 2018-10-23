@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PureComponent } from 'react';
 import Types from 'prop-types';
 import clickOutside from 'react-click-outside';
 
@@ -13,7 +13,7 @@ const enterCode = 13;
 const tabCode = 9;
 
 @clickOutside
-class AutocompleteContainer extends React.Component {
+class AutocompleteContainer extends PureComponent {
   static propTypes = {
     state: Types.object,
     locale: Types.string,
@@ -182,17 +182,24 @@ class AutocompleteContainer extends React.Component {
     this.hideWidget();
   };
 
-  addTerm = ({ state, options }) => {
+  searchItems = ({ state, options }) => {
+    const { editorIsActive } = this.props.options;
+    if (!editorIsActive) {
+      this.setState({ items: [], show: false, loading: false });
+      return
+    }
+
     const { term } = this.getSearchToken(state);
     const extension = term && this.matchExtension(options.extensions, term);
 
     if (!extension) {
-      return false;
+      this.hideWidget();
+      return
     }
 
     this.setState({ items: [], loading: true });
     this.toggleWidget(true);
-    const request = extension.searchItems(term).
+    const request = this.currentRequest = extension.searchItems(term).
       then(items => {
         if (this.currentRequest === request && this._isMounted) {
           this.setState({ items, selectedItem: 0, loading: false })
@@ -203,8 +210,6 @@ class AutocompleteContainer extends React.Component {
           this.setState({ items: [], loading: false })
         }
       });
-    this.currentRequest = request;
-    return true;
   };
 
   toggleWidget = flag => {
@@ -214,12 +219,6 @@ class AutocompleteContainer extends React.Component {
 
   hideWidget = () => {
     this.toggleWidget(false);
-  };
-
-  searchItems = props => {
-    if (!this.addTerm(props)) {
-      this.hideWidget();
-    }
   };
 
   handleRef = (ref) => {
@@ -235,7 +234,7 @@ class AutocompleteContainer extends React.Component {
 
   render() {
     const { show, selectedItem, items, ref, loading } = this.state;
-    const { children, locale } = this.props;
+    const { children, locale, options: { editorIsActive } } = this.props;
 
     const selection = window.getSelection();
     if (selection.anchorNode) {
@@ -250,7 +249,7 @@ class AutocompleteContainer extends React.Component {
         onKeyDown={this.handleKeyDown}
         ref={this.handleRef}
       >
-        {show ? (
+        {show && editorIsActive ? (
           <AutocompleteWidget
             items={items}
             itemRenderer={this.getItemRenderFunc()}

@@ -72,8 +72,6 @@ export default class AutocompleteWidget extends React.Component {
   };
 
   setPosition = (selectedItem) => {
-    console.group('setPosition');
-    console.log({ selectedItem });
     const editorWidth = this.props.restrictorRef.offsetWidth;
     const autocompleteWidth = this['containerRef'].offsetWidth;
     const autocompleteHeight = this['containerRef'].offsetHeight;
@@ -81,7 +79,7 @@ export default class AutocompleteWidget extends React.Component {
     const restrictorRect = this.props.restrictorRef.getBoundingClientRect();
     const lineHeight = selectionRect.bottom - selectionRect.top;
 
-    let left = selectionRect.left - restrictorRect.left;
+    let left = selectionRect.left - restrictorRect.left + this.props.restrictorRef.offsetLeft;
     left = editorWidth >= left + autocompleteWidth ? left : left - autocompleteWidth;
     left = left < 0 ? 0 : left;
 
@@ -107,12 +105,10 @@ export default class AutocompleteWidget extends React.Component {
       this.setState(position);
     }
 
-    console.groupEnd();
-    // this._animationFrame = window.requestAnimationFrame(this.adjustPosition);
+    this._animationFrame = window.requestAnimationFrame(this.adjustPosition);
   };
 
   adjustPosition = () => {
-    console.log('adjustPosition');
     const { restrictorRef } = this.props;
     const selectedItem = window.getSelection();
     // If user clicks outside of autocomplete then selectedItem won't be in a subtree of editor.
@@ -123,7 +119,6 @@ export default class AutocompleteWidget extends React.Component {
       // (other browsers work with both). For IE11 we walk up the tree to find a proper element.
       restrictorRef.contains(selectedItem.anchorNode.parentNode)
     )) {
-      console.log('adjustPosition: call setPosition()');
       this.setPosition(selectedItem);
     }
   };
