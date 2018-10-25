@@ -511,7 +511,6 @@ class PlainMarkdownInput extends React.Component {
         onCopy={this.handleCopy}
         onCut={this.handleCut}
         onKeyDown={this.handleKeyDown}
-        onFocus={this.handleFocus}
         plugins={[
           AutocompletePlugin({
             extensions,
@@ -533,7 +532,7 @@ class PlainMarkdownInput extends React.Component {
     );
 
     return (
-      <FocusBlur onBlur={this.handleBlur}>
+      <FocusBlur onBlur={this.handleBlur} onFocus={this.handleFocus}>
         <div
           className={classnames(
             'react-markdown--slate-editor',

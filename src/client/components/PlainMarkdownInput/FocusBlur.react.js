@@ -24,9 +24,9 @@ export default class ProvideBlur extends PureComponent {
   }
 
   componentDidMount() {
-    this.selfDOMNode = findDOMNode(this);
-    this.selfDOMNode.addEventListener('focusin', this.handleFocusIn);
-    this.selfDOMNode.addEventListener('focusout', this.handleFocusOut);
+    this.el = findDOMNode(this);
+    this.el.addEventListener('focusin', this.handleFocusIn);
+    this.el.addEventListener('focusout', this.handleFocusOut);
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -43,26 +43,28 @@ export default class ProvideBlur extends PureComponent {
   }
 
   componentWillUnmount() {
-    this.selfDOMNode.removeEventListener('focusin', this.handleFocusIn)
-    this.selfDOMNode.removeEventListener('focusout', this.handleFocusOut)
+    this.el.removeEventListener('focusin', this.handleFocusIn)
+    this.el.removeEventListener('focusout', this.handleFocusOut)
   }
 
-  handleFocusIn = _ => {
+  handleFocusIn = event => {
     if (!this.state.isFocused) {
       this.setState({ isFocused: true });
     }
   };
 
-  handleFocusOut = _ => {
-    const data = { timeout: null };
-    const abortFocusOut = _ => clearTimeout(data.timeout);
+  timeout = null;
 
-    data.timeout = setTimeout(_ => {
-      this.selfDOMNode.removeEventListener('focusin', abortFocusOut);
+  handleFocusOut = event => {
+    const abortFocusOut = _ => {
+      clearTimeout(this.timeout);
+    }
+    this.el.addEventListener('focusin', abortFocusOut);
+
+    this.timeout = setTimeout(_ => {
+      this.el.removeEventListener('focusin', abortFocusOut);
       this.setState({ isFocused: false });
-    })
-
-    this.selfDOMNode.addEventListener('focusin', abortFocusOut)
+    });
   }
 
   render() {
