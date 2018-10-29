@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PureComponent } from 'react';
 import { findDOMNode } from 'react-dom';
 import Types from 'prop-types';
 import classnames from 'classnames';
@@ -36,6 +36,8 @@ import {
   setSelectionToState,
 } from './slate/transforms';
 
+import FocusBlur from './FocusBlur.react';
+
 const ACCENTS = {
   b: 'bold',
   i: 'italic',
@@ -67,12 +69,13 @@ function copySelectionToClipboard(event, { state }) {
   }
 }
 
-class PlainMarkdownInput extends React.Component {
+class PlainMarkdownInput extends PureComponent {
   static propTypes = {
     extensions: Types.array,
     additionalButtons: Types.array,
     value: Types.string,
     onChange: Types.func,
+    onBlur: Types.func,
     onFullScreen: Types.func,
     readOnly: Types.bool,
     autoFocus: Types.bool,
@@ -87,6 +90,7 @@ class PlainMarkdownInput extends React.Component {
     value: '',
     onFullScreen: () => {},
     onChange: () => {},
+    onBlur: () => {},
     readOnly: false,
     autoFocus: true,
     showFullScreenButton: false,
@@ -95,12 +99,17 @@ class PlainMarkdownInput extends React.Component {
 
   state = {
     editorState: '',
-    fullScreen: false
+    fullScreen: false,
+    isActive: true // for fix about widget position: hide widget if editor is not focused currently
   }
 
   componentWillMount() {
     this.initialBodyOverflowStyle = document.body.style.overflow;
     this.handleNewValue(this.props.value);
+  }
+
+  componentDidMount() {
+    this.setState({ containerRef: this.container }) // eslint-disable-line react/no-did-mount-set-state
   }
 
   componentWillReceiveProps(nextProps) {
@@ -457,7 +466,30 @@ class PlainMarkdownInput extends React.Component {
     <div className="btn-group">
       {children}
     </div>
-  )
+  );
+
+  handleBlur = event => {
+    if (event && event.persist) {
+      event.persist();
+    }
+    this.setState(prevState => {
+      const change = prevState.editorState.change();
+      change.blur();
+      return ({
+        editorState: change.state,
+        ...(prevState.isActive && { isActive: false })
+      })
+    }, _ => this.props.onBlur(event));
+  }
+
+  handleFocus = _ => this.setState(prevState => {
+    const change = prevState.editorState.change();
+    change.focus();
+    return ({
+      editorState: change.state,
+      ...(!prevState.isActive && { isActive: true })
+    })
+  });
 
   render() {
     const { editorState, fullScreen } = this.state;
@@ -494,7 +526,9 @@ class PlainMarkdownInput extends React.Component {
             onChange: this.handleChange,
             onScroll: this.handleScroll,
             onMouseUp: this.handleMouseUp,
-            onToggle: this.handleAutocompleteToggle
+            onToggle: this.handleAutocompleteToggle,
+            editorIsActive: this.state.isActive,
+            containerRef: this.state.containerRef
           })
         ]}
         readOnly={readOnly}
@@ -506,31 +540,34 @@ class PlainMarkdownInput extends React.Component {
     );
 
     return (
-      <div
-        className={classnames(
-          'react-markdown--slate-editor',
-          { 'react-markdown--slate-editor--fullscreen': fullScreen }
-        )}
-      >
-        {
-          !hideToolbar && (
-            <div className="react-markdown--toolbar">
-              {emphasisButtons}
-              {linkButton}
-              {headerButtons}
-              {listButtons}
-              {additionalButtons}
-              {fullScreenButton}
-            </div>
-          )
-        }
+      <FocusBlur onBlur={this.handleBlur} onFocus={this.handleFocus}>
         <div
-          className={'react-markdown--slate-content'}
-          {...(hideToolbar && { style: { borderTop: '0' } })}
+          className={classnames(
+            'react-markdown--slate-editor',
+            { 'react-markdown--slate-editor--fullscreen': fullScreen }
+          )}
+          ref={el => (this.container = el)}
         >
-          {editor}
+          {
+            !hideToolbar && (
+              <div className="react-markdown--toolbar">
+                {emphasisButtons}
+                {linkButton}
+                {headerButtons}
+                {listButtons}
+                {additionalButtons}
+                {fullScreenButton}
+              </div>
+            )
+          }
+          <div
+            className={'react-markdown--slate-content'}
+            {...(hideToolbar && { style: { borderTop: '0' } })}
+          >
+            {editor}
+          </div>
         </div>
-      </div>
+      </FocusBlur>
     );
   }
 }

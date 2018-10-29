@@ -1,7 +1,6 @@
 import React from 'react';
 import Types from 'prop-types';
 import PlainMarkdownInput from '../PlainMarkdownInput';
-import ProvideBlur from './ProvideBlur.react';
 
 class MarkdownInput extends React.Component {
   static propTypes = {
@@ -42,12 +41,8 @@ class MarkdownInput extends React.Component {
   }
 
   render() {
-    const { onBlur, ...props } = this.props;
-
     return (
-      <ProvideBlur onBlur={onBlur}>
-        <PlainMarkdownInput {...props} ref={this.plainInputRef}/>
-      </ProvideBlur>
+      <PlainMarkdownInput {...this.props} ref={this.plainInputRef}/>
     );
   }
 }

@@ -305,7 +305,7 @@ describe('<AutocompleteContainer />', () => {
       });
   });
 
-  it('searchItems({ state, options })', (done) => {
+  it.skip('searchItems({ state, options })', (done) => {
     const nodeText = '# open #ba';
     const markdownInputElement = (<PlainMarkdownInput
       value={nodeText}
