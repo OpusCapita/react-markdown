@@ -1,4 +1,9 @@
 
+[Release 2.3.9](https://github.com/OpusCapita/react-markdown/releases/tag/v2.3.9) Mon Oct 29 2018 15:57:36 GMT+0300 (MSK)
+=======================================================
+
+- Close widget on lost focus, render widget into portal ([#162](https://github.com/OpusCapita/react-markdown/issues/162)) (GitHub 31243790+estambakio-sc@users.noreply.github.com, 2018-10-29 15:18:47 +0300)
+
 [Release 2.3.8](https://github.com/OpusCapita/react-markdown/releases/tag/v2.3.8) Mon Oct 15 2018 08:42:54 GMT+0300 (MSK)
 =======================================================
 
