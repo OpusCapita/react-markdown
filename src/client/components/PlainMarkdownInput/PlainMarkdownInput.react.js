@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PureComponent } from 'react';
 import { findDOMNode } from 'react-dom';
 import Types from 'prop-types';
 import classnames from 'classnames';
@@ -69,7 +69,7 @@ function copySelectionToClipboard(event, { state }) {
   }
 }
 
-class PlainMarkdownInput extends React.Component {
+class PlainMarkdownInput extends PureComponent {
   static propTypes = {
     extensions: Types.array,
     additionalButtons: Types.array,
@@ -469,19 +469,27 @@ class PlainMarkdownInput extends React.Component {
   );
 
   handleBlur = event => {
-    const { isActive } = this.state;
-    if (isActive) {
-      this.setState({ isActive: false });
+    if (event && event.persist) {
+      event.persist();
     }
-    this.props.onBlur(event);
+    this.setState(prevState => {
+      const change = prevState.editorState.change();
+      change.blur();
+      return ({
+        editorState: change.state,
+        ...(prevState.isActive && { isActive: false })
+      })
+    }, _ => this.props.onBlur(event));
   }
 
-  handleFocus = _ => {
-    const { isActive } = this.state;
-    if (!isActive) {
-      this.setState({ isActive: true })
-    }
-  }
+  handleFocus = _ => this.setState(prevState => {
+    const change = prevState.editorState.change();
+    change.focus();
+    return ({
+      editorState: change.state,
+      ...(!prevState.isActive && { isActive: true })
+    })
+  });
 
   render() {
     const { editorState, fullScreen } = this.state;

@@ -48,21 +48,25 @@ export default class ProvideBlur extends PureComponent {
   }
 
   handleFocusIn = event => {
-    if (!this.state.isFocused) {
-      this.setState({ isFocused: true });
-    }
+    // IE11 & firefox trigger focusout when you click on PlainMarkdownInput.
+    // In order to eliminate it we can stop listening for focusout when focusin occurs.
+    this.el.removeEventListener('focusout', this.handleFocusOut);
+    setTimeout(_ => this.el && this.el.addEventListener('focusout', this.handleFocusOut));
+    return this.setState(prevState => prevState.isFocused ? {} : { isFocused: true })
   };
 
   timeout = null;
 
-  handleFocusOut = event => {
-    const abortFocusOut = _ => {
-      clearTimeout(this.timeout);
-    }
-    this.el.addEventListener('focusin', abortFocusOut);
+  abortFocusOut = _ => {
+    clearTimeout(this.timeout);
+  }
 
+  handleFocusOut = event => {
+    this.el.addEventListener('focusin', this.abortFocusOut);
     this.timeout = setTimeout(_ => {
-      this.el.removeEventListener('focusin', abortFocusOut);
+      if (this.el) {
+        this.el.removeEventListener('focusin', this.abortFocusOut);
+      }
       this.setState({ isFocused: false });
     });
   }
