@@ -1,4 +1,9 @@
 
+[Release 2.3.10-alpha](https://github.com/OpusCapita/react-markdown/releases/tag/v2.3.10-alpha) Mon Aug 19 2019 10:15:17 GMT+0300 (MSK)
+=======================================================
+
+- Replace entire term instead of leaving replaced tail in text [#163](https://github.com/OpusCapita/react-markdown/issues/163) (Egor Stambakio egor.stambakio@opuscapita.com, 2019-08-19 10:00:58 +0300)
+
 [Release 2.3.9](https://github.com/OpusCapita/react-markdown/releases/tag/v2.3.9) Mon Oct 29 2018 15:57:36 GMT+0300 (MSK)
 =======================================================
 
