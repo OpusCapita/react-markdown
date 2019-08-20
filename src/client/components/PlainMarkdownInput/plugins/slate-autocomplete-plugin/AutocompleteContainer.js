@@ -178,8 +178,8 @@ class AutocompleteContainer extends PureComponent {
         const { start, end } = matchUnderCursor({ text, cursor, regexp: extension.termRegex });
 
         change.
-          deleteBackward(cursor - start).
-          deleteForward(end - cursor).
+          moveOffsetsTo(start, start).
+          deleteForward(end - start).
           insertText(extension.markdownText(item, term)).
           focus();
 
