@@ -5,6 +5,7 @@ import clickOutside from 'react-click-outside';
 import AutocompleteWidget from './AutocompleteWidget';
 import { getSlateEditor } from '../../utils';
 import { getAccents, getPosAfterEmphasis } from '../../slate/transforms';
+import { matchUnderCursor } from './utils';
 
 const escapeCode = 27;
 const arrowUpCode = 38;
@@ -170,7 +171,18 @@ class AutocompleteContainer extends PureComponent {
 
       if (extension && item) {
         const change = state.change();
-        change.deleteBackward(term.length).insertText(extension.markdownText(item, term)).focus();
+
+        const text = change.anchorText.text
+        const cursor = change.anchorOffset;
+
+        const { start, end } = matchUnderCursor({ text, cursor, regexp: extension.termRegex });
+
+        change.
+          moveOffsetsTo(start, start).
+          deleteForward(end - start).
+          insertText(extension.markdownText(item, term)).
+          focus();
+
         this.props.onChange(change.state, true);
       }
 
