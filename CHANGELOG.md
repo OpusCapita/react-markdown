@@ -1,4 +1,9 @@
 
+[Release 2.3.10](https://github.com/OpusCapita/react-markdown/releases/tag/v2.3.10) Wed Aug 21 2019 13:44:41 GMT+0300 (MSK)
+=======================================================
+
+- Replace old term with new one instead of cutting on cursor ([#164](https://github.com/OpusCapita/react-markdown/issues/164)) (GitHub 31243790+estambakio-sc@users.noreply.github.com, 2019-08-21 13:40:22 +0300)
+
 [Release 2.3.10-alpha](https://github.com/OpusCapita/react-markdown/releases/tag/v2.3.10-alpha) Mon Aug 19 2019 10:15:17 GMT+0300 (MSK)
 =======================================================
 
