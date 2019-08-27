@@ -11,6 +11,7 @@ class MarkdownInputModal extends React.Component {
     additionalButtons: Types.array,
     readOnly: Types.bool,
     showFullScreenButton: Types.bool,
+    spellCheck: Types.bool,
     locale: Types.string
   };
 
@@ -22,6 +23,7 @@ class MarkdownInputModal extends React.Component {
     additionalButtons: [],
     readOnly: false,
     showFullScreenButton: false,
+    spellCheck: false,
     locale: 'en'
   };
 
@@ -34,7 +36,7 @@ class MarkdownInputModal extends React.Component {
   };
 
   render() {
-    const { value, extensions, additionalButtons, readOnly, showFullScreenButton, locale } = this.props;
+    const { value, extensions, additionalButtons, readOnly, showFullScreenButton, spellCheck, locale } = this.props;
 
     return (
       <PlainMarkdownInput
@@ -46,6 +48,7 @@ class MarkdownInputModal extends React.Component {
         additionalButtons={additionalButtons}
         readOnly={readOnly}
         showFullScreenButton={showFullScreenButton}
+        spellCheck={spellCheck}
         locale={locale}
       />
     );

@@ -13,6 +13,7 @@ class MarkdownInput extends React.Component {
     readOnly: Types.bool,
     autoFocus: Types.bool,
     showFullScreenButton: Types.bool,
+    spellCheck: Types.bool,
     locale: Types.string,
     hideToolbar: Types.bool
   };
@@ -27,6 +28,7 @@ class MarkdownInput extends React.Component {
     readOnly: false,
     autoFocus: true,
     showFullScreenButton: false,
+    spellCheck: false,
     locale: 'en',
     hideToolbar: false
   };
