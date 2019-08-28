@@ -80,6 +80,7 @@ class PlainMarkdownInput extends PureComponent {
     readOnly: Types.bool,
     autoFocus: Types.bool,
     showFullScreenButton: Types.bool,
+    spellCheck: Types.bool,
     locale: Types.string,
     hideToolbar: Types.bool
   }
@@ -94,7 +95,8 @@ class PlainMarkdownInput extends PureComponent {
     readOnly: false,
     autoFocus: true,
     showFullScreenButton: false,
-    locale: 'en'
+    spellCheck: false,
+    locale: 'en',
   }
 
   state = {
@@ -493,7 +495,7 @@ class PlainMarkdownInput extends PureComponent {
 
   render() {
     const { editorState, fullScreen } = this.state;
-    const { children, extensions, readOnly, locale, autoFocus, hideToolbar } = this.props;
+    const { children, extensions, readOnly, locale, autoFocus, hideToolbar, spellCheck } = this.props;
     const disabled = readOnly || hasMultiLineSelection(editorState);
 
     // Create buttons for toolbar
@@ -510,7 +512,7 @@ class PlainMarkdownInput extends PureComponent {
 
     const editor = (
       <Editor
-        spellCheck={false}
+        spellCheck={spellCheck}
         state={editorState}
         fullScreen={fullScreen}
         autoFocus={autoFocus}
