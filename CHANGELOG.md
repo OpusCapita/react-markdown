@@ -1,4 +1,10 @@
 
+[Release 2.3.11](https://github.com/OpusCapita/react-markdown/releases/tag/v2.3.11) Wed Aug 28 2019 15:23:37 GMT+0300 (MSK)
+=======================================================
+
+- Update MarkdownInput.DOCUMENTATION.md (GitHub kvolkovich-sc@users.noreply.github.com, 2019-08-28 15:19:49 +0300)
+- Pass spellCheck property on to Slate Editor, default to false. ([#165](https://github.com/OpusCapita/react-markdown/issues/165)) (Kirill Volkovich github@jswhetstone.com, 2019-08-28 08:18:15 -0400)
+
 [Release 2.3.10](https://github.com/OpusCapita/react-markdown/releases/tag/v2.3.10) Wed Aug 21 2019 13:44:41 GMT+0300 (MSK)
 =======================================================
 
