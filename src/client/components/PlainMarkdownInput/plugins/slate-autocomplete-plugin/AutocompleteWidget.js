@@ -181,6 +181,12 @@ export default class AutocompleteWidget extends PureComponent {
             ...this.props.style
           }}
           className="react-markdown--autocomplete-widget"
+          onMouseDown={e => {
+            // prevent 'blur' event on 'input' while clicking inside widget
+            // e.g. click on suggestion or scroll bar
+            // acknowledged in https://github.com/OpusCapita/react-markdown/issues/167
+            e.preventDefault()
+          }}
         >
           <fieldset>
             {itemsElement}
