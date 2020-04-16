@@ -188,10 +188,15 @@ export default class AutocompleteWidget extends PureComponent {
             e.preventDefault()
           }}
         >
-          <fieldset>
-            {itemsElement}
-          </fieldset>
-          {notFoundElement}
+          {
+            notFoundElement ?
+              notFoundElement :
+              (
+                <div className="react-markdown--autocomplete-widget__items">
+                  {itemsElement}
+                </div>
+              )
+          }
         </div>
       );
     }
