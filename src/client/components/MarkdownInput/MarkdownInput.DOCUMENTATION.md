@@ -105,7 +105,7 @@ function (optional) that is called on when the user presses the button, the func
         searchItems(term) {
           const items = [
             {_objectLabel: 'a1'},
-            {_objectLabel: 'a2'},
+            {_objectLabel: 'a222222222222222222222222222222222222222222222222222222222222222222222222_end'},
             {_objectLabel: 'a23'},
             {_objectLabel: 'b1'},
             {_objectLabel: 'ba2'},
@@ -140,7 +140,7 @@ function (optional) that is called on when the user presses the button, the func
           const termId = term.replace(/^\$(?:\[(\w*)\]|\[?(\w*))$/, '$1$2');
           const items = [
             {_objectLabel: 'a1'},
-            {_objectLabel: 'a2'},
+            {_objectLabel: 'a222222222222222222222222222222222222222222222222222222222222222222222222_end'},
             {_objectLabel: 'a23'},
             {_objectLabel: 'b1'},
             {_objectLabel: 'ba2'},

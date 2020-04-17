@@ -1,4 +1,10 @@
 
+[Release 2.3.12-alpha](https://github.com/OpusCapita/react-markdown/releases/tag/v2.3.12-alpha) Tue Apr 14 2020 18:19:54 GMT+0300 (MSK)
+=======================================================
+
+- Prevent click on autocomplete scroll from closing widget (Egor Stambakio egor.stambakio@opuscapita.com, 2020-04-14 17:51:10 +0300)
+- Update package.json (GitHub kvolkovich-sc@users.noreply.github.com, 2019-08-28 15:29:16 +0300)
+
 [Release 2.3.11](https://github.com/OpusCapita/react-markdown/releases/tag/v2.3.11) Wed Aug 28 2019 15:23:37 GMT+0300 (MSK)
 =======================================================
 
