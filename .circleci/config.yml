@@ -3,7 +3,11 @@ defaults: &defaults
     - image: opuscapita/minsk-core-ci:grails-2.4.4-jdk-8u192-nodejs-8.17.0-maven-3.3.9
   working_directory: ~/build
 
-version: 2
+version: 2.1
+
+orbs:
+  jira: circleci/jira@1.2.2
+
 jobs:
   build:
     <<: *defaults
@@ -197,6 +201,8 @@ workflows:
               ignore:
                 - gh-pages
                 - release
+          post-steps:
+            - jira/notify
       - update-gh-pages:
           requires:
             - build
