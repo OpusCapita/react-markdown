@@ -1,6 +1,6 @@
 defaults: &defaults
   docker:
-    - image: opuscapita/minsk-core-ci:grails-2.4.4-jdk-8u192-nodejs-8.17.0-maven-3.3.9
+    - image: opuscapita/minsk-core-ci:4
   working_directory: ~/build
 
 version: 2.1
@@ -9,13 +9,15 @@ orbs:
   jira: circleci/jira@1.2.2
 
 jobs:
+  init:
+    docker:
+      - image: opuscapita/minsk-core-machineuser-env:2
+    steps:
+      - run: circle_ci_add_env.sh
+
   build:
     <<: *defaults
     steps:
-      - run:
-          name: Environment inject.
-          command: env_inject.sh
-
       - checkout
 
       - restore_cache:
@@ -23,6 +25,8 @@ jobs:
             - react-markdown-{{ .Branch }}-{{ checksum "package.json" }}
             - react-markdown-{{ .Branch }}
             - react-markdown
+
+      - run: if [ -f /.dockerenv ]; then configure-maven.sh && configure-grails.sh && configure-npm.sh; fi
 
       - run:
           name: "Installing dependencies."
@@ -108,10 +112,6 @@ jobs:
   build_release:
     <<: *defaults
     steps:
-      - run:
-          name: Environment inject
-          command: /bin/env_inject.sh
-
       - checkout
 
       - restore_cache:
@@ -119,6 +119,8 @@ jobs:
             - react-markdown-{{ .Branch }}-{{ checksum "package.json" }}
             - react-markdown-{{ .Branch }}
             - react-markdown
+
+      - run: if [ -f /.dockerenv ]; then configure-maven.sh && configure-grails.sh && configure-npm.sh; fi
 
       - run:
           name: "Installing dependencies."
@@ -176,11 +178,6 @@ jobs:
   release:
     <<: *defaults
     steps:
-
-      - run:
-          name: Environment inject
-          command: env_inject.sh
-
       - checkout
 
       - run:
@@ -191,16 +188,26 @@ workflows:
   version: 2
   release-and-build:
     jobs:
+      - init:
+          filters:
+            tags:
+              only: /.*/
       - release:
           filters:
             branches:
               only: release
+          requires:
+            - init
+          post-steps:
+            - jira/notify
       - build:
           filters:
             branches:
               ignore:
                 - gh-pages
                 - release
+          requires:
+            - init
           post-steps:
             - jira/notify
       - update-gh-pages:
@@ -217,3 +224,7 @@ workflows:
               only: /.*/
             branches:
               ignore: /.*/
+          requires:
+            - init
+          post-steps:
+            - jira/notify
