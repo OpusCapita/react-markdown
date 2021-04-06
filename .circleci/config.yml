@@ -79,10 +79,6 @@ jobs:
   update-gh-pages:
     <<: *defaults
     steps:
-      - run:
-          name: Environment inject
-          command: /bin/env_inject.sh
-
       - checkout
 
       - restore_cache:
@@ -90,7 +86,9 @@ jobs:
             - react-markdown-{{ .Branch }}-{{ checksum "package.json" }}
             - react-markdown-{{ .Branch }}
             - react-markdown
-
+      
+      - run: if [ -f /.dockerenv ]; then configure-maven.sh && configure-grails.sh && configure-npm.sh; fi
+      
       - run:
           name: "Installing dependencies."
           command: yarn install
