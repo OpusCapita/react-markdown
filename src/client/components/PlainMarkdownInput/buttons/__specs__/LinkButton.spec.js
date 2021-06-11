@@ -13,7 +13,7 @@ describe('<LinkButton/>', () => {
     expect(wrapper.find(`.btn-default`)).to.have.length(1);
     expect(wrapper.find('.fa')).to.have.length(1);
     expect(wrapper.find(`.fa-link`)).to.have.length(1);
-    expect(wrapper.find(`[title="${getMessage('en', 'insertLink')}"]`)).to.have.length(1);
+    expect(wrapper.find(`[title="${getMessage('en', 'common.PlainMarkdownInput.insertLink')}"]`)).to.have.length(1);
     const props = component.props;
     expect(props.disabled).to.equal(false);
     expect(props.locale).to.equal('en');

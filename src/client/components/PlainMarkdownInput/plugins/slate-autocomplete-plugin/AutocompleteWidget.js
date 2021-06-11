@@ -144,7 +144,7 @@ export default class AutocompleteWidget extends PureComponent {
           className="react-markdown--autocomplete-widget"
         >
           <div className="react-markdown--autocomplete-widget__item">
-            <span>{getMessage(locale, 'searching')}</span>
+            <span>{getMessage(locale, 'common.PlainMarkdownInput.searching')}</span>
             <i className="fa fa-spinner fa-spin pull-right" style={{ marginTop: '3px' }}></i>
           </div>
         </div>
@@ -152,7 +152,9 @@ export default class AutocompleteWidget extends PureComponent {
     }
 
     const notFoundElement = items.length === 0 && !loading ? (
-      <div className="react-markdown--autocomplete-widget__item">{getMessage(locale, 'noMatchesFound')}</div>
+      <div className="react-markdown--autocomplete-widget__item">
+        {getMessage(locale, 'common.PlainMarkdownInput.noMatchesFound')}
+      </div>
     ) : null;
 
     const itemsElement = items.map((item, index) => {

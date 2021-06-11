@@ -420,7 +420,7 @@ class PlainMarkdownInput extends PureComponent {
    * @returns {*}
    */
   getHeaderButtons = ({ disabled, locale }) => (
-    <div className="btn-group" title={getMessage(locale, 'insertHeader')}>
+    <div className="btn-group" title={getMessage(locale, 'common.PlainMarkdownInput.insertHeader')}>
       <DropdownButton
         id="oc-md--toolbar__headers-dropdown"
         title={<i className="fa fa-header"/>}
