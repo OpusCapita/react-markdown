@@ -3,7 +3,7 @@ import getMessage from './translations';
 
 describe('translations.js', () => {
   it('getMessage(locale, key)', () => {
-    const key = 'insertHeader';
+    const key = 'common.PlainMarkdownInput.insertHeader';
     const patternEn = 'Insert header';
     const patternDe = 'Kopfzeile einfügen';
 

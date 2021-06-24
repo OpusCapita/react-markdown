@@ -7,7 +7,11 @@ import getMessage from '../../translations';
 
 const FullScreenButton = function({ onClick, fullScreen, locale }) {
   const msgKey = fullScreen ? 'Minimize' : 'Maximize';
-  const tooltip = <Tooltip id="switch-tp" className="fullscreen-tp">{getMessage(locale, msgKey)}</Tooltip>;
+  const tooltip = (
+    <Tooltip id="switch-tp" className="fullscreen-tp">
+      {getMessage(locale, `common.PlainMarkdownInput.${msgKey}`)}
+    </Tooltip>
+  );
   return (
     <OverlayTrigger placement="bottom" overlay={tooltip}>
       <button type="button" className={classnames('btn btn-default')} onClick={onClick}>

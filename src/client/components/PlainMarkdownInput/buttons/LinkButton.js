@@ -8,7 +8,7 @@ const LinkButton = ({ onClick, disabled, locale }) => (
     disabled={disabled}
     onClick={e => onClick()}
     type="button"
-    title={getMessage(locale, 'insertLink')}
+    title={getMessage(locale, 'common.PlainMarkdownInput.insertLink')}
   >
     <i className="fa fa-link"/>
   </button>
