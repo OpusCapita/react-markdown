@@ -1,4 +1,14 @@
 
+[Release 2.3.13](https://github.com/OpusCapita/react-markdown/releases/tag/v2.3.13) Fri Jun 25 2021 11:55:16 GMT+0300 (MSK)
+=======================================================
+
+- (EPROC-20549) Make translation keys unique ([#169](https://github.com/OpusCapita/react-markdown/issues/169)) (GitHub dsanko-sc@users.noreply.github.com, 2021-06-24 12:54:48 +0300)
+- (EPROC-20383) Used jdk zulu (Alexandr Shestak ashestak@scand.com, 2021-04-06 16:20:38 +0300)
+- (EPROC-20383) Used jdk zulu (GitHub ashestak-sc@users.noreply.github.com, 2021-04-06 13:22:37 +0300)
+- (EPROC-20383) Used jdk zulu (GitHub ashestak-sc@users.noreply.github.com, 2021-04-06 13:07:40 +0300)
+- (EPROC-20252) Added circleci builds jira integration (GitHub ashestak-sc@users.noreply.github.com, 2021-03-10 16:02:02 +0300)
+- Update CI image to opuscapita/minsk-core-ci:grails-2.4.4-jdk-8u192-nodejs-8.17.0-maven-3.3.9 [ci skip] (Egor Stambakio egor.stambakio@opuscapita.com, 2020-05-07 16:14:43 +0300)
+
 [Release 2.3.12](https://github.com/OpusCapita/react-markdown/releases/tag/v2.3.12) Fri Apr 17 2020 11:34:17 GMT+0300 (MSK)
 =======================================================
 
