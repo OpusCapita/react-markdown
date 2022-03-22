@@ -13,12 +13,11 @@ jobs:
     docker:
       - image: opuscapita/minsk-core-machineuser-env:2
     steps:
-      - run: generate_bash_env_exports.sh CIRCLE_CI_TOKEN > ~/generated_bash_env
+      - run: generate_bash_env_exports.sh GH_MAIL GH_NAME CIRCLE_CI_TOKEN > ~/generated_bash_env
       - persist_to_workspace:
           root: ~/
           paths:
             - generated_bash_env
- GH_MAIL GH_NAME
 
   build:
     <<: *defaults
